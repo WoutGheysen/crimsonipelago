@@ -12,7 +12,7 @@ an APWorld for seed generation, a client that talks to Archipelago servers, and 
 
 | Area | State |
 |---|---|
-| APWorld (`crimson_desert.apworld`) | Loads in Archipelago 0.6.7+, generates solo and mixed-game seeds (bulk-tested: 80/80 across 8 scenarios). Placeholder data. |
+| APWorld (`crimson_desert.apworld`) | Loads in Archipelago 0.6.7+ (CI-tested on 0.6.7, 0.6.8 and current main), generates solo and mixed-game seeds (bulk-tested: 80/80 across 8 scenarios). Placeholder data. |
 | Network client | Full Archipelago protocol, reconnect, offline check queue, replay/gap handling, victory reporting. Tested end to end against a real `MultiServer` with a second game. |
 | Delivery ledger | SQLite ledger and an idempotent state machine (`RECEIVED → … → COMPLETE / RECOVERY_REQUIRED`) with two-phase, crash-safe writes. Fault-injection tests. |
 | Session isolation | Seed, slot, game, catalogue fingerprint and save profile are bound together; mismatches pause sync with an actionable message. |
