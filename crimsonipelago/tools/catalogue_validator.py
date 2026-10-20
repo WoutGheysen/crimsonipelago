@@ -8,7 +8,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -39,7 +38,8 @@ def cmd_report(args) -> int:
           f"{sum(i.deliverable for i in items)} deliverable; by capability {by_cap}")
     print(f"locations: {len(locs)} total, {sum(loc.verified for loc in locs)} verified, "
           f"{sum(loc.detectable for loc in locs)} detectable from saves")
-    print(f"goals:     {', '.join(f'{g.key} ({'verified' if g.verified else 'unverified'})' for g in cat.goals.values())}")
+    goals = ", ".join(f"{g.key} ({'verified' if g.verified else 'unverified'})" for g in cat.goals.values())
+    print(f"goals:     {goals}")
     if cat.is_placeholder:
         print("\nThis is the PLACEHOLDER catalogue: fine for development, not for a release.")
     return 0

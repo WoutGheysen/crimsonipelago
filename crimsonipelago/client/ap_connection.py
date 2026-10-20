@@ -8,7 +8,7 @@ import ssl
 from typing import Awaitable, Callable, Iterable
 
 import websockets
-from websockets.exceptions import ConnectionClosed, InvalidURI, InvalidHandshake
+from websockets.exceptions import ConnectionClosed, InvalidHandshake, InvalidURI
 
 from . import protocol
 
@@ -92,7 +92,7 @@ class APConnection:
                 ws = await websockets.connect(url, **kwargs)
                 self._working_url = url
                 return ws
-            except (OSError, InvalidHandshake, InvalidURI, asyncio.TimeoutError, ssl.SSLError) as exc:
+            except (TimeoutError, OSError, InvalidHandshake, InvalidURI, ssl.SSLError) as exc:
                 last_exc = exc
                 log.debug("connect to %s failed: %s", url, exc)
         raise ConnectionError(str(last_exc) if last_exc else "no URL to connect to")
@@ -109,7 +109,7 @@ class APConnection:
                 await self.on_state("disconnected", f"Archipelago server unavailable ({exc}); retrying in {delay}s")
                 try:
                     await asyncio.wait_for(self._stop.wait(), timeout=delay)
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     pass
                 continue
 
@@ -134,6 +134,6 @@ class APConnection:
             await self.on_state("disconnected", "connection to the Archipelago server was lost; reconnecting")
             try:
                 await asyncio.wait_for(self._stop.wait(), timeout=1)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 pass
         await self.on_state("stopped", self.fatal_error or "")

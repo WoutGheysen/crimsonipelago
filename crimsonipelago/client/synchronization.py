@@ -143,7 +143,7 @@ class SyncController:
                     self.bus.emit(ev.ERROR, f"Synchronization error: {exc}")
                 try:
                     await asyncio.wait_for(self._stopping.wait(), timeout=self.config.poll_interval)
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     pass
         finally:
             self.connection.stop()
@@ -230,6 +230,7 @@ class SyncController:
         self.authenticated = True
         self.identity_error = None
         self.status.seed_name = seed
+        self.status.connection = "connected"
 
         await self._check_profile()
         checked = {int(x) for x in cmd.get("checked_locations", [])}

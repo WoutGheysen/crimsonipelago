@@ -12,7 +12,7 @@ import sqlite3
 import threading
 from contextlib import contextmanager
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Iterator
 
@@ -103,7 +103,7 @@ CREATE INDEX IF NOT EXISTS received_state ON received_items (session_id, state);
 
 
 def now() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="milliseconds")
+    return datetime.now(UTC).isoformat(timespec="milliseconds")
 
 
 class LedgerError(RuntimeError):

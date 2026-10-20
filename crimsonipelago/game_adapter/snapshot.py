@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import hashlib
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -16,7 +16,7 @@ SNAPSHOT_VERSION = 1
 def snapshot_bytes(data: bytes, *, path: str | Path | None = None, backend=None, deep_fields: bool = False) -> dict[str, Any]:
     snap: dict[str, Any] = {
         "snapshot_version": SNAPSHOT_VERSION,
-        "taken_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "taken_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "source": {
             "path": str(path) if path else None,
             "size": len(data),

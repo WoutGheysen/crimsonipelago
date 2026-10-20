@@ -1,7 +1,6 @@
 import copy
 
 import pytest
-
 from crimson_desert import catalogue as cat_mod
 
 

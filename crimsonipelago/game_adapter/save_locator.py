@@ -13,7 +13,7 @@ import re
 import shutil
 import stat
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 STEAM_APP_ID = 3321460
@@ -82,7 +82,7 @@ def backup_save(path: str | Path, backup_root: str | Path, label: str = "") -> P
     data = src.read_bytes()
     digest = hashlib.sha256(data).hexdigest()[:12]
     slot = slot_from_path(src)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
     safe_label = re.sub(r"[^A-Za-z0-9_.-]+", "-", label).strip("-")
     name = f"{stamp}_{digest}" + (f"_{safe_label}" if safe_label else "") + ".save"
     dest_dir = Path(backup_root) / slot.account / slot.slot
