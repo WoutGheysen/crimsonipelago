@@ -21,8 +21,11 @@ def main(path: str) -> int:
             if node is None:
                 continue
             name = f"{case.get('classname', '')}::{case.get('name', '')}"
-            detail = (node.get("message") or "") + "\n" + (node.text or "")
-            detail = detail.strip()[-1500:].replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+            logs = "\n".join((case.findtext(t) or "") for t in ("system-out", "system-err")).strip()
+            detail = (node.text or node.get("message") or "").strip()[-1200:]
+            if logs:
+                detail += "\n--- captured output ---\n" + logs[-2500:]
+            detail = detail.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
             print(f"::error title={kind}: {name}::{detail}")
             count += 1
     print(f"{count} failing test(s) annotated")

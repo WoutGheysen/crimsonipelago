@@ -147,7 +147,10 @@ class SyncController:
                     pass
         finally:
             self.connection.stop()
-            await asyncio.gather(conn_task, return_exceptions=True)
+            (result,) = await asyncio.gather(conn_task, return_exceptions=True)
+            if isinstance(result, Exception):
+                log.error("connection task crashed", exc_info=result)
+                self.bus.emit(ev.ERROR, f"The connection to Archipelago stopped unexpectedly: {result}")
 
     def stop(self) -> None:
         self._stopping.set()
@@ -170,9 +173,19 @@ class SyncController:
 
     # ------------------------------------------------------------------ packets
     async def on_packet(self, cmd: dict[str, Any]) -> None:
-        handler = getattr(self, f"_on_{cmd['cmd']}", None)
-        if handler is not None:
+        handler = getattr(self, f"_on_{cmd.get('cmd')}", None)
+        if handler is None:
+            return
+        try:
             await handler(cmd)
+        except Exception as exc:
+            # Never let one bad packet silently end synchronization. Dropping the socket makes the
+            # client reconnect, and the server then resends Connected and the full item list, which
+            # the ledger reconciles without duplicates.
+            log.exception("handling %s failed", cmd.get("cmd"))
+            self.bus.emit(ev.ERROR, f"Synchronization error while handling {cmd.get('cmd')}: {exc}. Reconnecting.")
+            if self.connection:
+                self.connection.reconnect()
 
     async def _on_RoomInfo(self, cmd: dict) -> None:
         self.room_info = cmd
@@ -315,7 +328,7 @@ class SyncController:
             return
         session = self.ledger.session(self.session.id)
         if session.profile_id is None:
-            other = [s for s in self._sessions_for_profile(profile) if s.id != session.id]
+            other = [s for s in self.ledger.sessions_for_profile(profile) if s.id != session.id]
             if other:
                 self._pause(f"Save profile {profile} already belongs to seed {other[0].seed_name}. "
                             f"Start a new campaign in a free save slot for this seed.")
@@ -329,10 +342,6 @@ class SyncController:
             return
         self.session = session
         self._resume()
-
-    def _sessions_for_profile(self, profile: str) -> list[Session]:
-        rows = self.ledger.conn.execute("SELECT id FROM sessions WHERE profile_id=?", (profile,)).fetchall()
-        return [self.ledger.session(r["id"]) for r in rows]
 
     async def _flush_checks(self, *, force: bool = False) -> None:
         if not (self.session and self.authenticated) or self.paused:

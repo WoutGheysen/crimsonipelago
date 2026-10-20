@@ -153,3 +153,23 @@ async def test_profile_cannot_serve_two_seeds(tmp_path, catalogue, sim, ledger, 
     finally:
         await a.stop()
         await b.stop()
+
+
+async def test_failing_packet_handler_reconnects_instead_of_dying(tmp_path, server, sim, ledger, catalogue, bus):
+    """A bug in one packet handler must not silently end synchronization."""
+    c = make_controller(tmp_path, server, sim, ledger, catalogue, bus)
+    real = c._on_ReceivedItems
+    calls = {"n": 0}
+
+    async def flaky(cmd):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise RuntimeError("simulated handler bug")
+        await real(cmd)
+
+    c._on_ReceivedItems = flaky
+    await server.push_item(catalogue.items["Key Item"].ap_id)
+    await run_until(c, lambda: sim.get_inventory_snapshot().get("Key Item") == 1, timeout=10)
+    assert calls["n"] >= 2, "the client reconnected and the server resent the item list"
+    assert sim.get_inventory_snapshot() == {"Key Item": 1}, "delivered exactly once"
+    assert any(e.kind == ev.ERROR and "simulated handler bug" in e.message for e in bus.log)

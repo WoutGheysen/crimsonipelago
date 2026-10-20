@@ -188,9 +188,18 @@ class Ledger:
                     f"ledger {self.path} was written by a newer Crimsonipelago (schema {row['value']}); update the client"
                 )
 
+    def _one(self, sql: str, params: tuple = ()) -> sqlite3.Row | None:
+        """Locked read: the connection is shared with worker threads, so reads take the same lock as writes."""
+        with self._lock:
+            return self.conn.execute(sql, params).fetchone()
+
+    def _all(self, sql: str, params: tuple = ()) -> list[sqlite3.Row]:
+        with self._lock:
+            return self.conn.execute(sql, params).fetchall()
+
     @property
     def schema_version(self) -> int:
-        return int(self.conn.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()["value"])
+        return int(self._one("SELECT value FROM meta WHERE key='schema_version'")["value"])
 
     # ------------------------------------------------------------------ sessions
     def get_or_create_session(self, seed_name: str, team: int, slot: int, slot_name: str, server: str | None,
@@ -211,13 +220,16 @@ class Ledger:
         return self._session(row)
 
     def session(self, session_id: int) -> Session:
-        row = self.conn.execute("SELECT * FROM sessions WHERE id=?", (session_id,)).fetchone()
+        row = self._one("SELECT * FROM sessions WHERE id=?", (session_id,))
         if row is None:
             raise LedgerError(f"no session {session_id}")
         return self._session(row)
 
+    def sessions_for_profile(self, profile_id: str) -> list[Session]:
+        return [self._session(r) for r in self._all("SELECT * FROM sessions WHERE profile_id=? ORDER BY id", (profile_id,))]
+
     def latest_session(self) -> Session | None:
-        row = self.conn.execute("SELECT * FROM sessions ORDER BY last_connected_at DESC, id DESC LIMIT 1").fetchone()
+        row = self._one("SELECT * FROM sessions ORDER BY last_connected_at DESC, id DESC LIMIT 1")
         return self._session(row) if row else None
 
     def bind_profile(self, session_id: int, profile_id: str) -> None:
@@ -239,13 +251,13 @@ class Ledger:
 
     # ------------------------------------------------------------------ received items
     def next_index(self, session_id: int) -> int:
-        row = self.conn.execute("SELECT COALESCE(MAX(idx) + 1, 0) AS n FROM received_items WHERE session_id=?",
-                                (session_id,)).fetchone()
+        row = self._one("SELECT COALESCE(MAX(idx) + 1, 0) AS n FROM received_items WHERE session_id=?",
+                                (session_id,))
         return int(row["n"])
 
     def received(self, session_id: int, idx: int) -> ReceivedItem | None:
-        row = self.conn.execute("SELECT * FROM received_items WHERE session_id=? AND idx=?",
-                                (session_id, idx)).fetchone()
+        row = self._one("SELECT * FROM received_items WHERE session_id=? AND idx=?",
+                                (session_id, idx))
         return self._item(row) if row else None
 
     def record_received(self, session_id: int, idx: int, item_id: int, location_id: int, sender: int,
@@ -272,13 +284,13 @@ class Ledger:
     def items(self, session_id: int, states: tuple[DeliveryState, ...] | None = None) -> list[ReceivedItem]:
         if states:
             marks = ",".join("?" * len(states))
-            rows = self.conn.execute(
+            rows = self._all(
                 f"SELECT * FROM received_items WHERE session_id=? AND state IN ({marks}) ORDER BY idx",
                 (session_id, *[s.value for s in states]),
-            ).fetchall()
+            )
         else:
-            rows = self.conn.execute("SELECT * FROM received_items WHERE session_id=? ORDER BY idx",
-                                     (session_id,)).fetchall()
+            rows = self._all("SELECT * FROM received_items WHERE session_id=? ORDER BY idx",
+                                     (session_id,))
         return [self._item(r) for r in rows]
 
     def set_item_state(self, session_id: int, indices: list[int], state: DeliveryState, *,
@@ -301,8 +313,8 @@ class Ledger:
                 )
 
     def state_counts(self, session_id: int) -> dict[str, int]:
-        rows = self.conn.execute("SELECT state, COUNT(*) AS n FROM received_items WHERE session_id=? GROUP BY state",
-                                 (session_id,)).fetchall()
+        rows = self._all("SELECT state, COUNT(*) AS n FROM received_items WHERE session_id=? GROUP BY state",
+                                 (session_id,))
         return {r["state"]: r["n"] for r in rows}
 
     @staticmethod
@@ -341,15 +353,15 @@ class Ledger:
 
     def batches(self, session_id: int, states: tuple[BatchState, ...]) -> list[Batch]:
         marks = ",".join("?" * len(states))
-        rows = self.conn.execute(
+        rows = self._all(
             f"SELECT * FROM delivery_batches WHERE session_id=? AND state IN ({marks}) ORDER BY created_at",
             (session_id, *[s.value for s in states]),
-        ).fetchall()
+        )
         return [Batch(r["batch_id"], r["session_id"], BatchState(r["state"]), r["pre_fingerprint"],
                       r["post_fingerprint"], r["temp_path"]) for r in rows]
 
     def batch_items(self, batch_id: str) -> list[ReceivedItem]:
-        rows = self.conn.execute("SELECT * FROM received_items WHERE batch_id=? ORDER BY idx", (batch_id,)).fetchall()
+        rows = self._all("SELECT * FROM received_items WHERE batch_id=? ORDER BY idx", (batch_id,))
         return [self._item(r) for r in rows]
 
     # ------------------------------------------------------------------ checks
@@ -370,9 +382,9 @@ class Ledger:
         return new
 
     def unconfirmed_checks(self, session_id: int) -> set[int]:
-        rows = self.conn.execute(
+        rows = self._all(
             "SELECT location_id FROM checks WHERE session_id=? AND detected_at IS NOT NULL AND confirmed_at IS NULL",
-            (session_id,)).fetchall()
+            (session_id,))
         return {r["location_id"] for r in rows}
 
     def mark_checks_sent(self, session_id: int, location_ids: set[int]) -> None:
@@ -394,9 +406,9 @@ class Ledger:
                 )
 
     def check_counts(self, session_id: int) -> dict[str, int]:
-        row = self.conn.execute(
+        row = self._one(
             "SELECT COUNT(detected_at) AS detected, COUNT(sent_at) AS sent, COUNT(confirmed_at) AS confirmed "
-            "FROM checks WHERE session_id=?", (session_id,)).fetchone()
+            "FROM checks WHERE session_id=?", (session_id,))
         return dict(row)
 
     # ------------------------------------------------------------------ events
@@ -406,4 +418,4 @@ class Ledger:
                       (session_id, now(), kind, message))
 
     def recent_events(self, limit: int = 100) -> list[sqlite3.Row]:
-        return self.conn.execute("SELECT * FROM events ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+        return self._all("SELECT * FROM events ORDER BY id DESC LIMIT ?", (limit,))
