@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crimsonipelago"
+version = "0.1.0"
+description = "Archipelago multiworld integration for Crimson Desert: APWorld, client and game adapter"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Wout Gheysen" }]
+requires-python = ">=3.11"
+dependencies = [
+    "websockets>=13,<16",
+    "lz4>=4.3",
+    "cryptography>=42",
+]
+
+[project.optional-dependencies]
+ui = ["PySide6>=6.6"]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.5"]
+
+[project.scripts]
+crimsonipelago = "crimsonipelago.client.main:main"
+crimson-inspect = "crimsonipelago.tools.save_inspector:main"
+crimson-catalogue = "crimsonipelago.tools.catalogue_validator:main"
+
+[tool.setuptools]
+packages = [
+    "crimsonipelago",
+    "crimsonipelago.client",
+    "crimsonipelago.client.ui",
+    "crimsonipelago.game_adapter",
+    "crimsonipelago.game_adapter.runtime",
+    "crimsonipelago.tools",
+    "crimson_desert",
+]
+
+[tool.setuptools.package-dir]
+crimson_desert = "apworld/crimson_desert"
+
+[tool.setuptools.package-data]
+crimson_desert = ["data/*.json", "archipelago.json", "docs/*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "archipelago: needs an Archipelago source checkout (set ARCHIPELAGO_PATH)",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

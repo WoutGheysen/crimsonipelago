@@ -1,0 +1,230 @@
+"""The real Crimson Desert adapter: save-file based (the scope doc's fallback path).
+
+Reading is implemented. Writing is deliberately not: no reward-delivery
+procedure has been verified in-game yet (Phase 0, scope doc 3.4), so
+`can_grant_item` and `prepare` report UNSUPPORTED instead of guessing.
+The safety scaffolding a write will need (version gate, game-closed check,
+backups, temp file, re-decode validation, atomic swap) is in place in
+`_build_and_validate` / `commit` so the first verified procedure only has to
+supply the blob transformation.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import os
+from pathlib import Path
+from typing import Any, Callable
+
+from crimson_desert.catalogue import Catalogue, ItemDef, LocationDef
+
+from . import parc, save_container
+from .interface import DeliveryBatch, GameAdapter, GameVersion, PreparedWrite, Result, SaveIdentity
+from .nattkh_backend import BackendUnavailable, DeepState, NattKhBackend
+from .process_check import game_running
+from .save_locator import backup_save, find_saves, slot_from_path
+from .version_detection import detect_version
+
+BlobTransform = Callable[[bytes, DeliveryBatch], bytes]
+
+
+class CrimsonDesertSaveAdapter(GameAdapter):
+    name = "crimson-desert-save"
+
+    def __init__(
+        self,
+        catalogue: Catalogue,
+        *,
+        save_path: str | Path | None = None,
+        editor_dir: str | Path | None = None,
+        backup_dir: str | Path = "backups",
+        steam_manifest: str | Path | None = None,
+    ):
+        self.catalogue = catalogue
+        self.backup_dir = Path(backup_dir)
+        self.steam_manifest = steam_manifest
+        self._save_override = Path(save_path) if save_path else None
+        self.backend: NattKhBackend | None = None
+        self.backend_error: str | None = None
+        if editor_dir:
+            try:
+                self.backend = NattKhBackend(editor_dir)
+            except BackendUnavailable as exc:
+                self.backend_error = str(exc)
+        self._cache: tuple[str, DeepState | None] | None = None
+        self._version: GameVersion | None = None
+        self.transforms: dict[str, BlobTransform] = {}  # game_ref kind -> verified transform
+
+    # ------------------------------------------------------------------ helpers
+    @property
+    def save_path(self) -> Path | None:
+        if self._save_override:
+            return self._save_override
+        saves = find_saves()
+        return saves[0].path if saves else None
+
+    def _read(self) -> bytes | None:
+        path = self.save_path
+        if path is None or not path.is_file():
+            return None
+        return path.read_bytes()
+
+    def _deep_state(self) -> DeepState | None:
+        data = self._read()
+        if data is None or self.backend is None:
+            return None
+        digest = hashlib.sha256(data).hexdigest()
+        if self._cache and self._cache[0] == digest:
+            return self._cache[1]
+        container = save_container.decode(data)  # HMAC failure raises: never trust a corrupt save
+        state = self.backend.decode(container.blob)
+        self._cache = (digest, state)
+        return state
+
+    # ------------------------------------------------------------------ reading
+    def get_game_version(self) -> GameVersion:
+        if self._version is None:
+            self._version = detect_version(self.catalogue.compatibility, self.steam_manifest)
+        return self._version
+
+    def get_save_identity(self) -> SaveIdentity | None:
+        path = self.save_path
+        return SaveIdentity(slot_from_path(path).profile_id, str(path)) if path else None
+
+    def _detected(self, detection: dict[str, Any], state: DeepState) -> bool:
+        kind = detection.get("kind")
+        if kind == "quest_state":
+            entry = state.quests.get(int(detection["quest_key"]))
+            return entry is not None and entry.get("state") in set(detection["states"])
+        if kind == "mission_state":
+            entry = state.missions.get(int(detection["mission_key"]))
+            return entry is not None and entry.get("state") in set(detection["states"])
+        if kind == "knowledge":
+            return int(detection["knowledge_key"]) in state.knowledge
+        return False  # placeholder and unknown kinds are never reported
+
+    def get_completed_checks(self, catalogue: Catalogue) -> set[int]:
+        state = self._deep_state()
+        if state is None:
+            return set()
+        done = set()
+        for loc in catalogue.locations.values():
+            if loc.detectable and self._detected(dict(loc.detection), state):
+                done.add(loc.ap_id)
+        return done
+
+    def is_goal_complete(self, catalogue: Catalogue, goal_key: str) -> bool:
+        goal = catalogue.goals.get(goal_key)
+        state = self._deep_state()
+        if goal is None or state is None or not goal.verified:
+            return False
+        return self._detected(dict(goal.detection), state)
+
+    def get_inventory_snapshot(self) -> dict[str, int]:
+        state = self._deep_state()
+        return {str(k): v for k, v in state.items.items()} if state else {}
+
+    def get_progression_state(self) -> dict[str, Any]:
+        state = self._deep_state()
+        if state is None:
+            return {"backend": None, "backend_error": self.backend_error}
+        return {"quests": len(state.quests), "missions": len(state.missions), "knowledge": len(state.knowledge)}
+
+    def describe_location_support(self, loc: LocationDef) -> str:
+        return "detectable" if loc.detectable else "not detectable (placeholder or unverified)"
+
+    # ------------------------------------------------------------------ writing
+    def can_grant_item(self, item: ItemDef) -> Result:
+        if not item.deliverable:
+            return Result.unsupported(f"{item.name!r} has no verified delivery procedure (capability: {item.capability})")
+        kind = (item.game_ref or {}).get("kind")
+        if kind not in self.transforms:
+            return Result.unsupported(f"no verified save transformation for game_ref kind {kind!r} yet")
+        return Result.success()
+
+    def safe_to_write(self) -> Result:
+        version = self.get_game_version()
+        if not version.writes_allowed:
+            return Result.unsupported(f"save writes are disabled for game version {version.label}: {version.note}")
+        running = game_running()
+        if running is None:
+            return Result.failure("cannot tell whether Crimson Desert is running; refusing to write")
+        if running:
+            return Result.failure("Crimson Desert is running; rewards are applied once you quit to desktop")
+        data = self._read()
+        if data is None:
+            return Result.failure("no save file found")
+        try:
+            container = save_container.decode(data)
+        except save_container.SaveFormatError as exc:
+            return Result.failure(f"save is not readable: {exc}")
+        allowed = self.catalogue.compatibility.get("save_container_versions", {}).get(str(container.version), {})
+        if not allowed.get("write"):
+            return Result.unsupported(f"writing save container version {container.version} is not enabled")
+        return Result.success()
+
+    def fingerprint(self) -> str:
+        data = self._read()
+        return hashlib.sha256(data).hexdigest() if data is not None else "missing"
+
+    def prepare(self, batch: DeliveryBatch) -> PreparedWrite | Result:
+        for entry in batch.entries:
+            verdict = self.can_grant_item(entry.item)
+            if not verdict.ok:
+                return verdict
+        safe = self.safe_to_write()
+        if not safe.ok:
+            return safe
+        return self._build_and_validate(batch)
+
+    def _build_and_validate(self, batch: DeliveryBatch) -> PreparedWrite | Result:
+        path = self.save_path
+        assert path is not None
+        original = path.read_bytes()
+        container = save_container.decode(original)
+        before = parc.parse_structure(container.blob)
+
+        blob = container.blob
+        for entry in batch.entries:
+            blob = self.transforms[entry.item.game_ref["kind"]](blob, DeliveryBatch(batch.batch_id, [entry]))
+
+        encoded = save_container.encode(blob, container.header)
+        # validate by decoding what we are about to write, exactly as the game would
+        check = save_container.decode(encoded)
+        after = parc.parse_structure(check.blob)
+        if check.blob != blob:
+            return Result.failure("round-trip validation failed: re-decoded save differs from the intended content")
+        if after.schema_sha256 != before.schema_sha256:
+            return Result.failure("validation failed: the transformation changed the save schema")
+
+        backup_save(path, self.backup_dir, label=f"before-{batch.batch_id[:8]}")
+        temp = path.with_name(path.name + f".crimsonipelago-{batch.batch_id[:8]}")
+        with open(temp, "wb") as fh:
+            fh.write(encoded)
+            fh.flush()
+            os.fsync(fh.fileno())
+        return PreparedWrite(
+            batch_id=batch.batch_id,
+            pre_fingerprint=hashlib.sha256(original).hexdigest(),
+            post_fingerprint=hashlib.sha256(encoded).hexdigest(),
+            temp_path=str(temp),
+        )
+
+    def commit(self, prepared: PreparedWrite) -> Result:
+        path = self.save_path
+        if path is None or prepared.temp_path is None or not Path(prepared.temp_path).is_file():
+            return Result.failure("prepared save is missing")
+        if self.fingerprint() != prepared.pre_fingerprint:
+            return Result.failure("the save changed after the delivery was prepared; not overwriting it")
+        running = game_running()
+        if running is not False:
+            return Result.failure("Crimson Desert started (or cannot be checked) before the write; not overwriting")
+        os.replace(prepared.temp_path, path)
+        return self.verify_reward(prepared)
+
+    def discard(self, prepared: PreparedWrite) -> None:
+        if prepared.temp_path:
+            try:
+                os.remove(prepared.temp_path)
+            except FileNotFoundError:
+                pass

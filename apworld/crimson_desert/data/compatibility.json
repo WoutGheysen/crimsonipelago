@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "_comment": "Game builds the adapter has been tested against. Write operations are refused on any build not listed with writes_enabled=true. 'retired_*_ids' must list every AP ID that was ever released and later removed, so it is never reused.",
+  "steam_app_id": 3321460,
+  "supported_builds": [],
+  "save_container_versions": {
+    "2": {
+      "read": true,
+      "write": false,
+      "note": "Container format documented by the NattKh save editor; read path implemented, write path disabled until Phase 0 verifies it in-game."
+    }
+  },
+  "retired_item_ids": [],
+  "retired_location_ids": []
+}
