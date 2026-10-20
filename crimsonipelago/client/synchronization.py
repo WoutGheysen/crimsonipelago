@@ -79,6 +79,9 @@ class SyncController:
         self.names = DataPackageCache(Path(config.data_dir) / "datapackage")
         self.connection: APConnection | None = None
         self._adapter_lock = asyncio.Lock()
+        # Packet handlers, ticks and user actions all read and replace self.session across awaits.
+        # Running them one at a time keeps a tick that started under one seed from undoing a switch to another.
+        self._state_lock = asyncio.Lock()
         self._stopping = asyncio.Event()
 
         self.room_info: dict[str, Any] | None = None
@@ -137,7 +140,8 @@ class SyncController:
         try:
             while not self._stopping.is_set() and not conn_task.done():
                 try:
-                    await self.tick()
+                    async with self._state_lock:
+                        await self.tick()
                 except Exception as exc:  # never let one bad tick kill synchronization
                     log.exception("sync tick failed")
                     self.bus.emit(ev.ERROR, f"Synchronization error: {exc}")
@@ -177,7 +181,8 @@ class SyncController:
         if handler is None:
             return
         try:
-            await handler(cmd)
+            async with self._state_lock:
+                await handler(cmd)
         except Exception as exc:
             # Never let one bad packet silently end synchronization. Dropping the socket makes the
             # client reconnect, and the server then resends Connected and the full item list, which
@@ -309,6 +314,8 @@ class SyncController:
             sid = self.session.id
             new = await self._adapter(self.tracker.poll, sid, self.enabled_location_ids)
             await self._adapter(self.tracker.poll_goal, sid, self.goal_key)
+            if not self.session or self.session.id != sid:
+                return  # the session changed while this tick was waiting; never switch it back
             self.session = self.ledger.session(sid)
             if self.authenticated:
                 await self._flush_checks(force=bool(new))
@@ -377,10 +384,11 @@ class SyncController:
         self.status.waiting_reason = report.waiting_reason
 
     async def resolve_recovery(self, batch_id: str, decision: str) -> None:
-        if not self.session:
-            raise ValueError("no active session")
-        await self._adapter(self.engine.resolve_recovery, self.session.id, batch_id, decision)
-        await self._deliver()
+        async with self._state_lock:
+            if not self.session:
+                raise ValueError("no active session")
+            await self._adapter(self.engine.resolve_recovery, self.session.id, batch_id, decision)
+            await self._deliver()
 
     # ------------------------------------------------------------------ pause / status
     def _pause(self, reason: str, *, identity: bool = False) -> None:

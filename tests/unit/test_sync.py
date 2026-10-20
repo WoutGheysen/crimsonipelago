@@ -173,3 +173,33 @@ async def test_failing_packet_handler_reconnects_instead_of_dying(tmp_path, serv
     assert calls["n"] >= 2, "the client reconnected and the server resent the item list"
     assert sim.get_inventory_snapshot() == {"Key Item": 1}, "delivered exactly once"
     assert any(e.kind == ev.ERROR and "simulated handler bug" in e.message for e in bus.log)
+
+
+async def test_tick_in_flight_cannot_switch_session_back(tmp_path, catalogue, sim, ledger, bus):
+    """Regression: a tick that started under seed A must not overwrite the session after Connected switched to B.
+
+    Before the fix, tick() reloaded `self.session` from the id it captured before its awaits, silently
+    turning a client connected to SEED-B back into SEED-A, so the profile guard never fired.
+    """
+    import time
+
+    fp = {"catalogue_fingerprint": catalogue.fingerprint}
+    a = await FakeAPServer(seed="SEED-A", slot_data=fp).start()
+    b = await FakeAPServer(seed="SEED-B", slot_data=fp).start()
+    try:
+        c = make_controller(tmp_path, a, sim, ledger, catalogue, bus)
+        await run_until(c, lambda: c.session is not None and c.session.profile_id is not None)
+        c2 = make_controller(tmp_path, b, sim, ledger, catalogue, bus)
+        real_poll = c2.tracker.poll
+
+        def slow_poll(*args):  # keeps the first tick in flight while Connected for SEED-B arrives
+            time.sleep(0.4)
+            return real_poll(*args)
+
+        c2.tracker.poll = slow_poll
+        await run_until(c2, lambda: c2.paused is not None, timeout=5)
+        assert "already belongs to seed SEED-A" in c2.paused
+        assert c2.session.seed_name == "SEED-B"
+    finally:
+        await a.stop()
+        await b.stop()
