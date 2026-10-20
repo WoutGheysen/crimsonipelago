@@ -24,6 +24,7 @@ dev = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.5"]
 crimsonipelago = "crimsonipelago.client.main:main"
 crimson-inspect = "crimsonipelago.tools.save_inspector:main"
 crimson-catalogue = "crimsonipelago.tools.catalogue_validator:main"
+crimson-seeds = "crimsonipelago.tools.seed_tester:main"
 
 [tool.setuptools]
 packages = [
