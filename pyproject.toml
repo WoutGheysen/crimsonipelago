@@ -26,6 +26,7 @@ crimson-inspect = "crimsonipelago.tools.save_inspector:main"
 crimson-catalogue = "crimsonipelago.tools.catalogue_validator:main"
 crimson-seeds = "crimsonipelago.tools.seed_tester:main"
 crimson-build-apworld = "crimsonipelago.tools.build_apworld:main"
+crimson-candidates = "crimsonipelago.tools.candidates:main"
 
 [tool.setuptools]
 packages = [

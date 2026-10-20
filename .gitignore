@@ -10,3 +10,5 @@ crimsonipelago_data/
 *.save.bak
 snapshots/
 .venv/
+research/candidates/
+research/saves/

@@ -3,6 +3,13 @@
 This is how real Crimson Desert data gets into the catalogue. Everything here is **read-only**
 until step 4 of Phase 0, and even then only on disposable saves.
 
+Current research:
+
+- [research/progression-draft.md](research/progression-draft.md): what the game data says about
+  chapters, quests, abilities and items, and a first Archipelago model (unverified).
+- [research/first-session-plan.md](research/first-session-plan.md): the checklist for the first
+  save-diff session (Prologue and Chapter 1).
+
 ## Ground rules
 
 - Use a **dedicated test campaign** in its own save slot. Never experiment on your real campaign.
