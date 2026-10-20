@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # Pinned so a change upstream never silently breaks or changes our results.
+  ARCHIPELAGO_REF: 4036a354637ffa56a6892f5735bc0d03ee3e7c44
+  NATTKH_REF: 96e7f78fcb00d6cb5615171a7f359f0c2de5b114
+  SKIP_REQUIREMENTS_UPDATE: "1"
+  PYTHONWARNINGS: ignore
+
+jobs:
+  test:
+    name: Tests (Linux, real Archipelago server)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch Archipelago (pinned)
+        run: |
+          git init -q "$RUNNER_TEMP/Archipelago"
+          cd "$RUNNER_TEMP/Archipelago"
+          git remote add origin https://github.com/ArchipelagoMW/Archipelago
+          git fetch -q --depth 1 origin "$ARCHIPELAGO_REF"
+          git checkout -q FETCH_HEAD
+
+      - name: Fetch NattKh save editor decoder (pinned, MPL-2.0, used unmodified)
+        run: |
+          git init -q "$RUNNER_TEMP/nattkh"
+          cd "$RUNNER_TEMP/nattkh"
+          git remote add origin https://github.com/NattKh/CRIMSON-DESERT-SAVE-EDITOR-AND-GAME-MODS
+          git sparse-checkout set CrimsonSaveEditor
+          git fetch -q --depth 1 --filter=blob:none origin "$NATTKH_REF"
+          git checkout -q FETCH_HEAD
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          # Archipelago's generator and server need only these; its GUI deps (kivy) are skipped.
+          pip install colorama "websockets==13.1" PyYAML jellyfish jinja2 schema bsdiff4 platformdirs certifi orjson typing_extensions pathspec
+          pip install -e ".[dev,ui]"
+          sudo apt-get update -q && sudo apt-get install -yq libegl1 libxkbcommon0 libgl1
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Link the APWorld into Archipelago
+        run: ln -s "$GITHUB_WORKSPACE/apworld/crimson_desert" "$RUNNER_TEMP/Archipelago/worlds/crimson_desert"
+
+      - name: Unit and integration tests
+        env:
+          ARCHIPELAGO_PATH: ${{ runner.temp }}/Archipelago
+          NATTKH_EDITOR_DIR: ${{ runner.temp }}/nattkh/CrimsonSaveEditor
+          QT_QPA_PLATFORM: offscreen
+        run: python -m pytest -rs
+
+      - name: APWorld tests (Archipelago's own world test runner)
+        working-directory: ${{ runner.temp }}/Archipelago
+        run: python -m pytest -q worlds/crimson_desert/test
+
+      - name: Bulk seed generation
+        run: crimson-seeds --archipelago "$RUNNER_TEMP/Archipelago" --seeds 10 --jobs 4
+
+      - name: Packaged .apworld loads and generates like a player install
+        run: |
+          crimson-build-apworld -o dist/crimson_desert.apworld
+          AP="$RUNNER_TEMP/Archipelago"
+          rm "$AP/worlds/crimson_desert"
+          mkdir -p "$AP/custom_worlds" && cp dist/crimson_desert.apworld "$AP/custom_worlds/"
+          mkdir -p "$RUNNER_TEMP/gen/players" "$RUNNER_TEMP/gen/out"
+          printf 'name: Wout\ngame: Crimson Desert\nCrimson Desert:\n  goal: main_story\n' > "$RUNNER_TEMP/gen/players/cd.yaml"
+          cd "$AP"
+          python Generate.py --player_files_path "$RUNNER_TEMP/gen/players" --outputpath "$RUNNER_TEMP/gen/out" --seed 1 2>&1 | tee gen.log
+          ! grep -q "Invalid or missing manifest" gen.log
+          grep -q "Crimson Desert .*: v0\." gen.log
+          ls "$RUNNER_TEMP"/gen/out/*.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: crimson_desert.apworld
+          path: dist/crimson_desert.apworld
+
+  windows-unit:
+    name: Unit tests (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Unit tests
+        run: python -m pytest tests/unit -rs
