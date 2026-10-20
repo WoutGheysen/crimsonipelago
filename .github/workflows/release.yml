@@ -1,0 +1,66 @@
+name: Build release
+
+# Run manually from the Actions tab to get test builds, or push a tag like v0.1.0
+# to also publish them as a GitHub release (marked pre-release until 1.0).
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+  pull_request:  # proves packaging changes build on Windows before they merge
+    paths:
+      - "packaging/**"
+      - ".github/workflows/release.yml"
+      - "pyproject.toml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Windows client + APWorld
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[ui]" pyinstaller
+
+      - name: Build CrimsonipelagoClient.exe
+        run: pyinstaller --noconfirm --clean packaging/crimsonipelago.spec
+
+      - name: Build crimson_desert.apworld
+        run: crimson-build-apworld -o dist/crimson_desert.apworld
+
+      - name: Smoke-test the exe
+        shell: bash
+        run: |
+          ./dist/CrimsonipelagoClient.exe --version
+          ./dist/CrimsonipelagoClient.exe --data-dir smoke sim init
+          ./dist/CrimsonipelagoClient.exe --data-dir smoke sim complete "Prologue Quest 1"
+          ./dist/CrimsonipelagoClient.exe --data-dir smoke sim show
+
+      - name: Assemble release folder
+        shell: bash
+        run: |
+          mkdir -p release
+          cp dist/CrimsonipelagoClient.exe dist/crimson_desert.apworld release/
+          cp examples/player.yaml "release/Crimson Desert.yaml"
+          cp README.md LICENSE NOTICE.md docs/setup.md docs/troubleshooting.md release/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: crimsonipelago-windows
+          path: release/
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v1') }}
+          files: release/*

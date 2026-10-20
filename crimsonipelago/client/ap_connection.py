@@ -68,6 +68,10 @@ class APConnection:
         self._stop.set()
         self._close_socket()
 
+    def reconnect(self) -> None:
+        """Drop the current socket; run() notices and connects again after its usual short delay."""
+        self._close_socket()
+
     def fail(self, message: str) -> None:
         """Stop reconnecting because of a problem retrying will not fix."""
         self.fatal_error = message
