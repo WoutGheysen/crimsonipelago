@@ -60,7 +60,11 @@ jobs:
           ARCHIPELAGO_PATH: ${{ runner.temp }}/Archipelago
           NATTKH_EDITOR_DIR: ${{ runner.temp }}/nattkh/CrimsonSaveEditor
           QT_QPA_PLATFORM: offscreen
-        run: python -m pytest -rs
+        run: python -m pytest -rs --junitxml=report.xml
+
+      - name: Annotate failures
+        if: failure()
+        run: python .github/scripts/junit_annotations.py report.xml
 
       - name: APWorld tests (Archipelago's own world test runner)
         working-directory: ${{ runner.temp }}/Archipelago
@@ -138,4 +142,7 @@ jobs:
       - name: Install
         run: pip install -e ".[dev]"
       - name: Unit tests
-        run: python -m pytest tests/unit -rs
+        run: python -m pytest tests/unit -rs --junitxml=report.xml
+      - name: Annotate failures
+        if: failure()
+        run: python .github/scripts/junit_annotations.py report.xml
