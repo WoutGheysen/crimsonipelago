@@ -17,6 +17,10 @@
   That code is used unmodified and stays under the MPL-2.0. It is not redistributed in this
   repository or in Crimsonipelago releases.
 
+- `crimsonipelago/tools/candidates.py` (`crimson-candidates`) reads the editor's game-data tables
+  from the user's checkout and writes candidate lists to a local, git-ignored folder. Those lists are
+  not committed or redistributed. `docs/research/` contains our own analysis, citing individual keys.
+
 If MPL-2.0 files are ever vendored into this repository, they must keep their license headers and
 remain under the MPL-2.0 (file-level copyleft). The rest of the project can stay MIT.
 
