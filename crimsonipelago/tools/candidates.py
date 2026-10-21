@@ -66,6 +66,10 @@ TRAVERSAL_STEMS = (
     "Rope_Swing", "Rope_AirPull", "Rope_AirSwing",
     "JiJeongTa_I", "JiJeongTa_Air", "JiJeongTa_Deep", "JiJeongTa_Far", "JiJeongTa_Long_Distance",
     "CharacterClimb", "CallDragon",
+    # confirmed in real saves (2026-10-21, build 25477059); internal names that can't be guessed from display text
+    "BlackWolf",          # Axiom Force (grapple), granted during "Polar Opposites"
+    "Light_Reflection",   # Blinding Flash, granted in the Prologue
+    "CallVehicle",        # Summon Mount
 )
 CHARACTER_PREFIXES = {"Damian": "Damiane", "Oongka": "Oongka"}
 OTHER_ABILITY_GROUPS = {

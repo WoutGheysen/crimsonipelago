@@ -10,7 +10,7 @@ What this backend extracts (field names as used by the editor's quest parser):
     QuestSaveData._questStateList[]     _questKey, _state, _completedTime
     QuestSaveData._missionStateList[]   _key, _state, _completeCount
     KnowledgeSaveData list              _key
-    inventory items (legacy scanner)    itemKey, stack, section
+    InventorySaveData._inventorylist[] _inventoryKey, _itemList[] (_itemKey, _stackCount)
 plus a flat dump of every decoded field, for save-diff research.
 """
 
@@ -38,7 +38,8 @@ class DeepState:
     quests: dict[int, dict[str, Any]] = field(default_factory=dict)
     missions: dict[int, dict[str, Any]] = field(default_factory=dict)
     knowledge: set[int] = field(default_factory=set)
-    items: dict[int, int] = field(default_factory=dict)  # itemKey -> total stack (player sections)
+    items: dict[int, int] = field(default_factory=dict)  # itemKey -> total stack over all character inventories
+    inventories: dict[int, dict[int, int]] = field(default_factory=dict)  # inventoryKey -> itemKey -> stack
     fields: dict[str, str] = field(default_factory=dict)  # flat path -> hex value
     warnings: list[str] = field(default_factory=list)
 
@@ -121,16 +122,17 @@ class NattKhBackend:
 
     # ------------------------------------------------------------------ decoding
     def decode(self, raw: bytes, *, include_fields: bool = False) -> DeepState:
-        result = self._parser.build_result_from_raw(raw, {"input_kind": "raw_blob"}, include_legacy=True)
+        # The editor's legacy item scanner misses most of the inventory on current builds (found in the
+        # first real research session), so items are read from the parsed InventorySaveData tree instead.
+        result = self._parser.build_result_from_raw(raw, {"input_kind": "raw_blob"}, include_legacy=False)
         state = DeepState()
         for obj in result["objects"]:
             if obj.class_name == "QuestSaveData":
                 self._read_quests(raw, obj, state)
             elif obj.class_name == "KnowledgeSaveData":
                 self._read_knowledge(raw, obj, state)
-        for item in result.get("items", []):
-            if getattr(item, "section", 0) == 0:
-                state.items[item.itemKey] = state.items.get(item.itemKey, 0) + int(item.stack)
+            elif obj.class_name == "InventorySaveData":
+                self._read_inventory(raw, obj, state)
         if include_fields:
             for i, obj in enumerate(result["objects"]):
                 self._flatten(raw, obj.fields, f"{obj.class_name}#{i}", state.fields)
@@ -165,6 +167,23 @@ class NattKhBackend:
                             "complete_count": c.get("_completeCount"),
                             "completed_time": c.get("_completedTime"),
                         }
+
+    def _read_inventory(self, raw: bytes, obj, state: DeepState) -> None:
+        for f in obj.fields:
+            if not f.present or f.name != "_inventorylist":
+                continue
+            for bag in f.list_elements or []:
+                fields = {cf.name: cf for cf in (bag.child_fields or []) if cf.present}
+                inv_key = self._scalar(raw, fields["_inventoryKey"]) if "_inventoryKey" in fields else None
+                contents = state.inventories.setdefault(inv_key if inv_key is not None else -1, {})
+                for elem in (fields["_itemList"].list_elements or []) if "_itemList" in fields else []:
+                    c = self._children(raw, elem)
+                    key, stack = c.get("_itemKey"), c.get("_stackCount")
+                    if key is None:
+                        continue
+                    stack = 1 if stack is None else int(stack)
+                    contents[key] = contents.get(key, 0) + stack
+                    state.items[key] = state.items.get(key, 0) + stack
 
     def _read_knowledge(self, raw: bytes, obj, state: DeepState) -> None:
         for f in obj.fields:

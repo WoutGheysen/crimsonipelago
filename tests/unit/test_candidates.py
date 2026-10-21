@@ -24,6 +24,8 @@ def _editor(tmp_path):
                 {"key": 2, "name": "Mission_Honor", "display": "For Honor"}]
     knowledge = [
         {"key": 40002, "name": "Knowledge_CrowWing", "display_name": "Flight"},
+        {"key": 40068, "name": "Knowledge_BlackWolf", "display_name": "Axiom Force"},
+        {"key": 1003514, "name": "Knowledge_BlackWolf_Swing", "display_name": "Chain Scythe"},
         {"key": 1001541, "name": "Knowledge_Damian_ShieldGlider", "display_name": "Flight"},
         {"key": 1004189, "name": "Knowledge_Skill_TriStar_Attack", "display_name": "Blackstar - Basic Attack"},
         {"key": 1004213, "name": "Knowledge_Skill_Farming_I", "display_name": "Novice Farmer"},
@@ -66,7 +68,8 @@ def test_build_classifies_everything(tmp_path):
     assert result["side_quests"] == {"total": 1, "looks_internal": 1, "with_missions": 0}
 
     ab = result["abilities"]
-    assert {(a["knowledge_key"], a["character"]) for a in ab["traversal"]} == {(40002, "Kliff"), (1001541, "Damiane")}
+    traversal = {(a["knowledge_key"], a["character"]) for a in ab["traversal"]}
+    assert traversal == {(40002, "Kliff"), (40068, "Kliff"), (1001541, "Damiane")}
     assert [a["knowledge_key"] for a in ab["blackstar_dragon"]] == [1004189]
     assert [a["knowledge_key"] for a in ab["life_skill"]] == [1004213]
     assert all(a["knowledge_key"] != 1006 for group in ab.values() for a in group)  # codex entries are not abilities

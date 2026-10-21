@@ -10,7 +10,7 @@ from typing import Any
 from . import parc, save_container
 from .save_locator import slot_from_path
 
-SNAPSHOT_VERSION = 1
+SNAPSHOT_VERSION = 2  # 2: items read from InventorySaveData, plus per-bag inventories
 
 
 def snapshot_bytes(data: bytes, *, path: str | Path | None = None, backend=None, deep_fields: bool = False) -> dict[str, Any]:
@@ -60,6 +60,8 @@ def snapshot_bytes(data: bytes, *, path: str | Path | None = None, backend=None,
                 "missions": {str(k): v for k, v in sorted(deep.missions.items())},
                 "knowledge": sorted(deep.knowledge),
                 "items": {str(k): v for k, v in sorted(deep.items.items())},
+                "inventories": {str(b): {str(k): v for k, v in sorted(items.items())}
+                                for b, items in sorted(deep.inventories.items())},
             }
             if deep_fields:
                 snap["fields"] = dict(sorted(deep.fields.items()))
