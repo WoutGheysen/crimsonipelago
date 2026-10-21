@@ -5,7 +5,7 @@
     crimson-inspect backup SAVE [--to DIR]       immutable timestamped copy
     crimson-inspect snapshot SAVE [-o FILE]      normalized JSON snapshot
     crimson-inspect diff A B                     what changed (saves or snapshot JSONs)
-    crimson-inspect watch [SAVE] [--out DIR]     snapshot on every in-game save, print each diff
+    crimson-inspect watch [SAVE] [--out DIR]     snapshot on every in-game save (all slots by default)
 
 Nothing here ever writes to a save file.
 Add --editor-dir PATH (your CrimsonSaveEditor checkout) for quest / knowledge / item detail.
@@ -22,7 +22,7 @@ from pathlib import Path
 from ..game_adapter import save_diff, snapshot
 from ..game_adapter.nattkh_backend import BackendUnavailable, NattKhBackend, load_name_tables
 from ..game_adapter.save_container import SaveFormatError
-from ..game_adapter.save_locator import backup_save, find_saves
+from ..game_adapter.save_locator import backup_save, candidate_save_roots, find_saves, slot_from_path
 
 
 def _backend(args):
@@ -109,38 +109,99 @@ def cmd_diff(args) -> int:
     return 0
 
 
+class Watcher:
+    """Snapshot every save file that changes, across all slots.
+
+    Watching a single file misses progress when the game starts writing to another slot, so by
+    default every ``*.save`` under the save root is watched and new files are picked up as they appear.
+    A failure to read one write is reported and skipped; it never stops the watcher.
+    """
+
+    def __init__(self, targets: list[Path], out: Path, *, backend=None, names=None, backup: str | None = None,
+                 deep_fields: bool = False, max_fields: int = 200, settle: float = 1.0, printer=print):
+        self.targets, self.out = targets, out
+        self.backend, self.names, self.backup = backend, names, backup
+        self.deep_fields, self.max_fields, self.settle, self.print = deep_fields, max_fields, settle, printer
+        self.mtimes: dict[Path, float] = {}
+        self.previous: dict[Path, dict] = {}
+        self.last_any: tuple[Path, dict] | None = None
+        out.mkdir(parents=True, exist_ok=True)
+
+    def files(self) -> list[Path]:
+        found: set[Path] = set()
+        for t in self.targets:
+            if t.is_file():
+                found.add(t)
+            elif t.is_dir():
+                found.update(f for f in t.glob("*/*/*.save") if f.is_file())
+                found.update(f for f in t.glob("*/*.save") if f.is_file())
+        return sorted(found)
+
+    @staticmethod
+    def label(path: Path) -> str:
+        slot = slot_from_path(path)
+        name = f"{slot.account}-{slot.slot}"
+        return name if path.name == "save.save" else f"{name}-{path.stem}"
+
+    def poll(self) -> list[Path]:
+        """Check every file once; returns the snapshot files written."""
+        written = []
+        for f in self.files():
+            try:
+                mtime = f.stat().st_mtime
+            except OSError:
+                continue
+            if self.mtimes.get(f) == mtime:
+                continue
+            self.mtimes[f] = mtime
+            if self.settle:
+                time.sleep(self.settle)  # let the game finish writing
+            try:
+                snap = snapshot.snapshot_file(f, backend=self.backend, deep_fields=self.deep_fields)
+            except Exception as exc:  # never let one unreadable write stop a research session
+                self.print(f"skipped a write to {f} that could not be read: {type(exc).__name__}: {exc}")
+                continue
+            stamp = time.strftime("%Y%m%d-%H%M%S")
+            path = self.out / f"{stamp}_{self.label(f)}.json"
+            n = 1
+            while path.exists():
+                n += 1
+                path = self.out / f"{stamp}_{self.label(f)}_{n}.json"
+            path.write_text(json.dumps(snap, indent=2), encoding="utf-8")
+            if self.backup:
+                try:
+                    backup_save(f, self.backup, label="watch")
+                except OSError as exc:
+                    self.print(f"warning: could not back up {f}: {exc}")
+            self.print(f"\n=== {stamp}  {self.label(f)}  snapshot {path.name}")
+            base = self.previous.get(f)
+            if base is None and self.last_any is not None:
+                other, base = self.last_any
+                self.print(f"(first write to this file; compared with the last snapshot of {self.label(other)})")
+            if base is not None:
+                self.print(save_diff.render_diff(save_diff.diff_snapshots(base, snap), self.names,
+                                                 max_fields=self.max_fields))
+            self.previous[f] = snap
+            self.last_any = (f, snap)
+            written.append(path)
+        return written
+
+
 def cmd_watch(args) -> int:
-    save = _resolve_save(args.save)
-    out = Path(args.out)
-    out.mkdir(parents=True, exist_ok=True)
-    backend, names = _backend(args), load_name_tables(args.editor_dir)
-    print(f"watching {save}; snapshots go to {out}. Save in-game to record a step, Ctrl+C to stop.")
-    previous, last_mtime = None, None
+    if args.save:
+        targets = [Path(args.save)]
+    else:
+        targets = [Path(args.root)] if args.root else [r for r in candidate_save_roots() if r.is_dir()]
+        if not targets:
+            raise SystemExit("no Crimson Desert save folder found; pass --root …/Pearl Abyss/CD/save or a save file")
+    watcher = Watcher(targets, Path(args.out), backend=_backend(args), names=load_name_tables(args.editor_dir),
+                      backup=args.backup, deep_fields=args.fields, max_fields=args.max_fields)
+    what = ", ".join(str(t) for t in targets)
+    print(f"watching {what} ({len(watcher.files())} save file(s)); snapshots go to {watcher.out}.")
+    print("Save in-game to record a step, Ctrl+C to stop.")
     try:
         while True:
-            try:
-                mtime = save.stat().st_mtime
-            except OSError:
-                time.sleep(args.interval)
-                continue
-            if mtime != last_mtime:
-                time.sleep(1.0)  # let the game finish writing
-                try:
-                    snap = snapshot.snapshot_file(save, backend=backend, deep_fields=args.fields)
-                except (SaveFormatError, OSError) as exc:
-                    print(f"skipped a write that could not be read yet: {exc}")
-                    last_mtime = mtime
-                    continue
-                stamp = time.strftime("%Y%m%d-%H%M%S")
-                path = out / f"{stamp}.json"
-                path.write_text(json.dumps(snap, indent=2), encoding="utf-8")
-                if args.backup:
-                    backup_save(save, args.backup, label="watch")
-                print(f"\n=== {stamp}  snapshot {path.name}")
-                if previous is not None:
-                    print(save_diff.render_diff(save_diff.diff_snapshots(previous, snap), names,
-                                                max_fields=args.max_fields))
-                previous, last_mtime = snap, mtime
+            watcher.poll()
             time.sleep(args.interval)
     except KeyboardInterrupt:
         return 0
@@ -179,7 +240,8 @@ def build_parser() -> argparse.ArgumentParser:
     df.set_defaults(func=cmd_diff)
 
     w = sub.add_parser("watch")
-    w.add_argument("save", nargs="?")
+    w.add_argument("save", nargs="?", help="one save.save to watch (default: every slot in the save folder)")
+    w.add_argument("--root", help="save root folder to watch (default: found automatically)")
     w.add_argument("--out", default="snapshots")
     w.add_argument("--backup", help="also keep a read-only copy of every save in this folder")
     w.add_argument("--interval", type=float, default=2.0)
