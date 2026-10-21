@@ -69,25 +69,33 @@ def apply_edits(raw: bytes, plan: EditPlan, backend: NattKhBackend) -> tuple[byt
                             old = _patch_uint(blob, it["_stackCount"], stacks_left.pop(key))
                             log.append(f"item {key} in bag {bag_key}: stack {old} -> {plan.stacks[key]}")
         elif obj.class_name == "KnowledgeSaveData" and swaps_left:
-            present = set()
-            entries = []
+            # A learned ability is recorded twice: in the knowledge list (_list[]._key) and in the
+            # "learned" record (_learnedFollowLearnKnowledge[]._knowledgeKey), from which the game
+            # restores the list entry on load (found in write test B, 2026-10-21). Swap both.
+            lists: dict[str, list] = {}
             for f in obj.fields:
-                if f.present and f.name in ("_knowledgeElementSaveDataList", "_list"):
-                    for elem in f.list_elements or []:
-                        kf = _fields(elem).get("_key")
-                        if kf is not None:
-                            k = backend._scalar(raw, kf)
-                            present.add(k)
-                            entries.append((k, kf))
+                if not f.present or not f.list_elements:
+                    continue
+                key_name = {"_list": "_key", "_knowledgeElementSaveDataList": "_key",
+                            "_learnedFollowLearnKnowledge": "_knowledgeKey"}.get(f.name)
+                if key_name is None:
+                    continue
+                for elem in f.list_elements:
+                    kf = _fields(elem).get(key_name)
+                    if kf is not None:
+                        lists.setdefault(f.name, []).append((backend._scalar(raw, kf), kf))
             for old_key, new_key in list(swaps_left.items()):
-                if new_key in present:
-                    raise EditError(f"knowledge {new_key} is already in the save; pick a key that is absent")
-                for k, kf in entries:
-                    if k == old_key:
-                        _patch_uint(blob, kf, new_key)
-                        log.append(f"knowledge {old_key} -> {new_key}")
-                        swaps_left.pop(old_key)
-                        break
+                swapped = False
+                for list_name, entries in lists.items():
+                    if any(k == new_key for k, _ in entries):
+                        raise EditError(f"knowledge {new_key} is already in the save ({list_name}); pick a key that is absent")
+                    for k, kf in entries:
+                        if k == old_key:
+                            _patch_uint(blob, kf, new_key)
+                            log.append(f"knowledge {old_key} -> {new_key} in {list_name}")
+                            swapped = True
+                if swapped:
+                    swaps_left.pop(old_key)
 
     if stacks_left:
         raise EditError(f"item(s) not found in any inventory bag: {sorted(stacks_left)}")

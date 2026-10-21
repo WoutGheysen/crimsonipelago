@@ -39,7 +39,9 @@ class FakeBackend:
                 inv = Obj("InventorySaveData", [F("_inventorylist", list_elements=[bag])])
                 k1 = F("[0]", child_fields=[F("_key", 14, 18)])
                 k2 = F("[1]", child_fields=[F("_key", 18, 22)])
-                know = Obj("KnowledgeSaveData", [F("_list", list_elements=[k1, k2])])
+                learned = F("[0]", child_fields=[F("_knowledgeKey", 22, 26)])
+                know = Obj("KnowledgeSaveData", [F("_list", list_elements=[k1, k2]),
+                                                 F("_learnedFollowLearnKnowledge", list_elements=[learned])])
                 return {"objects": [inv, know]}
 
         self._parser = P()
@@ -50,14 +52,16 @@ class FakeBackend:
         return struct.unpack_from({2: "<H", 4: "<I", 8: "<Q"}[size], raw, f.start_offset)[0]
 
 
-RAW = struct.pack("<IQHII", 75001, 2, 2, 40002, 40068)  # item 75001 x2 in bag 2; knowledge 40002, 40068
+# item 75001 x2 in bag 2; knowledge list 40002, 40068; learned record 40002
+RAW = struct.pack("<IQHIII", 75001, 2, 2, 40002, 40068, 40002)
 
 
 def test_stack_and_knowledge_edits_are_in_place():
     new, log = test_edit.apply_edits(RAW, EditPlan(stacks={75001: 3}, knowledge_swaps={40002: 1006}), FakeBackend(RAW))
     assert len(new) == len(RAW)
-    assert struct.unpack("<IQHII", new) == (75001, 3, 2, 1006, 40068)
-    assert log == ["item 75001 in bag 2: stack 2 -> 3", "knowledge 40002 -> 1006"]
+    assert struct.unpack("<IQHIII", new) == (75001, 3, 2, 1006, 40068, 1006)
+    assert log == ["item 75001 in bag 2: stack 2 -> 3", "knowledge 40002 -> 1006 in _list",
+                   "knowledge 40002 -> 1006 in _learnedFollowLearnKnowledge"]
 
 
 def test_refuses_duplicate_or_missing_keys():

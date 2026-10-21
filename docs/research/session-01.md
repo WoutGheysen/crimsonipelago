@@ -123,7 +123,29 @@ Made with `crimson-testsave` from slot101 (in-place, same-size edits; verified b
 | A | Abyss Artifact 75001: 2 → 3 | Does the game load it, show 3, and keep 3 after its own save + reload? |
 | B | knowledge 40002 → 1006 (Flight replaced by a codex entry) | Does the game load it, and can Kliff still glide? |
 
-Results: *pending*.
+**Results:**
+
+- **A: passed.** The edited save loads, shows 3 Abyss Artifacts, and still shows 3 after the game's own
+  manual save and a restart. *The game accepts our re-encoded saves and keeps the edit*: item delivery
+  through the save works.
+- **B: Flight came back.** The save loads (2 artifacts, so it really was B), but Kliff can still glide
+  and the skill tree shows Flight learned (Lv 1/3). The game's next save contains 40002 *and* the
+  placeholder 1006 (77 entries), so it **re-added Flight on load**.
+
+Flight is stored three times in the save:
+
+| Where | Entry |
+|---|---|
+| `KnowledgeSaveData._list[]` | `_key 40002, _level 1, _learnedFieldTime, _isNewMark` |
+| `KnowledgeSaveData._learnedFollowLearnKnowledge[]` | `_knowledgeKey 40002, _learnFromTypeRaw 25` |
+| `ContentsMiscSaveData` (undecoded range, next to `_alertHistorySaveDataList`) | likely the "learned" notification history |
+
+`_learnFromTypeRaw` seen: 25 for story grants (Blinding Flash, Summon Mount, Axiom Force, Flight, UI
+unlocks), 15 for Force Palm, 20 for Healing and Aerial Force Palm, 0 and 1 for others.
+
+- **C: pending.** Flight swapped out of both `_list` and `_learnedFollowLearnKnowledge`. If Kliff can't
+  glide, abilities can be withheld through the save. If Flight comes back, the game re-grants from
+  completed quest state, and withholding needs another mechanism.
 
 ## Next
 
