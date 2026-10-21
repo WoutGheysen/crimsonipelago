@@ -42,8 +42,20 @@ objectives, not checks.
 Axiom Force's internal name could not have been guessed from the data tables, so confirmation in a
 real save was essential.
 
-Flight (40002, the glider) came around 19:15, after the old tracker stopped following the save;
-it will be confirmed from the save folder.
+**Completing *Abyss without Balance* (meeting White Crow) grants, in one save:**
+
+| Key | Internal | Display |
+|---|---|---|
+| **40002** | Knowledge_CrowWing | **Flight** (the glider) |
+| 40086 | Knowledge_JiJeongTa_I | Force Palm |
+| 1000929 | Knowledge_JiJeongTa_Cure | Healing Force Palm |
+| 1001117 | Knowledge_JiJeongTa_Air | Aerial Force Palm |
+| 1001093 | Knowledge_WhiteCrow_Witch | White Crow (codex) |
+
+plus +1 Abyss Artifact (objective "Take the Abyss Artifact") and the Abyss challenge mission
+1000066 *Ethereal Pathway* (→ 5). *Woman in White* (1000166) becomes available at the same moment,
+so the glider comes with *Abyss without Balance*, not *Woman in White*. Confirmed from the save folder
+(slot101, 19:19).
 
 ### Items
 
@@ -68,23 +80,52 @@ each `_itemList[]` entry with `_itemKey` and `_stackCount`.
 4. **Misleading schema note.** New save data types appearing (normal progress) was reported as
    "different game build or a corrupted save". Fixed.
 
+## Save folder layout
+
+```text
+<account>/slot0..slot2/   autosave rotation, about every 15 minutes
+<account>/slot100+/       other saves (slot101: a save made right after the glider; slot100: an old campaign)
+<account>/slotN/lobby.save  small LobbySaveData: save-menu summary
+```
+
+`lobby.save` (same container format) holds `_generateNo`, `_slotSaveData._generatedTime` (Unix time of
+the write), `_characterKey`, `_level`, the main quest and mission shown in the menu, and
+`_customDisplayName` ("Woman in White").
+
 ## Consequence for the client: campaign identity
 
 The client binds a seed to a save *profile*, currently `account/slotN`. With slot rotation, the next
 autosave would look like a different profile and pause sync. The client must recognise the
 **campaign**, not the slot.
 
-Lead: every starting item in the new campaign has the same `_timeWhenPushItem`
-(`0x00006ad8fa220000` as stored), and the older campaign found in slot0 has a different one
-(`0x000069e7c3410000`). That looks like a campaign-creation timestamp. To confirm:
+Leads:
+
+1. `_timeWhenPushItem` on items: the upper 32 bits are Unix time. All starting items of the new
+   campaign carry 0x6ad8fa22 = **2026-10-21 17:45 local**, the moment the new game started; the old
+   campaign's carry 0x69e7c341 = 2026-04-21, matching slot100. The earliest push time in a save is
+   effectively the campaign's creation time.
+2. `lobby.save` `_generateNo`: 1000033 in all four slots of the new campaign, 79 in the old one.
+   Meaning unknown.
+
+To confirm lead 1:
 
 - It stays constant over a whole session and across slots (true so far: slot0 → slot2).
 - It differs between two new campaigns (needs a second new game).
 - It survives the starting items being sold or used up (the earliest push time in the save may be
   the better signal).
 
+## Write tests (in progress)
+
+Made with `crimson-testsave` from slot101 (in-place, same-size edits; verified by re-reading):
+
+| Copy | Change | Question |
+|---|---|---|
+| A | Abyss Artifact 75001: 2 → 3 | Does the game load it, show 3, and keep 3 after its own save + reload? |
+| B | knowledge 40002 → 1006 (Flight replaced by a codex entry) | Does the game load it, and can Kliff still glide? |
+
+Results: *pending*.
+
 ## Next
 
-1. Confirm Flight (40002) and *Woman in White* (1000166) from the save folder.
-2. First write tests on copies of the post-glider save: remove 40002; add one Abyss Artifact.
-3. Campaign identity: implement and test the fingerprint, then bind seeds to it.
+1. Record the results of write tests A and B.
+2. Campaign identity: implement and test the creation-time fingerprint, then bind seeds to it.
