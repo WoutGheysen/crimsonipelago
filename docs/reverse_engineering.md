@@ -9,6 +9,7 @@ Current research:
   chapters, quests, abilities and items, and a first Archipelago model (unverified).
 - [research/first-session-plan.md](research/first-session-plan.md): the checklist for the first
   save-diff session (Prologue and Chapter 1).
+- [research/session-01.md](research/session-01.md): results of that first session.
 
 ## Ground rules
 

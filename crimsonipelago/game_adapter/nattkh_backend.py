@@ -134,8 +134,13 @@ class NattKhBackend:
             elif obj.class_name == "InventorySaveData":
                 self._read_inventory(raw, obj, state)
         if include_fields:
-            for i, obj in enumerate(result["objects"]):
-                self._flatten(raw, obj.fields, f"{obj.class_name}#{i}", state.fields)
+            # Number objects per class, not by position: positions shift whenever the game adds new
+            # save objects, which made paths incomparable between saves.
+            seen: dict[str, int] = {}
+            for obj in result["objects"]:
+                n = seen.get(obj.class_name, 0)
+                seen[obj.class_name] = n + 1
+                self._flatten(raw, obj.fields, f"{obj.class_name}#{n}", state.fields)
         return state
 
     @staticmethod
