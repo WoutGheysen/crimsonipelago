@@ -84,3 +84,34 @@ def test_catalogue_ids_detect_renumbering(tmp_path, capsys):
     assert catalogue_validator.main(["--dir", str(changed), "ids", "--against", str(DATA)]) == 1
     assert "disappeared" in capsys.readouterr().out
     assert catalogue_validator.main(["ids", "--against", str(DATA)]) == 0
+
+
+def test_watch_follows_every_slot_and_survives_bad_writes(tmp_path):
+    root = tmp_path / "save"
+    slot0 = root / "123" / "slot0"
+    slot1 = root / "123" / "slot1"
+    slot0.mkdir(parents=True)
+    (slot0 / "save.save").write_bytes(make_save(quest_state=3))
+    out, lines = tmp_path / "research", []
+    w = save_inspector.Watcher([root], out, settle=0, printer=lines.append)
+
+    assert len(w.poll()) == 1  # baseline of the existing slot
+    assert w.poll() == []      # nothing changed
+
+    # the game starts writing to a new slot: it is picked up and compared with the last snapshot
+    slot1.mkdir()
+    (slot1 / "save.save").write_bytes(make_save(quest_state=6))
+    written = w.poll()
+    assert [p.name.split("_", 1)[1] for p in written] == ["123-slot1.json"]
+    assert any("first write to this file" in line for line in lines)
+    assert any("QuestSaveData" in line for line in lines)
+
+    # a half-written / corrupt save is reported and skipped, and the watcher keeps going
+    import os
+    (slot0 / "save.save").write_bytes(b"SAVE garbage")
+    os.utime(slot0 / "save.save", (1, 1))
+    assert w.poll() == []
+    assert any("could not be read" in line for line in lines)
+    (slot0 / "save.save").write_bytes(make_save(quest_state=6))
+    os.utime(slot0 / "save.save", (2, 2))
+    assert len(w.poll()) == 1

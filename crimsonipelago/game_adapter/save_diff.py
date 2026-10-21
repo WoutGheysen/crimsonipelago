@@ -60,12 +60,17 @@ def diff_snapshots(a: dict, b: dict) -> SnapshotDiff:
     )
     if not d.same_profile:
         d.notes.append("snapshots come from different save profiles")
-    if d.schema_changed:
-        d.notes.append("the serializer schema changed: different game build or a corrupted save")
-
     oa, ob = _objects(a), _objects(b)
     d.objects_removed = sorted(set(oa) - set(ob))
     d.objects_added = sorted(set(ob) - set(oa))
+    if d.schema_changed:
+        ta = a.get("structure", {}).get("type_count") or 0
+        tb = b.get("structure", {}).get("type_count") or 0
+        if tb > ta and not d.objects_removed:
+            d.notes.append(f"the save gained {tb - ta} new data type(s); normal as the game progresses")
+        else:
+            d.notes.append("the save's data schema changed in a way progress doesn't explain: "
+                           "a game update, or a damaged save")
     d.objects_changed = sorted(k for k in set(oa) & set(ob) if oa[k]["sha256"] != ob[k]["sha256"])
 
     sa, sb = a.get("state"), b.get("state")
