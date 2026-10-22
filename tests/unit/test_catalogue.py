@@ -3,6 +3,8 @@ import copy
 import pytest
 from crimson_desert import catalogue as cat_mod
 
+from tests.conftest import PLACEHOLDER_CATALOGUE
+
 
 def test_default_catalogue_is_valid(catalogue):
     assert cat_mod.validate_catalogue(catalogue) == []
@@ -18,13 +20,13 @@ def test_ids_are_unique(catalogue):
 
 
 def test_fingerprint_is_stable(catalogue):
-    again = cat_mod.load()
+    again = cat_mod.load(PLACEHOLDER_CATALOGUE)
     assert again.fingerprint == catalogue.fingerprint
     assert len(catalogue.fingerprint) == 16
 
 
 def _broken(mutate):
-    raw = copy.deepcopy(cat_mod.load_raw())
+    raw = copy.deepcopy(cat_mod.load_raw(PLACEHOLDER_CATALOGUE))
     mutate(raw)
     return cat_mod.validate_catalogue(cat_mod.build(raw))
 
@@ -96,3 +98,28 @@ def test_pool_eligibility_respects_capability(catalogue):
     catalogue_copy.status = "verified"
     eligible = {i.name for i in catalogue.items.values() if catalogue_copy.pool_item_eligible(i)}
     assert eligible == {i.name for i in catalogue.items.values() if i.deliverable} == {"Flight"}
+
+
+# --------------------------------------------------------------------------- the shipped catalogue
+def test_shipped_catalogue_is_the_real_first_slice(real_catalogue):
+    cat = real_catalogue
+    assert cat_mod.validate_catalogue(cat) == []
+    assert cat.status == "partial" and not cat.is_placeholder
+    assert all(loc.detectable for loc in cat.locations.values())
+    assert all(i.deliverable for i in cat.items.values())
+    assert cat.goals[cat.default_goal].verified
+    assert cat.items["Flight"].game_ref == {"kind": "knowledge", "knowledge_key": 40002}
+
+
+def test_shipped_location_ids_are_derived_from_game_keys(real_catalogue):
+    for loc in real_catalogue.locations.values():
+        assert loc.detection["kind"] == "mission_state"
+        assert loc.ap_id == 10_000_000_000 + loc.detection["mission_key"]
+
+
+def test_detection_shape_is_checked():
+    def m(raw):
+        raw["locations"]["locations"][0]["detection"] = {"kind": "mission_state", "mission_key": "x", "states": []}
+    problems = _broken(m)
+    assert any("integer mission_key" in p for p in problems)
+    assert any("non-empty list of integer states" in p for p in problems)

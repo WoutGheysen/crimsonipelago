@@ -142,6 +142,19 @@ class DeliveryEngine:
         if not pending:
             self.last_waiting_reason = None
             return DeliveryReport(recovery_required=recovery)
+        # items with nothing to write complete right away, game running or not
+        no_write = [r for r in pending if (item := self.catalogue.item_by_id(r.item_id)) is not None
+                    and not self.adapter.needs_write(item)]
+        if no_write:
+            self.ledger.set_item_state(session_id, [r.idx for r in no_write], DeliveryState.COMPLETE,
+                                       expect=(DeliveryState.PENDING,))
+            names = ", ".join(sorted({self._name(r.item_id) for r in no_write}))
+            self.bus.emit(ev.REWARD_DELIVERED, f"Received: {names} (nothing to add to the game)",
+                          indices=[r.idx for r in no_write])
+            pending = [r for r in pending if r not in no_write]
+            if not pending:
+                self.last_waiting_reason = None
+                return DeliveryReport(delivered=len(no_write), recovery_required=recovery)
         if recovery:
             # never stack new writes on top of a save in an unknown state
             reason = "a previous delivery needs your decision first"

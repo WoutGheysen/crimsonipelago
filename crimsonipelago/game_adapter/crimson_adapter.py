@@ -68,6 +68,7 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         self.registry = CampaignRegistry(campaigns_file or Path(backup_dir).parent / "campaigns.json")
         self.identity_problem: str | None = None
         self.transforms: dict[str, BlobTransform] = {}  # game_ref kind -> verified transform
+        self.transforms["nothing"] = lambda blob, entries: blob
         if self.backend is not None:
             self.transforms["knowledge"] = self._learn_knowledge
 
@@ -130,7 +131,11 @@ class CrimsonDesertSaveAdapter(GameAdapter):
             return entry is not None and entry.get("state") in set(detection["states"])
         if kind == "mission_state":
             entry = state.missions.get(int(detection["mission_key"]))
-            return entry is not None and entry.get("state") in set(detection["states"])
+            if entry is not None and entry.get("state") in set(detection["states"]):
+                return True
+            # an objective counts as done once its mission is, even if the player skipped it
+            parent = detection.get("parent_mission_key")
+            return parent is not None and (state.missions.get(int(parent)) or {}).get("state") == 5
         if kind == "knowledge":
             return int(detection["knowledge_key"]) in state.knowledge
         return False  # placeholder and unknown kinds are never reported
@@ -265,6 +270,9 @@ class CrimsonDesertSaveAdapter(GameAdapter):
             return Result.failure("Crimson Desert started (or cannot be checked) before the write; not overwriting")
         os.replace(prepared.temp_path, path)
         return self.verify_reward(prepared)
+
+    def needs_write(self, item: ItemDef) -> bool:
+        return (item.game_ref or {}).get("kind") != "nothing"
 
     def missing_unlocks(self, items) -> list[ItemDef]:
         state = self._deep_state()

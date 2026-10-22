@@ -3,16 +3,17 @@
 [Archipelago](https://archipelago.gg) multiworld integration for **Crimson Desert** (PC / Steam):
 an APWorld for seed generation, a client that talks to Archipelago servers, and a save-file game adapter.
 
-> **Status: pre-alpha, Phase 0 (feasibility) not yet passed.**
-> The engineering foundation is built and tested. The game data is not: the catalogue is a
-> **placeholder**, so seeds generate but no check or item maps to real Crimson Desert data yet,
-> and the client cannot write rewards into real saves. See [Roadmap](#roadmap).
+> **Status: pre-alpha, first playable slice.**
+> The APWorld covers the prologue and chapter 1 (42 real checks, read from your save) with
+> **Flight** as the one real unlock: a game-data override stops the story from handing it out and the
+> client adds it to your save when it arrives. Everything else in the pool is filler for now.
+> See [Roadmap](#roadmap).
 
 ## What works today
 
 | Area | State |
 |---|---|
-| APWorld (`crimson_desert.apworld`) | Loads in Archipelago 0.6.7+ (CI-tested on 0.6.7, 0.6.8 and current main), generates solo and mixed-game seeds (bulk-tested: 80/80 across 8 scenarios). Placeholder data. |
+| APWorld (`crimson_desert.apworld`) | Loads in Archipelago 0.6.7+ (CI-tested on 0.6.7, 0.6.8 and current main), generates solo and mixed-game seeds (bulk-tested: 80/80 across 8 scenarios). Real data for the first slice: 42 checks, Flight, filler. |
 | Network client | Full Archipelago protocol, reconnect, offline check queue, replay/gap handling, victory reporting. Tested end to end against a real `MultiServer` with a second game. |
 | Delivery ledger | SQLite ledger and an idempotent state machine (`RECEIVED → … → COMPLETE / RECOVERY_REQUIRED`) with two-phase, crash-safe writes. Fault-injection tests. |
 | Session isolation | Seed, slot, game, catalogue fingerprint and **playthrough** are bound together; the playthrough is recognised from save history, whichever slot the game saved to. Mismatches pause sync with an actionable message. |
@@ -39,7 +40,7 @@ Try the client against the simulated game:
 
 ```bash
 crimsonipelago sim init
-crimsonipelago sim complete "Prologue Quest 1"
+crimsonipelago sim complete "Unfamiliar Lands: Search the surroundings"
 crimsonipelago connect --server localhost:38281 --slot Wout --adapter sim
 crimsonipelago status
 ```
@@ -75,14 +76,14 @@ Milestones follow the project scope document.
 
 | | Milestone | State |
 |---|---|---|
-| M0 | Feasibility report | **Next.** Needs the real game: save-diff research, one proven delivery, reward interception. |
-| M1 | Save inspector | Built. Waiting on real save pairs to verify detection fields. |
-| M2 | Minimal APWorld | Built with placeholder data. |
+| M0 | Feasibility report | **Passed.** Detection from saves, delivery into saves (tests A and D), and withholding a story reward with a game-data override (E2): see `docs/research/`. |
+| M1 | Save inspector | Built and used on the real save series. |
+| M2 | Minimal APWorld | Built; ships the first slice. |
 | M3 | Network client | Built and tested against a real server. |
-| M4 | Game bridge | Interface and detection plumbing built. Needs verified flags from M0. |
-| M5 | Reward delivery | Safety machinery built. Needs a verified write procedure from M0. |
-| M6 | Progression randomizer | Not started. This is the main research gate. |
-| M7 | Logic catalogue | Not started. Built entry by entry through the discovery workflow. |
+| M4 | Game bridge | Mission detection verified; playthrough identity from save history. |
+| M5 | Reward delivery | Flight (knowledge) verified in-game; inventory items next. |
+| M6 | Progression randomizer | Flight withheld by `crimson-mod`; more abilities to follow the same way. |
+| M7 | Logic catalogue | First slice (prologue and chapter 1); the rest of the story next. |
 | M8 | Playable alpha | Not started. |
 | M9 | Public beta | Installer pieces built: Windows exe and `.apworld` via GitHub Actions. |
 

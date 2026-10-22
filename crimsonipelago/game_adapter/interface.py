@@ -146,6 +146,10 @@ class GameAdapter(ABC):
     def discard(self, prepared: PreparedWrite) -> None:
         """Remove a prepared-but-uncommitted temp file, if any."""
 
+    def needs_write(self, item: ItemDef) -> bool:
+        """False for items with no effect in the game (filler): they complete without touching the save."""
+        return True
+
     def missing_unlocks(self, items: Sequence[ItemDef]) -> list[ItemDef]:
         """Of these delivered items, the unlocks the current save does not have (an older save was loaded).
 

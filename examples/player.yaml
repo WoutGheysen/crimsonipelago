@@ -3,8 +3,8 @@
 # The full template with every common option is available from the Archipelago
 # Launcher: "Generate Template Options".
 #
-# NOTE: Crimsonipelago is pre-alpha. The world still uses a PLACEHOLDER
-# catalogue: seeds generate, but no check or item maps to real game data yet.
+# NOTE: Crimsonipelago is pre-alpha. This world covers the first slice of the game
+# (prologue and chapter 1: 42 checks) with Flight as the one real unlock.
 
 name: Player{number}          # your slot name, max 16 characters
 description: Crimson Desert (Crimsonipelago)
@@ -18,7 +18,7 @@ Crimson Desert:
   accessibility: full         # full: every location reachable; minimal: only what the goal needs
 
   # Victory condition. Only goals with reliable in-game detection are offered.
-  goal: main_story
+  goal: first_slice
 
   # conservative: fewer unlocks shuffled, safe ones given at the start (gentler seed)
   # expanded: every supported unlock goes into the multiworld

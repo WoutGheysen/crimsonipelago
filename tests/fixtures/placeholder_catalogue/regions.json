@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "catalogue_status": "placeholder",
+  "_comment": "PLACEHOLDER REGION GRAPH. The real graph must be derived from verified Crimson Desert progression (Phase 4). Rules use the JSON rule language documented in docs/catalogue_format.md.",
+  "origin": "Prologue",
+  "regions": [
+    {"name": "Prologue", "description": "Starting area. Must always contain checks reachable with no items."},
+    {"name": "Act 1", "description": "First main campaign phase."},
+    {"name": "Act 1 Highlands", "description": "Optional area gated by a traversal unlock."},
+    {"name": "Act 2", "description": "Second main campaign phase."},
+    {"name": "Act 2 Vault", "description": "Optional area gated by a key and an interaction unlock."},
+    {"name": "Act 3", "description": "Third main campaign phase."},
+    {"name": "Act 3 Cliffs", "description": "Optional area gated by a second traversal unlock."},
+    {"name": "Finale", "description": "Final objective region."}
+  ],
+  "connections": [
+    {"from": "Prologue", "to": "Act 1", "requires": {"item": "Story Access: Act 1"}},
+    {"from": "Act 1", "to": "Act 1 Highlands", "requires": {"item": "Flight"}},
+    {"from": "Act 1", "to": "Act 2", "requires": {"item": "Story Access: Act 2"}},
+    {"from": "Act 2", "to": "Act 2 Vault", "requires": {"all": [{"item": "Key Item"}, {"item": "Interaction Unlock"}]}},
+    {"from": "Act 2", "to": "Act 3", "requires": {"item": "Story Access: Act 3"}},
+    {"from": "Act 3", "to": "Act 3 Cliffs", "requires": {"any": [{"item": "Traversal Unlock B"}, {"all": [{"item": "Flight"}, {"item": "Interaction Unlock"}]}]}},
+    {"from": "Act 3", "to": "Finale", "requires": {"event": "Act 3 Boss Defeated"}}
+  ]
+}

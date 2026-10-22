@@ -8,47 +8,51 @@ from Options import OptionError
 
 from . import CrimsonDesertTestBase
 
+GOAL_CHECK = "Woman in White: Speak with the woman in white"
+
 
 class TestDefault(CrimsonDesertTestBase):
-    def test_goal_requires_story_access(self) -> None:
-        self.assertFalse(self.multiworld.state.has("Victory", self.player))
-        self.assertBeatable(False)
-        self.collect_by_name(["Story Access: Act 1", "Story Access: Act 2", "Story Access: Act 3"])
-        self.assertBeatable(False)  # still needs the equipment for the Act 3 event
-        self.collect_by_name(["Equipment Upgrade"])
+    def test_slice_is_beatable_without_items(self) -> None:
+        # the story is linear and nothing in the first slice needs an item (the jump is survivable)
         self.assertBeatable(True)
 
-    def test_sphere_one_has_checks(self) -> None:
-        reachable = [loc for loc in self.multiworld.get_reachable_locations(self.multiworld.state, self.player)
-                     if loc.address is not None]
-        self.assertGreater(len(reachable), 0)
+    def test_every_check_is_in_sphere_one(self) -> None:
+        reachable = {loc.name for loc in self.multiworld.get_reachable_locations(self.multiworld.state, self.player)
+                     if loc.address is not None}
+        all_checks = {loc.name for loc in self.multiworld.get_locations(self.player) if loc.address is not None}
+        self.assertEqual(reachable, all_checks)
+        self.assertIn(GOAL_CHECK, all_checks)
+        self.assertEqual(len(all_checks), 42)
 
-    def test_vault_needs_key_and_interaction(self) -> None:
-        self.assertAccessDependency(["Vault Treasure 1", "Vault Treasure 2"], [["Key Item"]], only_check_listed=True)
-        self.assertAccessDependency(["Vault Treasure 1", "Vault Treasure 2"], [["Interaction Unlock"]],
-                                    only_check_listed=True)
+    def test_pool_is_flight_and_filler(self) -> None:
+        names = [item.name for item in self.multiworld.itempool if item.player == self.player]
+        self.assertEqual(names.count("Flight"), 1)
+        self.assertEqual(set(names), {"Flight", "Crow Feather"})
+        self.assertEqual(len(names), 42)
 
     def test_slot_data(self) -> None:
         slot_data = self.world.fill_slot_data()
         for key in ("catalogue_fingerprint", "catalogue_status", "world_version", "goal", "slot_data_version"):
             self.assertIn(key, slot_data)
+        self.assertEqual(slot_data["goal"], "first_slice")
+        self.assertEqual(slot_data["catalogue_status"], "partial")
 
 
 class TestConservative(CrimsonDesertTestBase):
     options = {"item_pool_mode": "conservative"}
 
-    def test_left_out_unlocks_are_precollected(self) -> None:
-        precollected = {item.name for item in self.multiworld.precollected_items[self.player]}
-        self.assertIn("Traversal Unlock B", precollected)
+    def test_flight_is_shuffled(self) -> None:
+        names = [item.name for item in self.multiworld.itempool if item.player == self.player]
+        self.assertIn("Flight", names)
 
 
-class TestQuestsAndBossesOnly(CrimsonDesertTestBase):
-    options = {"included_check_categories": ["quest", "boss"]}
+class TestQuestsOnly(CrimsonDesertTestBase):
+    options = {"included_check_categories": ["quest"]}
 
-    def test_no_treasure_locations(self) -> None:
+    def test_no_abyss_puzzle_checks(self) -> None:
         names = {loc.name for loc in self.multiworld.get_locations(self.player)}
-        self.assertNotIn("Vault Treasure 1", names)
-        self.assertIn("Prologue Quest 1", names)
+        self.assertNotIn("Ethereal Pathway: Obtain the artifact", names)
+        self.assertIn("Unfamiliar Lands: Search the surroundings", names)
 
 
 class TestTooFewChecks(CrimsonDesertTestBase):

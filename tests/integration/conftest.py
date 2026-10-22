@@ -17,7 +17,7 @@ AP = archipelago_path()
 CD_YAML = """name: Wout
 game: Crimson Desert
 Crimson Desert:
-  goal: main_story
+  goal: first_slice
   item_pool_mode: expanded
 """
 CF_YAML = """name: Partner

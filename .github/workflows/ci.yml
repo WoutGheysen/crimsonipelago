@@ -80,7 +80,7 @@ jobs:
           rm "$AP/worlds/crimson_desert"
           mkdir -p "$AP/custom_worlds" && cp dist/crimson_desert.apworld "$AP/custom_worlds/"
           mkdir -p "$RUNNER_TEMP/gen/players" "$RUNNER_TEMP/gen/out"
-          printf 'name: Wout\ngame: Crimson Desert\nCrimson Desert:\n  goal: main_story\n' > "$RUNNER_TEMP/gen/players/cd.yaml"
+          printf 'name: Wout\ngame: Crimson Desert\nCrimson Desert:\n  goal: first_slice\n' > "$RUNNER_TEMP/gen/players/cd.yaml"
           cd "$AP"
           python Generate.py --player_files_path "$RUNNER_TEMP/gen/players" --outputpath "$RUNNER_TEMP/gen/out" --seed 1 2>&1 | tee gen.log
           ! grep -q "Invalid or missing manifest" gen.log

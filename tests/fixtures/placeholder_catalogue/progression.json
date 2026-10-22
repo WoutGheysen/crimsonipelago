@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "catalogue_status": "placeholder",
+  "_comment": "Generation-only events and goals. Every goal must have reliable detection before it is exposed in the 'goal' option.",
+  "events": [
+    {
+      "name": "Act 3 Boss Defeated",
+      "region": "Act 3",
+      "requires": {
+        "item": "Equipment Upgrade",
+        "count": 2
+      }
+    }
+  ],
+  "goals": {
+    "main_story": {
+      "display": "Complete the main story",
+      "region": "Finale",
+      "requires": {
+        "location": "Finale Quest"
+      },
+      "detection": {
+        "kind": "placeholder"
+      },
+      "verified": false
+    }
+  },
+  "default_goal": "main_story"
+}

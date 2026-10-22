@@ -1,29 +1,24 @@
 {
   "schema_version": 1,
-  "catalogue_status": "placeholder",
+  "catalogue_status": "partial",
   "_comment": "Generation-only events and goals. Every goal must have reliable detection before it is exposed in the 'goal' option.",
-  "events": [
-    {
-      "name": "Act 3 Boss Defeated",
-      "region": "Act 3",
-      "requires": {
-        "item": "Equipment Upgrade",
-        "count": 2
-      }
-    }
-  ],
+  "events": [],
   "goals": {
-    "main_story": {
-      "display": "Complete the main story",
-      "region": "Finale",
+    "first_slice": {
+      "display": "Speak with the woman in white",
+      "region": "Traces",
       "requires": {
-        "location": "Finale Quest"
+        "location": "Woman in White: Speak with the woman in white"
       },
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 4294964343,
+        "states": [
+          5
+        ]
       },
-      "verified": false
+      "verified": true
     }
   },
-  "default_goal": "main_story"
+  "default_goal": "first_slice"
 }
