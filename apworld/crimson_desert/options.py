@@ -17,12 +17,12 @@ from .catalogue import LOCATION_CATEGORIES
 class Goal(Choice):
     """Victory condition.
 
-    main_story: complete the main story.
-    Only goals with reliable in-game detection are offered.
+    first_slice: speak with the woman in white (end of the first playable slice: prologue and chapter 1).
+    Only goals with reliable in-game detection are offered; longer goals come with more of the game.
     """
 
     display_name = "Goal"
-    option_main_story = 0
+    option_first_slice = 0
     default = 0
 
 

@@ -82,7 +82,8 @@ def controller_for(url, data_dir, sim, ledger, catalogue, bus):
     return SyncController(cfg, sim, ledger, catalogue, bus)
 
 
-async def test_full_multiworld_session(multiworld, tmp_path, catalogue):
+async def test_full_multiworld_session(multiworld, tmp_path, real_catalogue):
+    catalogue = real_catalogue
     url = multiworld["url"]
     data_dir = tmp_path / "data"
     sim = SimulatedGameAdapter(tmp_path / "sim.json")
@@ -163,7 +164,8 @@ async def test_full_multiworld_session(multiworld, tmp_path, catalogue):
             ledger.close()
 
 
-async def test_wrong_game_slot_is_refused(multiworld, tmp_path, catalogue):
+async def test_wrong_game_slot_is_refused(multiworld, tmp_path, real_catalogue):
+    catalogue = real_catalogue
     sim = SimulatedGameAdapter(tmp_path / "sim.json")
     ledger = Ledger(tmp_path / "ledger.sqlite3")
     try:

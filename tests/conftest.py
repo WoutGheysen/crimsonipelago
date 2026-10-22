@@ -13,15 +13,25 @@ for p in (ROOT, ROOT / "apworld"):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from crimson_desert.catalogue import default_catalogue  # noqa: E402
+from crimson_desert.catalogue import load as load_catalogue  # noqa: E402
 
 from crimsonipelago.client import events as ev  # noqa: E402
 from crimsonipelago.client.database import Ledger  # noqa: E402
 from crimsonipelago.game_adapter.sim_adapter import SimulatedGameAdapter  # noqa: E402
 
+PLACEHOLDER_CATALOGUE = ROOT / "tests" / "fixtures" / "placeholder_catalogue"
+
 
 @pytest.fixture
 def catalogue():
+    """The placeholder world: synthetic items and checks that exercise every client path."""
+    return load_catalogue(PLACEHOLDER_CATALOGUE)
+
+
+@pytest.fixture
+def real_catalogue():
+    """The catalogue shipped in the APWorld (real game data)."""
+    from crimson_desert.catalogue import default_catalogue
     return default_catalogue()
 
 

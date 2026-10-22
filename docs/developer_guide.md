@@ -70,7 +70,7 @@ so the client can be exercised end to end before the real adapter can write.
 ```bash
 crimsonipelago sim init
 crimsonipelago sim list
-crimsonipelago sim complete "Prologue Quest 1" "Prologue Discovery"
+crimsonipelago sim complete "Unfamiliar Lands: Search the surroundings" "In Ashes: Help Naira"
 crimsonipelago sim running on        # deliveries wait, like with the real game
 crimsonipelago sim goal
 crimsonipelago connect --server localhost:38281 --slot Wout --adapter sim
@@ -91,6 +91,14 @@ progression rules and game-build compatibility. Rules for editing it:
 
 Any catalogue change alters its fingerprint. Seeds generated with the old catalogue then refuse to
 sync with the new client, which is intended.
+
+The shipped catalogue holds real game data only. Client and ledger tests use a synthetic world instead,
+`tests/fixtures/placeholder_catalogue/` (fixture `catalogue`), whose items and checks exercise every client
+path (unsupported items, traps, gated regions); `real_catalogue` is the shipped one.
+
+Location ids are `10,000,000,000 × kind + the game's key` (kind 1: mission or objective), so an id says
+which game record it reads. An objective's detection may name a `parent_mission_key`: the check then
+also counts once that mission is complete.
 
 ## Adding a real reward procedure
 

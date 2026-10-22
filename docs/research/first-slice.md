@@ -1,6 +1,7 @@
 # First slice: the opening hours as an Archipelago world
 
-- **Status:** reviewed (2026-10-23), going into the catalogue. Decisions below.
+- **Status:** in the catalogue (2026-10-23): checks 1–42, goal *Speak with the woman in white*. Checks 43–44
+  and the longer goal (*Woman in White* completed) follow once one save shows them completing.
 - **Covers:** the prologue and chapter 1, from the first cutscene to *Woman in White* (where the story
   hands out Flight).
 - **Sources:** 30 saves of the new campaign (the watcher's autosaves from the first evening, the manual saves,

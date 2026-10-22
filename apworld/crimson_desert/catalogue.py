@@ -30,7 +30,7 @@ CAPABILITIES = {"supported", "restricted", "detection_only", "unsupported"}
 DELIVERABLE_CAPABILITIES = {"supported", "restricted"}
 LOCATION_CATEGORIES = {"quest", "boss", "discovery", "treasure", "ability", "exploration"}
 DETECTION_KINDS = {"placeholder", "quest_state", "mission_state", "knowledge"}
-GAME_REF_KINDS = {"inventory_item", "knowledge", "quest_state"}
+GAME_REF_KINDS = {"inventory_item", "knowledge", "quest_state", "nothing"}  # nothing: filler with no in-game effect
 CATALOGUE_STATUSES = {"placeholder", "partial", "verified"}
 
 Rule = Any  # JSON rule expression, see module docstring
@@ -350,6 +350,28 @@ def compile_rule(
 
 
 # --------------------------------------------------------------------------- validation
+_DETECTION_KEYS = {"quest_state": "quest_key", "mission_state": "mission_key", "knowledge": "knowledge_key"}
+
+
+def detection_problems(detection: Mapping[str, Any]) -> list[str]:
+    """Shape of a detection rule. mission_state may name a parent mission whose completion also counts
+    (an objective is done once its mission is, even if it was skipped)."""
+    kind = detection.get("kind")
+    key = _DETECTION_KEYS.get(kind)
+    if key is None:
+        return []
+    problems = []
+    if not isinstance(detection.get(key), int):
+        problems.append(f"{kind} detection needs an integer {key}")
+    if kind in ("quest_state", "mission_state"):
+        states = detection.get("states")
+        if not (isinstance(states, list) and states and all(isinstance(s, int) for s in states)):
+            problems.append(f"{kind} detection needs a non-empty list of integer states")
+    if "parent_mission_key" in detection and (kind != "mission_state" or not isinstance(detection["parent_mission_key"], int)):
+        problems.append("parent_mission_key must be an integer, on a mission_state detection")
+    return problems
+
+
 def validate_catalogue(cat: Catalogue) -> list[str]:
     """Return a list of problems; empty means the catalogue is internally consistent."""
     problems: list[str] = []
@@ -425,6 +447,7 @@ def validate_catalogue(cat: Catalogue) -> list[str]:
             problems.append(f"{where}: verified entries need a real detection method")
         if loc.verified and not loc.evidence:
             problems.append(f"{where}: verified entries need an evidence reference")
+        problems += [f"{where}: {p}" for p in detection_problems(loc.detection)]
         if loc.repeatable_risk and kind in ("mission_state",) and not loc.caveats:
             problems.append(f"{where}: repeatable checks must document their first-completion identifier")
 
@@ -461,6 +484,7 @@ def validate_catalogue(cat: Catalogue) -> list[str]:
         problems.append("at least one goal is required")
     for goal in cat.goals.values():
         check_rule(goal.requires, f"goal {goal.key!r}")
+        problems += [f"goal {goal.key!r}: {p}" for p in detection_problems(goal.detection)]
         if goal.region not in regions:
             problems.append(f"goal {goal.key!r}: unknown region {goal.region!r}")
     if cat.default_goal not in cat.goals:

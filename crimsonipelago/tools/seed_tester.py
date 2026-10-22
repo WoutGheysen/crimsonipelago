@@ -27,7 +27,7 @@ CD = "Crimson Desert"
 
 
 def cd_player(name: str, **options) -> str:
-    opts = {"goal": "main_story", **options}
+    opts = {"goal": "first_slice", **options}
     body = "\n".join(f"  {k}: {v}" for k, v in opts.items())
     return f"name: {name}\ngame: {CD}\n{CD}:\n{body}\n"
 

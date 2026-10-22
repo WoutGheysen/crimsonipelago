@@ -72,7 +72,8 @@ def test_catalogue_validate_and_report(capsys):
     assert catalogue_validator.main(["validate"]) == 0
     assert "OK:" in capsys.readouterr().out
     assert catalogue_validator.main(["report"]) == 0
-    assert "PLACEHOLDER" in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert "status: partial" in out and "PLACEHOLDER" not in out
 
 
 def test_catalogue_ids_detect_renumbering(tmp_path, capsys):

@@ -8,13 +8,17 @@ the multiworld, so other players can find them for you.
 
 ## Current status
 
-**Pre-alpha / development catalogue.** The checks and items in this APWorld are placeholders that exist to test
-generation and the client. They are not yet mapped to verified game data, and the Crimsonipelago client will not
-modify your save for any unverified item. See the project README for the feasibility status.
+**Pre-alpha, first slice.** The world covers the prologue and chapter 1: 42 checks, each an objective from the
+quest log (for example "In Ashes: Help Naira") or an Abyss puzzle. An objective's check also counts once its
+mission is complete, so skipping one never loses it.
+
+Items: **Flight**, which the story would normally give you at the woman in white (install the
+`flight-grant-removed` override with `crimson-mod` so it doesn't), and filler (Crow Feathers, which do nothing
+in the game). More real items follow.
 
 ## What is the goal?
 
-Complete the main story (the only goal offered until others can be detected reliably).
+Speak with the woman in white (the end of the first slice). Longer goals come with more of the game.
 
 ## What does another world's item look like in Crimson Desert?
 

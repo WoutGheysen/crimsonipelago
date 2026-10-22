@@ -29,7 +29,8 @@ def pump_until(app, predicate, timeout=20.0):
     raise AssertionError("UI condition not met in time")
 
 
-def test_window_connects_plays_and_disconnects(multiworld, tmp_path, catalogue):
+def test_window_connects_plays_and_disconnects(multiworld, tmp_path, real_catalogue):
+    catalogue = real_catalogue
     from crimsonipelago.client.ui.main_window import MainWindow
 
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
@@ -46,18 +47,20 @@ def test_window_connects_plays_and_disconnects(multiworld, tmp_path, catalogue):
         assert window.fields["profile"].text() == "sim/slot1"
         assert not window.server_edit.isEnabled()
 
-        for name in ("Prologue Quest 1", "Prologue Quest 2", "Prologue Discovery"):
-            sim.complete_location(name)
-        pump_until(app, lambda: window.fields["checks"].text().startswith("3 confirmed"))
+        for loc in catalogue.locations.values():
+            sim.complete_location(loc.name)
+        total = len(catalogue.locations)
+        pump_until(app, lambda: window.fields["checks"].text().startswith(f"{total} confirmed"))
 
         def feed():
             return [window.feed.item(i).text() for i in range(window.feed.count())]
-        # in this seed the three prologue checks hold items for the ChecksFinder player
+        # with every check done, some of them held items for the ChecksFinder player
         pump_until(app, lambda: sum("SENT" in line for line in feed()) >= 1)
         shot = os.environ.get("CRIMSONIPELAGO_SCREENSHOT")
         if shot:
             window.grab().save(shot)
-        assert any("CHECK" in line and "Prologue Quest 1" in line for line in feed())
+        first = next(iter(catalogue.locations))
+        assert any("CHECK" in line and first in line for line in feed())
     finally:
         window.disconnect_clicked()
     assert window.connect_btn.isEnabled() and window.server_edit.isEnabled()

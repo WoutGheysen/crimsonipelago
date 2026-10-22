@@ -1,339 +1,846 @@
 {
   "schema_version": 1,
-  "catalogue_status": "placeholder",
-  "_comment": "PLACEHOLDER LOCATIONS. 'detection.kind: placeholder' means no verified save flag exists yet; the real adapter can never report these, only the simulated game can. Replace with verified entries (quest_state / mission_state / knowledge) from the discovery workflow.",
+  "catalogue_status": "partial",
+  "_comment": "First slice: prologue and chapter 1 objectives (docs/research/first-slice.md). Location ids are 10,000,000,000 x kind + the game's key (kind 1 = mission/objective). Released ids are never reused (compatibility.json).",
   "locations": [
     {
-      "ap_id": 10001,
-      "name": "Prologue Quest 1",
+      "ap_id": 14294964434,
+      "name": "Unfamiliar Lands: Search the surroundings",
       "region": "Prologue",
       "category": "quest",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 4294964434,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000157
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 10002,
-      "name": "Prologue Quest 2",
+      "ap_id": 14294964433,
+      "name": "Unfamiliar Lands: Head to the cabin",
       "region": "Prologue",
       "category": "quest",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 4294964433,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000157
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 10003,
-      "name": "Prologue Discovery",
+      "ap_id": 14294964432,
+      "name": "Unfamiliar Lands: Speak with Marius",
       "region": "Prologue",
-      "category": "discovery",
+      "category": "quest",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 4294964432,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000157
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 10004,
-      "name": "Prologue Treasure",
+      "ap_id": 14294964431,
+      "name": "Unfamiliar Lands: Speak with Ross",
       "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964431,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000157
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964430,
+      "name": "Unfamiliar Lands: Enter the cabin",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964430,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000157
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964429,
+      "name": "In Ashes: Annihilate the Black Bears",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964429,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000160
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964427,
+      "name": "In Ashes: Help Oongka",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964427,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000160
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964428,
+      "name": "In Ashes: Help Naira",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964428,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000160
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964426,
+      "name": "In Ashes: Help Yann",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964426,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000160
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002831,
+      "name": "In Ashes: Defeat Myurdin",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002831,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000160
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964425,
+      "name": "Realm of Uncertainty: Into the Fog",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964425,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000620
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002799,
+      "name": "Realm of Uncertainty: Blinding Flash",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002799,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000620
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964424,
+      "name": "Realm of Uncertainty: Move forward",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964424,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000620
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964421,
+      "name": "New Journey: Follow Sebastian",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964421,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000164
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964420,
+      "name": "New Journey: Head to Hernand",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964420,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000164
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964357,
+      "name": "Where Rumors Gather: Look around Hernand Tavern",
+      "region": "Hernand",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964357,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000052
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964356,
+      "name": "Where Rumors Gather: Try arm wrestling",
+      "region": "Hernand",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964356,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000052
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964355,
+      "name": "Mysterious Man: Give a coin to the old beggar",
+      "region": "Hernand",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964355,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000053
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964354,
+      "name": "True Wisdom in Kindness: Investigate the sewer",
+      "region": "Hernand",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964354,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000294
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964352,
+      "name": "Heart Beyond Borders: Speak with the child",
+      "region": "Hernand",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964352,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000051
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964351,
+      "name": "Heart Beyond Borders: Return the cat to its owner",
+      "region": "Hernand",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964351,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000051
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964353,
+      "name": "Actions Speak Louder than Words: Help the distressed villagers",
+      "region": "Hernand",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964353,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000042
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964349,
+      "name": "Mystical Key: Examine the key from the old man.",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964349,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000043
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964348,
+      "name": "Mystical Key: Go to Hernand Castle",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964348,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000043
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964347,
+      "name": "Mystical Key: Find the room the key opens",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964347,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000043
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001761,
+      "name": "Mystical Key: Go through the shining gate",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001761,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000043
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294967290,
+      "name": "Axiom Archive: Restore the Abyss",
+      "region": "Traces",
+      "category": "exploration",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294967290,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000695
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964346,
+      "name": "Polar Opposites: Activate the Abyss Nexus",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964346,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000048
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001554,
+      "name": "Polar Opposites: Go toward the building",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001554,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000048
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001573,
+      "name": "Polar Opposites: Find a way into the building",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001573,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000048
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001969,
+      "name": "Polar Opposites: Enter the building",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001969,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000048
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001928,
+      "name": "Abyss without Balance: Go through the skybridge gate to the next Abyss",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001928,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000546
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001929,
+      "name": "Abyss without Balance: Activate the Abyss Nexus",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001929,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000546
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001704,
+      "name": "Axiom Archive: Obtain the artifact",
+      "region": "Traces",
       "category": "treasure",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 1001704,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000695
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": "Optional Abyss puzzle; seen completing in the override run (E2) only."
     },
     {
-      "ap_id": 11001,
-      "name": "Act 1 Quest 1",
-      "region": "Act 1",
+      "ap_id": 10001001930,
+      "name": "Abyss without Balance: Remove the wall blocking the floor",
+      "region": "Traces",
       "category": "quest",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 1001930,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000546
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 11002,
-      "name": "Act 1 Quest 2",
-      "region": "Act 1",
+      "ap_id": 10001001946,
+      "name": "Abyss without Balance: Synthesize the Abyss cell",
+      "region": "Traces",
       "category": "quest",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 1001946,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000546
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 11003,
-      "name": "Act 1 Boss",
-      "region": "Act 1",
-      "category": "boss",
+      "ap_id": 10001001947,
+      "name": "Abyss without Balance: Activate the Abyss power supply",
+      "region": "Traces",
+      "category": "quest",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 1001947,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000546
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 11004,
-      "name": "Act 1 Discovery",
-      "region": "Act 1",
-      "category": "discovery",
+      "ap_id": 14294967293,
+      "name": "Ethereal Pathway: Restore the Abyss",
+      "region": "Traces",
+      "category": "exploration",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 4294967293,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000066
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 11101,
-      "name": "Highlands Treasure",
-      "region": "Act 1 Highlands",
+      "ap_id": 10001000639,
+      "name": "Abyss without Balance: Take the Abyss Artifact",
+      "region": "Traces",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000639,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000546
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294967292,
+      "name": "Ethereal Pathway: Obtain the artifact",
+      "region": "Traces",
       "category": "treasure",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 4294967292,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000066
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 11102,
-      "name": "Highlands Discovery",
-      "region": "Act 1 Highlands",
-      "category": "discovery",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 12001,
-      "name": "Act 2 Quest 1",
-      "region": "Act 2",
+      "ap_id": 14294964344,
+      "name": "Woman in White: White Crow",
+      "region": "Traces",
       "category": "quest",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 4294964344,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000166
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     },
     {
-      "ap_id": 12002,
-      "name": "Act 2 Quest 2",
-      "region": "Act 2",
+      "ap_id": 14294964343,
+      "name": "Woman in White: Speak with the woman in white",
+      "region": "Traces",
       "category": "quest",
       "detection": {
-        "kind": "placeholder"
+        "kind": "mission_state",
+        "mission_key": 4294964343,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000166
       },
       "requires": null,
       "missable": false,
       "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 12003,
-      "name": "Act 2 Boss",
-      "region": "Act 2",
-      "category": "boss",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": {
-        "item": "Equipment Upgrade",
-        "count": 1
-      },
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 12004,
-      "name": "Act 2 Discovery",
-      "region": "Act 2",
-      "category": "discovery",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 12101,
-      "name": "Vault Treasure 1",
-      "region": "Act 2 Vault",
-      "category": "treasure",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 12102,
-      "name": "Vault Treasure 2",
-      "region": "Act 2 Vault",
-      "category": "treasure",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 13001,
-      "name": "Act 3 Quest 1",
-      "region": "Act 3",
-      "category": "quest",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 13002,
-      "name": "Act 3 Quest 2",
-      "region": "Act 3",
-      "category": "quest",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 13003,
-      "name": "Act 3 Discovery",
-      "region": "Act 3",
-      "category": "discovery",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 13101,
-      "name": "Cliffs Treasure",
-      "region": "Act 3 Cliffs",
-      "category": "treasure",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 13102,
-      "name": "Cliffs Discovery",
-      "region": "Act 3 Cliffs",
-      "category": "discovery",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
-      "caveats": null
-    },
-    {
-      "ap_id": 14001,
-      "name": "Finale Quest",
-      "region": "Finale",
-      "category": "quest",
-      "detection": {
-        "kind": "placeholder"
-      },
-      "requires": null,
-      "missable": false,
-      "repeatable_risk": false,
-      "verified": false,
-      "evidence": null,
+      "verified": true,
+      "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
       "caveats": null
     }
   ]

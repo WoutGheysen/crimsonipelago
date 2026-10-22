@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "catalogue_status": "placeholder",
+  "_comment": "PLACEHOLDER LOCATIONS. 'detection.kind: placeholder' means no verified save flag exists yet; the real adapter can never report these, only the simulated game can. Replace with verified entries (quest_state / mission_state / knowledge) from the discovery workflow.",
+  "locations": [
+    {
+      "ap_id": 10001,
+      "name": "Prologue Quest 1",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 10002,
+      "name": "Prologue Quest 2",
+      "region": "Prologue",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 10003,
+      "name": "Prologue Discovery",
+      "region": "Prologue",
+      "category": "discovery",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 10004,
+      "name": "Prologue Treasure",
+      "region": "Prologue",
+      "category": "treasure",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 11001,
+      "name": "Act 1 Quest 1",
+      "region": "Act 1",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 11002,
+      "name": "Act 1 Quest 2",
+      "region": "Act 1",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 11003,
+      "name": "Act 1 Boss",
+      "region": "Act 1",
+      "category": "boss",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 11004,
+      "name": "Act 1 Discovery",
+      "region": "Act 1",
+      "category": "discovery",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 11101,
+      "name": "Highlands Treasure",
+      "region": "Act 1 Highlands",
+      "category": "treasure",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 11102,
+      "name": "Highlands Discovery",
+      "region": "Act 1 Highlands",
+      "category": "discovery",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 12001,
+      "name": "Act 2 Quest 1",
+      "region": "Act 2",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 12002,
+      "name": "Act 2 Quest 2",
+      "region": "Act 2",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 12003,
+      "name": "Act 2 Boss",
+      "region": "Act 2",
+      "category": "boss",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": {
+        "item": "Equipment Upgrade",
+        "count": 1
+      },
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 12004,
+      "name": "Act 2 Discovery",
+      "region": "Act 2",
+      "category": "discovery",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 12101,
+      "name": "Vault Treasure 1",
+      "region": "Act 2 Vault",
+      "category": "treasure",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 12102,
+      "name": "Vault Treasure 2",
+      "region": "Act 2 Vault",
+      "category": "treasure",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 13001,
+      "name": "Act 3 Quest 1",
+      "region": "Act 3",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 13002,
+      "name": "Act 3 Quest 2",
+      "region": "Act 3",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 13003,
+      "name": "Act 3 Discovery",
+      "region": "Act 3",
+      "category": "discovery",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 13101,
+      "name": "Cliffs Treasure",
+      "region": "Act 3 Cliffs",
+      "category": "treasure",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 13102,
+      "name": "Cliffs Discovery",
+      "region": "Act 3 Cliffs",
+      "category": "discovery",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    },
+    {
+      "ap_id": 14001,
+      "name": "Finale Quest",
+      "region": "Finale",
+      "category": "quest",
+      "detection": {
+        "kind": "placeholder"
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": null,
+      "caveats": null
+    }
+  ]
+}

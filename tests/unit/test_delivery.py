@@ -211,3 +211,25 @@ def test_unlock_lost_by_loading_an_older_save_is_given_again(setup, ledger, sim,
     engine.deliver_pending(sid)
     assert sim.get_inventory_snapshot() == {"Flight": 1}
     assert engine.reconcile(sid) == 0
+
+
+class NoWriteSim(SimulatedGameAdapter):
+    def needs_write(self, item):
+        return item.name != "Resource Bundle"
+
+
+def test_items_without_an_effect_complete_while_the_game_runs(tmp_path, ledger, catalogue, bus):
+    sim = NoWriteSim(tmp_path / "sim.json")
+    sid = ledger.get_or_create_session("SEED", 0, 1, "Wout", None, catalogue.fingerprint, "0.1.0").id
+    engine = DeliveryEngine(ledger, sim, catalogue, bus)
+    receive(ledger, sid, catalogue, "Resource Bundle", "Key Item")
+    sim.update(game_running=True)
+    engine.validate(sid)
+    report = engine.deliver_pending(sid)
+    assert states(ledger, sid) == [DeliveryState.COMPLETE, DeliveryState.PENDING]
+    assert report.pending == 1 and "running" in report.waiting_reason
+    assert sim.get_inventory_snapshot() == {}               # nothing was written for the filler
+    sim.update(game_running=False)
+    engine.deliver_pending(sid)
+    assert states(ledger, sid) == [DeliveryState.COMPLETE, DeliveryState.COMPLETE]
+    assert sim.get_inventory_snapshot() == {"Key Item": 1}
