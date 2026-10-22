@@ -1,6 +1,7 @@
 """crimson-data: explore Crimson Desert's game data (read-only).
 
     crimson-data groups                         archive groups in load order
+    crimson-data types                          how many files of each extension (short overview)
     crimson-data find PATTERN                   files whose path or name matches a glob
     crimson-data extract PATTERN -o DIR         unpack matching files (keeps their folder structure)
     crimson-data tables DIR                     static-info tables found in DIR, with record counts
@@ -59,6 +60,20 @@ def cmd_groups(args) -> int:
     return 0
 
 
+def cmd_types(args) -> int:
+    ga = GameArchive(find_game_dir(args.game))
+    counts: dict[str, list[int]] = {}
+    for vf in ga.files("*"):
+        ext = vf.name.rsplit(".", 1)[-1].lower() if "." in vf.name else "(none)"
+        c = counts.setdefault(ext, [0, 0])
+        c[0] += 1
+        c[1] += vf.size
+    for ext, (n, size) in sorted(counts.items(), key=lambda kv: -kv[1][0]):
+        print(f"{n:8d}  {_size(size):>9}  .{ext}")
+    print(f"{sum(c[0] for c in counts.values())} files, {len(counts)} extensions")
+    return 0
+
+
 def cmd_find(args) -> int:
     ga = GameArchive(find_game_dir(args.game))
     hits = ga.files(args.pattern, all_copies=args.all_copies)
@@ -100,7 +115,8 @@ def _tables(folder: str) -> dict[str, tb.Table]:
     for p in problems:
         print(f"warning: {p}", file=sys.stderr)
     if not tables:
-        raise SystemExit(f"no .pabgb/.pabgh pairs found under {folder}")
+        raise SystemExit(f"no tables found under {folder} (expected .staticinfobody/.staticinfoheader "
+                         "or .pabgb/.pabgh pairs; did the extract step match any files?)")
     return tables
 
 
@@ -177,6 +193,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
 
     sub.add_parser("groups", help="archive groups in load order").set_defaults(func=cmd_groups)
+    sub.add_parser("types", help="file count per extension").set_defaults(func=cmd_types)
 
     f = sub.add_parser("find", help="list files matching a glob")
     f.add_argument("pattern", help='e.g. "*.pabgh" or "*skill*"')
