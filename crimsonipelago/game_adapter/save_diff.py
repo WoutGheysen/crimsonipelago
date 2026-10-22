@@ -135,7 +135,7 @@ def render_diff(d: SnapshotDiff, names: NameTables | None = None, *, max_fields:
         lines += [f"  + {names.label('knowledge', k)}" for k in d.knowledge_added]
         lines += [f"  - {names.label('knowledge', k)}" for k in d.knowledge_removed]
     if d.items:
-        lines.append("Inventory (player):")
+        lines.append("Inventory:")
         lines += [f"  {names.label('items', k)}: {x} -> {y} ({y - x:+d})" for k, x, y in d.items]
     if d.fields:
         lines.append(f"Raw fields ({len(d.fields)} changed):")

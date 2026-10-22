@@ -32,12 +32,12 @@ jobs:
           git fetch -q --depth 1 origin "$ARCHIPELAGO_REF"
           git checkout -q FETCH_HEAD
 
-      - name: Fetch NattKh save editor decoder (pinned, MPL-2.0, used unmodified)
+      - name: Fetch NattKh save editor decoder and a sample mod pack (pinned, MPL-2.0, used unmodified)
         run: |
           git init -q "$RUNNER_TEMP/nattkh"
           cd "$RUNNER_TEMP/nattkh"
           git remote add origin https://github.com/NattKh/CRIMSON-DESERT-SAVE-EDITOR-AND-GAME-MODS
-          git sparse-checkout set CrimsonSaveEditor
+          git sparse-checkout set CrimsonSaveEditor "CrimsonGameMods/packs/Universal Proficiency"
           git fetch -q --depth 1 --filter=blob:none origin "$NATTKH_REF"
           git checkout -q FETCH_HEAD
 
