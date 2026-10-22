@@ -1,6 +1,6 @@
 # How Flight is gated (and how to make it an Archipelago item)
 
-- **Status:** the override withholds Flight in-game (E2 passed); test D (give it back through the save) built, awaiting test (2026-10-22)
+- **Status:** proven end to end (2026-10-22): the override withholds Flight (E2) and the save gives it back (D)
 - **Build:** 25477059
 - **Inputs:**
   - write tests A, B and C (session 1)
@@ -94,9 +94,20 @@ as requiring Flight), otherwise the seed can strand the player.
 **E1, reload (optional):** load the test-C save with the override installed. Not needed for the design
 any more: E2 already shows the story grant goes through this drop set.
 
-## Test D: give Flight through the save (built)
+## Test D: give Flight through the save: passed
 
 Made from save 6 above (override active, no Flight). The Hedgehog placeholder is turned into Flight in both
 knowledge lists (`crimson-testsave --swap-knowledge 1006:40002`), which is what the client will do when
-the Archipelago item arrives. Expected: Kliff can glide after loading, and still after a save, a restart
-and a reload.
+the Archipelago item arrives.
+
+Result (override still installed): Kliff can glide after loading. Wout then made manual save 7, restarted
+the game and loaded it: still gliding. The delivered Flight survives the game's own save and a restart.
+
+**Flight works as an Archipelago item:** the override holds it back, the save delivers it.
+
+## Next
+
+- The client delivers 40002 by inserting it into both knowledge lists (a structural insert; the test used
+  a same-size swap of the placeholder).
+- Progressive Flight: Flight first, then the upgrades that already require it.
+- Logic: Flight must be reachable before the jump after *Speak with the woman in white*.
