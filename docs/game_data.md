@@ -58,7 +58,9 @@ checks the reader against a real mod pack built by the community tools.
 ## Overrides: `crimson-mod`
 
 `crimson-mod` installs a small game-data override: a few patched tables in an extra archive group
-(`0090` and up), registered first in `meta/0.papgt` so the game prefers it. The game's own groups are
+(the next number after the game's own groups), registered first in `meta/0.papgt` so the game
+prefers it. The group is packed exactly like the community mod tools' output (verified byte for byte:
+same name-table layout, uncompressed). The game's own groups are
 never modified.
 
 ```powershell

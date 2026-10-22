@@ -159,5 +159,9 @@ def test_reads_a_real_mod_pack():
     pamt = ga.pamt("0041")
     paz = (PACK / "0041" / "0.paz").read_bytes()
     assert pamt.chunks[0] == (checksum(paz), len(paz))
+    # our builder reproduces the community tools' output byte for byte (same files, same order, no compression)
+    rebuilt_pamt, rebuilt_chunks = ar.build_group({vf.path: ga.read(vf) for vf in ga.files("*")}, compression="none")
+    assert rebuilt_pamt == (PACK / "0041" / "0.pamt").read_bytes()
+    assert rebuilt_chunks[0] == paz
     table = tb.Table("equipslotinfo", ga.read(ga.files("equipslotinfo.pabgb")[0]), ga.read(ga.files("equipslotinfo.pabgh")[0]))
     assert len(table) > 0

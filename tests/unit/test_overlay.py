@@ -89,11 +89,11 @@ def test_install_and_uninstall_are_exact_inverses(tmp_path, no_process_check):
     original = (root / "meta" / "0.papgt").read_bytes()
     built = ov.build(GameArchive(root), ov.PatchSpec.load("flight-grant-removed"))
     result = ov.install(root, built)
-    assert result.name == "0090"
+    assert result.name == "0002"  # right after the game's own groups 0000 and 0001
     game = GameArchive(root)
-    assert game.groups[0].name == "0090"
+    assert game.groups[0].name == "0002"
     [vf] = game.files("dropsetinfo.staticinfobody")
-    assert vf.group == "0090"
+    assert vf.group == "0002" and vf.compression == "none"
     assert Table("dropsetinfo", game.read(vf), game.read(game.files("dropsetinfo.staticinfoheader")[0])) \
         .records[1014512].name == "Knowledge(Knowledge_Hedgehog, 1)"
     with pytest.raises(ov.OverlayError, match="already installed"):
@@ -101,9 +101,9 @@ def test_install_and_uninstall_are_exact_inverses(tmp_path, no_process_check):
     # building again reads the vanilla table, not our own overlay
     assert ov.build(GameArchive(root), ov.PatchSpec.load("flight-grant-removed")).sources[vf.path] == "0000"
 
-    assert ov.uninstall(root) == ["0090"]
+    assert ov.uninstall(root) == ["0002"]
     assert (root / "meta" / "0.papgt").read_bytes() == original
-    assert not (root / "0090").exists()
+    assert not (root / "0002").exists()
     assert len(list((root / "meta").glob("0.papgt.crimsonipelago-*.bak"))) >= 1
 
 
@@ -115,7 +115,7 @@ def test_failed_install_leaves_nothing_behind(tmp_path, no_process_check, monkey
     with pytest.raises(ov.OverlayError, match="boom"):
         ov.install(root, built)
     assert (root / "meta" / "0.papgt").read_bytes() == original
-    assert not (root / "0090").exists()
+    assert not (root / "0002").exists()
 
 
 def test_refuses_while_game_runs(tmp_path, monkeypatch):
@@ -132,11 +132,12 @@ def test_refuses_while_game_runs(tmp_path, monkeypatch):
 
 def test_foreign_groups_are_never_deleted(tmp_path, no_process_check):
     root = _game(tmp_path)
-    (root / "0095").mkdir()
-    (root / "0095" / "0.pamt").write_bytes(b"someone else's mod")
-    ov.install(root, ov.build(GameArchive(root), ov.PatchSpec.load("flight-grant-removed")))
+    (root / "0002").mkdir()
+    (root / "0002" / "0.pamt").write_bytes(b"someone else's mod")
+    result = ov.install(root, ov.build(GameArchive(root), ov.PatchSpec.load("flight-grant-removed")))
+    assert result.name == "0003"  # an existing folder is skipped, never overwritten
     ov.uninstall(root)
-    assert (root / "0095" / "0.pamt").read_bytes() == b"someone else's mod"
+    assert (root / "0002" / "0.pamt").read_bytes() == b"someone else's mod"
 
 
 def test_cli(tmp_path, capsys, no_process_check):

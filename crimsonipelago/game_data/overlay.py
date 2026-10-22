@@ -1,6 +1,6 @@
 """Game-data overrides ("overlays"): patch static-info records and install them as an extra archive group.
 
-An overlay is a numbered group folder (default range 0090+) holding modified copies of a few tables,
+An overlay is a numbered group folder (the next number after the game's own groups) holding modified copies of a few tables,
 registered at the front of meta/0.papgt so the game loads it first. Nothing in the original groups is
 touched. Install and uninstall are exact inverses on 0.papgt, and a timestamped copy of 0.papgt is
 kept before every change. Steam's "Verify integrity of game files" also restores the original state.
@@ -25,7 +25,6 @@ from .checksum import checksum
 from .tables import TABLE_SUFFIXES, Table
 
 MARKER = "crimsonipelago_overlay.json"
-FIRST_GROUP = 90
 BUNDLED = Path(__file__).with_name("patches")
 
 
@@ -147,6 +146,7 @@ def build(game: GameArchive, spec: PatchSpec) -> BuiltOverlay:
     by_table: dict[str, list[RecordPatch]] = {}
     for p in spec.patches:
         by_table.setdefault(p.table, []).append(p)
+    # Uncompressed, like the community mod packs the game is known to load.
     files, log, sources, compression = {}, [], {}, "none"
     for table_name, patches in by_table.items():
         body_vf, index_vf = _table_files(game, table_name, ours)
@@ -155,7 +155,6 @@ def build(game: GameArchive, spec: PatchSpec) -> BuiltOverlay:
         files[body_vf.path] = new_body
         files[index_vf.path] = game.read(index_vf)  # unchanged; shipped as a pair, as the modding notes advise
         sources[body_vf.path], sources[index_vf.path] = body_vf.group, index_vf.group
-        compression = "lz4" if body_vf.compression == "lz4" else compression
         log += tlog
     return BuiltOverlay(spec, files, compression, log, sources)
 
@@ -163,7 +162,7 @@ def build(game: GameArchive, spec: PatchSpec) -> BuiltOverlay:
 # --------------------------------------------------------------------------- install / uninstall
 @dataclass(frozen=True)
 class InstalledOverlay:
-    name: str          # group folder, e.g. "0090"
+    name: str          # group folder, e.g. "0048"
     patch: str
     installed_at: str
 
@@ -210,11 +209,7 @@ def install(game_dir: str | Path, built: BuiltOverlay, *, force: bool = False) -
         raise OverlayError("a Crimsonipelago overlay is already installed; uninstall it first")
     papgt_path = root / "meta" / "0.papgt"
     papgt = Papgt.parse(papgt_path.read_bytes())
-    taken = {e.name for e in papgt.entries}
-    number = FIRST_GROUP
-    while f"{number:04d}" in taken or (root / f"{number:04d}").exists():
-        number += 1
-    group = f"{number:04d}"
+    group = next_group_name(root, papgt)
 
     pamt, chunks = build_group(built.files, compression=built.compression)
     group_dir = root / group
@@ -236,6 +231,18 @@ def install(game_dir: str | Path, built: BuiltOverlay, *, force: bool = False) -
         _remove_group(root, group, created_now=True)
         raise
     return InstalledOverlay(group, built.spec.name, info["installed_at"])
+
+
+def next_group_name(root: Path, papgt: Papgt) -> str:
+    """The first number after every registered numeric group, skipping folders that already exist.
+    Known-working mods sit right after the game's own groups; a large gap made the game crash at boot."""
+    numbers = [int(e.name) for e in papgt.entries if e.name.isdigit()]
+    number = max(numbers, default=-1) + 1
+    while (root / f"{number:04d}").exists():
+        number += 1
+    if number > 9999:
+        raise OverlayError("no free group number")
+    return f"{number:04d}"
 
 
 def _verify_installed(root: Path, group: str, built: BuiltOverlay) -> None:

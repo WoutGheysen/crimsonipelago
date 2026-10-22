@@ -305,25 +305,96 @@ class GameArchive:
 
 
 # --------------------------------------------------------------------------- building groups
+class _SegNode:
+    def __init__(self):
+        self.children: list[tuple[str, _SegNode]] = []
+        self.terminals: list[int] = []
+
+
+class _Radix:
+    def __init__(self, fragment: str, seg_idx: int | None = None):
+        self.fragment, self.seg_idx = fragment, seg_idx
+        self.children: list[_Radix] = []
+
+
+def _radix_insert(node: _Radix, remaining: str, seg_idx: int) -> None:
+    if not remaining:
+        node.seg_idx = seg_idx
+        return
+    for i, child in enumerate(node.children):
+        common = 0
+        for a, b in zip(child.fragment, remaining):
+            if a != b:
+                break
+            common += 1
+        if common == 0:
+            continue
+        if common == len(child.fragment):
+            _radix_insert(child, remaining[common:], seg_idx)
+            return
+        # split the child at the shared prefix (Rust Vec::swap_remove semantics, to match the reference layout)
+        old = node.children[i]
+        node.children[i] = node.children[-1]
+        node.children.pop()
+        old.fragment = old.fragment[common:]
+        split = _Radix(remaining[:common])  # the shared prefix
+        split.children = [old]
+        _radix_insert(split, remaining[common:], seg_idx)
+        node.children.append(split)
+        return
+    node.children.append(_Radix(remaining, seg_idx))
+
+
 def _build_trie(strings: list[str]) -> tuple[bytes, list[int]]:
-    """Name table with one node per path segment (shared parents); readers only follow parent links."""
+    """Name table in the native layout: one level per path segment ("/"-prefixed below the root), with
+    siblings sharing common prefixes (radix-compressed). Same algorithm as crimson-rs build_trie_buffer."""
+    root = _SegNode()
+    for idx, s in enumerate(strings):
+        node = root
+        for seg in (s.split("/") if s else []):
+            nxt = next((c for name, c in node.children if name == seg), None)
+            if nxt is None:
+                nxt = _SegNode()
+                node.children.append((seg, nxt))
+            node = nxt
+        node.terminals.append(idx)
+
     buf = bytearray()
-    nodes: dict[str, int] = {}
-    offsets = []
-    for s in strings:
-        parent, built = -1, ""
-        segments = s.split("/") if s else [""]
-        for i, seg in enumerate(segments):
-            text = seg if i == 0 else "/" + seg
-            built += text
-            if built not in nodes:
-                enc = text.encode("utf-8")
-                if len(enc) > 255:
-                    raise ArchiveError(f"path segment too long: {seg!r}")
-                nodes[built] = len(buf)
-                buf += struct.pack("<iB", parent, len(enc)) + enc
-            parent = nodes[built]
-        offsets.append(parent)
+    offsets = [-1] * len(strings)
+
+    def write(parent: int, text: str) -> int:
+        enc = text.encode("utf-8")
+        if len(enc) > 255:
+            raise ArchiveError(f"name fragment too long: {text!r}")
+        off = len(buf)
+        buf.extend(struct.pack("<iB", parent, len(enc)) + enc)
+        return off
+
+    def emit_children(children: list[tuple[str, _SegNode]], parent: int, at_root: bool) -> None:
+        if not children:
+            return
+        radix = _Radix("")
+        for ci, (name, _node) in enumerate(children):
+            _radix_insert(radix, name if at_root else "/" + name, ci)
+        emit_radix(radix, parent, children)
+
+    def emit_radix(node: _Radix, parent: int, children: list[tuple[str, _SegNode]]) -> None:
+        if not node.fragment:
+            for c in node.children:
+                emit_radix(c, parent, children)
+            return
+        me = write(parent, node.fragment)
+        if node.seg_idx is not None:
+            seg = children[node.seg_idx][1]
+            for t in seg.terminals:
+                offsets[t] = me
+            emit_children(seg.children, me, False)
+        for c in node.children:
+            emit_radix(c, me, children)
+
+    for t in root.terminals:
+        offsets[t] = write(-1, "")
+    emit_children(root.children, -1, True)
     return bytes(buf), offsets
 
 
