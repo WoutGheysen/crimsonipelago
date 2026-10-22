@@ -1,0 +1,8 @@
+{
+  "name": "diagnostic-noop",
+  "description": "Diagnostic only: ships the drop-set table UNCHANGED through the same overlay packing. If the game crashes with this installed, the packing is at fault, not a data change.",
+  "game_build": "25477059",
+  "patches": [
+    {"table": "dropsetinfo", "record": 1014512, "name": "Knowledge(Knowledge_CrowWing, 1)", "expect": {"u32": 0, "text": 0}}
+  ]
+}
