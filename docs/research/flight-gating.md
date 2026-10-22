@@ -42,7 +42,7 @@ mission data**, which isn't extracted yet.
 
 ## Plan
 
-1. Extract the quest and mission tables (`crimson-data find "*quest*"`, `"*mission*"`, then `extract`)
+1. Extract the quest and mission tables (`crimson-data find "*quest*.staticinfo*"`, `"*mission*.staticinfo*"`, then `extract`)
    and `search` them for 40002 and for 1000546. Expected: the reward of *Abyss without Balance* teaches
    knowledge 40002.
 2. **Remove the grant, not the skill:** an overlay group that drops 40002 from that reward. Disabling

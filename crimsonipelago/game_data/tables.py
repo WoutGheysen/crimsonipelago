@@ -1,4 +1,7 @@
-"""Static-info tables: a `.pabgb` body of records plus its `.pabgh` key -> offset index.
+"""Static-info tables: a body of records plus a key -> offset index.
+
+The pair is named `<table>.pabgb` + `<table>.pabgh` in older builds and community mods, and
+`<table>.staticinfobody` + `<table>.staticinfoheader` in the current Steam build (25477059).
 
 Index formats seen (documented in the NattKh modding notes):
     u16 count + count x (u32 key, u32 offset)     most tables
@@ -20,6 +23,10 @@ from pathlib import Path
 
 class TableError(ValueError):
     pass
+
+
+# body suffix -> index suffix
+TABLE_SUFFIXES = {".pabgb": ".pabgh", ".staticinfobody": ".staticinfoheader"}
 
 
 def parse_index(header: bytes) -> list[tuple[int, int]]:
@@ -74,7 +81,12 @@ class Table:
     @classmethod
     def load(cls, body_path: str | Path, header_path: str | Path | None = None) -> Table:
         body_path = Path(body_path)
-        header_path = Path(header_path) if header_path else body_path.with_suffix(".pabgh")
+        if header_path is None:
+            index_suffix = TABLE_SUFFIXES.get(body_path.suffix.lower())
+            if index_suffix is None:
+                raise TableError(f"{body_path.name}: not a table body ({', '.join(TABLE_SUFFIXES)})")
+            header_path = body_path.with_suffix(index_suffix)
+        header_path = Path(header_path)
         if not header_path.is_file():
             raise TableError(f"no index next to {body_path} (expected {header_path.name})")
         return cls(body_path.stem, body_path.read_bytes(), header_path.read_bytes())
@@ -88,11 +100,12 @@ class Table:
 
 
 def load_tables(folder: str | Path, *, problems: list[str] | None = None) -> dict[str, Table]:
-    """Every <name>.pabgb with a matching .pabgh under a folder (searched recursively).
+    """Every table body with its matching index under a folder (searched recursively), in either naming scheme.
     Tables that can't be read are skipped and described in `problems`."""
     out: dict[str, Table] = {}
-    for body in sorted(Path(folder).rglob("*.pabgb")):
-        if body.with_suffix(".pabgh").is_file() and body.stem not in out:
+    bodies = sorted(p for p in Path(folder).rglob("*") if p.suffix.lower() in TABLE_SUFFIXES)
+    for body in bodies:
+        if body.with_suffix(TABLE_SUFFIXES[body.suffix.lower()]).is_file() and body.stem not in out:
             try:
                 out[body.stem] = Table.load(body)
             except TableError as exc:

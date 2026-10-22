@@ -82,14 +82,14 @@ def _record(key, name, payload=b""):
     return struct.pack("<II", key, len(n)) + n + payload
 
 
-def _write_table(folder: Path, name: str, records: list[tuple[int, bytes]]):
+def _write_table(folder: Path, name: str, records: list[tuple[int, bytes]], suffixes=(".pabgb", ".pabgh")):
     folder.mkdir(parents=True, exist_ok=True)
     body, index = b"", []
     for key, data in records:
         index.append(struct.pack("<II", key, len(body)))
         body += data
-    (folder / f"{name}.pabgb").write_bytes(body)
-    (folder / f"{name}.pabgh").write_bytes(struct.pack("<H", len(index)) + b"".join(index))
+    (folder / f"{name}{suffixes[0]}").write_bytes(body)
+    (folder / f"{name}{suffixes[1]}").write_bytes(struct.pack("<H", len(index)) + b"".join(index))
 
 
 def _table_files(folder: Path):
@@ -117,12 +117,24 @@ def test_tables_search_and_references(tmp_path):
     assert (15027 in [v for _, v, _ in refs]) and names.describe(15027) == "skill:Skill_CrowWing"
 
 
+def test_current_build_naming_is_recognised(tmp_path):
+    _write_table(tmp_path, "skill", [(15027, _record(15027, "Skill_CrowWing", struct.pack("<I", 40002)))],
+                 suffixes=(".staticinfobody", ".staticinfoheader"))
+    _write_table(tmp_path, "knowledgeinfo", [(40002, _record(40002, "Knowledge_CrowWing"))])  # older naming
+    tables = tb.load_tables(tmp_path)
+    assert set(tables) == {"skill", "knowledgeinfo"}
+    assert [(t, r.key) for t, r, _ in tb.search(tables, 40002)] == [("skill", 15027)]
+
+
 def test_cli_end_to_end(tmp_path, capsys):
     root = _game(tmp_path, {"0000": {"gamedata/binary__/client/bin/skill.pabgb": SKILL}})
     out = tmp_path / "out"
     assert game_data_cli.main(["--game", str(root), "extract", "*skill*", "-o", str(out)]) == 0
     assert (out / "gamedata/binary__/client/bin/skill.pabgb").read_bytes() == SKILL
     assert game_data_cli.main(["--game", str(root), "extract", "*", "-o", str(out), "--limit", "0"]) == 1
+    capsys.readouterr()
+    assert game_data_cli.main(["--game", str(root), "types"]) == 0
+    assert ".pabgb" in capsys.readouterr().out
     _table_files(tmp_path / "t")
     assert game_data_cli.main(["search", str(tmp_path / "t"), "40002"]) == 0
     assert "Skill_CrowWing" in capsys.readouterr().out
