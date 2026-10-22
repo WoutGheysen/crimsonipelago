@@ -1,6 +1,6 @@
 # How Flight is gated (and how to make it an Archipelago item)
 
-- **Status:** override built, awaiting in-game test (2026-10-22)
+- **Status:** the override withholds Flight in-game (E2 passed); test D (give it back through the save) built, awaiting test (2026-10-22)
 - **Build:** 25477059
 - **Inputs:**
   - write tests A, B and C (session 1)
@@ -34,7 +34,7 @@ From `skill.pabgb`, `knowledgeinfo.pabgb` and `skilltreeinfo.pabgb` (`crimson-da
 | knowledge 40002 | knowledge 1002349 Swift Flight (offset 452) | level 2 grants Swift Flight |
 | knowledge 1002349 Swift Flight, 40082 Aerial Roll, 1004772 Super Dash, 1005740 Enhanced | knowledge 40002 | they require Flight |
 | skilltree 9 `SpecialSkill_Kliff`, 50 `Skill_Kliff` | skill 15027 | Flight's place in Kliff's skill tree |
-| skill 15036 `Skill_CrowWing_Start` | (nothing points to it) | the take-off action, not a gate |
+| skill 15036 `Skill_CrowWing_Start` | (nothing points to it) | the take-off action; it checks the gate (see below) |
 | item 391518539 `Karanda_Necklace` and three other necklaces | the value 40002 | possibly coincidence; worth one look |
 
 None of these records contains a quest or mission condition. The rest of the chain is in the
@@ -61,17 +61,42 @@ references the condition. The earlier note that it is "not a gate" was wrong.
    grants, and deliver that one.
 3. **Deliver through the save:** when the Archipelago item arrives, add 40002 to both knowledge lists
    (the same path that worked for items in test A).
-4. Test D (save only): add 40002 to the 19:00 pre-glider save and check that Kliff can glide. This
-   proves the "give" half without any game-data change.
+4. Test D: give 40002 back in a save made with the override active, and check that Kliff can glide.
+   This proves the "give" half (see below).
 
 Flight then becomes a **progressive** item: Flight, then Swift Flight and the other upgrades, which
 already require 40002 in the game data.
 
-## In-game test of the override (pending)
+## In-game tests of the override
 
-With `flight-grant-removed` installed:
+Packing: the first build (LZ4, simple name table, group `0090`) crashed the game at boot. The packer now
+writes the community tools' layout byte for byte (radix name table, uncompressed, next group number).
+`diagnostic-noop` (an unchanged copy of the table) then booted, and so did `flight-grant-removed`.
 
-- **E1, reload:** load the test-C save (Flight removed from both knowledge lists). Can Kliff glide? If
-  not, the on-load re-grant ran through this drop set, and the override stops it.
-- **E2, story:** load the 19:00 save (before *Abyss without Balance*) and play through the woman in
-  white. Expected: no glider; the Hedgehog codex entry appears instead.
+**E2, story: passed.** With `flight-grant-removed` installed, Wout played from manual save 2 through the
+woman in white and made manual save 6 (`slot105`) afterwards:
+
+| Check | Result |
+|---|---|
+| *Speak with the woman in white* (Witch_1) | completed (5) |
+| *Abyss without Balance* | completed (5) |
+| Flight 40002 in `_list` / `_learnedFollowLearnKnowledge` | **absent** from both |
+| Hedgehog 1006 | present in both, `_learnFromTypeRaw` 25 (story grant): the patched reward fired |
+| In-game | the scripted "press to glide" prompt during the jump worked once; after that no gliding (Kliff died from a fall) |
+
+So the grant is the drop set, and the override withholds it. The one scripted glide is part of the cutscene
+sequence, not the skill.
+
+**Design consequence:** the story drops Kliff from a height right after this objective and expects him
+to glide. The logic must place Flight before that point is reachable (or treat the area after the jump
+as requiring Flight), otherwise the seed can strand the player.
+
+**E1, reload (optional):** load the test-C save with the override installed. Not needed for the design
+any more: E2 already shows the story grant goes through this drop set.
+
+## Test D: give Flight through the save (built)
+
+Made from save 6 above (override active, no Flight). The Hedgehog placeholder is turned into Flight in both
+knowledge lists (`crimson-testsave --swap-knowledge 1006:40002`), which is what the client will do when
+the Archipelago item arrives. Expected: Kliff can glide after loading, and still after a save, a restart
+and a reload.
