@@ -94,4 +94,5 @@ def test_pool_eligibility_respects_capability(catalogue):
     # but once the catalogue claims to be verified, unsupported items are excluded
     catalogue_copy = copy.copy(catalogue)
     catalogue_copy.status = "verified"
-    assert not any(catalogue_copy.pool_item_eligible(i) for i in catalogue.items.values())
+    eligible = {i.name for i in catalogue.items.values() if catalogue_copy.pool_item_eligible(i)}
+    assert eligible == {i.name for i in catalogue.items.values() if i.deliverable} == {"Flight"}

@@ -15,10 +15,10 @@ an APWorld for seed generation, a client that talks to Archipelago servers, and 
 | APWorld (`crimson_desert.apworld`) | Loads in Archipelago 0.6.7+ (CI-tested on 0.6.7, 0.6.8 and current main), generates solo and mixed-game seeds (bulk-tested: 80/80 across 8 scenarios). Placeholder data. |
 | Network client | Full Archipelago protocol, reconnect, offline check queue, replay/gap handling, victory reporting. Tested end to end against a real `MultiServer` with a second game. |
 | Delivery ledger | SQLite ledger and an idempotent state machine (`RECEIVED → … → COMPLETE / RECOVERY_REQUIRED`) with two-phase, crash-safe writes. Fault-injection tests. |
-| Session isolation | Seed, slot, game, catalogue fingerprint and save profile are bound together; mismatches pause sync with an actionable message. |
+| Session isolation | Seed, slot, game, catalogue fingerprint and **playthrough** are bound together; the playthrough is recognised from save history, whichever slot the game saved to. Mismatches pause sync with an actionable message. |
 | Save reading | Decrypts and validates the `save.save` container (ChaCha20, HMAC, LZ4) and fingerprints every top-level save object. Optional field-level decoding through your own checkout of the NattKh save editor. |
 | `crimson-inspect` | Locate, back up, snapshot and diff saves; `watch` records a snapshot every time the game saves. |
-| Save writing | **Disabled on purpose.** The safety scaffolding (version gate, game-closed check, backups, temp file, re-decode validation, atomic swap) is in place; no reward procedure is verified yet. |
+| Save writing | **Flight is delivered** (verified in-game on build 25477059): added to the save like the story does, after a backup, with the game closed, decoded again before the swap. A save loaded from before the delivery gets it again. Other items stay parked until verified. Needs the `flight-grant-removed` game-data override (`crimson-mod`), so the story doesn't hand it out first. |
 | Desktop UI | PySide6 window: connection, game status, activity feed, pending deliveries. |
 | Simulated game | A fake save used to exercise the whole client without the game. |
 

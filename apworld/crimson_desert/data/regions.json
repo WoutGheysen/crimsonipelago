@@ -15,11 +15,11 @@
   ],
   "connections": [
     {"from": "Prologue", "to": "Act 1", "requires": {"item": "Story Access: Act 1"}},
-    {"from": "Act 1", "to": "Act 1 Highlands", "requires": {"item": "Traversal Unlock A"}},
+    {"from": "Act 1", "to": "Act 1 Highlands", "requires": {"item": "Flight"}},
     {"from": "Act 1", "to": "Act 2", "requires": {"item": "Story Access: Act 2"}},
     {"from": "Act 2", "to": "Act 2 Vault", "requires": {"all": [{"item": "Key Item"}, {"item": "Interaction Unlock"}]}},
     {"from": "Act 2", "to": "Act 3", "requires": {"item": "Story Access: Act 3"}},
-    {"from": "Act 3", "to": "Act 3 Cliffs", "requires": {"any": [{"item": "Traversal Unlock B"}, {"all": [{"item": "Traversal Unlock A"}, {"item": "Interaction Unlock"}]}]}},
+    {"from": "Act 3", "to": "Act 3 Cliffs", "requires": {"any": [{"item": "Traversal Unlock B"}, {"all": [{"item": "Flight"}, {"item": "Interaction Unlock"}]}]}},
     {"from": "Act 3", "to": "Finale", "requires": {"event": "Act 3 Boss Defeated"}}
   ]
 }

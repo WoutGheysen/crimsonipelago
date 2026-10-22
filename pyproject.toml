@@ -29,6 +29,7 @@ crimson-build-apworld = "crimsonipelago.tools.build_apworld:main"
 crimson-candidates = "crimsonipelago.tools.candidates:main"
 crimson-testsave = "crimsonipelago.tools.testsave:main"
 crimson-data = "crimsonipelago.tools.game_data_cli:main"
+crimson-mod = "crimsonipelago.tools.mod_cli:main"
 
 [tool.setuptools]
 packages = [
@@ -46,6 +47,7 @@ packages = [
 crimson_desert = "apworld/crimson_desert"
 
 [tool.setuptools.package-data]
+"crimsonipelago.game_data" = ["patches/*.json"]
 crimson_desert = ["data/*.json", "archipelago.json", "docs/*.md"]
 
 [tool.pytest.ini_options]

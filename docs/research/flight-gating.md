@@ -1,6 +1,6 @@
 # How Flight is gated (and how to make it an Archipelago item)
 
-- **Status:** in progress, 2026-10-22
+- **Status:** proven end to end (2026-10-22): the override withholds Flight (E2) and the save gives it back (D)
 - **Build:** 25477059
 - **Inputs:**
   - write tests A, B and C (session 1)
@@ -34,24 +34,82 @@ From `skill.pabgb`, `knowledgeinfo.pabgb` and `skilltreeinfo.pabgb` (`crimson-da
 | knowledge 40002 | knowledge 1002349 Swift Flight (offset 452) | level 2 grants Swift Flight |
 | knowledge 1002349 Swift Flight, 40082 Aerial Roll, 1004772 Super Dash, 1005740 Enhanced | knowledge 40002 | they require Flight |
 | skilltree 9 `SpecialSkill_Kliff`, 50 `Skill_Kliff` | skill 15027 | Flight's place in Kliff's skill tree |
-| skill 15036 `Skill_CrowWing_Start` | (nothing points to it) | the take-off action, not a gate |
+| skill 15036 `Skill_CrowWing_Start` | (nothing points to it) | the take-off action; it checks the gate (see below) |
 | item 391518539 `Karanda_Necklace` and three other necklaces | the value 40002 | possibly coincidence; worth one look |
 
-None of these records contains a quest or mission condition, so **the grant lives in the quest or
-mission data**, which isn't extracted yet.
+None of these records contains a quest or mission condition. The rest of the chain is in the
+quest/mission data, found with `crimson-data search` over all 134 tables (2026-10-22):
+
+| Record | Content | Role |
+|---|---|---|
+| missioninfo 4294964343 `Mission_MeetAlustain_Alustain_Witch_1` | rewards: drop sets 1014512 and 1014513 | the objective "Speak with the woman in white" (the save shows it completing as the glider appears) |
+| dropsetinfo 1014512 `Knowledge(Knowledge_CrowWing, 1)` | 40002 at offsets 59 and 118, plus the text twice | **the grant** |
+| dropsetinfo 1014513 `Knowledge(AbyssGate_0002_AbyssIsland, 1)` | | the objective's second reward, an Abyss Gate |
+| conditioninfo 1000547 `checkCharacterKey(Kliff) && checkKnowledge(Knowledge_CrowWing)` | 40002 at offset 97, plus the text | **the gate** |
+| skill 15036 `Skill_CrowWing_Start` | uses condition 1000547 (offset 126) | the take-off action checks the gate |
+| missioninfo 1000546 `Mission_MeetAlustain_Alustain_AbyssGate` | sub-missions `_0`…`_5` | *Abyss without Balance* and its steps |
+
+So `Skill_CrowWing_Start` is where the check happens. It isn't referenced by other records, but it
+references the condition. The earlier note that it is "not a gate" was wrong.
 
 ## Plan
 
-1. Extract the quest and mission tables (`crimson-data find "*quest*.staticinfo*"`, `"*mission*.staticinfo*"`, then `extract`)
-   and `search` them for 40002 and for 1000546. Expected: the reward of *Abyss without Balance* teaches
-   knowledge 40002.
-2. **Remove the grant, not the skill:** an overlay group that drops 40002 from that reward. Disabling
-   `Skill_CrowWing` itself would need a second override to turn Flight back on, and would risk
-   scripted story moments that expect gliding.
+1. ~~Find the grant in the quest/mission tables.~~ Done (above).
+2. **Remove the grant, not the skill:** `crimson-mod install flight-grant-removed` patches drop set
+   1014512 to teach the Hedgehog codex entry (1006) instead: same size, same-length text. Fallback if the
+   on-load re-grant has another source: point condition 1000547 at a knowledge key the game never
+   grants, and deliver that one.
 3. **Deliver through the save:** when the Archipelago item arrives, add 40002 to both knowledge lists
    (the same path that worked for items in test A).
-4. Test D (save only): add 40002 to the 19:00 pre-glider save and check that Kliff can glide. This
-   proves the "give" half without any game-data change.
+4. Test D: give 40002 back in a save made with the override active, and check that Kliff can glide.
+   This proves the "give" half (see below).
 
 Flight then becomes a **progressive** item: Flight, then Swift Flight and the other upgrades, which
 already require 40002 in the game data.
+
+## In-game tests of the override
+
+Packing: the first build (LZ4, simple name table, group `0090`) crashed the game at boot. The packer now
+writes the community tools' layout byte for byte (radix name table, uncompressed, next group number).
+`diagnostic-noop` (an unchanged copy of the table) then booted, and so did `flight-grant-removed`.
+
+**E2, story: passed.** With `flight-grant-removed` installed, Wout played from manual save 2 through the
+woman in white and made manual save 6 (`slot105`) afterwards:
+
+| Check | Result |
+|---|---|
+| *Speak with the woman in white* (Witch_1) | completed (5) |
+| *Abyss without Balance* | completed (5) |
+| Flight 40002 in `_list` / `_learnedFollowLearnKnowledge` | **absent** from both |
+| Hedgehog 1006 | present in both, `_learnFromTypeRaw` 25 (story grant): the patched reward fired |
+| In-game | the scripted "press to glide" prompt during the jump worked once; after that no gliding (Kliff died from a fall) |
+
+So the grant is the drop set, and the override withholds it. The one scripted glide is part of the cutscene
+sequence, not the skill.
+
+**Design consequence:** the story drops Kliff from a height right after this objective and expects him
+to glide. The logic must place Flight before that point is reachable (or treat the area after the jump
+as requiring Flight), otherwise the seed can strand the player.
+
+**E1, reload (optional):** load the test-C save with the override installed. Not needed for the design
+any more: E2 already shows the story grant goes through this drop set.
+
+## Test D: give Flight through the save: passed
+
+Made from save 6 above (override active, no Flight). The Hedgehog placeholder is turned into Flight in both
+knowledge lists (`crimson-testsave --swap-knowledge 1006:40002`), which is what the client will do when
+the Archipelago item arrives.
+
+Result (override still installed): Kliff can glide after loading. Wout then made manual save 7, restarted
+the game and loaded it: still gliding. The delivered Flight survives the game's own save and a restart.
+
+**Flight works as an Archipelago item:** the override holds it back, the save delivers it.
+
+## Next
+
+- ~~The client delivers 40002 by inserting it into both knowledge lists.~~ Done: `save_edit.learn_knowledge`
+  appends a real entry to both lists (no placeholder needed), as the story grant does (level 1, marked new,
+  learn type 25). Checked on all 32 distinct saves collected so far, from both campaigns, and on a copy of
+  save 6 through the full client adapter. `crimson-testsave --learn 40002` makes the same edit on a copy.
+- Progressive Flight: Flight first, then the upgrades that already require it.
+- Logic: Flight must be reachable before the jump after *Speak with the woman in white*.

@@ -146,6 +146,13 @@ class GameAdapter(ABC):
     def discard(self, prepared: PreparedWrite) -> None:
         """Remove a prepared-but-uncommitted temp file, if any."""
 
+    def missing_unlocks(self, items: Sequence[ItemDef]) -> list[ItemDef]:
+        """Of these delivered items, the unlocks the current save does not have (an older save was loaded).
+
+        Only for items whose delivery is idempotent (learning an ability twice is a no-op), so they can
+        safely be delivered again. Consumables are never reported here."""
+        return []
+
     def verify_reward(self, prepared: PreparedWrite) -> Result:
         current = self.fingerprint()
         if current == prepared.post_fingerprint:

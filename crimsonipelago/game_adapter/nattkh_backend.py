@@ -38,6 +38,7 @@ class DeepState:
     quests: dict[int, dict[str, Any]] = field(default_factory=dict)
     missions: dict[int, dict[str, Any]] = field(default_factory=dict)
     knowledge: set[int] = field(default_factory=set)
+    knowledge_times: dict[int, int] = field(default_factory=dict)  # key -> _learnedFieldTime (when recorded)
     items: dict[int, int] = field(default_factory=dict)  # itemKey -> total stack over all character inventories
     inventories: dict[int, dict[int, int]] = field(default_factory=dict)  # inventoryKey -> itemKey -> stack
     fields: dict[str, str] = field(default_factory=dict)  # flat path -> hex value
@@ -121,10 +122,15 @@ class NattKhBackend:
             sys.modules.update({k: v for k, v in saved.items() if k not in sys.modules})
 
     # ------------------------------------------------------------------ decoding
-    def decode(self, raw: bytes, *, include_fields: bool = False) -> DeepState:
+    def parse(self, raw: bytes) -> dict:
+        """The editor's full decode of a blob (objects with their field trees)."""
         # The editor's legacy item scanner misses most of the inventory on current builds (found in the
         # first real research session), so items are read from the parsed InventorySaveData tree instead.
-        result = self._parser.build_result_from_raw(raw, {"input_kind": "raw_blob"}, include_legacy=False)
+        return self._parser.build_result_from_raw(raw, {"input_kind": "raw_blob"}, include_legacy=False)
+
+    def decode(self, raw: bytes, *, include_fields: bool = False, result: dict | None = None) -> DeepState:
+        if result is None:
+            result = self.parse(raw)
         state = DeepState()
         for obj in result["objects"]:
             if obj.class_name == "QuestSaveData":
@@ -194,9 +200,12 @@ class NattKhBackend:
         for f in obj.fields:
             if f.present and f.name in ("_knowledgeElementSaveDataList", "_list"):
                 for elem in f.list_elements or []:
-                    key = self._children(raw, elem).get("_key")
+                    c = self._children(raw, elem)
+                    key = c.get("_key")
                     if key is not None:
                         state.knowledge.add(key)
+                        if c.get("_learnedFieldTime") is not None:
+                            state.knowledge_times[key] = c["_learnedFieldTime"]
 
     def _flatten(self, raw: bytes, fields, prefix: str, out: dict[str, str]) -> None:
         for f in fields or []:

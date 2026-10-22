@@ -89,26 +89,67 @@ class GroupEntry:
 
 @dataclass
 class Papgt:
+    """The group registry. Keeps every header value and the raw name buffer so edits are minimal and
+    reversible: add_front + remove of the same group restores the original bytes exactly."""
+
     unknown0: int
     checksum: int
-    entries: list[GroupEntry]
+    unknown1: int
+    unknown2: int
+    raw_entries: list[tuple[int, int, int, int, int]]   # optional, language, zero, name_offset, pamt_checksum
+    names: bytes
 
     @classmethod
     def parse(cls, data: bytes, *, verify: bool = True) -> Papgt:
         r = _Reader(data, "0.papgt")
-        unknown0, stored, count, _u1, _u2 = r.take("<IIBBH")
+        unknown0, stored, count, unknown1, unknown2 = r.take("<IIBBH")
         if verify and checksum(data[12:]) != stored:
             raise ArchiveError("0.papgt checksum mismatch: damaged file or unsupported format")
         raw = [r.take("<BHBII") for _ in range(count)]
         (names_len,) = r.take("<i")
         names = r.blob(names_len)
-        entries = []
-        for optional, language, _zero, name_off, pamt_sum in raw:
-            end = names.find(b"\0", name_off)
-            if name_off >= len(names) or end < 0:
+        papgt = cls(unknown0, stored, unknown1, unknown2, raw, names)
+        _ = papgt.entries  # validates every name offset
+        return papgt
+
+    @property
+    def entries(self) -> list[GroupEntry]:
+        out = []
+        for optional, language, _zero, name_off, pamt_sum in self.raw_entries:
+            end = self.names.find(b"\0", name_off)
+            if name_off >= len(self.names) or end < 0:
                 raise ArchiveError(f"0.papgt: bad group name offset {name_off}")
-            entries.append(GroupEntry(names[name_off:end].decode("ascii"), optional, language, pamt_sum))
-        return cls(unknown0, stored, entries)
+            out.append(GroupEntry(self.names[name_off:end].decode("ascii"), optional, language, pamt_sum))
+        return out
+
+    def add_front(self, name: str, pamt_checksum: int, *, is_optional: int = 0, language: int = 0x3FFF) -> None:
+        """Register a group with top priority (what the community mod tools do)."""
+        if any(e.name == name for e in self.entries):
+            raise ArchiveError(f"group {name} is already registered")
+        if len(self.raw_entries) >= 255:
+            raise ArchiveError("the registry is full (255 groups)")
+        prefix = name.encode("ascii") + b"\0"
+        self.raw_entries = [(is_optional, language, 0, 0, pamt_checksum)] + [
+            (o, lang, z, off + len(prefix), c) for o, lang, z, off, c in self.raw_entries]
+        self.names = prefix + self.names
+
+    def remove(self, name: str) -> None:
+        """Unregister a group; if its name sits at the front of the buffer (as add_front leaves it) and
+        nothing else uses those bytes, they are removed too, restoring the original layout."""
+        index = next((i for i, e in enumerate(self.entries) if e.name == name), None)
+        if index is None:
+            raise ArchiveError(f"group {name} is not registered")
+        _o, _l, _z, off, _c = self.raw_entries.pop(index)
+        prefix = name.encode("ascii") + b"\0"
+        if off == 0 and self.names.startswith(prefix) and all(e[3] >= len(prefix) for e in self.raw_entries):
+            self.names = self.names[len(prefix):]
+            self.raw_entries = [(o, lang, z, n - len(prefix), c) for o, lang, z, n, c in self.raw_entries]
+
+    def to_bytes(self) -> bytes:
+        body = b"".join(struct.pack("<BHBII", *e) for e in self.raw_entries)
+        body += struct.pack("<i", len(self.names)) + self.names
+        return struct.pack("<IIBBH", self.unknown0, checksum(body), len(self.raw_entries),
+                           self.unknown1, self.unknown2) + body
 
 
 # --------------------------------------------------------------------------- PAMT
@@ -264,25 +305,96 @@ class GameArchive:
 
 
 # --------------------------------------------------------------------------- building groups
+class _SegNode:
+    def __init__(self):
+        self.children: list[tuple[str, _SegNode]] = []
+        self.terminals: list[int] = []
+
+
+class _Radix:
+    def __init__(self, fragment: str, seg_idx: int | None = None):
+        self.fragment, self.seg_idx = fragment, seg_idx
+        self.children: list[_Radix] = []
+
+
+def _radix_insert(node: _Radix, remaining: str, seg_idx: int) -> None:
+    if not remaining:
+        node.seg_idx = seg_idx
+        return
+    for i, child in enumerate(node.children):
+        common = 0
+        for a, b in zip(child.fragment, remaining):
+            if a != b:
+                break
+            common += 1
+        if common == 0:
+            continue
+        if common == len(child.fragment):
+            _radix_insert(child, remaining[common:], seg_idx)
+            return
+        # split the child at the shared prefix (Rust Vec::swap_remove semantics, to match the reference layout)
+        old = node.children[i]
+        node.children[i] = node.children[-1]
+        node.children.pop()
+        old.fragment = old.fragment[common:]
+        split = _Radix(remaining[:common])  # the shared prefix
+        split.children = [old]
+        _radix_insert(split, remaining[common:], seg_idx)
+        node.children.append(split)
+        return
+    node.children.append(_Radix(remaining, seg_idx))
+
+
 def _build_trie(strings: list[str]) -> tuple[bytes, list[int]]:
-    """Name table with one node per path segment (shared parents); readers only follow parent links."""
+    """Name table in the native layout: one level per path segment ("/"-prefixed below the root), with
+    siblings sharing common prefixes (radix-compressed). Same algorithm as crimson-rs build_trie_buffer."""
+    root = _SegNode()
+    for idx, s in enumerate(strings):
+        node = root
+        for seg in (s.split("/") if s else []):
+            nxt = next((c for name, c in node.children if name == seg), None)
+            if nxt is None:
+                nxt = _SegNode()
+                node.children.append((seg, nxt))
+            node = nxt
+        node.terminals.append(idx)
+
     buf = bytearray()
-    nodes: dict[str, int] = {}
-    offsets = []
-    for s in strings:
-        parent, built = -1, ""
-        segments = s.split("/") if s else [""]
-        for i, seg in enumerate(segments):
-            text = seg if i == 0 else "/" + seg
-            built += text
-            if built not in nodes:
-                enc = text.encode("utf-8")
-                if len(enc) > 255:
-                    raise ArchiveError(f"path segment too long: {seg!r}")
-                nodes[built] = len(buf)
-                buf += struct.pack("<iB", parent, len(enc)) + enc
-            parent = nodes[built]
-        offsets.append(parent)
+    offsets = [-1] * len(strings)
+
+    def write(parent: int, text: str) -> int:
+        enc = text.encode("utf-8")
+        if len(enc) > 255:
+            raise ArchiveError(f"name fragment too long: {text!r}")
+        off = len(buf)
+        buf.extend(struct.pack("<iB", parent, len(enc)) + enc)
+        return off
+
+    def emit_children(children: list[tuple[str, _SegNode]], parent: int, at_root: bool) -> None:
+        if not children:
+            return
+        radix = _Radix("")
+        for ci, (name, _node) in enumerate(children):
+            _radix_insert(radix, name if at_root else "/" + name, ci)
+        emit_radix(radix, parent, children)
+
+    def emit_radix(node: _Radix, parent: int, children: list[tuple[str, _SegNode]]) -> None:
+        if not node.fragment:
+            for c in node.children:
+                emit_radix(c, parent, children)
+            return
+        me = write(parent, node.fragment)
+        if node.seg_idx is not None:
+            seg = children[node.seg_idx][1]
+            for t in seg.terminals:
+                offsets[t] = me
+            emit_children(seg.children, me, False)
+        for c in node.children:
+            emit_radix(c, me, children)
+
+    for t in root.terminals:
+        offsets[t] = write(-1, "")
+    emit_children(root.children, -1, True)
     return bytes(buf), offsets
 
 
@@ -322,14 +434,9 @@ def build_group(files: dict[str, bytes], *, compression: str = "lz4",
     return header + bytes(body), {0: bytes(paz)}
 
 
-def build_papgt(groups: list[GroupEntry], *, unknown0: int = 0) -> bytes:
-    """Serialise a group registry (order = load order; first match wins)."""
-    names = bytearray()
-    entries = bytearray()
-    for g in groups:
-        entries += struct.pack("<BHBII", g.is_optional, g.language, 0, len(names), g.pamt_checksum)
-        names += g.name.encode("ascii") + b"\0"
-    if len(groups) > 255:
-        raise ArchiveError("a group registry holds at most 255 groups")
-    body = bytes(entries) + struct.pack("<i", len(names)) + bytes(names)
-    return struct.pack("<IIBBH", unknown0, checksum(body), len(groups), 0, 0) + body
+def build_papgt(groups: list[GroupEntry], *, unknown0: int = 0, unknown1: int = 0, unknown2: int = 0) -> bytes:
+    """Serialise a fresh registry (order = load order; first match wins). Used by tests."""
+    papgt = Papgt(unknown0, 0, unknown1, unknown2, [], b"")
+    for g in reversed(groups):
+        papgt.add_front(g.name, g.pamt_checksum, is_optional=g.is_optional, language=g.language)
+    return papgt.to_bytes()

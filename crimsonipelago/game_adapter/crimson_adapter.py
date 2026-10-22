@@ -1,31 +1,42 @@
 """The real Crimson Desert adapter: save-file based (the scope doc's fallback path).
 
-Reading is implemented. Writing is deliberately not: no reward-delivery
-procedure has been verified in-game yet (Phase 0, scope doc 3.4), so
-`can_grant_item` and `prepare` report UNSUPPORTED instead of guessing.
-The safety scaffolding a write will need (version gate, game-closed check,
-backups, temp file, re-decode validation, atomic swap) is in place in
-`_build_and_validate` / `commit` so the first verified procedure only has to
-supply the blob transformation.
+Reading: quest, mission and knowledge state of the newest save, through the editor's decoder.
+
+Identity: the newest save is assigned to a campaign (playthrough) by its history, so autosave
+rotation and manual slots all map to the same campaign (see campaign.py).
+
+Writing: only item kinds with a transformation verified in-game are delivered; everything else
+reports UNSUPPORTED and stays parked. Verified so far:
+
+    knowledge   add the key to both knowledge lists, as the story does (test D, 2026-10-22:
+                Flight given this way works, and survives the game's own save and a restart)
+
+Every write goes through the same gate: supported game version, game closed, a backup, the new save
+built in a temp file and decoded again, then an atomic swap (two-phase, see interface.py).
 """
 
 from __future__ import annotations
 
 import hashlib
 import os
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable
 
 from crimson_desert.catalogue import Catalogue, ItemDef, LocationDef
 
-from . import parc, save_container
-from .interface import DeliveryBatch, GameAdapter, GameVersion, PreparedWrite, Result, SaveIdentity
+from . import parc, save_container, save_edit
+from .campaign import CampaignRegistry
+from .interface import DeliveryBatch, DeliveryEntry, GameAdapter, GameVersion, PreparedWrite, Result, SaveIdentity
 from .nattkh_backend import BackendUnavailable, DeepState, NattKhBackend
 from .process_check import game_running
 from .save_locator import backup_save, find_saves, slot_from_path
 from .version_detection import detect_version
 
-BlobTransform = Callable[[bytes, DeliveryBatch], bytes]
+BlobTransform = Callable[[bytes, list[DeliveryEntry]], bytes]
+
+# Items the story would hand out anyway unless a game-data override stops it (see crimson-mod).
+REQUIRED_OVERRIDES = {"Flight": "flight-grant-removed"}
 
 
 class CrimsonDesertSaveAdapter(GameAdapter):
@@ -39,6 +50,7 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         editor_dir: str | Path | None = None,
         backup_dir: str | Path = "backups",
         steam_manifest: str | Path | None = None,
+        campaigns_file: str | Path | None = None,
     ):
         self.catalogue = catalogue
         self.backup_dir = Path(backup_dir)
@@ -53,7 +65,11 @@ class CrimsonDesertSaveAdapter(GameAdapter):
                 self.backend_error = str(exc)
         self._cache: tuple[str, DeepState | None] | None = None
         self._version: GameVersion | None = None
+        self.registry = CampaignRegistry(campaigns_file or Path(backup_dir).parent / "campaigns.json")
+        self.identity_problem: str | None = None
         self.transforms: dict[str, BlobTransform] = {}  # game_ref kind -> verified transform
+        if self.backend is not None:
+            self.transforms["knowledge"] = self._learn_knowledge
 
     # ------------------------------------------------------------------ helpers
     @property
@@ -89,7 +105,23 @@ class CrimsonDesertSaveAdapter(GameAdapter):
 
     def get_save_identity(self) -> SaveIdentity | None:
         path = self.save_path
-        return SaveIdentity(slot_from_path(path).profile_id, str(path)) if path else None
+        if path is None or not path.is_file():
+            self.identity_problem = None
+            return None
+        if self.backend is None:
+            # without the decoder there is no history to go by; fall back to the slot
+            self.identity_problem = None
+            return SaveIdentity(slot_from_path(path).profile_id, str(path))
+        try:
+            state = self._deep_state()
+        except save_container.SaveFormatError as exc:
+            self.identity_problem = f"the newest save cannot be read ({exc})"
+            return None
+        if state is None:
+            return None
+        found = self.registry.identify(state, slot_from_path(path).account, now=datetime.now().isoformat(timespec="seconds"))
+        self.identity_problem = found.problem
+        return SaveIdentity(found.campaign.id, str(path)) if found.campaign else None
 
     def _detected(self, detection: dict[str, Any], state: DeepState) -> bool:
         kind = detection.get("kind")
@@ -185,8 +217,18 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         before = parc.parse_structure(container.blob)
 
         blob = container.blob
+        by_kind: dict[str, list[DeliveryEntry]] = {}
         for entry in batch.entries:
-            blob = self.transforms[entry.item.game_ref["kind"]](blob, DeliveryBatch(batch.batch_id, [entry]))
+            by_kind.setdefault(entry.item.game_ref["kind"], []).append(entry)
+        try:
+            for kind, entries in by_kind.items():
+                blob = self.transforms[kind](blob, entries)
+        except save_edit.SaveEditError as exc:
+            return Result.failure(f"could not build the new save: {exc}")
+        if blob == container.blob:
+            # everything in the batch is already in the save (e.g. Flight learned in the meantime)
+            fp = hashlib.sha256(original).hexdigest()
+            return PreparedWrite(batch_id=batch.batch_id, pre_fingerprint=fp, post_fingerprint=fp, temp_path=None)
 
         encoded = save_container.encode(blob, container.header)
         # validate by decoding what we are about to write, exactly as the game would
@@ -211,6 +253,8 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         )
 
     def commit(self, prepared: PreparedWrite) -> Result:
+        if prepared.temp_path is None and prepared.pre_fingerprint == prepared.post_fingerprint:
+            return self.verify_reward(prepared)   # nothing to write
         path = self.save_path
         if path is None or prepared.temp_path is None or not Path(prepared.temp_path).is_file():
             return Result.failure("prepared save is missing")
@@ -221,6 +265,38 @@ class CrimsonDesertSaveAdapter(GameAdapter):
             return Result.failure("Crimson Desert started (or cannot be checked) before the write; not overwriting")
         os.replace(prepared.temp_path, path)
         return self.verify_reward(prepared)
+
+    def missing_unlocks(self, items) -> list[ItemDef]:
+        state = self._deep_state()
+        if state is None:
+            return []
+        return [i for i in items if (i.game_ref or {}).get("kind") == "knowledge"
+                and int(i.game_ref["knowledge_key"]) not in state.knowledge]
+
+    def setup_warnings(self) -> list[str]:
+        """Problems with the player's setup that make the randomizer misbehave without breaking anything."""
+        from ..game_data import overlay
+        from ..tools.game_data_cli import find_game_dir
+
+        needed = {patch for name, patch in REQUIRED_OVERRIDES.items()
+                  if name in self.catalogue.items and self.catalogue.items[name].deliverable}
+        if not needed:
+            return []
+        try:
+            game_dir = find_game_dir(None)
+        except SystemExit:
+            return ["The Crimson Desert game folder was not found (set CRIMSON_DESERT_DIR), so the client cannot "
+                    "check that the Crimsonipelago game-data override is installed."]
+        installed = {ov.patch for ov in overlay.installed(game_dir)}
+        return [f"The game-data override {patch!r} is not installed, so the story still hands out what it "
+                f"withholds (Flight at the woman in white). With the game closed, run: crimson-mod install {patch}"
+                for patch in sorted(needed - installed)]
+
+    # ------------------------------------------------------------------ transformations
+    def _learn_knowledge(self, blob: bytes, entries: list[DeliveryEntry]) -> bytes:
+        keys = [int(e.item.game_ref["knowledge_key"]) for e in entries]
+        new, _report = save_edit.learn_knowledge(blob, self.backend, keys)
+        return new
 
     def discard(self, prepared: PreparedWrite) -> None:
         if prepared.temp_path:

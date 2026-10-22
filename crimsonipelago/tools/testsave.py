@@ -7,6 +7,10 @@ Only same-size, in-place edits are supported, so the save's structure is never r
                                 Swapping an ability to a harmless codex key removes the ability
                                 without changing the list length.
 
+One structural edit, the same one the client uses to deliver abilities:
+
+    --learn KEY                 learn knowledge KEY (added to both knowledge lists, as the story does)
+
 The source file is never modified. The output is re-encoded (LZ4 + ChaCha20 + HMAC) exactly as the
 save editor does, then decoded again and compared with the source: the command fails unless the
 only differences are the requested ones.
@@ -32,6 +36,7 @@ class EditError(ValueError):
 class EditPlan:
     stacks: dict[int, int] = field(default_factory=dict)          # itemKey -> new total stack
     knowledge_swaps: dict[int, int] = field(default_factory=dict)  # old key -> new key
+    learn: list[int] = field(default_factory=list)                  # knowledge keys to add
 
 
 def _fields(elem) -> dict:
@@ -101,6 +106,14 @@ def apply_edits(raw: bytes, plan: EditPlan, backend: NattKhBackend) -> tuple[byt
         raise EditError(f"item(s) not found in any inventory bag: {sorted(stacks_left)}")
     if swaps_left:
         raise EditError(f"knowledge key(s) not found: {sorted(swaps_left)}")
+    if plan.learn:
+        from ..game_adapter import save_edit
+        try:
+            new, report = save_edit.learn_knowledge(bytes(blob), backend, plan.learn)
+        except save_edit.SaveEditError as exc:
+            raise EditError(str(exc)) from exc
+        log += report.log
+        return new, log
     return bytes(blob), log
 
 
@@ -114,7 +127,7 @@ def verify(before: dict, after: dict, plan: EditPlan) -> list[str]:
         if b["items"].get(k) != want:
             problems.append(f"item {k}: expected {want}, got {b['items'].get(k)}")
     ka, kb = set(a["knowledge"]), set(b["knowledge"])
-    expect_k = (ka - set(plan.knowledge_swaps)) | set(plan.knowledge_swaps.values())
+    expect_k = (ka - set(plan.knowledge_swaps)) | set(plan.knowledge_swaps.values()) | set(plan.learn)
     if kb != expect_k:
         problems.append(f"knowledge differs: missing {sorted(expect_k - kb)}, extra {sorted(kb - expect_k)}")
     for name in ("quests", "missions"):
@@ -165,11 +178,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--editor-dir", type=Path, required=True, help="your CrimsonSaveEditor folder")
     p.add_argument("--stack", action="append", default=[], metavar="ITEM=COUNT")
     p.add_argument("--swap-knowledge", action="append", default=[], metavar="OLD:NEW")
+    p.add_argument("--learn", action="append", default=[], type=int, metavar="KEY")
     args = p.parse_args(argv)
     plan = EditPlan(stacks=dict(_pair(s, "=") for s in args.stack),
-                    knowledge_swaps=dict(_pair(s, ":") for s in args.swap_knowledge))
-    if not plan.stacks and not plan.knowledge_swaps:
-        p.error("nothing to do: give --stack and/or --swap-knowledge")
+                    knowledge_swaps=dict(_pair(s, ":") for s in args.swap_knowledge), learn=args.learn)
+    if not plan.stacks and not plan.knowledge_swaps and not plan.learn:
+        p.error("nothing to do: give --stack, --swap-knowledge and/or --learn")
     try:
         log = make_test_save(args.source, args.output, plan, args.editor_dir)
     except (EditError, save_container.SaveFormatError) as exc:

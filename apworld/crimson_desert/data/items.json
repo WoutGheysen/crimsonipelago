@@ -46,18 +46,23 @@
       "game_versions": []
     },
     {
-      "ap_id": 1101,
-      "name": "Traversal Unlock A",
+      "ap_id": 1110,
+      "name": "Flight",
       "classification": "progression",
       "category": "traversal",
-      "game_ref": null,
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 40002
+      },
       "quantity": 1,
       "repeatable": false,
       "starting_safe": true,
-      "capability": "unsupported",
-      "verified": false,
-      "evidence": null,
-      "game_versions": []
+      "capability": "supported",
+      "verified": true,
+      "evidence": "docs/research/flight-gating.md (test D: added to both knowledge lists, glides after load, save and restart)",
+      "game_versions": [
+        "25477059"
+      ]
     },
     {
       "ap_id": 1102,
@@ -177,7 +182,7 @@
       "Story Access: Act 1": 1,
       "Story Access: Act 2": 1,
       "Story Access: Act 3": 1,
-      "Traversal Unlock A": 1,
+      "Flight": 1,
       "Interaction Unlock": 1,
       "Key Item": 1,
       "Equipment Upgrade": 2
@@ -186,7 +191,7 @@
       "Story Access: Act 1": 1,
       "Story Access: Act 2": 1,
       "Story Access: Act 3": 1,
-      "Traversal Unlock A": 1,
+      "Flight": 1,
       "Traversal Unlock B": 1,
       "Interaction Unlock": 1,
       "Key Item": 1,
