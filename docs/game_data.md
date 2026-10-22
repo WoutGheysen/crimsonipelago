@@ -54,3 +54,31 @@ checks the reader against a real mod pack built by the community tools.
 | ChaCha20 | nonce = checksum(file name) ×4; key = fixed base key XOR nonce XOR (xor of the 3 encrypt-info bytes) |
 | Index (`.staticinfoheader` / `.pabgh`) | `u16 n` + n × (`u32`/`u16`/`u8` key, `u32` offset), or `u32 n` + n × (`u32`, `u32`) |
 | Record | `u32 key`, `u32 name length`, name, then table-specific fields |
+
+## Overrides: `crimson-mod`
+
+`crimson-mod` installs a small game-data override: a few patched tables in an extra archive group
+(`0090` and up), registered first in `meta/0.papgt` so the game prefers it. The game's own groups are
+never modified.
+
+```powershell
+crimson-mod list                              # bundled patches
+crimson-mod check flight-grant-removed        # dry run against your game: shows exactly what changes
+crimson-mod install flight-grant-removed      # game must be closed
+crimson-mod status
+crimson-mod uninstall                         # removes it; 0.papgt is restored byte for byte
+```
+
+Safety rules built in:
+
+- **Same-size patches only:** whole 32-bit values, and text of equal length, inside one record. Offsets
+  never move, and the table index is shipped unchanged next to the body.
+- **Each patch names its target:** the record it expects and how many replacements it must make, so it
+  stops instead of guessing after a game update.
+- **Install verifies itself:** the game data is re-read and the patched files must resolve to the new
+  group. A failed install undoes itself.
+- **Reversible:** a timestamped copy of `0.papgt` is kept before every change, and only folders carrying
+  Crimsonipelago's marker file are ever deleted.
+- **Game must be closed:** install and uninstall refuse while Crimson Desert is running.
+
+Steam's "Verify integrity of game files" also returns the game to its original state.

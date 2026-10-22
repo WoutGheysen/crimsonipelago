@@ -89,26 +89,67 @@ class GroupEntry:
 
 @dataclass
 class Papgt:
+    """The group registry. Keeps every header value and the raw name buffer so edits are minimal and
+    reversible: add_front + remove of the same group restores the original bytes exactly."""
+
     unknown0: int
     checksum: int
-    entries: list[GroupEntry]
+    unknown1: int
+    unknown2: int
+    raw_entries: list[tuple[int, int, int, int, int]]   # optional, language, zero, name_offset, pamt_checksum
+    names: bytes
 
     @classmethod
     def parse(cls, data: bytes, *, verify: bool = True) -> Papgt:
         r = _Reader(data, "0.papgt")
-        unknown0, stored, count, _u1, _u2 = r.take("<IIBBH")
+        unknown0, stored, count, unknown1, unknown2 = r.take("<IIBBH")
         if verify and checksum(data[12:]) != stored:
             raise ArchiveError("0.papgt checksum mismatch: damaged file or unsupported format")
         raw = [r.take("<BHBII") for _ in range(count)]
         (names_len,) = r.take("<i")
         names = r.blob(names_len)
-        entries = []
-        for optional, language, _zero, name_off, pamt_sum in raw:
-            end = names.find(b"\0", name_off)
-            if name_off >= len(names) or end < 0:
+        papgt = cls(unknown0, stored, unknown1, unknown2, raw, names)
+        _ = papgt.entries  # validates every name offset
+        return papgt
+
+    @property
+    def entries(self) -> list[GroupEntry]:
+        out = []
+        for optional, language, _zero, name_off, pamt_sum in self.raw_entries:
+            end = self.names.find(b"\0", name_off)
+            if name_off >= len(self.names) or end < 0:
                 raise ArchiveError(f"0.papgt: bad group name offset {name_off}")
-            entries.append(GroupEntry(names[name_off:end].decode("ascii"), optional, language, pamt_sum))
-        return cls(unknown0, stored, entries)
+            out.append(GroupEntry(self.names[name_off:end].decode("ascii"), optional, language, pamt_sum))
+        return out
+
+    def add_front(self, name: str, pamt_checksum: int, *, is_optional: int = 0, language: int = 0x3FFF) -> None:
+        """Register a group with top priority (what the community mod tools do)."""
+        if any(e.name == name for e in self.entries):
+            raise ArchiveError(f"group {name} is already registered")
+        if len(self.raw_entries) >= 255:
+            raise ArchiveError("the registry is full (255 groups)")
+        prefix = name.encode("ascii") + b"\0"
+        self.raw_entries = [(is_optional, language, 0, 0, pamt_checksum)] + [
+            (o, lang, z, off + len(prefix), c) for o, lang, z, off, c in self.raw_entries]
+        self.names = prefix + self.names
+
+    def remove(self, name: str) -> None:
+        """Unregister a group; if its name sits at the front of the buffer (as add_front leaves it) and
+        nothing else uses those bytes, they are removed too, restoring the original layout."""
+        index = next((i for i, e in enumerate(self.entries) if e.name == name), None)
+        if index is None:
+            raise ArchiveError(f"group {name} is not registered")
+        _o, _l, _z, off, _c = self.raw_entries.pop(index)
+        prefix = name.encode("ascii") + b"\0"
+        if off == 0 and self.names.startswith(prefix) and all(e[3] >= len(prefix) for e in self.raw_entries):
+            self.names = self.names[len(prefix):]
+            self.raw_entries = [(o, lang, z, n - len(prefix), c) for o, lang, z, n, c in self.raw_entries]
+
+    def to_bytes(self) -> bytes:
+        body = b"".join(struct.pack("<BHBII", *e) for e in self.raw_entries)
+        body += struct.pack("<i", len(self.names)) + self.names
+        return struct.pack("<IIBBH", self.unknown0, checksum(body), len(self.raw_entries),
+                           self.unknown1, self.unknown2) + body
 
 
 # --------------------------------------------------------------------------- PAMT
@@ -322,14 +363,9 @@ def build_group(files: dict[str, bytes], *, compression: str = "lz4",
     return header + bytes(body), {0: bytes(paz)}
 
 
-def build_papgt(groups: list[GroupEntry], *, unknown0: int = 0) -> bytes:
-    """Serialise a group registry (order = load order; first match wins)."""
-    names = bytearray()
-    entries = bytearray()
-    for g in groups:
-        entries += struct.pack("<BHBII", g.is_optional, g.language, 0, len(names), g.pamt_checksum)
-        names += g.name.encode("ascii") + b"\0"
-    if len(groups) > 255:
-        raise ArchiveError("a group registry holds at most 255 groups")
-    body = bytes(entries) + struct.pack("<i", len(names)) + bytes(names)
-    return struct.pack("<IIBBH", unknown0, checksum(body), len(groups), 0, 0) + body
+def build_papgt(groups: list[GroupEntry], *, unknown0: int = 0, unknown1: int = 0, unknown2: int = 0) -> bytes:
+    """Serialise a fresh registry (order = load order; first match wins). Used by tests."""
+    papgt = Papgt(unknown0, 0, unknown1, unknown2, [], b"")
+    for g in reversed(groups):
+        papgt.add_front(g.name, g.pamt_checksum, is_optional=g.is_optional, language=g.language)
+    return papgt.to_bytes()

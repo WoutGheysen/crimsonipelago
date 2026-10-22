@@ -1,6 +1,6 @@
 # How Flight is gated (and how to make it an Archipelago item)
 
-- **Status:** in progress, 2026-10-22
+- **Status:** override built, awaiting in-game test (2026-10-22)
 - **Build:** 25477059
 - **Inputs:**
   - write tests A, B and C (session 1)
@@ -37,17 +37,28 @@ From `skill.pabgb`, `knowledgeinfo.pabgb` and `skilltreeinfo.pabgb` (`crimson-da
 | skill 15036 `Skill_CrowWing_Start` | (nothing points to it) | the take-off action, not a gate |
 | item 391518539 `Karanda_Necklace` and three other necklaces | the value 40002 | possibly coincidence; worth one look |
 
-None of these records contains a quest or mission condition, so **the grant lives in the quest or
-mission data**, which isn't extracted yet.
+None of these records contains a quest or mission condition. The rest of the chain is in the
+quest/mission data, found with `crimson-data search` over all 134 tables (2026-10-22):
+
+| Record | Content | Role |
+|---|---|---|
+| missioninfo 4294964343 `Mission_MeetAlustain_Alustain_Witch_1` | rewards: drop sets 1014512 and 1014513 | the objective "Speak with the woman in white" (the save shows it completing as the glider appears) |
+| dropsetinfo 1014512 `Knowledge(Knowledge_CrowWing, 1)` | 40002 at offsets 59 and 118, plus the text twice | **the grant** |
+| dropsetinfo 1014513 `Knowledge(AbyssGate_0002_AbyssIsland, 1)` | | the objective's second reward, an Abyss Gate |
+| conditioninfo 1000547 `checkCharacterKey(Kliff) && checkKnowledge(Knowledge_CrowWing)` | 40002 at offset 97, plus the text | **the gate** |
+| skill 15036 `Skill_CrowWing_Start` | uses condition 1000547 (offset 126) | the take-off action checks the gate |
+| missioninfo 1000546 `Mission_MeetAlustain_Alustain_AbyssGate` | sub-missions `_0`…`_5` | *Abyss without Balance* and its steps |
+
+So `Skill_CrowWing_Start` is where the check happens. It isn't referenced by other records, but it
+references the condition. The earlier note that it is "not a gate" was wrong.
 
 ## Plan
 
-1. Extract the quest and mission tables (`crimson-data find "*quest*.staticinfo*"`, `"*mission*.staticinfo*"`, then `extract`)
-   and `search` them for 40002 and for 1000546. Expected: the reward of *Abyss without Balance* teaches
-   knowledge 40002.
-2. **Remove the grant, not the skill:** an overlay group that drops 40002 from that reward. Disabling
-   `Skill_CrowWing` itself would need a second override to turn Flight back on, and would risk
-   scripted story moments that expect gliding.
+1. ~~Find the grant in the quest/mission tables.~~ Done (above).
+2. **Remove the grant, not the skill:** `crimson-mod install flight-grant-removed` patches drop set
+   1014512 to teach the Hedgehog codex entry (1006) instead: same size, same-length text. Fallback if the
+   on-load re-grant has another source: point condition 1000547 at a knowledge key the game never
+   grants, and deliver that one.
 3. **Deliver through the save:** when the Archipelago item arrives, add 40002 to both knowledge lists
    (the same path that worked for items in test A).
 4. Test D (save only): add 40002 to the 19:00 pre-glider save and check that Kliff can glide. This
@@ -55,3 +66,12 @@ mission data**, which isn't extracted yet.
 
 Flight then becomes a **progressive** item: Flight, then Swift Flight and the other upgrades, which
 already require 40002 in the game data.
+
+## In-game test of the override (pending)
+
+With `flight-grant-removed` installed:
+
+- **E1, reload:** load the test-C save (Flight removed from both knowledge lists). Can Kliff glide? If
+  not, the on-load re-grant ran through this drop set, and the override stops it.
+- **E2, story:** load the 19:00 save (before *Abyss without Balance*) and play through the woman in
+  white. Expected: no glider; the Hedgehog codex entry appears instead.
