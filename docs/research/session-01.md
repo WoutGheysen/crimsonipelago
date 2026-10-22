@@ -143,9 +143,9 @@ Flight is stored three times in the save:
 `_learnFromTypeRaw` seen: 25 for story grants (Blinding Flash, Summon Mount, Axiom Force, Flight, UI
 unlocks), 15 for Force Palm, 20 for Healing and Aerial Force Palm, 0 and 1 for others.
 
-- **C: pending.** Flight swapped out of both `_list` and `_learnedFollowLearnKnowledge`. If Kliff can't
-  glide, abilities can be withheld through the save. If Flight comes back, the game re-grants from
-  completed quest state, and withholding needs another mechanism.
+- **C: Flight came back again.** Removed from both `_list` and `_learnedFollowLearnKnowledge`; the game
+  re-added it to both on load, with a fresh learned timestamp and no quest change. Story-granted
+  abilities are re-granted on load; see [flight-gating.md](flight-gating.md) for the follow-up.
 
 ## Next
 

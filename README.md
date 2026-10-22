@@ -53,6 +53,8 @@ crimsonipelago status
 | `crimson-catalogue` | Validate the data catalogue and report how much of it is verified |
 | `crimson-seeds` | Bulk seed-generation tester (solo, mixed-game and multi-player scenarios) |
 | `crimson-build-apworld` | Package `apworld/crimson_desert` into `dist/crimson_desert.apworld` |
+| `crimson-data` | Read the game's own data archives: list, extract, and search static tables ([docs/game_data.md](docs/game_data.md)) |
+| `crimson-testsave` | Make verified, edited copies of a save for in-game write experiments |
 | `crimson-candidates` | Draft unverified catalogue candidates (quests, missions, abilities, items) from the NattKh editor's data tables |
 
 ## Repository layout

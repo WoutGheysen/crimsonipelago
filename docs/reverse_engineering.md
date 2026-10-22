@@ -10,6 +10,8 @@ Current research:
 - [research/first-session-plan.md](research/first-session-plan.md): the checklist for the first
   save-diff session (Prologue and Chapter 1).
 - [research/session-01.md](research/session-01.md): results of that first session.
+- [research/flight-gating.md](research/flight-gating.md): how Flight is gated, and the plan to make it an Archipelago item.
+- [game_data.md](game_data.md): `crimson-data`, for reading the game's own data archives.
 
 ## Ground rules
 
