@@ -1,6 +1,6 @@
 # First slice: the opening hours as an Archipelago world
 
-- **Status:** draft for review (2026-10-23). Nothing here is in the live catalogue yet.
+- **Status:** reviewed (2026-10-23), going into the catalogue. Decisions below.
 - **Covers:** the prologue and chapter 1, from the first cutscene to *Woman in White* (where the story
   hands out Flight).
 - **Sources:** 30 saves of the new campaign (the watcher's autosaves from the first evening, the manual saves,
@@ -120,7 +120,19 @@ now to more work:
 Vanilla rewards stay as they are for now: you still get them from the story. Quest items (the old man's key,
 the sewer letter) must stay that way anyway.
 
-## Questions for Wout (next time in the game)
+## Decisions (Wout, 2026-10-23)
+
+1. **The jump is not a hard gate.** Without Flight, Kliff dies and respawns on the ground below, and the
+   story continues. So nothing in this slice requires Flight; it gates Abyss islands and gaps later on.
+2. **Objectives as checks** (44): the full game has hundreds more (main story, regional and side quests,
+   Abyss puzzles and gates, bosses), so small checks scale well for big multiworlds.
+3. **Skipped objectives can't be lost:** an objective's check also counts as done once its mission
+   completes. Whether an objective can be skipped for good is unproven (neither run skipped one, and no
+   completed mission in any save has an unfinished objective), and with this rule it doesn't matter.
+4. **Filler for now:** items that do nothing in the game, so the slice can be built. Real items (inventory
+   insert) are next.
+
+## Original questions
 
 1. **After the jump without Flight**, where did you come back after dying: on the island, or below it? Could you
    still reach Hernand somehow (walking, an Abyss Nexus teleport)? If yes, Flight is not a hard gate there.
