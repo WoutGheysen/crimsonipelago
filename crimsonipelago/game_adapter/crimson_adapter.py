@@ -8,8 +8,13 @@ rotation and manual slots all map to the same campaign (see campaign.py).
 Writing: only item kinds with a transformation verified in-game are delivered; everything else
 reports UNSUPPORTED and stays parked. Verified so far:
 
-    knowledge   add the key to both knowledge lists, as the story does (test D, 2026-10-22:
-                Flight given this way works, and survives the game's own save and a restart)
+    knowledge       add the key to both knowledge lists, as the story does (test D, 2026-10-22:
+                    Flight given this way works, and survives the game's own save and a restart)
+    inventory_item  add to the stack in the main bag, or a new stack (save_edit.give_items; in-game
+                    test F pending, so no catalogue item uses it yet)
+
+An item that can't go in right now (a full stack, say) is left out of the write and stays pending with
+the reason; the rest of the batch is delivered.
 
 Every write goes through the same gate: supported game version, game closed, a backup, the new save
 built in a temp file and decoded again, then an atomic swap (two-phase, see interface.py).
@@ -67,10 +72,12 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         self._version: GameVersion | None = None
         self.registry = CampaignRegistry(campaigns_file or Path(backup_dir).parent / "campaigns.json")
         self.identity_problem: str | None = None
+        self._failed: dict[tuple, Result] = {}
         self.transforms: dict[str, BlobTransform] = {}  # game_ref kind -> verified transform
         self.transforms["nothing"] = lambda blob, entries: blob
         if self.backend is not None:
             self.transforms["knowledge"] = self._learn_knowledge
+            self.transforms["inventory_item"] = self._give_items
 
     # ------------------------------------------------------------------ helpers
     @property
@@ -221,19 +228,34 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         container = save_container.decode(original)
         before = parc.parse_structure(container.blob)
 
+        pre_fp = hashlib.sha256(original).hexdigest()
+        attempt = (pre_fp, tuple(sorted(e.index for e in batch.entries)))
+        if attempt in self._failed:
+            return self._failed[attempt]   # same save, same items: don't spend another decode finding out
+
         blob = container.blob
         by_kind: dict[str, list[DeliveryEntry]] = {}
         for entry in batch.entries:
             by_kind.setdefault(entry.item.game_ref["kind"], []).append(entry)
-        try:
-            for kind, entries in by_kind.items():
+        skipped: dict[str, str] = {}
+        for kind, entries in by_kind.items():
+            try:
                 blob = self.transforms[kind](blob, entries)
-        except save_edit.SaveEditError as exc:
-            return Result.failure(f"could not build the new save: {exc}")
+            except save_edit.SaveEditError:
+                # find the item(s) that can't go in right now; deliver the rest
+                for entry in entries:
+                    try:
+                        blob = self.transforms[kind](blob, [entry])
+                    except save_edit.SaveEditError as exc:
+                        skipped[str(entry.index)] = f"{entry.item.name}: {exc}"
+        if len(skipped) == len(batch.entries):
+            failure = Result.failure("; ".join(dict.fromkeys(skipped.values())), skipped=skipped)
+            self._failed = {attempt: failure}
+            return failure
         if blob == container.blob:
             # everything in the batch is already in the save (e.g. Flight learned in the meantime)
-            fp = hashlib.sha256(original).hexdigest()
-            return PreparedWrite(batch_id=batch.batch_id, pre_fingerprint=fp, post_fingerprint=fp, temp_path=None)
+            return PreparedWrite(batch_id=batch.batch_id, pre_fingerprint=pre_fp, post_fingerprint=pre_fp, temp_path=None,
+                                 plan={"skipped": skipped})
 
         encoded = save_container.encode(blob, container.header)
         # validate by decoding what we are about to write, exactly as the game would
@@ -252,9 +274,10 @@ class CrimsonDesertSaveAdapter(GameAdapter):
             os.fsync(fh.fileno())
         return PreparedWrite(
             batch_id=batch.batch_id,
-            pre_fingerprint=hashlib.sha256(original).hexdigest(),
+            pre_fingerprint=pre_fp,
             post_fingerprint=hashlib.sha256(encoded).hexdigest(),
             temp_path=str(temp),
+            plan={"skipped": skipped},
         )
 
     def commit(self, prepared: PreparedWrite) -> Result:
@@ -301,6 +324,12 @@ class CrimsonDesertSaveAdapter(GameAdapter):
                 for patch in sorted(needed - installed)]
 
     # ------------------------------------------------------------------ transformations
+    def _give_items(self, blob: bytes, entries: list[DeliveryEntry]) -> bytes:
+        gifts = [save_edit.Gift(int(e.item.game_ref["item_key"]), int(e.item.game_ref.get("count", 1)),
+                                e.item.game_ref.get("max_stack")) for e in entries]
+        new, _report = save_edit.give_items(blob, self.backend, gifts)
+        return new
+
     def _learn_knowledge(self, blob: bytes, entries: list[DeliveryEntry]) -> bytes:
         keys = [int(e.item.game_ref["knowledge_key"]) for e in entries]
         new, _report = save_edit.learn_knowledge(blob, self.backend, keys)

@@ -186,7 +186,12 @@ class DeliveryEngine:
                                        error=prepared.message, bump_attempts=True)
             return self._waiting(len(pending), prepared.message, recovery)
 
-        indices = [e.index for e in entries]
+        skipped = {int(k): v for k, v in (prepared.plan or {}).get("skipped", {}).items()}
+        if skipped:
+            self.ledger.set_item_state(session_id, list(skipped), DeliveryState.PENDING,
+                                       error="; ".join(skipped.values()), bump_attempts=True)
+            self._waiting(len(skipped), "; ".join(dict.fromkeys(skipped.values())), recovery)
+        indices = [e.index for e in entries if e.index not in skipped]
         try:
             self.ledger.begin_batch(session_id, batch.batch_id, indices, prepared.pre_fingerprint,
                                     prepared.post_fingerprint, prepared.temp_path)
@@ -198,7 +203,8 @@ class DeliveryEngine:
         if result.ok:
             self._complete(session_id, batch.batch_id, "")
             remaining = len(pending) - len(indices)
-            self.last_waiting_reason = None
+            if not skipped:
+                self.last_waiting_reason = None
             return DeliveryReport(delivered=len(indices), pending=remaining, recovery_required=recovery)
 
         outcome = self.adapter.recover_pending_delivery(prepared)
