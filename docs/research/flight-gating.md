@@ -107,7 +107,9 @@ the game and loaded it: still gliding. The delivered Flight survives the game's 
 
 ## Next
 
-- The client delivers 40002 by inserting it into both knowledge lists (a structural insert; the test used
-  a same-size swap of the placeholder).
+- ~~The client delivers 40002 by inserting it into both knowledge lists.~~ Done: `save_edit.learn_knowledge`
+  appends a real entry to both lists (no placeholder needed), as the story grant does (level 1, marked new,
+  learn type 25). Checked on all 32 distinct saves collected so far, from both campaigns, and on a copy of
+  save 6 through the full client adapter. `crimson-testsave --learn 40002` makes the same edit on a copy.
 - Progressive Flight: Flight first, then the upgrades that already require it.
 - Logic: Flight must be reachable before the jump after *Speak with the woman in white*.

@@ -120,6 +120,10 @@ class SyncController:
         """Resume the last session offline (if it matches the loaded save) and finish interrupted writes."""
         version = await self._adapter(self.adapter.get_game_version)
         self.status.game_version, self.status.game_supported = version.label, version.supported
+        setup_warnings = getattr(self.adapter, "setup_warnings", None)
+        if setup_warnings:
+            for warning in await self._adapter(setup_warnings):
+                self.bus.emit(ev.ERROR, warning)
         self.status.writes_allowed = version.writes_allowed
         profile = await self._adapter(self.adapter.get_current_profile)
         self.status.profile_id = profile
@@ -331,21 +335,23 @@ class SyncController:
         if not self.session:
             return
         if profile is None:
-            self._pause("No Crimson Desert save was found. Start or load the campaign for this seed.")
+            problem = getattr(self.adapter, "identity_problem", None)
+            self._pause(f"Waiting for the campaign: {problem}." if problem else
+                        "No Crimson Desert save was found. Start or load the campaign for this seed.")
             return
         session = self.ledger.session(self.session.id)
         if session.profile_id is None:
             other = [s for s in self.ledger.sessions_for_profile(profile) if s.id != session.id]
             if other:
-                self._pause(f"Save profile {profile} already belongs to seed {other[0].seed_name}. "
-                            f"Start a new campaign in a free save slot for this seed.")
+                self._pause(f"This playthrough ({profile}) already belongs to seed {other[0].seed_name}. "
+                            f"Start a new game for this seed.")
                 return
             self.ledger.bind_profile(session.id, profile)
-            self.bus.emit(ev.CONNECTION, f"Seed {session.seed_name} is now bound to save profile {profile}")
+            self.bus.emit(ev.CONNECTION, f"Seed {session.seed_name} is now bound to playthrough {profile}")
             session = self.ledger.session(session.id)
         if session.profile_id != profile:
-            self._pause(f"This seed belongs to save profile {session.profile_id}, but {profile} is loaded. "
-                        f"Load the matching save slot to continue.")
+            self._pause(f"This seed belongs to playthrough {session.profile_id}, but the newest save is from "
+                        f"{profile}. Load a save of the right playthrough (and save once) to continue.")
             return
         self.session = session
         self._resume()
@@ -380,6 +386,7 @@ class SyncController:
             return
         sid = self.session.id
         await self._adapter(self.engine.validate, sid)
+        await self._adapter(self.engine.reconcile, sid)
         report = await self._adapter(self.engine.deliver_pending, sid)
         self.status.waiting_reason = report.waiting_reason
 

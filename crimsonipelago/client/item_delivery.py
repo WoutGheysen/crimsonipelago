@@ -120,6 +120,21 @@ class DeliveryEngine:
         self.bus.emit(ev.REWARD_DELIVERED, f"Delivered: {names}" + (f" ({how})" if how else ""),
                       indices=[r.idx for r in items])
 
+    def reconcile(self, session_id: int) -> int:
+        """Re-queue delivered unlocks the loaded save no longer has (e.g. the player loaded an older save).
+
+        Only the adapter's idempotent kinds qualify, so delivering one again can never duplicate it."""
+        done = self.ledger.items(session_id, (DeliveryState.COMPLETE,))
+        items = {r.item_id: self.catalogue.item_by_id(r.item_id) for r in done}
+        missing = {i.ap_id for i in self.adapter.missing_unlocks([i for i in items.values() if i is not None])}
+        again = [r.idx for r in done if r.item_id in missing]
+        if again:
+            self.ledger.set_item_state(session_id, again, DeliveryState.PENDING, expect=(DeliveryState.COMPLETE,),
+                                       error="not in the loaded save (an older save was loaded?); delivering again")
+            names = ", ".join(sorted({items[r.item_id].name for r in done if r.idx in again}))
+            self.bus.emit(ev.REWARD_PENDING, f"The loaded save is missing {names}; it will be given again")
+        return len(again)
+
     # ------------------------------------------------------------------ delivery
     def deliver_pending(self, session_id: int) -> DeliveryReport:
         pending: list[ReceivedItem] = self.ledger.items(session_id, (DeliveryState.PENDING,))

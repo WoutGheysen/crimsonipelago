@@ -55,7 +55,9 @@ placeholder.
 | Module | Role |
 |---|---|
 | `interface.py` | The `GameAdapter` contract and the two-phase write protocol. |
-| `crimson_adapter.py` | Real save-file adapter. Reading is implemented; writing returns `UNSUPPORTED` until Phase 0 verifies a procedure. |
+| `crimson_adapter.py` | Real save-file adapter. Reads the newest save; delivers the item kinds verified in-game (so far: knowledge, e.g. Flight); everything else is `UNSUPPORTED`. |
+| `save_edit.py` | Structural save edits: appends list elements (e.g. learns a knowledge entry) and keeps pointers, sizes and the table of contents consistent; the result is decoded again and compared. |
+| `campaign.py` | Tells which playthrough a save belongs to from its history, so every slot of one playthrough maps to one campaign. |
 | `sim_adapter.py` | Simulated game that supports everything, used by tests and `crimsonipelago sim`. |
 | `save_container.py` | `save.save` header, ChaCha20 decrypt/encrypt, HMAC check, LZ4. |
 | `parc.py` | Reads the serializer's self-describing schema and table of contents, and fingerprints each top-level save object. |
@@ -88,10 +90,24 @@ Anything else: the game or the user changed the save in between, so the client s
 
 ## Session isolation
 
-The first successful sync binds a seed to one save profile (`<account>/<slot>`). Each connect
-validates the seed, slot, game name, the catalogue fingerprint the seed was generated with
-(sent in slot data) and the bound profile. A mismatch pauses
-sync with a message saying what is wrong and how to fix it. Progression never moves between seeds.
+The first successful sync binds a seed to one **campaign** (playthrough). Each connect validates the
+seed, slot, game name, the catalogue fingerprint the seed was generated with (sent in slot data) and
+the bound campaign. A mismatch pauses sync with a message saying what is wrong and how to fix it.
+Progression never moves between seeds.
+
+A save slot is not a campaign: the game rotates autosaves over `slot0`–`slot2` and keeps manual saves in
+`slot100`+. The save has no campaign id either, so `campaign.py` recognises a playthrough by its
+history: the game-time moments quests were completed and knowledge was learned (batches with one shared
+time are scripted and ignored). Two playthroughs share none of these; later saves of one playthrough
+keep them. A campaign is registered once a save has at least 5 of these anchors (about 15 minutes into a
+new game) and is stored in `campaigns.json` in the client's data folder.
+
+## Unlocks lost to an older save
+
+Abilities such as Flight are delivered by adding them to the save. If the player later loads a save from
+before that delivery, the ability is gone while the ledger says delivered. For item kinds whose
+delivery is idempotent (learning knowledge twice is a no-op), the engine checks the loaded save every
+tick and re-queues what is missing (`DeliveryEngine.reconcile`). Consumables are never re-queued.
 
 ## Received items
 

@@ -62,7 +62,8 @@ def build_adapter(kind: str, catalogue: Catalogue, data_dir: Path, *, sim_file: 
         return SimulatedGameAdapter(sim_file or data_dir / "simulated_game.json")
     if kind == "save":
         return CrimsonDesertSaveAdapter(catalogue, save_path=save_path, editor_dir=editor_dir,
-                                        backup_dir=data_dir / "backups", steam_manifest=steam_manifest)
+                                        backup_dir=data_dir / "backups", steam_manifest=steam_manifest,
+                                        campaigns_file=data_dir / "campaigns.json")
     raise ValueError(f"unknown adapter {kind!r}")
 
 

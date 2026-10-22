@@ -195,3 +195,19 @@ def test_many_pending_rewards_are_batched(setup, ledger, sim, catalogue):
     assert delivered == 120
     assert sim.get_inventory_snapshot() == {"Coin Pouch": 120}
     assert len(ledger.batches(sid, (BatchState.COMMITTED,))) == 3
+
+
+def test_unlock_lost_by_loading_an_older_save_is_given_again(setup, ledger, sim, catalogue, bus):
+    sid, engine = setup
+    receive(ledger, sid, catalogue, "Flight", "Resource Bundle")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    assert sim.get_inventory_snapshot() == {"Flight": 1, "Resource Bundle": 1}
+    assert engine.reconcile(sid) == 0
+    sim.update(inventory={})                      # the player loaded a save from before the delivery
+    assert engine.reconcile(sid) == 1             # Flight comes back; the consumable is not duplicated
+    assert states(ledger, sid) == [DeliveryState.PENDING, DeliveryState.COMPLETE]
+    assert any("missing Flight" in e.message for e in bus.log)
+    engine.deliver_pending(sid)
+    assert sim.get_inventory_snapshot() == {"Flight": 1}
+    assert engine.reconcile(sid) == 0

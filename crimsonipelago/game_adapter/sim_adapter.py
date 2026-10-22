@@ -93,6 +93,10 @@ class SimulatedGameAdapter(GameAdapter):
         return dict(self.read_state()["inventory"])
 
     # ------------------------------------------------------------------ writing
+    def missing_unlocks(self, items) -> list[ItemDef]:
+        inventory = self.get_inventory_snapshot()
+        return [i for i in items if (i.game_ref or {}).get("kind") == "knowledge" and not inventory.get(i.name)]
+
     def can_grant_item(self, item: ItemDef) -> Result:
         if item.name in self.ungrantable:
             return Result.unsupported(f"{item.name!r} cannot be delivered (simulated restriction)")

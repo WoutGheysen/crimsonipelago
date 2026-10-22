@@ -2,12 +2,19 @@
   "schema_version": 1,
   "_comment": "Game builds the adapter has been tested against. Write operations are refused on any build not listed with writes_enabled=true. 'retired_*_ids' must list every AP ID that was ever released and later removed, so it is never reused.",
   "steam_app_id": 3321460,
-  "supported_builds": [],
+  "supported_builds": [
+    {
+      "buildid": "25477059",
+      "label": "Steam build 25477059 (October 2026)",
+      "writes_enabled": true,
+      "note": "Save writes verified in-game: item stack change (test A) and Flight knowledge (test D), 2026-10-21/22."
+    }
+  ],
   "save_container_versions": {
     "2": {
       "read": true,
-      "write": false,
-      "note": "Container format documented by the NattKh save editor; read path implemented, write path disabled until Phase 0 verifies it in-game."
+      "write": true,
+      "note": "Encode verified in-game on build 25477059 (tests A and D): the game loads the re-encoded save."
     }
   },
   "retired_item_ids": [],

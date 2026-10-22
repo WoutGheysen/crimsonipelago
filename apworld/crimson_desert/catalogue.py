@@ -400,6 +400,9 @@ def validate_catalogue(cat: Catalogue) -> list[str]:
             problems.append(f"{where}: quantity must be >= 1")
         if item.game_ref is not None and item.game_ref.get("kind") not in GAME_REF_KINDS:
             problems.append(f"{where}: unknown game_ref kind {item.game_ref.get('kind')!r}")
+        if item.game_ref is not None and item.game_ref.get("kind") == "knowledge" \
+                and not isinstance(item.game_ref.get("knowledge_key"), int):
+            problems.append(f"{where}: a knowledge game_ref needs an integer knowledge_key")
         if item.verified and not item.evidence:
             problems.append(f"{where}: verified entries need an evidence reference")
         if item.verified and item.game_ref is None:

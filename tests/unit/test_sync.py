@@ -135,7 +135,7 @@ async def test_wrong_profile_pauses_delivery(tmp_path, server, sim, ledger, cata
     await server.push_item(catalogue.items["Key Item"].ap_id)
     c2 = make_controller(tmp_path, server, other, ledger, catalogue, bus)
     await run_until(c2, lambda: c2.paused is not None and ledger.next_index(c2.session.id) == 1)
-    assert "belongs to save profile sim/slot1" in c2.paused
+    assert "belongs to playthrough sim/slot1" in c2.paused
     assert other.get_inventory_snapshot() == {}  # nothing crossed over
     assert ledger.items(c2.session.id)[0].state is DeliveryState.RECEIVED
 

@@ -330,7 +330,7 @@ class MainWindow(QMainWindow):
         grid.setVerticalSpacing(6)
         self.fields: dict[str, QLabel] = {}
         rows = [
-            [("seed", "Seed"), ("game", "Game version"), ("profile", "Save profile")],
+            [("seed", "Seed"), ("game", "Game version"), ("profile", "Playthrough")],
             [("checks", "Checks sent"), ("rewards", "Rewards delivered"), ("pending", "Waiting")],
             [("catalogue", "Game data"), ("held", "Held back"), ("goal", "Goal")],
         ]
