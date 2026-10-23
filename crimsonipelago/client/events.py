@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Callable
 
-log = logging.getLogger("crimsonipelago")
+log = logging.getLogger("crimsonipelago.events")  # the window / console show these already
 
 
 @dataclass(frozen=True)

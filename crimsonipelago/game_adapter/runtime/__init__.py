@@ -1,6 +1,6 @@
-"""Reserved for a runtime (in-process) integration.
+"""Runtime (in-process) integration: the Crimsonipelago game plugin and the client's link to it.
 
-The scope document prefers runtime mod hooks over save editing if a stable
-hook framework for Crimson Desert exists. None has been established yet, so
-this package intentionally contains no code. See docs/feasibility.md.
+The plugin (plugin/, loaded into Crimson Desert by an ASI loader) listens on 127.0.0.1:38301 and speaks
+newline-delimited JSON. R0 only proves the link: hello, ping and game facts. Live item delivery and live
+check detection build on it (docs/research/realtime.md).
 """
