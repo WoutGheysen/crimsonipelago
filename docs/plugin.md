@@ -1,7 +1,10 @@
-# The game plugin (R0)
+# The game plugin
 
-`crimsonipelago.asi` runs inside Crimson Desert and lets the client talk to the running game. R0 only proves
-the link: it touches nothing in the game (no hooks, no memory writes).
+`crimsonipelago.asi` runs inside Crimson Desert and lets the client talk to the running game.
+
+- **R0** (passed 2026-10-23): loads, logs the game build, talks to the client (0.04 ms round trip).
+- **R1**: memory search for research. The plugin never changes anything by itself: a write happens only when
+  the client asks, and only if the value there is exactly the one the client expects.
 
 ## Install (Windows)
 
@@ -9,8 +12,9 @@ Game folder: usually `C:\Program Files (x86)\Steam\steamapps\common\Crimson Dese
 `CrimsonDesert.exe`.
 
 1. **ASI loader** (skip it if a mod manager already installed one): download `dinput8-x64.zip` from the
-   [Ultimate ASI Loader releases](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases) and put its
-   `dinput8.dll` in `bin64`. If the plugin doesn't load, rename it to `winmm.dll`.
+   [Ultimate ASI Loader releases](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases), put its
+   `dinput8.dll` in `bin64` and **rename it to `version.dll`**: the game doesn't load `dinput8.dll`
+   (tested 2026-10-23, game 2.03.02).
 2. Put `crimsonipelago.asi` in `bin64`.
 3. Start the game. The plugin writes `crimsonipelago_plugin.log` next to itself.
 4. With the game running, in your `crimsonipelago` folder:
@@ -19,6 +23,18 @@ Game folder: usually `C:\Program Files (x86)\Steam\steamapps\common\Crimson Dese
    ```
    It prints the game version and the round-trip time. `connect` also reports
    `Game plugin connected` while it runs.
+
+## R1: change your Copper live
+
+With the game running and a save loaded:
+
+```powershell
+py -m crimsonipelago.client.main plugin find-copper
+```
+
+It asks how much money you have, searches the game's memory for it, asks you to change your money in the
+game (buy or sell something) and searches again until one place is left. Then it offers to add 100 copper
+there while you play.
 
 ## Remove
 

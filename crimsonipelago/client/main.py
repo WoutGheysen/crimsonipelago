@@ -108,6 +108,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("status", help="show the local ledger for the most recent session")
     pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
+    pl.add_argument("action", nargs="?", default="check", choices=["check", "find-copper"],
+                    help="check: test the link (default); find-copper: research step R1")
     pl.add_argument("--port", type=int, default=None)
     pl.add_argument("--pings", type=int, default=5)
     r = sub.add_parser("resolve", help="settle an interrupted delivery")
@@ -191,7 +193,22 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
 def cmd_plugin(args) -> int:
     import time
 
-    from ..game_adapter.runtime.bridge import DEFAULT_PORT, BridgeError, GameBridge
+    from ..game_adapter.runtime.bridge import DEFAULT_PORT, BridgeError, GameBridge, ResearchBridge
+
+    if args.action == "find-copper":
+        from ..game_adapter.runtime.research import find_copper
+
+        research = ResearchBridge(port=args.port or DEFAULT_PORT)
+        try:
+            research.connect()
+            return 0 if find_copper(research) else 1
+        except BridgeError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+        except (KeyboardInterrupt, EOFError):
+            return 1
+        finally:
+            research.close()
 
     bridge = GameBridge(port=args.port or DEFAULT_PORT)
     try:

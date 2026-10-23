@@ -171,6 +171,7 @@ jobs:
           Start-Sleep -Seconds 3
           python -m crimsonipelago.client.main plugin --pings 20
           $code = $LASTEXITCODE
+          if ($code -eq 0) { python plugin/test/live_check.py; $code = $LASTEXITCODE }
           Get-Content "$dir/crimsonipelago_plugin.log"
           Stop-Process -Id $host_proc.Id -ErrorAction SilentlyContinue
           exit $code

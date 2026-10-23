@@ -1,18 +1,26 @@
-// Crimsonipelago game plugin (R0): loads inside Crimson Desert through an ASI loader, writes a log next
-// to itself and lets the Crimsonipelago client connect over localhost.
+// Crimsonipelago game plugin: loads inside Crimson Desert through an ASI loader, writes a log next to
+// itself and lets the Crimsonipelago client connect over localhost.
 //
-// R0 does not touch the game at all: no hooks, no memory writes. It proves that our own code runs in the
-// game process and can talk to the client, and it records facts about the running game (executable,
-// version, module base and size) for the next research steps.
+// R0: proves our code runs in the game and talks to the client; records the game build.
+// R1: memory search for research (memory.hpp). The plugin never writes on its own: a write happens only
+//     when the client asks for one and the current value is exactly the one it expects.
 //
 // Protocol: newline-delimited JSON over TCP on 127.0.0.1:38301 (localhost only).
 //   plugin -> client on connect: {"type":"hello", "plugin":"crimsonipelago", "protocol":1, ...game facts}
 //   client -> plugin: {"cmd":"ping","id":N}   -> {"type":"pong","id":N,"uptime_ms":...}
 //   client -> plugin: {"cmd":"info"}          -> {"type":"info", ...game facts}
+//   client -> plugin: {"cmd":"scan_u64","value":N}            -> {"type":"scan","count":..,"hits":[first 64]}
+//   client -> plugin: {"cmd":"rescan_u64","value":N}          -> same, among the previous hits
+//   client -> plugin: {"cmd":"read","addr":"0x..","size":N}   -> {"type":"bytes","hex":".."} (N <= 4096)
+//   client -> plugin: {"cmd":"write_u64","addr":"0x..","expect":N,"value":M} -> {"type":"written",...}
 //   anything else                             -> {"type":"error","message":"unknown command"}
 
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
@@ -25,9 +33,12 @@
 #include <cstdarg>
 #include <cstdint>
 #include <string>
+#include <vector>
+
+#include "memory.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.1.0-r0"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.2.0-r1"
 #endif
 
 namespace {
@@ -187,6 +198,80 @@ std::string json_field(const std::string& obj, const char* key) {
     return obj.substr(at, end - at);
 }
 
+uint64_t parse_u64(const std::string& s, bool& ok) {
+    ok = false;
+    if (s.empty()) return 0;
+    char* end = nullptr;
+    const unsigned long long v = std::strtoull(s.c_str(), &end, 0);   // "0x.." or decimal
+    ok = end && *end == '\0';
+    return v;
+}
+
+std::string hits_json(const char* type, const std::vector<uint64_t>& hits, bool truncated, uint64_t bytes, uint32_t regions,
+                      ULONGLONG ms) {
+    std::string out = std::string("{\"type\":\"") + type + "\",\"count\":" + std::to_string(hits.size()) +
+                      ",\"truncated\":" + (truncated ? "true" : "false") + ",\"bytes_scanned\":" + std::to_string(bytes) +
+                      ",\"regions\":" + std::to_string(regions) + ",\"ms\":" + std::to_string(ms) + ",\"hits\":[";
+    for (size_t i = 0; i < hits.size() && i < 64; ++i) {
+        char a[24];
+        std::snprintf(a, sizeof(a), "%s\"0x%llx\"", i ? "," : "", static_cast<unsigned long long>(hits[i]));
+        out += a;
+    }
+    return out + "]}";
+}
+
+std::string error_json(const char* message) {
+    return std::string("{\"type\":\"error\",\"message\":\"") + json_escape(message) + "\"}";
+}
+
+// Research commands (R1). The hit list lives for the connection: one search at a time.
+std::string handle_memory(const std::string& cmd, const std::string& line, std::vector<uint64_t>& hits) {
+    bool ok = false;
+    if (cmd == "scan_u64" || cmd == "rescan_u64") {
+        const uint64_t value = parse_u64(json_field(line, "value"), ok);
+        if (!ok) return error_json("value must be an integer");
+        const ULONGLONG t0 = GetTickCount64();
+        if (cmd == "scan_u64") {
+            mem::ScanResult r = mem::scan_u64(value);
+            hits.swap(r.hits);
+            log("scan_u64 %llu: %zu hits in %u regions, %llu MB, %llu ms%s", static_cast<unsigned long long>(value),
+                hits.size(), r.regions, static_cast<unsigned long long>(r.bytes_scanned >> 20),
+                static_cast<unsigned long long>(GetTickCount64() - t0), r.truncated ? " (truncated)" : "");
+            return hits_json("scan", hits, r.truncated, r.bytes_scanned, r.regions, GetTickCount64() - t0);
+        }
+        hits = mem::rescan_u64(hits, value);
+        log("rescan_u64 %llu: %zu hits", static_cast<unsigned long long>(value), hits.size());
+        return hits_json("scan", hits, false, 0, 0, GetTickCount64() - t0);
+    }
+    if (cmd == "read") {
+        const uint64_t addr = parse_u64(json_field(line, "addr"), ok);
+        if (!ok) return error_json("addr must be an integer");
+        const uint64_t size = parse_u64(json_field(line, "size"), ok);
+        if (!ok || size == 0 || size > 4096) return error_json("size must be 1..4096");
+        std::vector<uint8_t> data(static_cast<size_t>(size));
+        if (!mem::read(addr, data.data(), data.size())) return error_json("address not readable");
+        return std::string("{\"type\":\"bytes\",\"hex\":\"") + mem::hex(data.data(), data.size()) + "\"}";
+    }
+    if (cmd == "write_u64") {
+        const uint64_t addr = parse_u64(json_field(line, "addr"), ok);
+        if (!ok) return error_json("addr must be an integer");
+        const uint64_t expect = parse_u64(json_field(line, "expect"), ok);
+        if (!ok) return error_json("expect must be an integer");
+        const uint64_t value = parse_u64(json_field(line, "value"), ok);
+        if (!ok) return error_json("value must be an integer");
+        uint64_t found = 0;
+        const bool done = mem::write_u64_if(addr, expect, value, found);
+        log("write_u64 0x%llx: expect %llu, found %llu, value %llu -> %s", static_cast<unsigned long long>(addr),
+            static_cast<unsigned long long>(expect), static_cast<unsigned long long>(found),
+            static_cast<unsigned long long>(value), done ? "written" : "not written");
+        char out[200];
+        std::snprintf(out, sizeof(out), "{\"type\":\"written\",\"ok\":%s,\"found\":%llu}", done ? "true" : "false",
+                      static_cast<unsigned long long>(found));
+        return out;
+    }
+    return {};
+}
+
 void serve_client(SOCKET client, const GameFacts& facts) {
     log("client connected");
     if (!send_line(client, facts_json("hello", facts))) {
@@ -194,6 +279,7 @@ void serve_client(SOCKET client, const GameFacts& facts) {
         return;
     }
     std::string pending;
+    std::vector<uint64_t> hits;
     char buf[1024];
     while (!g_stop.load()) {
         const int n = recv(client, buf, sizeof(buf), 0);
@@ -218,6 +304,8 @@ void serve_client(SOCKET client, const GameFacts& facts) {
                 reply = out;
             } else if (cmd == "info") {
                 reply = facts_json("info", facts);
+            } else if (!(reply = handle_memory(cmd, line, hits)).empty()) {
+                // handled
             } else {
                 reply = "{\"type\":\"error\",\"message\":\"unknown command\"}";
                 log("unknown command: %s", line.substr(0, 200).c_str());
@@ -239,7 +327,7 @@ DWORD WINAPI worker(LPVOID) {
     log("game: %s (file version %s, build stamp %u)", facts.exe_path.c_str(), facts.exe_version.c_str(), facts.pe_timestamp);
     log("module base 0x%llx, size %llu bytes, pid %lu", static_cast<unsigned long long>(facts.module_base),
         static_cast<unsigned long long>(facts.module_size), static_cast<unsigned long>(facts.pid));
-    log("R0: no hooks, no memory writes; waiting for the client on 127.0.0.1:%u", kPort);
+    log("no hooks; memory is only written when the client asks; waiting for the client on 127.0.0.1:%u", kPort);
 
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
