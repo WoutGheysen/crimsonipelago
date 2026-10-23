@@ -3,7 +3,8 @@
 `crimsonipelago.asi` runs inside Crimson Desert and lets the client talk to the running game.
 
 - **R0** (passed 2026-10-23): loads, logs the game build, talks to the client (0.04 ms round trip).
-- **R1**: memory search for research. The plugin never changes anything by itself: a write happens only when
+- **R1** (passed 2026-10-23): memory search for research; a live Copper change that survives a save.
+  The plugin never changes anything by itself: a write happens only when
   the client asks, and only if the value there is exactly the one the client expects.
 
 ## Install (Windows)
@@ -41,6 +42,21 @@ py -m crimsonipelago.client.main plugin find-copper
 4. It tries the candidates one by one: adds 100 copper, checks whether the other places follow (the game
    copies the real amount into the others), asks whether the bag shows it, and puts the old amount back
    when it doesn't.
+
+### Result: all at once (2026-10-23), R1 passed
+
+5.00 → 3.68 left 8 places; 6 still held the amount when tried (both item records next to 900000002 and
+4 others). Writing 4.68 into all 6 at once:
+
+| | live | after save and reload |
+|---|---|---|
+| coin stack in the bag | 4.68 | 4.68 |
+| money at the top right | unchanged | 4.68 |
+
+So a live change to an existing stack works and is saved. The money total at the top right is worked out
+separately (on load, and by the game's own code when money changes), so changing the numbers directly
+skips part of the game's bookkeeping. R2 looks for that code: the function the game runs when you receive
+something, which updates everything at once and also covers items you don't have a stack of yet.
 
 ### Third attempt (2026-10-23)
 

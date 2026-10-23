@@ -20,7 +20,7 @@
 | Step | What | Proves |
 |---|---|---|
 | **R0** | `crimsonipelago.asi`: loads, logs the game build, serves the client on `127.0.0.1:38301`. No hooks, no writes. | our code runs in the game and talks to the client |
-| R1 | Live change to an item the player already has (Copper) | live writes are safe |
+| R1 | Live change to an item the player already has (Copper) | live writes are safe: **passed 2026-10-23**, the stack changes live and is saved; the money total only refreshes on load (see docs/plugin.md) |
 | R2 | A logging plugin that watches the game's reward path while the player picks up items and finishes objectives | where the game grants items and knowledge |
 | R3 | Call the game's own reward function: Flight, Abyss Artifacts, new items, live, with the game's own popup; live check detection | real-time Archipelago |
 
