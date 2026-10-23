@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cstdio>
+#include <cstdlib>
 
 int wmain(int argc, wchar_t** argv) {
     const wchar_t* plugin = argc > 1 ? argv[1] : L"crimsonipelago.asi";

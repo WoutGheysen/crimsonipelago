@@ -156,9 +156,12 @@ jobs:
         with:
           python-version: "3.12"
       - name: Build crimsonipelago.asi (MSVC, static runtime)
+        shell: pwsh
         run: |
-          cmake -S plugin -B build/plugin -A x64 -DCRIMSONIPELAGO_TEST_HOST=ON
-          cmake --build build/plugin --config Release
+          cmake -S plugin -B build/plugin -A x64 -DCRIMSONIPELAGO_TEST_HOST=ON 2>&1 | Tee-Object -FilePath configure.log
+          if ($LASTEXITCODE -ne 0) { Get-Content configure.log | Select-String -Pattern "Error|error" | ForEach-Object { Write-Output "::error::$_" }; exit 1 }
+          cmake --build build/plugin --config Release 2>&1 | Tee-Object -FilePath build.log
+          if ($LASTEXITCODE -ne 0) { Get-Content build.log | Select-String -Pattern ": (fatal )?error |: warning C" | ForEach-Object { Write-Output "::error::$_" }; exit 1 }
       - name: Load it the way the game would and talk to it from the client
         shell: pwsh
         run: |

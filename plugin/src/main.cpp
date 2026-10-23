@@ -19,6 +19,8 @@
 #include <psapi.h>
 
 #include <atomic>
+#include <cstdlib>
+#include <cwctype>
 #include <cstdio>
 #include <cstdarg>
 #include <cstdint>
