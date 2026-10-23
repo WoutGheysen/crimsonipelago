@@ -108,9 +108,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("status", help="show the local ledger for the most recent session")
     pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
-    pl.add_argument("action", nargs="?", default="check", choices=["check", "find-copper", "watch-money"],
+    pl.add_argument("action", nargs="?", default="check",
+                    choices=["check", "find-copper", "watch-money", "dump-code"],
                     help="check: test the link (default); find-copper: research step R1; "
-                         "watch-money: research step R2")
+                         "watch-money, dump-code: research step R2")
+    pl.add_argument("--report", default=None, help="dump-code: the watch-money report (default: the newest)")
     pl.add_argument("--port", type=int, default=None)
     pl.add_argument("--pings", type=int, default=5)
     r = sub.add_parser("resolve", help="settle an interrupted delivery")
@@ -191,7 +193,7 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
     return 0
 
 
-NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4)}
+NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4), "dump-code": (0, 5)}
 
 
 def _plugin_version(text: str) -> tuple[int, int]:
@@ -208,7 +210,7 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
     from ..game_adapter.runtime.bridge import DEFAULT_PORT, BridgeError, GameBridge, ResearchBridge
 
     if args.action in NEEDS_PLUGIN:
-        from ..game_adapter.runtime.research import find_copper, watch_money
+        from ..game_adapter.runtime.research import dump_code, find_copper, watch_money
 
         research = ResearchBridge(port=args.port or DEFAULT_PORT)
         try:
@@ -221,6 +223,14 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
             if args.action == "find-copper":
                 return 0 if find_copper(research) else 1
             report_dir = (data_dir or default_data_dir()) / "research"
+            if args.action == "dump-code":
+                reports = sorted(report_dir.glob("r2-money-*.json"))
+                report = Path(args.report) if args.report else (reports[-1] if reports else None)
+                if report is None or not report.exists():
+                    print("error: no watch-money report found; run `plugin watch-money` first", file=sys.stderr)
+                    return 1
+                print(f"Using {report}")
+                return 0 if dump_code(research, report, report_dir) else 1
             return 0 if watch_money(research, report_dir) else 1
         except BridgeError as exc:
             print(f"error: {exc}", file=sys.stderr)
