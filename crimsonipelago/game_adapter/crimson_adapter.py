@@ -297,6 +297,13 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         os.replace(prepared.temp_path, path)
         return self.verify_reward(prepared)
 
+    def save_written_after(self, timestamp: float) -> bool:
+        path = self.save_path
+        try:
+            return path is not None and path.stat().st_mtime > timestamp
+        except OSError:
+            return False
+
     def needs_write(self, item: ItemDef) -> bool:
         return (item.game_ref or {}).get("kind") != "nothing"
 

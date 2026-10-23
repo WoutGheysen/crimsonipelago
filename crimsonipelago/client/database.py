@@ -123,6 +123,7 @@ class Session:
     world_version: str | None
     goal_detected: bool
     goal_reported: bool
+    created_at: str = ""          # ISO time (UTC) the client first saw this seed
 
 
 @dataclass(frozen=True)
@@ -247,7 +248,7 @@ class Ledger:
     def _session(row: sqlite3.Row) -> Session:
         return Session(row["id"], row["seed_name"], row["team"], row["slot"], row["slot_name"], row["server"],
                        row["profile_id"], row["catalogue_fingerprint"], row["world_version"],
-                       bool(row["goal_detected"]), bool(row["goal_reported"]))
+                       bool(row["goal_detected"]), bool(row["goal_reported"]), row["created_at"])
 
     # ------------------------------------------------------------------ received items
     def next_index(self, session_id: int) -> int:

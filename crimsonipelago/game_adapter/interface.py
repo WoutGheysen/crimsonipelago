@@ -146,6 +146,11 @@ class GameAdapter(ABC):
     def discard(self, prepared: PreparedWrite) -> None:
         """Remove a prepared-but-uncommitted temp file, if any."""
 
+    def save_written_after(self, timestamp: float) -> bool:
+        """Whether the current save was written after this Unix time. A new seed only binds to a playthrough
+        the player saved after connecting the seed, never to an old one that happens to be the newest save."""
+        return True
+
     def needs_write(self, item: ItemDef) -> bool:
         """False for items with no effect in the game (filler): they complete without touching the save."""
         return True

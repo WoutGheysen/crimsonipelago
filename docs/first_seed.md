@@ -61,7 +61,7 @@ crimsonipelago connect --server localhost:38281 --slot Wout --editor-dir "C:\pat
 ## 7. Play
 
 1. Start Crimson Desert and begin a **new game**.
-2. For the first 15 minutes or so, the client says it is *waiting for the campaign*. A new game looks the same for everyone until then. That's normal: nothing is lost, it catches up.
+2. The client only takes on a playthrough you save **after** connecting the seed, so an older playthrough can never claim it. For the first 15 minutes or so of the new game, it says it is *waiting*: a new game looks the same for everyone until then. That's normal: nothing is lost, it catches up.
 3. **Checks are sent when the game saves.** Autosaves are about every 15 minutes. A manual save sends them right away. The client prints `Sent check: …` for each one.
 4. **Items are added while the game is closed.** When the client says you received something:
    - Quit to desktop. The client prints `Delivered: …`.
