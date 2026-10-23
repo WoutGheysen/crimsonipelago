@@ -24,10 +24,11 @@ class TestDefault(CrimsonDesertTestBase):
         self.assertIn(GOAL_CHECK, all_checks)
         self.assertEqual(len(all_checks), 42)
 
-    def test_pool_is_flight_and_filler(self) -> None:
+    def test_pool_is_flight_artifacts_and_filler(self) -> None:
         names = [item.name for item in self.multiworld.itempool if item.player == self.player]
         self.assertEqual(names.count("Flight"), 1)
-        self.assertEqual(set(names), {"Flight", "Crow Feather"})
+        self.assertEqual(names.count("Abyss Artifact"), 3)
+        self.assertLessEqual(set(names), {"Flight", "Abyss Artifact", "100 Copper", "Crow Feather"})
         self.assertEqual(len(names), 42)
 
     def test_slot_data(self) -> None:

@@ -1,6 +1,6 @@
 # How the game stores items (and how the client adds them)
 
-- **Status:** built and checked on every save collected so far; in-game test F pending (2026-10-23)
+- **Status:** works in the game (test F passed, 2026-10-23); Abyss Artifacts and Copper are Archipelago items
 - **Build:** 25477059
 - **Inputs:** the 30-save series of the new campaign and the old campaign's saves
 
@@ -48,10 +48,19 @@ pending with its reason.
 Checked on all 32 distinct saves collected so far (with Flight learned in the same edit), and with a
 synthetic save in the test suite.
 
-## Test F (pending)
+## Test F: passed (2026-10-23)
 
 Save 6 with Flight added as a new entry (not the swap from test D), 100 Copper and a Light Copper Pouch as
-new stacks, and 2 Abyss Artifacts on the existing stack. To check in the game: glide; see the items; use the
-pouch; spend an artifact on a Flight upgrade; pick up something new; save, restart, load.
+new stacks, and 2 Abyss Artifacts on the existing stack (3 → 5). In the game:
 
-When it passes, Copper, Abyss Artifacts and other misc items go into the catalogue as real Archipelago items.
+| Check | Result |
+|---|---|
+| Glide | yes: Flight as a new knowledge entry works too |
+| 100 Copper | yes, shown as 1 silver: the game treats it as money |
+| Light Copper Pouch, 5 Abyss Artifacts | yes |
+| Use the pouch | yes, it pays out copper |
+| Spend an artifact on a Flight upgrade | yes |
+| Pick up a new item afterwards | yes, it goes in normally next to ours |
+| Save, quit to desktop, restart, load | everything still there |
+
+So **Abyss Artifact** (useful: Flight upgrades) and **100 Copper** (filler) are now Archipelago items.

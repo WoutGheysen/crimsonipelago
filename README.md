@@ -6,7 +6,7 @@ an APWorld for seed generation, a client that talks to Archipelago servers, and 
 > **Status: pre-alpha, first playable slice.**
 > The APWorld covers the prologue and chapter 1 (42 real checks, read from your save) with
 > **Flight** as the one real unlock: a game-data override stops the story from handing it out and the
-> client adds it to your save when it arrives. Everything else in the pool is filler for now.
+> client adds it to your save when it arrives. Abyss Artifacts and Copper are added to your bag the same way.
 > See [Roadmap](#roadmap).
 
 ## What works today

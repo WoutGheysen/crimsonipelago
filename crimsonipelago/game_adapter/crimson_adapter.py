@@ -10,8 +10,8 @@ reports UNSUPPORTED and stays parked. Verified so far:
 
     knowledge       add the key to both knowledge lists, as the story does (test D, 2026-10-22:
                     Flight given this way works, and survives the game's own save and a restart)
-    inventory_item  add to the stack in the main bag, or a new stack (save_edit.give_items; in-game
-                    test F pending, so no catalogue item uses it yet)
+    inventory_item  add to the stack in the main bag, or a new stack (save_edit.give_items; test F,
+                    2026-10-23: Copper, a pouch and Abyss Artifacts show, work and survive a restart)
 
 An item that can't go in right now (a full stack, say) is left out of the write and stays pending with
 the reason; the rest of the batch is delivered.

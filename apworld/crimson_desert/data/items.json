@@ -37,17 +37,62 @@
       "verified": true,
       "evidence": "Filler with no effect in the game: nothing is written to the save.",
       "game_versions": []
+    },
+    {
+      "ap_id": 2101,
+      "name": "Abyss Artifact",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 75001,
+        "count": 1,
+        "max_stack": 10
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "supported",
+      "verified": true,
+      "evidence": "docs/research/items.md (test F, 2026-10-23: new stacks and stack increases show, work and survive save and restart)",
+      "game_versions": [
+        "25477059"
+      ]
+    },
+    {
+      "ap_id": 3102,
+      "name": "100 Copper",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1,
+        "count": 100,
+        "max_stack": 100000
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "supported",
+      "verified": true,
+      "evidence": "docs/research/items.md (test F, 2026-10-23: new stacks and stack increases show, work and survive save and restart)",
+      "game_versions": [
+        "25477059"
+      ]
     }
   ],
   "item_pool": {
     "conservative": {
-      "Flight": 1
+      "Flight": 1,
+      "Abyss Artifact": 3
     },
     "expanded": {
-      "Flight": 1
+      "Flight": 1,
+      "Abyss Artifact": 3
     }
   },
   "filler_weights": {
+    "100 Copper": 3,
     "Crow Feather": 1
   },
   "trap_weights": {}
