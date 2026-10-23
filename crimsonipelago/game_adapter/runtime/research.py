@@ -14,6 +14,7 @@ puts the old amount back when it doesn't (a copy the game only displays, not you
 
 from __future__ import annotations
 
+import time
 from collections.abc import Callable
 from dataclasses import dataclass
 
@@ -23,7 +24,7 @@ from .bridge import BridgeError, ResearchBridge
 WIDTH = 4                # amounts are searched and written as 4-byte values
 ITEM_NO_SPAN = 256       # item numbers 900,000,001 .. 900,000,256
 NEAR = 256               # bytes searched on each side of an item number
-MAX_CANDIDATES = 6
+MAX_CANDIDATES = 16      # the game keeps several copies of the amount (7 in the first test)
 CONTEXT = 32
 
 
@@ -101,7 +102,7 @@ def _describe(bridge: ResearchBridge, c: Candidate, say: Callable[[str], None]) 
 
 
 def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: Callable[[str], None] = print,
-                add: int = 100) -> bool:
+                add: int = 100, wait: Callable[[float], None] = time.sleep) -> bool:
     say("Finding your Copper in the game's memory.")
     say("Open your bag in the game and look at the money. It shows silver: 8.00 means 800 copper.")
     amount = None
@@ -117,7 +118,7 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
         return False
     say(f"{report.count} places in memory hold {amount} ({report.ms} ms).")
 
-    changes = 0
+    changes, previous = 0, None
     while True:
         anchored = [c for c in anchored if _holds(bridge, c.addr, amount)]
         if report.count == 0 and not anchored:
@@ -126,6 +127,8 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
             return False
         if (changes >= 2 and report.count <= MAX_CANDIDATES) or (changes >= 1 and anchored):
             break
+        if changes >= 3 and report.count <= 64 and report.count == previous:
+            break                                   # the same places followed every change: that's all of them
         say("Now change your money in the game: buy or sell something cheap, or pick up coins.")
         text = ask("New amount (as shown), Enter if it hasn't changed, or q to stop: ").strip()
         if text.lower() == "q":
@@ -135,15 +138,15 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
             continue
         if new != amount:
             say(f"That's {new} copper.")
-        if new != amount:
             changes += 1
+            previous = report.count
         amount = new
         report = bridge.rescan(amount)
         anchored = [c for c in anchored if _holds(bridge, c.addr, amount)]
         say(f"{report.count} places still match" + (f", {len(anchored)} near an item number." if anchored else "."))
 
     seen = {c.addr for c in anchored}
-    searched = report.hits if report.count <= MAX_CANDIDATES else []
+    searched = report.hits if report.count <= 64 else []
     candidates = anchored + [Candidate(a, "follows your money", 10**6) for a in searched if a not in seen]
     candidates = [c for c in candidates if _holds(bridge, c.addr, amount)]       # drop copies that moved on
     if not candidates:
@@ -165,9 +168,17 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
         if not written:
             say(f"Not written: it holds {found} now, not {amount}. Next one.")
             continue
+        # The game copies the real amount into the others (for the screen, the shop...): if they follow
+        # within a moment, this one is the source.
+        wait(1.0)
+        followed = [o.addr for o in candidates if o.addr != c.addr and _holds(bridge, o.addr, target)]
+        if followed:
+            say(f"{len(followed)} of the other places changed to {target} with it: this looks like the real one.")
+        else:
+            say("The other places didn't follow (yet).")
         answer = ask(f"Close and reopen the bag. Does it show {shown(target)} now? (y/n) ").strip().lower()
         if answer == "y":
-            say(f"Your Copper lives at 0x{c.addr:x} ({c.source}).")
+            say(f"Your Copper lives at 0x{c.addr:x} ({c.source}; {len(followed)} cop{'y' if len(followed) == 1 else 'ies'} followed).")
             say("Last part: save in the game, quit to the main menu, load that save, and tell me the amount "
                 f"it shows ({shown(target)} means the change stuck). Send me this whole output too.")
             return True

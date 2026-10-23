@@ -38,8 +38,15 @@ py -m crimsonipelago.client.main plugin find-copper
 3. It asks you to change your money in the game (buy or sell something). Press Enter instead when nothing
    changed: that drops places that change by themselves. It needs two changes, or one when the amount sits
    next to one of our item numbers.
-4. It tries the candidates one by one: adds 100 copper, asks whether the bag shows it, and puts the old
-   amount back when it doesn't.
+4. It tries the candidates one by one: adds 100 copper, checks whether the other places follow (the game
+   copies the real amount into the others), asks whether the bag shows it, and puts the old amount back
+   when it doesn't.
+
+### Second attempt (2026-10-23)
+
+Starting from 8.00, 2,806 places held 800; after 7.00 only 7 were left, and the same 7 followed 6.00, 5.98
+and 3.98: the game keeps the amount in several places. The tool now stops once the same places follow
+every change (up to 16) and uses the copies to tell which one is the source.
 
 ### First attempt (2026-10-23, plugin 0.2.0-r1)
 
