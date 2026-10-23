@@ -6,6 +6,8 @@
 - **R1** (passed 2026-10-23): memory search for research; a live Copper change that survives a save.
   The plugin never changes anything by itself: a write happens only when
   the client asks, and only if the value there is exactly the one the client expects.
+- **R2**: write watches: which game code changes your money, and what called it. The first step towards
+  calling the game's own "receive an item" code.
 
 ## Install (Windows)
 
