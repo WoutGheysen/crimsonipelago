@@ -14,6 +14,7 @@ import asyncio
 import logging
 import uuid
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -341,6 +342,11 @@ class SyncController:
             return
         session = self.ledger.session(self.session.id)
         if session.profile_id is None:
+            created = datetime.fromisoformat(session.created_at).timestamp() if session.created_at else 0.0
+            if not await self._adapter(self.adapter.save_written_after, created):
+                self._pause("Waiting for this seed's playthrough: start a new game (or load the playthrough you "
+                            "want for this seed) and save. The newest save is older than this seed.")
+                return
             other = [s for s in self.ledger.sessions_for_profile(profile) if s.id != session.id]
             if other:
                 self._pause(f"This playthrough ({profile}) already belongs to seed {other[0].seed_name}. "

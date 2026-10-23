@@ -117,9 +117,12 @@ class CrimsonDesertSaveAdapter(GameAdapter):
             self.identity_problem = None
             return None
         if self.backend is None:
-            # without the decoder there is no history to go by; fall back to the slot
-            self.identity_problem = None
-            return SaveIdentity(slot_from_path(path).profile_id, str(path))
+            # Without the decoder there is no history to go by. Binding to the slot instead would tie the seed
+            # to an autosave slot that the game rotates, so refuse until the decoder is set up.
+            self.identity_problem = ("the save editor folder is not set up, so your saves cannot be read "
+                                     f"({self.backend_error or 'no --editor-dir given'}); restart the client with "
+                                     "--editor-dir pointing at the CrimsonSaveEditor folder")
+            return None
         try:
             state = self._deep_state()
         except save_container.SaveFormatError as exc:
@@ -294,6 +297,13 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         os.replace(prepared.temp_path, path)
         return self.verify_reward(prepared)
 
+    def save_written_after(self, timestamp: float) -> bool:
+        path = self.save_path
+        try:
+            return path is not None and path.stat().st_mtime > timestamp
+        except OSError:
+            return False
+
     def needs_write(self, item: ItemDef) -> bool:
         return (item.game_ref or {}).get("kind") != "nothing"
 
@@ -308,6 +318,11 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         """Problems with the player's setup that make the randomizer misbehave without breaking anything."""
         from ..game_data import overlay
         from ..tools.game_data_cli import find_game_dir
+
+        if self.backend is None:
+            return [f"Save editor folder not usable ({self.backend_error or 'no --editor-dir given'}): checks can't be "
+                    "read and items can't be delivered. Restart with --editor-dir pointing at your CrimsonSaveEditor "
+                    "folder (the one with save_parser.py)."]
 
         needed = {patch for name, patch in REQUIRED_OVERRIDES.items()
                   if name in self.catalogue.items and self.catalogue.items[name].deliverable}
