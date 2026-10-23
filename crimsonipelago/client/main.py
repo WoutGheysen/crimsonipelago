@@ -132,9 +132,13 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
         print("error: --server and --slot are required the first time", file=sys.stderr)
         return 2
     password = args.password if args.password is not None else os.environ.get("CRIMSONIPELAGO_PASSWORD", "")
-    save_settings(data_dir, {**settings, "server": server, "slot_name": slot})
+    editor_dir = args.editor_dir or settings.get("editor_dir")
+    save_settings(data_dir, {**settings, "server": server, "slot_name": slot,
+                             **({"editor_dir": editor_dir} if editor_dir else {})})
+    if args.adapter == "save" and not editor_dir:
+        print("warning: no --editor-dir given, so checks cannot be read from your save", file=sys.stderr)
     adapter = build_adapter(args.adapter, catalogue, data_dir, sim_file=args.sim_file, save_path=args.save_path,
-                            editor_dir=args.editor_dir, steam_manifest=args.steam_manifest)
+                            editor_dir=editor_dir, steam_manifest=args.steam_manifest)
     ledger = Ledger(data_dir / "ledger.sqlite3")
     bus = ev.EventBus()
     bus.subscribe(lambda e: e.kind != ev.STATUS and print(f"{e.at:%H:%M:%S}  {e.message}", flush=True))

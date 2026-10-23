@@ -13,8 +13,8 @@ quest log (for example "In Ashes: Help Naira") or an Abyss puzzle. An objective'
 mission is complete, so skipping one never loses it.
 
 Items: **Flight**, which the story would normally give you at the woman in white (install the
-`flight-grant-removed` override with `crimson-mod` so it doesn't), and filler (Crow Feathers, which do nothing
-in the game). More real items follow.
+`flight-grant-removed` override with `crimson-mod` so it doesn't); three **Abyss Artifacts**, to spend on Flight
+upgrades; and filler: **100 Copper**, or now and then a Crow Feather, which does nothing in the game.
 
 ## What is the goal?
 
