@@ -122,7 +122,16 @@ class FakeMemory(FakePlugin):
         self.hits, self.width = [], 8
         self.after_rescan = None
         self.after_write = None
+        self.watches, self.pending, self.sites, self.unwatched = [], [], {}, 0
         super().__init__()
+
+    def game_writes(self, addr, value, fn, rip, frames):
+        """The game changes a value; a watch on it records who did it."""
+        self.put(addr, value, 4)
+        if addr in self.watches:
+            self.sites[rip] = self.sites.get(rip, 0) + 1
+            self.pending.append({"slot": self.watches.index(addr), "tid": 7, "value": value, "rip": rip, "fn": fn,
+                                 "code": "", "frames": frames, "stack": frames})
 
     def put(self, addr, value, width=8):
         self.mem[addr - BASE:addr - BASE + width] = value.to_bytes(width, "little")
@@ -151,6 +160,20 @@ class FakeMemory(FakePlugin):
                 if self.after_write:
                     self.after_write(self, addr)
             return {"type": "written", "ok": found == msg["expect"], "found": found}
+        elif cmd == "watch":
+            if len(self.watches) == 4:
+                return {"type": "error", "message": "no free watch"}
+            self.watches.append(int(msg["addr"], 16))
+            return {"type": "watching", "slot": len(self.watches) - 1, "threads": 12}
+        elif cmd == "watch_apply":
+            return {"type": "watching", "slot": -1, "threads": 12}
+        elif cmd == "unwatch":
+            self.watches, self.unwatched = [], self.unwatched + 1
+            return {"type": "unwatched", "threads": 12}
+        elif cmd == "hits":
+            out, self.pending = self.pending[:msg["max"]], self.pending[msg["max"]:]
+            return {"type": "hits", "total": 0, "lost": 0, "records": out,
+                    "sites": [{"rip": r, "count": c} for r, c in self.sites.items()]}
         else:
             return super().handle(msg)
         self.hits = [a for a in pool if lo <= self.get(a, self.width) <= hi]
@@ -276,6 +299,56 @@ def test_all_at_once_is_put_back_when_nothing_shows():
         with ResearchBridge(port=game.port) as bridge:
             assert not research.find_copper(bridge, ask=ask, say=said.append, wait=lambda s: None)
         assert all(game.get(a) == 600 for a in places)
+    finally:
+        game.close()
+
+
+def test_watch_money_records_who_changes_it(tmp_path):
+    game = FakeMemory()
+    record, total = 0x19010, 0x15000
+    game.put(record - 16, ITEM_NO_BASE + 2)
+    for addr in (record, total):
+        game.put(addr, 800, 4)
+    shop = ["CrimsonDesert.exe+0x500", "CrimsonDesert.exe+0x900"]
+    actions = iter([
+        lambda: [game.game_writes(a, 650, "CrimsonDesert.exe+0x100", "CrimsonDesert.exe+0x123", shop)
+                 for a in (record, total)],                                            # buy
+        lambda: [game.game_writes(record, 655 + i, "CrimsonDesert.exe+0x100", "CrimsonDesert.exe+0x123", shop)
+                 for i in range(70)],                                                  # many writes: drained in pages
+        lambda: None,
+    ])
+    said = []
+    answers = iter(["8.00", "7.00", "", "", "d"])
+
+    def ask(prompt):
+        said.append(prompt)
+        answer = next(answers)
+        if "amount" in prompt and answer:
+            for addr in (record, total):
+                game.put(addr, research.parse_money(answer), 4)
+        if "Enter after each one" in prompt:
+            next(actions)()
+        return answer
+
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.watch_money(bridge, tmp_path, ask=ask, say=said.append, wait=lambda s: None)
+        assert path is not None and path.exists()
+        report = json.loads(path.read_text())
+        assert len(report["records"]) == 72 and report["sites"] == {"CrimsonDesert.exe+0x123": 72}
+        assert [w["addr"] for w in report["watched"]] == [hex(record), hex(total)]
+        assert game.unwatched == 1 and game.watches == []
+        assert any("CrimsonDesert.exe+0x100: 72 write(s)" in line for line in said)
+        assert any("called from CrimsonDesert.exe+0x500 <- CrimsonDesert.exe+0x900" in line for line in said)
+    finally:
+        game.close()
+
+
+def test_watch_money_needs_the_new_plugin(capsys):
+    game = FakeMemory()
+    try:
+        assert client_main(["plugin", "watch-money", "--port", str(game.port)]) == 1
+        assert "needs 0.4.0" in capsys.readouterr().err
     finally:
         game.close()
 

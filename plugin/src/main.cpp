@@ -4,6 +4,7 @@
 // R0: proves our code runs in the game and talks to the client; records the game build.
 // R1: memory search for research (memory.hpp). The plugin never writes on its own: a write happens only
 //     when the client asks for one and the current value is exactly the one it expects.
+// R2: write watches for research (watch.hpp): which game code changes a value, and what called it.
 //
 // Protocol: newline-delimited JSON over TCP on 127.0.0.1:38301 (localhost only).
 //   plugin -> client on connect: {"type":"hello", "plugin":"crimsonipelago", "protocol":1, ...game facts}
@@ -15,6 +16,12 @@
 //   client -> plugin: {"cmd":"read","addr":"0x..","size":N}   -> {"type":"bytes","hex":".."} (N <= 4096)
 //   client -> plugin: {"cmd":"write","addr":"0x..","expect":N,"value":M,"width":4|8} -> {"type":"written",...}
 //   ("value":N instead of lo/hi searches one value; scan_u64, rescan_u64, write_u64 are the 8-byte forms)
+//   client -> plugin: {"cmd":"watch","addr":"0x..","size":1|2|4|8,"mode":"write"|"access"}
+//                                                 -> {"type":"watching","slot":0..3,"threads":N}
+//   client -> plugin: {"cmd":"watch_apply"}  -> same, again for threads started since (slot -1)
+//   client -> plugin: {"cmd":"unwatch"}      -> {"type":"unwatched","threads":N}  (also on disconnect)
+//   client -> plugin: {"cmd":"hits","max":N} -> {"type":"hits","total":T,"lost":L,"sites":[...],"records":[...]}
+//                      (N <= 64 records since the last call; up to 8 per writing instruction; sites count them all)
 //   anything else                             -> {"type":"error","message":"unknown command"}
 
 #ifndef WIN32_LEAN_AND_MEAN
@@ -38,9 +45,10 @@
 #include <vector>
 
 #include "memory.hpp"
+#include "watch.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.3.0-r1b"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.4.0-r2"
 #endif
 
 namespace {
@@ -325,6 +333,110 @@ std::string handle_memory(const std::string& cmd, const std::string& line, Searc
     return {};
 }
 
+std::string describe(uint64_t addr) {
+    HMODULE m = nullptr;
+    char buf[400];
+    if (addr && GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                                   reinterpret_cast<LPCWSTR>(addr), &m) && m) {
+        std::wstring path = module_path(m);
+        const size_t cut = path.find_last_of(L"\\/");
+        if (cut != std::wstring::npos) path = path.substr(cut + 1);
+        std::snprintf(buf, sizeof(buf), "%s+0x%llx", json_escape(utf8(path)).c_str(),
+                      static_cast<unsigned long long>(addr - reinterpret_cast<uint64_t>(m)));
+    } else {
+        std::snprintf(buf, sizeof(buf), "0x%llx", static_cast<unsigned long long>(addr));
+    }
+    return buf;
+}
+
+std::string function_of(uint64_t rip) {
+    DWORD64 image = 0;
+    PRUNTIME_FUNCTION fn = RtlLookupFunctionEntry(rip, &image, nullptr);
+    return fn ? describe(image + fn->BeginAddress) : std::string();
+}
+
+std::string address_list(const uint64_t* values, unsigned n) {
+    std::string out = "[";
+    for (unsigned i = 0; i < n; ++i) out += (i ? ",\"" : "\"") + describe(values[i]) + "\"";
+    return out + "]";
+}
+
+// Watch commands (R2).
+std::string handle_watch(const std::string& cmd, const std::string& line) {
+    bool ok = false;
+    char out[200];
+    if (cmd == "watch") {
+        const uint64_t addr = parse_u64(json_field(line, "addr"), ok);
+        if (!ok) return error_json("addr must be an integer");
+        const std::string size_text = json_field(line, "size");
+        const uint64_t size = size_text.empty() ? 8 : parse_u64(size_text, ok);
+        if (!ok) return error_json("size must be 1, 2, 4 or 8");
+        const std::string mode = json_field(line, "mode");
+        const int slot = watch::add(addr, static_cast<unsigned>(size), mode == "access");
+        if (slot < 0) return error_json("no free watch (4 at most), or the address isn't aligned to its size");
+        const unsigned threads = watch::apply(watch::g_mask.load());
+        log("watch %d: 0x%llx, %llu bytes, %s, %u threads", slot, static_cast<unsigned long long>(addr),
+            static_cast<unsigned long long>(size), mode == "access" ? "access" : "write", threads);
+        std::snprintf(out, sizeof(out), "{\"type\":\"watching\",\"slot\":%d,\"threads\":%u}", slot, threads);
+        return out;
+    }
+    if (cmd == "watch_apply") {
+        const unsigned threads = watch::apply(watch::g_mask.load());
+        std::snprintf(out, sizeof(out), "{\"type\":\"watching\",\"slot\":-1,\"threads\":%u}", threads);
+        return out;
+    }
+    if (cmd == "unwatch") {
+        const unsigned threads = watch::clear();
+        log("watches removed from %u threads; %llu hits in total", threads,
+            static_cast<unsigned long long>(watch::g_total.load()));
+        std::snprintf(out, sizeof(out), "{\"type\":\"unwatched\",\"threads\":%u}", threads);
+        return out;
+    }
+    if (cmd == "hits") {
+        const std::string max_text = json_field(line, "max");
+        uint64_t max = max_text.empty() ? 64 : parse_u64(max_text, ok);
+        if (max == 0 || max > 64) max = 64;
+        const uint64_t total = watch::g_total.load();
+        uint64_t from = watch::g_delivered.load();
+        uint64_t lost = 0;
+        if (total - from > watch::kRing) {
+            lost = total - from - watch::kRing;
+            from = total - watch::kRing;
+        }
+        const uint64_t to = from + max < total ? from + max : total;
+        std::string records;
+        for (uint64_t i = from; i < to; ++i) {
+            const watch::Hit& h = watch::g_ring[i % watch::kRing];
+            if (h.seq.load(std::memory_order_acquire) != i + 1) {
+                ++lost;
+                continue;
+            }
+            uint8_t code[48] = {};
+            const bool have_code = mem::read(h.rip - 32, code, sizeof(code));
+            char head[300];
+            std::snprintf(head, sizeof(head), "{\"slot\":%u,\"tid\":%u,\"value\":%llu,\"rip\":\"%s\",\"fn\":\"%s\",\"code\":\"",
+                          h.slot, h.tid, static_cast<unsigned long long>(h.value), describe(h.rip).c_str(),
+                          function_of(h.rip).c_str());
+            if (!records.empty()) records += ",";
+            records += head;
+            if (have_code) records += mem::hex(code, sizeof(code));
+            records += "\",\"frames\":" + address_list(h.frames, h.nframes);
+            records += ",\"stack\":" + address_list(h.stack, h.nstack) + "}";
+        }
+        watch::g_delivered.store(to);
+        std::string sites;
+        for (const watch::Site& site : watch::g_sites) {
+            const uint64_t rip = site.rip.load();
+            if (!rip) break;
+            if (!sites.empty()) sites += ",";
+            sites += "{\"rip\":\"" + describe(rip) + "\",\"count\":" + std::to_string(site.count.load()) + "}";
+        }
+        return "{\"type\":\"hits\",\"total\":" + std::to_string(total) + ",\"lost\":" + std::to_string(lost) +
+               ",\"sites\":[" + sites + "],\"records\":[" + records + "]}";
+    }
+    return {};
+}
+
 void serve_client(SOCKET client, const GameFacts& facts) {
     log("client connected");
     if (!send_line(client, facts_json("hello", facts))) {
@@ -359,6 +471,8 @@ void serve_client(SOCKET client, const GameFacts& facts) {
                 reply = facts_json("info", facts);
             } else if (!(reply = handle_memory(cmd, line, search)).empty()) {
                 // handled
+            } else if (!(reply = handle_watch(cmd, line)).empty()) {
+                // handled
             } else {
                 reply = "{\"type\":\"error\",\"message\":\"unknown command\"}";
                 log("unknown command: %s", line.substr(0, 200).c_str());
@@ -366,6 +480,7 @@ void serve_client(SOCKET client, const GameFacts& facts) {
             if (!send_line(client, reply)) break;
         }
     }
+    if (watch::g_mask.load()) log("client gone: watches removed from %u threads", watch::clear());
     log("client disconnected");
 }
 
@@ -380,6 +495,7 @@ DWORD WINAPI worker(LPVOID) {
     log("game: %s (file version %s, build stamp %u)", facts.exe_path.c_str(), facts.exe_version.c_str(), facts.pe_timestamp);
     log("module base 0x%llx, size %llu bytes, pid %lu", static_cast<unsigned long long>(facts.module_base),
         static_cast<unsigned long long>(facts.module_size), static_cast<unsigned long>(facts.pid));
+    watch::init(facts.module_base, facts.module_size);
     log("no hooks; memory is only written when the client asks; waiting for the client on 127.0.0.1:%u", kPort);
 
     WSADATA wsa;

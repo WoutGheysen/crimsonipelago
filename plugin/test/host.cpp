@@ -8,6 +8,11 @@
 #include <cstdlib>
 
 volatile uint64_t g_marker = 0x00C0FFEE12345678ull;   // the CI test finds this and changes it
+volatile uint64_t g_watched = 0x00BADC0DE5EED000ull;  // rewritten (same value) every 100 ms: the watch test
+
+// A real function of its own, so the watch test can check the writer and its caller.
+__declspec(noinline) void poke_watched() { g_watched = 0x00BADC0DE5EED000ull; }
+__declspec(noinline) void tick() { poke_watched(); }
 
 int wmain(int argc, wchar_t** argv) {
     const wchar_t* plugin = argc > 1 ? argv[1] : L"crimsonipelago.asi";
@@ -21,6 +26,7 @@ int wmain(int argc, wchar_t** argv) {
     std::fflush(stdout);
     for (DWORD i = 0; i < seconds * 10; ++i) {
         Sleep(100);
+        tick();
         if (g_marker != 0x00C0FFEE12345678ull) {
             std::printf("marker changed to 0x%llx\n", static_cast<unsigned long long>(g_marker));
             std::fflush(stdout);
