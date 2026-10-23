@@ -186,13 +186,13 @@ def test_find_copper_by_item_number():
     game.put(number, ITEM_NO_BASE + 2)                             # a stack the client added to the save
     game.put(copy, 800)                                            # a copy the game displays
     try:
-        ask, said = _player(game, ["8.00", "7.50", "y", "y"], money=(copper, copy))
+        ask, said = _player(game, ["8.00", "7.50", "o", "y", "y"], money=(copper, copy))
         with ResearchBridge(port=game.port) as bridge:
             assert research.find_copper(bridge, ask=ask, say=said.append, wait=lambda s: None)
         assert game.get(copper) == 850 and game.get(copy) == 750
         assert all(game.get(0x11000 + 16 * i) == 800 for i in range(10))
         assert any("+24 bytes from item number 900000002" in line for line in said)
-        assert any("Does it show 8.50" in line for line in said)
+        assert any("top right show 8.50" in line for line in said)
         writes = [m for m in game.received if m["cmd"] == "write"]
         assert len(writes) == 1 and writes[0]["width"] == 4
     finally:
@@ -215,7 +215,7 @@ def test_find_copper_by_value_puts_back_wrong_guesses():
     try:
         # first amount, a change, Enter (no change), another change; then: try the copy (the bag doesn't
         # change), skip nothing, try the real one (it does)
-        ask, said = _player(game, ["8.00", "7.50", "", "7.00", "y", "n", "y", "y"], money=(copper, copy, transient))
+        ask, said = _player(game, ["8.00", "7.50", "", "7.00", "o", "y", "n", "n", "y", "y"], money=(copper, copy, transient))
         with ResearchBridge(port=game.port) as bridge:
             assert research.find_copper(bridge, ask=ask, say=said.append, wait=lambda s: None)
         assert game.get(copper) == 800 and game.get(copy) == 700        # the copy was put back
@@ -240,13 +240,42 @@ def test_find_copper_among_copies_finds_the_one_the_others_follow():
 
     game.after_write = copy_from_source
     try:
-        ask, said = _player(game, ["8.00", "7.00", "6.00", "y", "n", "y", "n", "y", "y"], money=places)
+        ask, said = _player(game, ["8.00", "7.00", "6.00", "o", "y", "n", "y", "y", "n", "n", "y", "y"], money=places)
         with ResearchBridge(port=game.port) as bridge:
             assert research.find_copper(bridge, ask=ask, say=said.append, wait=lambda s: None)
         assert all(game.get(a) == 700 for a in places)
         assert any("Found 7 candidate(s)" in line for line in said)
         assert any("6 of the other places changed to 700" in line for line in said)
-        assert any(f"lives at 0x{source:x}" in line and "6 copies followed" in line for line in said)
+        assert any(f"lives at 0x{source:x}" in line and "6 other place(s) followed" in line for line in said)
+    finally:
+        game.close()
+
+
+def test_find_copper_can_change_every_place_at_once():
+    game = FakeMemory()
+    places = [0x11000 + 0x100 * i for i in range(9)]
+    for addr in places:
+        game.put(addr, 800)
+    try:
+        ask, said = _player(game, ["8.00", "7.00", "6.00", "a", "y", "y"], money=places)
+        with ResearchBridge(port=game.port) as bridge:
+            assert research.find_copper(bridge, ask=ask, say=said.append, wait=lambda s: None)
+        assert all(game.get(a) == 700 for a in places)
+        assert any("Wrote 700 to 9 of 9 places" in line for line in said)
+    finally:
+        game.close()
+
+
+def test_all_at_once_is_put_back_when_nothing_shows():
+    game = FakeMemory()
+    places = [0x11000 + 0x100 * i for i in range(3)]
+    for addr in places:
+        game.put(addr, 800)
+    try:
+        ask, said = _player(game, ["8.00", "7.00", "6.00", "a", "n", "n"], money=places)
+        with ResearchBridge(port=game.port) as bridge:
+            assert not research.find_copper(bridge, ask=ask, say=said.append, wait=lambda s: None)
+        assert all(game.get(a) == 600 for a in places)
     finally:
         game.close()
 

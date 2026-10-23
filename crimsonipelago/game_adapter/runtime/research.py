@@ -158,6 +158,13 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
         _describe(bridge, c, say)
 
     target = amount + add
+    mode = ask(f"Try them one by one (o), all {len(candidates)} at once (a), or stop (q)? ").strip().lower()
+    if mode == "q":
+        return False
+    if mode == "a":
+        return _try_all(bridge, candidates, amount, target, ask, say, wait)
+
+    stack_only = []
     for c in candidates:
         answer = ask(f"Add {add} copper at 0x{c.addr:x}? (y = try it, n = skip, q = stop) ").strip().lower()
         if answer == "q":
@@ -176,14 +183,48 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
             say(f"{len(followed)} of the other places changed to {target} with it: this looks like the real one.")
         else:
             say("The other places didn't follow (yet).")
-        answer = ask(f"Close and reopen the bag. Does it show {shown(target)} now? (y/n) ").strip().lower()
-        if answer == "y":
-            say(f"Your Copper lives at 0x{c.addr:x} ({c.source}; {len(followed)} cop{'y' if len(followed) == 1 else 'ies'} followed).")
-            say("Last part: save in the game, quit to the main menu, load that save, and tell me the amount "
-                f"it shows ({shown(target)} means the change stuck). Send me this whole output too.")
+        if _yes(ask(f"Close and reopen the bag. Does the money at the top right show {shown(target)}? (y/n) ")):
+            say(f"Your Copper lives at 0x{c.addr:x} ({c.source}; {len(followed)} other place(s) followed).")
+            _save_test(say, target)
             return True
+        if _yes(ask("And the coin stack inside the bag, does that one show the new amount? (y/n) ")):
+            stack_only.append(c.addr)
         undone, found = bridge.write(c.addr, target, amount, width=WIDTH)
-        say("Put back: that one isn't your money." if undone else
-            f"The game already changed it to {found} by itself: a copy, not your money.")
-    say("None of the candidates is your money. Send me this output and crimsonipelago_plugin.log from bin64.")
+        say("Put back." if undone else f"The game already changed it to {found} by itself: a copy.")
+    if stack_only:
+        say("Only the coin stack changed, at " + ", ".join(f"0x{a:x}" for a in stack_only) + ".")
+    say("No single place moves the money at the top right. Run it again and choose a (all at once), or send me "
+        "this output.")
+    return False
+
+
+def _yes(answer: str) -> bool:
+    return answer.strip().lower().startswith("y")
+
+
+def _save_test(say: Callable[[str], None], target: int) -> None:
+    say("Last part: save in the game, quit to the main menu, load that save, and tell me the amount at the top "
+        f"right ({shown(target)} means the change stuck). Send me this whole output too.")
+
+
+def _try_all(bridge: ResearchBridge, candidates: list[Candidate], amount: int, target: int,
+             ask: Callable[[str], str], say: Callable[[str], None], wait: Callable[[float], None]) -> bool:
+    written = []
+    for c in candidates:
+        ok, found = bridge.write(c.addr, amount, target, width=WIDTH)
+        if ok:
+            written.append(c)
+        else:
+            say(f"  0x{c.addr:x} not written: it holds {found} now.")
+    say(f"Wrote {target} to {len(written)} of {len(candidates)} places.")
+    wait(1.0)
+    top = _yes(ask(f"Close and reopen the bag. Does the money at the top right show {shown(target)}? (y/n) "))
+    stack = _yes(ask("And the coin stack inside the bag? (y/n) "))
+    say(f"Top right: {'yes' if top else 'no'}; coin stack: {'yes' if stack else 'no'}.")
+    if top or stack:
+        _save_test(say, target)
+        return top
+    for c in written:
+        bridge.write(c.addr, target, amount, width=WIDTH)
+    say("Put them all back. Send me this output.")
     return False
