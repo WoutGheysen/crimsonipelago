@@ -169,9 +169,15 @@ jobs:
           $dir = "build/plugin/Release"
           $host_proc = Start-Process -FilePath "$dir/CrimsonDesert.exe" -ArgumentList "crimsonipelago.asi","60" -WorkingDirectory $dir -PassThru
           Start-Sleep -Seconds 3
-          python -m crimsonipelago.client.main plugin --pings 20
+          python -m crimsonipelago.client.main plugin --pings 20 2>&1 | Tee-Object -FilePath link.log
           $code = $LASTEXITCODE
+          if ($code -eq 0) { python plugin/test/live_check.py 2>&1 | Tee-Object -FilePath live.log; $code = $LASTEXITCODE }
           Get-Content "$dir/crimsonipelago_plugin.log"
+          if ($code -ne 0) {
+            foreach ($f in @("link.log", "live.log", "$dir/crimsonipelago_plugin.log")) {
+              if (Test-Path $f) { Get-Content $f | ForEach-Object { Write-Output "::error title=$(Split-Path $f -Leaf)::$_" } }
+            }
+          }
           Stop-Process -Id $host_proc.Id -ErrorAction SilentlyContinue
           exit $code
       - uses: actions/upload-artifact@v4

@@ -45,7 +45,7 @@ class PluginInfo:
 class GameBridge:
     """A blocking, line-based connection to the plugin. Small on purpose: one request, one reply."""
 
-    def __init__(self, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, timeout: float = 2.0):
+    def __init__(self, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, timeout: float = 5.0):
         self.host, self.port, self.timeout = host, port, timeout
         self._sock: socket.socket | None = None
         self._buffer = b""
@@ -136,3 +136,46 @@ class GameBridge:
         if not isinstance(msg, dict):
             raise BridgeError(f"unexpected message from the game plugin: {msg!r}")
         return msg
+
+
+# --------------------------------------------------------------------------- research (R1)
+@dataclass(frozen=True)
+class ScanReport:
+    count: int
+    hits: list[int]           # the first 64 addresses
+    truncated: bool
+    ms: int
+
+
+def _scan_report(reply: dict[str, Any]) -> ScanReport:
+    if reply.get("type") != "scan":
+        raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+    return ScanReport(int(reply["count"]), [int(h, 16) for h in reply.get("hits", [])], bool(reply.get("truncated")),
+                      int(reply.get("ms", 0)))
+
+
+class ResearchBridge(GameBridge):
+    """Memory search commands of the R1 plugin. Searches can take seconds, so the timeout is longer."""
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("timeout", 120.0)
+        super().__init__(*args, **kwargs)
+
+    def scan_u64(self, value: int) -> ScanReport:
+        return _scan_report(self.request({"cmd": "scan_u64", "value": int(value)}))
+
+    def rescan_u64(self, value: int) -> ScanReport:
+        return _scan_report(self.request({"cmd": "rescan_u64", "value": int(value)}))
+
+    def read(self, addr: int, size: int) -> bytes:
+        reply = self.request({"cmd": "read", "addr": hex(addr), "size": int(size)})
+        if reply.get("type") != "bytes":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return bytes.fromhex(reply["hex"])
+
+    def write_u64(self, addr: int, expect: int, value: int) -> tuple[bool, int]:
+        """Compare-and-set: writes only if the address still holds `expect`. Returns (written, value found)."""
+        reply = self.request({"cmd": "write_u64", "addr": hex(addr), "expect": int(expect), "value": int(value)})
+        if reply.get("type") != "written":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return bool(reply["ok"]), int(reply["found"])

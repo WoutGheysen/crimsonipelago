@@ -102,3 +102,96 @@ def test_plugin_command(plugin, capsys):
     assert client_main(["plugin", "--port", str(plugin.port), "--pings", "3"]) == 0
     out = capsys.readouterr().out
     assert "Connected to the game plugin" in out and "1.2.3.4" in out and "over 3 pings" in out
+
+
+# --------------------------------------------------------------------------- research (R1)
+import struct  # noqa: E402
+
+from crimsonipelago.game_adapter.runtime import research  # noqa: E402
+from crimsonipelago.game_adapter.runtime.bridge import ResearchBridge  # noqa: E402
+
+
+class FakeMemory(FakePlugin):
+    """A stand-in plugin with a small memory: copper sits 16 bytes after item key 1, plus decoys."""
+
+    def __init__(self):
+        self.memory = {0x1000 + 8 * i: 800 for i in range(10)}          # decoys holding the same value
+        self.copper = 0x9000
+        self.memory[self.copper] = 800
+        self.hits = []
+        super().__init__()
+
+    def _bytes(self, start, size):
+        out = bytearray(size)
+        for addr, value in self.memory.items():
+            if start <= addr < start + size - 7:
+                struct.pack_into("<Q", out, addr - start, value)
+        if start <= self.copper - 16 < start + size - 3:
+            struct.pack_into("<I", out, self.copper - 16 - start, 1)
+        return bytes(out)
+
+    def _serve(self):
+        while True:
+            try:
+                conn, _ = self.server.accept()
+            except OSError:
+                return
+            with conn:
+                conn.sendall((json.dumps(HELLO) + "\n").encode())
+                buf = b""
+                while True:
+                    data = conn.recv(4096)
+                    if not data:
+                        break
+                    buf += data
+                    while b"\n" in buf:
+                        line, buf = buf.split(b"\n", 1)
+                        msg = json.loads(line)
+                        cmd = msg["cmd"]
+                        if cmd in ("scan_u64", "rescan_u64"):
+                            pool = self.memory if cmd == "scan_u64" else self.hits
+                            self.hits = sorted(a for a in pool if self.memory[a] == msg["value"])
+                            reply = {"type": "scan", "count": len(self.hits), "truncated": False, "ms": 1,
+                                     "hits": [hex(a) for a in self.hits]}
+                        elif cmd == "read":
+                            reply = {"type": "bytes", "hex": self._bytes(int(msg["addr"], 16), msg["size"]).hex()}
+                        elif cmd == "write_u64":
+                            addr = int(msg["addr"], 16)
+                            ok = self.memory.get(addr) == msg["expect"]
+                            found = self.memory.get(addr, 0)
+                            if ok:
+                                self.memory[addr] = msg["value"]
+                            reply = {"type": "written", "ok": ok, "found": found}
+                        conn.sendall((json.dumps(reply) + "\n").encode())
+
+    def spend(self, amount):
+        self.memory[self.copper] -= amount
+
+
+def test_find_copper_narrows_down_and_writes_live():
+    game = FakeMemory()
+    try:
+        answers = iter(["8.00", "7.50", "y"])
+        said = []
+
+        def ask(prompt):
+            said.append(prompt)
+            answer = next(answers)
+            if answer == "7.50":
+                game.spend(50)          # the player buys something between the two searches
+            return answer
+
+        with ResearchBridge(port=game.port) as bridge:
+            assert research.find_copper(bridge, ask=ask, say=said.append)
+        assert game.memory[game.copper] == 850
+        assert all(v == 800 for a, v in game.memory.items() if a != game.copper)   # decoys untouched
+        assert any("item key 1 at -16 bytes" in line for line in said)
+    finally:
+        game.close()
+
+
+def test_money_is_read_as_shown():
+    assert research.parse_money("8.00") == 800
+    assert research.parse_money("8,5") == 850
+    assert research.parse_money("123") == 123
+    assert research.parse_money("abc") is None
