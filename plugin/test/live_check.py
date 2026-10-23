@@ -20,9 +20,17 @@ with ResearchBridge() as bridge:
     assert len(in_image) == 1, (again.hits, hex(base), size)
     addr = in_image[0]
     assert bridge.read(addr, 8) == MARKER.to_bytes(8, "little")
-    ok, found = bridge.write_u64(addr, MARKER + 5, MARKER + 1)        # wrong expectation: must not write
-    assert not ok and found == MARKER, (ok, found)
-    ok, found = bridge.write_u64(addr, MARKER, MARKER + 1)
+    # the general search: a value range, 8-byte aligned
+    ranged = bridge.scan(MARKER - 1, MARKER + 1, width=8, align=8)
+    assert addr in ranged.hits, (hex(addr), ranged.hits)
+    # 4-byte writes change only the low half
+    low = MARKER & 0xFFFFFFFF
+    ok, found = bridge.write(addr, low + 5, low + 1, width=4)          # wrong expectation: must not write
+    assert not ok and found == low, (ok, found)
+    ok, found = bridge.write(addr, low, low + 1, width=4)
     assert ok, found
-    assert bridge.read(addr, 8) == (MARKER + 1).to_bytes(8, "little")
-    print("memory search, read and compare-and-set write: ok")
+    assert bridge.read_int(addr) == MARKER + 1, hex(bridge.read_int(addr))
+    ok, found = bridge.write_u64(addr, MARKER + 1, MARKER + 2)
+    assert ok, found
+    assert bridge.read_int(addr) == MARKER + 2
+    print("memory search (8- and 4-byte), read and compare-and-set writes: ok")

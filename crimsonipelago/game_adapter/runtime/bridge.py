@@ -161,6 +161,15 @@ class ResearchBridge(GameBridge):
         kwargs.setdefault("timeout", 120.0)
         super().__init__(*args, **kwargs)
 
+    def scan(self, lo: int, hi: int | None = None, *, width: int = 8, align: int = 4) -> ScanReport:
+        """New search: every `align`-aligned `width`-byte value in [lo, hi] (hi defaults to lo)."""
+        return _scan_report(self.request({"cmd": "scan", "lo": int(lo), "hi": int(lo if hi is None else hi),
+                                          "width": int(width), "align": int(align)}))
+
+    def rescan(self, lo: int, hi: int | None = None) -> ScanReport:
+        """Keep the previous search's hits whose value is now in [lo, hi]; same width as that search."""
+        return _scan_report(self.request({"cmd": "rescan", "lo": int(lo), "hi": int(lo if hi is None else hi)}))
+
     def scan_u64(self, value: int) -> ScanReport:
         return _scan_report(self.request({"cmd": "scan_u64", "value": int(value)}))
 
@@ -173,8 +182,19 @@ class ResearchBridge(GameBridge):
             raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
         return bytes.fromhex(reply["hex"])
 
-    def write_u64(self, addr: int, expect: int, value: int) -> tuple[bool, int]:
+    def read_int(self, addr: int, width: int = 8) -> int:
+        return int.from_bytes(self.read(addr, width), "little")
+
+    def write(self, addr: int, expect: int, value: int, *, width: int = 8) -> tuple[bool, int]:
         """Compare-and-set: writes only if the address still holds `expect`. Returns (written, value found)."""
+        reply = self.request({"cmd": "write", "addr": hex(addr), "expect": int(expect), "value": int(value),
+                              "width": int(width)})
+        if reply.get("type") != "written":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return bool(reply["ok"]), int(reply["found"])
+
+    def write_u64(self, addr: int, expect: int, value: int) -> tuple[bool, int]:
+        """The 8-byte form of write() (R1's first version)."""
         reply = self.request({"cmd": "write_u64", "addr": hex(addr), "expect": int(expect), "value": int(value)})
         if reply.get("type") != "written":
             raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")

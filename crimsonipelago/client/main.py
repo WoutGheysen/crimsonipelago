@@ -200,7 +200,11 @@ def cmd_plugin(args) -> int:
 
         research = ResearchBridge(port=args.port or DEFAULT_PORT)
         try:
-            research.connect()
+            info = research.connect()
+            if info.plugin_version.startswith(("0.1.", "0.2.")):
+                print(f"error: the plugin in the game is {info.plugin_version}; this step needs 0.3.0 or newer. "
+                      "Replace crimsonipelago.asi in bin64 with the new one.", file=sys.stderr)
+                return 1
             return 0 if find_copper(research) else 1
         except BridgeError as exc:
             print(f"error: {exc}", file=sys.stderr)
