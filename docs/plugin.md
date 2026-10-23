@@ -43,10 +43,10 @@ py -m crimsonipelago.client.main plugin find-copper
 
 ### First attempt (2026-10-23, plugin 0.2.0-r1)
 
-8.00 → 5.70 left 3 places, none of them the money: one was a stack slot that had moved on by the time it
-was tried (the write was refused, nothing changed), one sat in a table of counters, one in a table of
-small records. 0.3.0-r1b searches 4-byte values (a superset), uses our item numbers as a second way in,
-re-checks candidates before offering them, and asks whether the bag changed.
+The first amount was typed as `8` and read as 8 copper instead of 8.00 silver, so the search started from the
+wrong value; the 3 places left after 5.70 were coincidences (one had moved on by the time it was tried, so
+the write was refused and nothing changed). Amounts are now always read as silver, as the bag shows them,
+and the client says back how much copper that is.
 
 ## Remove
 

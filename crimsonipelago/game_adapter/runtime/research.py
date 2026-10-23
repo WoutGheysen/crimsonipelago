@@ -28,16 +28,19 @@ CONTEXT = 32
 
 
 def parse_money(text: str) -> int | None:
-    """The amount the game shows ("8.00" silver, or "800" copper) as copper."""
-    text = text.strip().replace(",", ".")
+    """The amount the game shows, in silver ("8.00", "8", "5,70", "1,234.56"), as copper."""
+    text = text.strip().replace(" ", "")
     if not text:
         return None
+    if "," in text and "." in text:
+        text = text.replace(",", "")          # 1,234.56: the comma groups thousands
+    else:
+        text = text.replace(",", ".")         # 5,70: a decimal comma
     try:
-        if "." in text:
-            return round(float(text) * 100)
-        return int(text)
+        value = round(float(text) * 100)
     except ValueError:
         return None
+    return value if value >= 0 else None
 
 
 def shown(copper: int) -> str:
@@ -103,7 +106,8 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
     say("Open your bag in the game and look at the money. It shows silver: 8.00 means 800 copper.")
     amount = None
     while amount is None:
-        amount = parse_money(ask("How much money do you have right now (as shown, e.g. 8.00)? "))
+        amount = parse_money(ask("How much money do you have right now, as the bag shows it (e.g. 8.00)? "))
+    say(f"That's {amount} copper.")
 
     anchored = near_item_numbers(bridge, amount, say)
     report = bridge.scan(amount, width=WIDTH, align=4)
@@ -129,6 +133,8 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
         new = amount if text == "" else parse_money(text)
         if new is None:
             continue
+        if new != amount:
+            say(f"That's {new} copper.")
         if new != amount:
             changes += 1
         amount = new

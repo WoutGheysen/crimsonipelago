@@ -261,6 +261,9 @@ def test_find_copper_asks_for_the_new_plugin(capsys):
 def test_money_is_read_as_shown():
     assert research.parse_money("8.00") == 800
     assert research.parse_money("8,5") == 850
-    assert research.parse_money("123") == 123
+    assert research.parse_money("8") == 800                         # silver, as the bag shows it
+    assert research.parse_money("5,70") == 570
+    assert research.parse_money("1,234.56") == 123456
+    assert research.parse_money("-1") is None
     assert research.parse_money("abc") is None
     assert research.shown(570) == "5.70"
