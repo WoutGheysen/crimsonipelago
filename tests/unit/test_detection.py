@@ -28,3 +28,16 @@ def test_filler_needs_no_write_but_flight_does(real_catalogue, tmp_path):
     assert not a.needs_write(real_catalogue.items["Crow Feather"])
     assert a.can_grant_item(real_catalogue.items["Crow Feather"]).ok
     assert a.needs_write(real_catalogue.items["Flight"])
+
+
+def test_without_the_decoder_nothing_is_bound(real_catalogue, tmp_path):
+    from tests.fixtures.synthetic_save import make_save
+
+    save = tmp_path / "123" / "slot107" / "save.save"
+    save.parent.mkdir(parents=True)
+    save.write_bytes(make_save())
+    a = CrimsonDesertSaveAdapter(real_catalogue, save_path=save, editor_dir=tmp_path / "not-the-editor",
+                                 backup_dir=tmp_path / "b", campaigns_file=tmp_path / "c.json")
+    assert a.get_save_identity() is None           # never fall back to the slot: the game rotates them
+    assert "--editor-dir" in a.identity_problem
+    assert "Save editor folder not usable" in a.setup_warnings()[0]
