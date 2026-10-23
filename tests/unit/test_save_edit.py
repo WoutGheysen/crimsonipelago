@@ -50,7 +50,7 @@ def test_pointers_tables_and_sizes_stay_consistent(backend):
     sites = save_edit.pointer_sites(new, res["objects"])          # raises if any pointer is off
     assert len(sites) == len(save_edit.pointer_sites(raw, backend.parse(raw)["objects"])) + 4
     st = parc.parse_structure(new)
-    assert st.stream_size == len(new)
+    assert st.stream_size - len(new) == parc.parse_structure(raw).stream_size - len(raw)  # grows with the blob
     ordered = sorted(st.toc, key=lambda e: e.data_offset)
     assert ordered[-1].data_offset + ordered[-1].data_size == len(new)
     assert all(a.data_offset + a.data_size == b.data_offset for a, b in zip(ordered, ordered[1:]))
@@ -91,3 +91,67 @@ def test_verification_catches_a_broken_edit(backend):
     pos = broken.rfind(struct.pack("<I", 4500))
     struct.pack_into("<I", broken, pos, 4501)
     assert any("changed" in p for p in save_edit.verify_append(raw, bytes(broken), backend, appends))
+
+
+# --------------------------------------------------------------------------- inventory items
+from tests.fixtures.synthetic_save import make_inventory_blob  # noqa: E402
+
+NOW = 1_792_700_000
+
+
+def _bag(backend, raw):
+    res = backend.parse(raw)
+    _, items = save_edit._find(res["objects"], "InventorySaveData", "_inventorylist[_inventoryKey=2]._itemList", raw)
+    return [save_edit._child_values(raw, e) for e in items.list_elements], items.list_elements
+
+
+def test_give_adds_a_new_stack_like_the_game(backend):
+    raw = make_inventory_blob()
+    new, report = save_edit.give_items(raw, backend, [save_edit.Gift(1, 100)], now=NOW)
+    values, elements = _bag(backend, new)
+    copper = values[-1]
+    assert copper["_itemKey"] == 1 and copper["_stackCount"] == 100
+    assert copper["_slotNo"] == 2                                   # lowest free slot
+    assert copper["_itemNo"] == save_edit.ITEM_NO_BASE + 1
+    data = new[elements[-1].start_offset:elements[-1].end_offset]
+    assert struct.pack("<I", 1) in data[-30:]                       # transferred item key follows the new key
+    assert struct.pack("<Q", NOW) in data and data[-5] == 1         # received now, marked new
+    assert backend.decode(new).items == {50001: 14, 75001: 3, 1: 100}
+    assert backend.decode(new).knowledge == backend.decode(raw).knowledge
+
+
+def test_give_raises_an_existing_stack_in_place(backend):
+    raw = make_inventory_blob()
+    new, report = save_edit.give_items(raw, backend, [save_edit.Gift(75001, 2, 10)], now=NOW)
+    assert len(new) == len(raw)
+    assert backend.decode(new).items[75001] == 5
+    assert report.log == ["item 75001: stack 3 -> 5"]
+
+
+def test_give_refuses_to_overfill_a_stack(backend):
+    raw = make_inventory_blob()
+    with pytest.raises(save_edit.SaveEditError, match="stack is full"):
+        save_edit.give_items(raw, backend, [save_edit.Gift(75001, 8, 10)], now=NOW)
+
+
+def test_give_twice_numbers_items_and_slots_onward(backend):
+    raw = make_inventory_blob()
+    once, _ = save_edit.give_items(raw, backend, [save_edit.Gift(1, 100), save_edit.Gift(103, 1)], now=NOW)
+    twice, _ = save_edit.give_items(once, backend, [save_edit.Gift(720004, 5), save_edit.Gift(1, 50)], now=NOW)
+    values, _ = _bag(backend, twice)
+    by_key = {v["_itemKey"]: v for v in values}
+    assert by_key[1]["_stackCount"] == 150
+    assert [by_key[k]["_slotNo"] for k in (1, 103, 720004)] == [2, 3, 4]
+    assert [by_key[k]["_itemNo"] - save_edit.ITEM_NO_BASE for k in (1, 103, 720004)] == [1, 2, 3]
+    res = backend.parse(twice)
+    save_edit.pointer_sites(twice, res["objects"])                   # every pointer still points at itself
+    st = parc.parse_structure(twice)
+    assert st.stream_size - len(twice) == parc.parse_structure(raw).stream_size - len(raw)
+
+
+def test_learn_and_give_combine(backend):
+    raw = make_inventory_blob()
+    new, _ = save_edit.learn_knowledge(raw, backend, [40002])
+    new, _ = save_edit.give_items(new, backend, [save_edit.Gift(1, 100)], now=NOW)
+    state = backend.decode(new)
+    assert 40002 in state.knowledge and state.items[1] == 100

@@ -7,9 +7,10 @@ Only same-size, in-place edits are supported, so the save's structure is never r
                                 Swapping an ability to a harmless codex key removes the ability
                                 without changing the list length.
 
-One structural edit, the same one the client uses to deliver abilities:
+Structural edits, the same ones the client uses to deliver abilities and items:
 
     --learn KEY                 learn knowledge KEY (added to both knowledge lists, as the story does)
+    --give KEY=COUNT            add COUNT of item KEY to the main bag (onto its stack, or a new stack)
 
 The source file is never modified. The output is re-encoded (LZ4 + ChaCha20 + HMAC) exactly as the
 save editor does, then decoded again and compared with the source: the command fails unless the
@@ -37,6 +38,7 @@ class EditPlan:
     stacks: dict[int, int] = field(default_factory=dict)          # itemKey -> new total stack
     knowledge_swaps: dict[int, int] = field(default_factory=dict)  # old key -> new key
     learn: list[int] = field(default_factory=list)                  # knowledge keys to add
+    give: dict[int, int] = field(default_factory=dict)              # item key -> count to add
 
 
 def _fields(elem) -> dict:
@@ -106,15 +108,19 @@ def apply_edits(raw: bytes, plan: EditPlan, backend: NattKhBackend) -> tuple[byt
         raise EditError(f"item(s) not found in any inventory bag: {sorted(stacks_left)}")
     if swaps_left:
         raise EditError(f"knowledge key(s) not found: {sorted(swaps_left)}")
-    if plan.learn:
+    blob = bytes(blob)
+    if plan.learn or plan.give:
         from ..game_adapter import save_edit
         try:
-            new, report = save_edit.learn_knowledge(bytes(blob), backend, plan.learn)
+            if plan.learn:
+                blob, report = save_edit.learn_knowledge(blob, backend, plan.learn)
+                log += report.log
+            if plan.give:
+                blob, report = save_edit.give_items(blob, backend, [save_edit.Gift(k, n) for k, n in plan.give.items()])
+                log += report.log
         except save_edit.SaveEditError as exc:
             raise EditError(str(exc)) from exc
-        log += report.log
-        return new, log
-    return bytes(blob), log
+    return blob, log
 
 
 def verify(before: dict, after: dict, plan: EditPlan) -> list[str]:
@@ -122,6 +128,8 @@ def verify(before: dict, after: dict, plan: EditPlan) -> list[str]:
     problems = []
     a, b = before["state"], after["state"]
     expect_items = {str(k): v for k, v in plan.stacks.items()}
+    for k, n in plan.give.items():
+        expect_items[str(k)] = a["items"].get(str(k), 0) + n
     for k in set(a["items"]) | set(b["items"]):
         want = expect_items.get(k, a["items"].get(k))
         if b["items"].get(k) != want:
@@ -179,11 +187,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--stack", action="append", default=[], metavar="ITEM=COUNT")
     p.add_argument("--swap-knowledge", action="append", default=[], metavar="OLD:NEW")
     p.add_argument("--learn", action="append", default=[], type=int, metavar="KEY")
+    p.add_argument("--give", action="append", default=[], metavar="KEY=COUNT")
     args = p.parse_args(argv)
     plan = EditPlan(stacks=dict(_pair(s, "=") for s in args.stack),
-                    knowledge_swaps=dict(_pair(s, ":") for s in args.swap_knowledge), learn=args.learn)
-    if not plan.stacks and not plan.knowledge_swaps and not plan.learn:
-        p.error("nothing to do: give --stack, --swap-knowledge and/or --learn")
+                    knowledge_swaps=dict(_pair(s, ":") for s in args.swap_knowledge), learn=args.learn,
+                    give=dict(_pair(s, "=") for s in args.give))
+    if not (plan.stacks or plan.knowledge_swaps or plan.learn or plan.give):
+        p.error("nothing to do: give --stack, --swap-knowledge, --learn and/or --give")
     try:
         log = make_test_save(args.source, args.output, plan, args.editor_dir)
     except (EditError, save_container.SaveFormatError) as exc:
