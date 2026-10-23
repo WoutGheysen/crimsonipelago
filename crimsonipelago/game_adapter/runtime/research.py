@@ -14,9 +14,11 @@ puts the old amount back when it doesn't (a copy the game only displays, not you
 
 from __future__ import annotations
 
+import json
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 
 from ..save_edit import ITEM_NO_BASE
 from .bridge import BridgeError, ResearchBridge
@@ -101,9 +103,9 @@ def _describe(bridge: ResearchBridge, c: Candidate, say: Callable[[str], None]) 
         say(f"    {data[:CONTEXT].hex()} [{data[CONTEXT:CONTEXT + 8].hex()}] {data[CONTEXT + 8:].hex()}")
 
 
-def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: Callable[[str], None] = print,
-                add: int = 100, wait: Callable[[float], None] = time.sleep) -> bool:
-    say("Finding your Copper in the game's memory.")
+def locate_money(bridge: ResearchBridge, ask: Callable[[str], str], say: Callable[[str], None]
+                 ) -> tuple[int, list[Candidate]] | None:
+    """Asks for the amount, follows it through changes; returns (current amount, places holding it)."""
     say("Open your bag in the game and look at the money. It shows silver: 8.00 means 800 copper.")
     amount = None
     while amount is None:
@@ -115,7 +117,7 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
     if report.truncated:
         say(f"Too many places hold {amount} to follow them all. Change your money to a less round amount "
             "(buy or sell something), then start again.")
-        return False
+        return None
     say(f"{report.count} places in memory hold {amount} ({report.ms} ms).")
 
     changes, previous = 0, None
@@ -124,7 +126,7 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
         if report.count == 0 and not anchored:
             say("Nothing follows your money any more: the game keeps it in a form this search doesn't see. "
                 "Send me this output and crimsonipelago_plugin.log from the bin64 folder.")
-            return False
+            return None
         if (changes >= 2 and report.count <= MAX_CANDIDATES) or (changes >= 1 and anchored):
             break
         if changes >= 3 and report.count <= 64 and report.count == previous:
@@ -132,7 +134,7 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
         say("Now change your money in the game: buy or sell something cheap, or pick up coins.")
         text = ask("New amount (as shown), Enter if it hasn't changed, or q to stop: ").strip()
         if text.lower() == "q":
-            return False
+            return None
         new = amount if text == "" else parse_money(text)
         if new is None:
             continue
@@ -152,10 +154,20 @@ def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: 
     if not candidates:
         say("The places found changed on their own in the meantime. Start again, without touching your money "
             "while the search runs.")
-        return False
+        return None
     say(f"Found {len(candidates)} candidate(s) after {changes} change(s):")
     for c in candidates:
         _describe(bridge, c, say)
+    return amount, candidates
+
+
+def find_copper(bridge: ResearchBridge, ask: Callable[[str], str] = input, say: Callable[[str], None] = print,
+                add: int = 100, wait: Callable[[float], None] = time.sleep) -> bool:
+    say("Finding your Copper in the game's memory.")
+    found = locate_money(bridge, ask, say)
+    if found is None:
+        return False
+    amount, candidates = found
 
     target = amount + add
     mode = ask(f"Try them one by one (o), all {len(candidates)} at once (a), or stop (q)? ").strip().lower()
@@ -228,3 +240,99 @@ def _try_all(bridge: ResearchBridge, candidates: list[Candidate], amount: int, t
         bridge.write(c.addr, target, amount, width=WIDTH)
     say("Put them all back. Send me this output.")
     return False
+
+
+# --------------------------------------------------------------------------- R2: who changes the money
+WATCH_SLOTS = 4
+
+
+def _drain(bridge: ResearchBridge) -> tuple[list[dict], dict[str, int], int]:
+    records, lost = [], 0
+    while True:
+        got = bridge.hits(64)
+        records += got.records
+        lost += got.lost
+        if len(got.records) < 64:
+            return records, got.sites, lost
+
+
+def summarize(records: list[dict], sites: dict[str, int], watched: list[Candidate]) -> list[str]:
+    """Readable lines: each writing function, how often, which places, and the call chain of its first hit."""
+    by_fn: dict[str, list[dict]] = {}
+    for r in records:
+        by_fn.setdefault(r.get("fn") or r["rip"], []).append(r)
+    lines = []
+    for fn, recs in sorted(by_fn.items(), key=lambda kv: -len(kv[1])):
+        rips = sorted({r["rip"] for r in recs})
+        count = sum(sites.get(rip, 0) for rip in rips) or len(recs)
+        places = sorted({f"0x{watched[r['slot']].addr:x}" for r in recs if r["slot"] < len(watched)})
+        values = sorted({r["value"] for r in recs})
+        lines.append(f"{fn}: {count} write(s) to {', '.join(places)}; values {', '.join(map(str, values[:6]))}")
+        chain = recs[0].get("frames", [])[:8]
+        if chain:
+            lines.append("    called from " + " <- ".join(chain))
+    return lines
+
+
+def watch_money(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], str] = input,
+                say: Callable[[str], None] = print, wait: Callable[[float], None] = time.sleep) -> Path | None:
+    """R2: watch the places holding the money, let the player change it, and record which code wrote."""
+    say("Finding the game code that changes your money. First, where your money is:")
+    found = locate_money(bridge, ask, say)
+    if found is None:
+        return None
+    amount, candidates = found
+    watched = [c for c in candidates if c.addr % WIDTH == 0][:WATCH_SLOTS]
+    records: list[dict] = []
+    sites: dict[str, int] = {}
+    lost = 0
+    try:
+        threads = 0
+        for c in watched:
+            slot, threads = bridge.watch(c.addr, WIDTH, "write")
+            if slot != watched.index(c):
+                raise BridgeError(f"plugin gave watch slot {slot} for place {watched.index(c)}")
+        say(f"Watching {len(watched)} place(s) on {threads} game threads. If the game stutters or closes, "
+            "tell me: the watch uses the same processor feature as a debugger.")
+        _drain(bridge)                                       # anything from before the player's actions
+        records.clear()
+        say("Now, in the game, one at a time, pressing Enter after each:")
+        say("  1. buy something cheap   2. sell something   3. pick up coins or loot coins from a body, if you can")
+        say("Type d and Enter when you're done.")
+        while True:
+            bridge.watch_apply()                             # threads the game started meanwhile
+            text = ask("Enter after each one, d when done: ").strip().lower()
+            got, sites, dropped = _drain(bridge)
+            records += got
+            lost += dropped
+            say(f"  {len(got)} write(s) recorded" + (f", {dropped} lost" if dropped else "") + ".")
+            if text in ("d", "q", "done"):
+                break
+    finally:
+        try:
+            bridge.unwatch()
+        except BridgeError:
+            pass
+
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r2-money-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    info = bridge.info
+    path.write_text(json.dumps({
+        "plugin": info.plugin_version if info else None,
+        "game": {"exe_version": info.exe_version, "pe_timestamp": info.pe_timestamp} if info else None,
+        "amount_at_start": amount,
+        "watched": [{"slot": i, "addr": hex(c.addr), "source": c.source} for i, c in enumerate(watched)],
+        "sites": sites,
+        "lost": lost,
+        "records": records,
+    }, indent=1), encoding="utf-8")
+    say("")
+    if not records:
+        say("No writes were seen. Did the money change while watching? Send me the file anyway.")
+    else:
+        say("What changed your money:")
+        for line in summarize(records, sites, watched):
+            say("  " + line)
+    say(f"Saved: {path}")
+    say("Send me that file.")
+    return path

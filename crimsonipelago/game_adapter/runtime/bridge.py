@@ -154,6 +154,14 @@ def _scan_report(reply: dict[str, Any]) -> ScanReport:
                       int(reply.get("ms", 0)))
 
 
+@dataclass(frozen=True)
+class WatchHits:
+    total: int                         # records made so far
+    lost: int                          # records overwritten before they were collected
+    records: list[dict[str, Any]]      # slot, tid, value, rip, fn, code, frames, stack
+    sites: dict[str, int]              # every writing instruction seen, with how often it wrote
+
+
 class ResearchBridge(GameBridge):
     """Memory search commands of the R1 plugin. Searches can take seconds, so the timeout is longer."""
 
@@ -199,3 +207,32 @@ class ResearchBridge(GameBridge):
         if reply.get("type") != "written":
             raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
         return bool(reply["ok"]), int(reply["found"])
+
+    # ------------------------------------------------------------------ write watches (R2)
+    def watch(self, addr: int, size: int = 8, mode: str = "write") -> tuple[int, int]:
+        """Watch writes (or, with mode "access", reads too) to `addr`. Returns (slot, threads armed)."""
+        reply = self.request({"cmd": "watch", "addr": hex(addr), "size": int(size), "mode": mode})
+        if reply.get("type") != "watching":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return int(reply["slot"]), int(reply["threads"])
+
+    def watch_apply(self) -> int:
+        """Arm the watches on threads the game started since. Returns the threads armed."""
+        reply = self.request({"cmd": "watch_apply"})
+        if reply.get("type") != "watching":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return int(reply["threads"])
+
+    def unwatch(self) -> int:
+        reply = self.request({"cmd": "unwatch"})
+        if reply.get("type") != "unwatched":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return int(reply["threads"])
+
+    def hits(self, max_records: int = 64) -> WatchHits:
+        """Records since the last call (up to 8 per writing instruction), and every writing instruction seen."""
+        reply = self.request({"cmd": "hits", "max": int(max_records)})
+        if reply.get("type") != "hits":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        sites = {str(s["rip"]): int(s["count"]) for s in reply.get("sites", [])}
+        return WatchHits(int(reply["total"]), int(reply["lost"]), list(reply["records"]), sites)

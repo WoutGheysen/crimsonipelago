@@ -108,8 +108,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("status", help="show the local ledger for the most recent session")
     pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
-    pl.add_argument("action", nargs="?", default="check", choices=["check", "find-copper"],
-                    help="check: test the link (default); find-copper: research step R1")
+    pl.add_argument("action", nargs="?", default="check", choices=["check", "find-copper", "watch-money"],
+                    help="check: test the link (default); find-copper: research step R1; "
+                         "watch-money: research step R2")
     pl.add_argument("--port", type=int, default=None)
     pl.add_argument("--pings", type=int, default=5)
     r = sub.add_parser("resolve", help="settle an interrupted delivery")
@@ -190,22 +191,37 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
     return 0
 
 
-def cmd_plugin(args) -> int:
+NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4)}
+
+
+def _plugin_version(text: str) -> tuple[int, int]:
+    try:
+        major, minor = text.split(".")[:2]
+        return int(major), int(minor)
+    except ValueError:
+        return (0, 0)
+
+
+def cmd_plugin(args, data_dir: Path | None = None) -> int:
     import time
 
     from ..game_adapter.runtime.bridge import DEFAULT_PORT, BridgeError, GameBridge, ResearchBridge
 
-    if args.action == "find-copper":
-        from ..game_adapter.runtime.research import find_copper
+    if args.action in NEEDS_PLUGIN:
+        from ..game_adapter.runtime.research import find_copper, watch_money
 
         research = ResearchBridge(port=args.port or DEFAULT_PORT)
         try:
             info = research.connect()
-            if info.plugin_version.startswith(("0.1.", "0.2.")):
-                print(f"error: the plugin in the game is {info.plugin_version}; this step needs 0.3.0 or newer. "
-                      "Replace crimsonipelago.asi in bin64 with the new one.", file=sys.stderr)
+            need = NEEDS_PLUGIN[args.action]
+            if _plugin_version(info.plugin_version) < need:
+                print(f"error: the plugin in the game is {info.plugin_version}; this step needs {need[0]}.{need[1]}.0 "
+                      "or newer. Replace crimsonipelago.asi in bin64 with the new one.", file=sys.stderr)
                 return 1
-            return 0 if find_copper(research) else 1
+            if args.action == "find-copper":
+                return 0 if find_copper(research) else 1
+            report_dir = (data_dir or default_data_dir()) / "research"
+            return 0 if watch_money(research, report_dir) else 1
         except BridgeError as exc:
             print(f"error: {exc}", file=sys.stderr)
             return 1
@@ -329,7 +345,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "status":
         return cmd_status(data_dir)
     if args.command == "plugin":
-        return cmd_plugin(args)
+        return cmd_plugin(args, Path(data_dir))
     if args.command == "resolve":
         return cmd_resolve(args, data_dir, catalogue)
     if args.command in (None, "ui"):

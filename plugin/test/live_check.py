@@ -1,20 +1,43 @@
-"""CI check against the real plugin in the test host: link, memory search and a compare-and-set write."""
+"""CI check against the real plugin in the test host: write watch, memory search and compare-and-set writes."""
 
 import sys
+import time
 
 from crimsonipelago.game_adapter.runtime.bridge import ResearchBridge
 
 MARKER = 0x00C0FFEE12345678
+WATCHED = 0x00BADC0DE5EED000
 
 with ResearchBridge() as bridge:
     print("connected:", bridge.info.describe())
+    base, size = int(bridge.info.module_base, 16), bridge.info.module_size
+
+    # R2: watch the host's variable that it rewrites every 100 ms
+    bridge.scan(WATCHED, width=8, align=8)
+    found = [a for a in bridge.rescan(WATCHED).hits if base <= a < base + size]
+    assert len(found) == 1, found
+    slot, threads = bridge.watch(found[0], 8)
+    assert slot == 0 and threads >= 1, (slot, threads)
+    time.sleep(1.5)
+    got = bridge.hits()
+    print(f"watch: {got.total} record(s), {got.lost} lost, sites {got.sites}; first: {got.records[:1]}")
+    assert sum(got.sites.values()) >= 5 and got.records, got
+    first = got.records[0]
+    assert first["rip"].startswith("CrimsonDesert.exe+0x") and first["value"] == WATCHED, first
+    assert first["frames"] and all(f.startswith("CrimsonDesert.exe+0x") for f in first["frames"][:2]), first
+    assert bridge.unwatch() >= 1
+    time.sleep(0.3)
+    after = sum(bridge.hits().sites.values())
+    time.sleep(0.5)
+    assert sum(bridge.hits().sites.values()) == after, "hits still arriving after unwatch"
+    print("write watch, call chain and removal: ok")
+
     report = bridge.scan_u64(MARKER)
     print(f"scan: {report.count} hit(s) in {report.ms} ms")
     if report.count < 1:
         sys.exit("marker not found")
     # The value also turns up in transient copies (the scan's own buffers, stack slots); the test host's
     # variable is the one inside its executable's image.
-    base, size = int(bridge.info.module_base, 16), bridge.info.module_size
     again = bridge.rescan_u64(MARKER)
     in_image = [a for a in again.hits if base <= a < base + size]
     assert len(in_image) == 1, (again.hits, hex(base), size)

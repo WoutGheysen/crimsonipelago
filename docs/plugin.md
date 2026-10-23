@@ -6,6 +6,8 @@
 - **R1** (passed 2026-10-23): memory search for research; a live Copper change that survives a save.
   The plugin never changes anything by itself: a write happens only when
   the client asks, and only if the value there is exactly the one the client expects.
+- **R2**: write watches: which game code changes your money, and what called it. The first step towards
+  calling the game's own "receive an item" code.
 
 ## Install (Windows)
 
@@ -80,6 +82,30 @@ wrong value; the 3 places left after 5.70 were coincidences (one had moved on by
 the write was refused and nothing changed). Amounts are now always read as silver, as the bag shows them,
 and the client says back how much copper that is.
 
+## R2: what changes your money
+
+With the game running and a save loaded (plugin 0.4.0 or newer):
+
+```powershell
+py -m crimsonipelago.client.main plugin watch-money
+```
+
+1. It finds your money the same way as `find-copper` (one money change is enough when it sits next to one
+   of our item numbers).
+2. It watches up to 4 of those places. Nothing in the game changes: the processor reports every write to
+   them, and the plugin notes which instruction wrote, the call chain above it, and return addresses on
+   the stack.
+3. You buy something, sell something and pick up coins, pressing Enter after each.
+4. It prints which game functions wrote and what called them, and saves everything to
+   `crimsonipelago_data\research\r2-money-….json`.
+
+The watches use the processor's debug registers, like a debugger's data breakpoints. If Denuvo minds,
+the game may close: that loses nothing (no write happens), but tell me. The watches are removed when the
+command ends or the client disconnects.
+
+What comes next: the common caller of those writes is the game's code for "money changed"; above it,
+the code for "received an item" (which also refreshes the total at the top right). R3 calls that code.
+
 ## Remove
 
 Delete `crimsonipelago.asi` (and the loader DLL if nothing else uses it) from `bin64`. Steam's "Verify
@@ -99,4 +125,5 @@ the `.asi` is attached to every CI run as the `crimsonipelago-plugin` artifact.
 
 Newline-delimited JSON on `127.0.0.1:38301` (localhost only). On connect the plugin sends `hello` with the
 game facts; the client sends `{"cmd":"ping","id":N}` or `{"cmd":"info"}`, and for research `scan`,
-`rescan`, `read` and `write` (4- or 8-byte values, compare-and-set). See `plugin/src/main.cpp`.
+`rescan`, `read` and `write` (4- or 8-byte values, compare-and-set), and `watch`, `watch_apply`,
+`unwatch` and `hits` for write watches. See `plugin/src/main.cpp`.
