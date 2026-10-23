@@ -12,3 +12,6 @@ snapshots/
 .venv/
 research/candidates/
 research/saves/
+
+# game code dumped for research (plugin dump-code): never committed
+r2-code-*.json

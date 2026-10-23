@@ -151,7 +151,15 @@ class FakeMemory(FakePlugin):
             pool = self.hits
         elif cmd == "read":
             start = int(msg["addr"], 16)
+            if start >= 0x140000000:                                  # "code": a recognisable pattern
+                return {"type": "bytes", "hex": bytes((start + i) & 0xFF for i in range(msg["size"])).hex()}
             return {"type": "bytes", "hex": self.mem[start - BASE:start - BASE + msg["size"]].hex()}
+        elif cmd == "function":
+            addr = int(msg["addr"], 16)
+            if addr & 0xFFF == 0xBAD:
+                return {"type": "function", "begin": "0x0", "end": "0x0"}
+            begin = addr & ~0x1FFF
+            return {"type": "function", "begin": hex(begin), "end": hex(begin + 0x1800)}
         elif cmd in ("write", "write_u64"):
             addr, width = int(msg["addr"], 16), msg.get("width", 8)
             found = self.get(addr, width)
@@ -318,7 +326,7 @@ def test_watch_money_records_who_changes_it(tmp_path):
         lambda: None,
     ])
     said = []
-    answers = iter(["8.00", "7.00", "", "", "d"])
+    answers = iter(["8.00", "7.00", "buy", "sell", "d"])
 
     def ask(prompt):
         said.append(prompt)
@@ -326,7 +334,7 @@ def test_watch_money_records_who_changes_it(tmp_path):
         if "amount" in prompt and answer:
             for addr in (record, total):
                 game.put(addr, research.parse_money(answer), 4)
-        if "Enter after each one" in prompt:
+        if "What did you just do" in prompt:
             next(actions)()
         return answer
 
@@ -337,6 +345,8 @@ def test_watch_money_records_who_changes_it(tmp_path):
         report = json.loads(path.read_text())
         assert len(report["records"]) == 72 and report["sites"] == {"CrimsonDesert.exe+0x123": 72}
         assert [w["addr"] for w in report["watched"]] == [hex(record), hex(total)]
+        assert report["events"] == ["buy", "sell"]
+        assert {r["event"] for r in report["records"][:2]} == {"buy"} and report["records"][-1]["event"] == "sell"
         assert game.unwatched == 1 and game.watches == []
         assert any("CrimsonDesert.exe+0x100: 72 write(s)" in line for line in said)
         assert any("called from CrimsonDesert.exe+0x500 <- CrimsonDesert.exe+0x900" in line for line in said)
@@ -349,6 +359,44 @@ def test_watch_money_needs_the_new_plugin(capsys):
     try:
         assert client_main(["plugin", "watch-money", "--port", str(game.port)]) == 1
         assert "needs 0.4.0" in capsys.readouterr().err
+    finally:
+        game.close()
+
+
+def test_dump_code_saves_each_function_once(tmp_path):
+    game = FakeMemory()
+    report = tmp_path / "r2-money-1.json"
+    report.write_text(json.dumps({
+        "game": {"pe_timestamp": HELLO["pe_timestamp"]},
+        "sites": {"CrimsonDesert.exe+0x4484": 4},
+        "records": [{"rip": "CrimsonDesert.exe+0x4484", "fn": "CrimsonDesert.exe+0x4000",
+                     "frames": ["CrimsonDesert.exe+0x6150", "CrimsonDesert.exe+0x7bad", "ntdll.dll+0x10"]}],
+    }))
+    said = []
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.dump_code(bridge, report, tmp_path, say=said.append)
+        dump = json.loads(path.read_text())
+        by_start = {f["rva_begin"]: f for f in dump["functions"]}
+        assert set(by_start) == {"0x4000", "0x6000", hex(0x7BAD - 512)}
+        assert by_start["0x4000"]["refs"] == ["0x4484", "0x4000"]
+        assert len(by_start["0x4000"]["bytes"]) == 2 * 0x1800 and not by_start["0x4000"]["truncated"]
+        assert by_start[hex(0x7BAD - 512)]["kind"].startswith("no unwind data")
+        start = 0x140000000 + 0x6000
+        assert bytes.fromhex(by_start["0x6000"]["bytes"])[:4] == bytes((start + i) & 0xFF for i in range(4))
+    finally:
+        game.close()
+
+
+def test_dump_code_refuses_a_report_from_another_build(tmp_path):
+    game = FakeMemory()
+    report = tmp_path / "r2-money-1.json"
+    report.write_text(json.dumps({"game": {"pe_timestamp": 1}, "records": []}))
+    said = []
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            assert research.dump_code(bridge, report, tmp_path, say=said.append) is None
+        assert any("another game build" in line for line in said)
     finally:
         game.close()
 

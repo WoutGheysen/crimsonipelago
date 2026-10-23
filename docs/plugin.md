@@ -95,13 +95,24 @@ py -m crimsonipelago.client.main plugin watch-money
 2. It watches up to 4 of those places. Nothing in the game changes: the processor reports every write to
    them, and the plugin notes which instruction wrote, the call chain above it, and return addresses on
    the stack.
-3. You buy something, sell something and pick up coins, pressing Enter after each.
+3. You buy something, sell something and pick up coins; after each, you type what you did and press Enter.
 4. It prints which game functions wrote and what called them, and saves everything to
    `crimsonipelago_data\research\r2-money-….json`.
 
 The watches use the processor's debug registers, like a debugger's data breakpoints. If Denuvo minds,
 the game may close: that loses nothing (no write happens), but tell me. The watches are removed when the
 command ends or the client disconnects.
+
+First results: [research/r2-money.md](research/r2-money.md).
+
+Then, with the same report:
+
+```powershell
+py -m crimsonipelago.client.main plugin dump-code
+```
+
+saves the game's code for each function on the recorded paths (`r2-code-….json`, plugin 0.5.0 or newer),
+to work out what they expect. It stays on your PC and in our conversation, never in the repository.
 
 What comes next: the common caller of those writes is the game's code for "money changed"; above it,
 the code for "received an item" (which also refreshes the total at the top right). R3 calls that code.

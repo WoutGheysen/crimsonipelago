@@ -15,6 +15,7 @@ puts the old amount back when it doesn't (a copy the game only displays, not you
 from __future__ import annotations
 
 import json
+import struct
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -274,6 +275,15 @@ def summarize(records: list[dict], sites: dict[str, int], watched: list[Candidat
     return lines
 
 
+def _counting_table(bridge: ResearchBridge, addr: int) -> bool:
+    """A value in a run like 122, 123, 124: an index table that happens to pass through the amount."""
+    data = _read(bridge, addr - 4, 12)
+    if data is None:
+        return False
+    prev, cur, nxt = struct.unpack("<3I", data)
+    return abs(prev - cur) == 1 and abs(nxt - cur) == 1
+
+
 def watch_money(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], str] = input,
                 say: Callable[[str], None] = print, wait: Callable[[float], None] = time.sleep) -> Path | None:
     """R2: watch the places holding the money, let the player change it, and record which code wrote."""
@@ -282,9 +292,12 @@ def watch_money(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
     if found is None:
         return None
     amount, candidates = found
-    watched = [c for c in candidates if c.addr % WIDTH == 0][:WATCH_SLOTS]
+    usable = [c for c in candidates if c.addr % WIDTH == 0
+              and (c.rank < 10**6 or not _counting_table(bridge, c.addr))]
+    watched = usable[:WATCH_SLOTS]
     records: list[dict] = []
     sites: dict[str, int] = {}
+    events: list[str] = []
     lost = 0
     try:
         threads = 0
@@ -295,18 +308,24 @@ def watch_money(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
         say(f"Watching {len(watched)} place(s) on {threads} game threads. If the game stutters or closes, "
             "tell me: the watch uses the same processor feature as a debugger.")
         _drain(bridge)                                       # anything from before the player's actions
-        records.clear()
-        say("Now, in the game, one at a time, pressing Enter after each:")
-        say("  1. buy something cheap   2. sell something   3. pick up coins or loot coins from a body, if you can")
+        say("Now do these in the game, one at a time. After each one, come back here, type what you did and "
+            "press Enter:")
+        say("  buy something cheap, sell something, pick up or loot coins, finish a quest that pays money...")
         say("Type d and Enter when you're done.")
         while True:
             bridge.watch_apply()                             # threads the game started meanwhile
-            text = ask("Enter after each one, d when done: ").strip().lower()
+            text = ask("What did you just do (e.g. buy, sell, loot, reward), or d when done: ").strip()
+            done = text.lower() in ("d", "q", "done")
             got, sites, dropped = _drain(bridge)
+            label = "before done" if done else (text or "unlabelled")
+            for r in got:
+                r["event"] = label
             records += got
             lost += dropped
-            say(f"  {len(got)} write(s) recorded" + (f", {dropped} lost" if dropped else "") + ".")
-            if text in ("d", "q", "done"):
+            if got or not done:
+                events.append(label)
+                say(f"  {label}: {len(got)} write(s) recorded" + (f", {dropped} lost" if dropped else "") + ".")
+            if done:
                 break
     finally:
         try:
@@ -319,9 +338,11 @@ def watch_money(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
     info = bridge.info
     path.write_text(json.dumps({
         "plugin": info.plugin_version if info else None,
-        "game": {"exe_version": info.exe_version, "pe_timestamp": info.pe_timestamp} if info else None,
+        "game": {"exe_version": info.exe_version, "pe_timestamp": info.pe_timestamp,
+                 "module_base": info.module_base} if info else None,
         "amount_at_start": amount,
         "watched": [{"slot": i, "addr": hex(c.addr), "source": c.source} for i, c in enumerate(watched)],
+        "events": events,
         "sites": sites,
         "lost": lost,
         "records": records,
@@ -335,4 +356,90 @@ def watch_money(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
             say("  " + line)
     say(f"Saved: {path}")
     say("Send me that file.")
+    return path
+
+
+# --------------------------------------------------------------------------- R2b: the code on those paths
+MODULE = "CrimsonDesert.exe"
+MAX_FUNCTION = 16384
+FRAMES_PER_RECORD = 12
+UNKNOWN_SPAN = 512
+
+
+def _rva(text: str) -> int | None:
+    prefix = MODULE.lower() + "+"
+    if not text.lower().startswith(prefix):
+        return None
+    try:
+        return int(text[len(prefix):], 16)
+    except ValueError:
+        return None
+
+
+def addresses_in_report(report: dict) -> list[int]:
+    """Game addresses (as offsets in the executable) on the recorded paths, nearest to the write first."""
+    seen: dict[int, None] = {}
+    for r in report.get("records", []):
+        for text in [r.get("rip", ""), r.get("fn", "")] + list(r.get("frames", []))[:FRAMES_PER_RECORD]:
+            rva = _rva(text)
+            if rva is not None:
+                seen.setdefault(rva, None)
+    for text in report.get("sites", {}):
+        rva = _rva(text)
+        if rva is not None:
+            seen.setdefault(rva, None)
+    return list(seen)
+
+
+def dump_code(bridge: ResearchBridge, report_path: Path, out_dir: Path,
+              say: Callable[[str], None] = print) -> Path | None:
+    """Saves the game's code for each function on the recorded paths, for analysis outside the game."""
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    info = bridge.info
+    if info is None:
+        raise BridgeError("not connected")
+    base = int(info.module_base, 16)
+    recorded = (report.get("game") or {}).get("pe_timestamp")
+    if recorded and recorded != info.pe_timestamp:
+        say(f"That report is from another game build ({recorded}, now {info.pe_timestamp}): the addresses "
+            "don't match any more. Record a new one with watch-money first.")
+        return None
+    rvas = addresses_in_report(report)
+    if not rvas:
+        say("That report has no game addresses in it.")
+        return None
+    functions: dict[int, dict] = {}
+    for rva in rvas:
+        addr = base + rva
+        begin, end = bridge.function_bounds(addr)
+        if begin == 0:
+            begin, end = max(base, addr - UNKNOWN_SPAN), addr + UNKNOWN_SPAN
+            kind = "no unwind data: bytes around the address"
+        else:
+            kind = "function"
+        key = begin - base
+        if key in functions:
+            functions[key]["refs"].append(hex(rva))
+            continue
+        size = min(end - begin, MAX_FUNCTION)
+        data = b""
+        while len(data) < size:
+            chunk = _read(bridge, begin + len(data), min(4096, size - len(data)))
+            if chunk is None:
+                break
+            data += chunk
+        functions[key] = {"rva_begin": hex(key), "rva_end": hex(end - base), "kind": kind,
+                          "truncated": end - begin > len(data), "refs": [hex(rva)], "bytes": data.hex()}
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"r2-code-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    path.write_text(json.dumps({
+        "plugin": info.plugin_version,
+        "game": {"exe_version": info.exe_version, "pe_timestamp": info.pe_timestamp},
+        "from_report": report_path.name,
+        "functions": list(functions.values()),
+    }, indent=1), encoding="utf-8")
+    total = sum(len(f["bytes"]) // 2 for f in functions.values())
+    say(f"Saved the code of {len(functions)} game functions ({total:,} bytes) on the recorded paths.")
+    say(f"Saved: {path}")
+    say("Send me that file. It stays between us: it's the game's code, so it doesn't go in the repository.")
     return path

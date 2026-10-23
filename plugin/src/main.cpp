@@ -20,6 +20,8 @@
 //                                                 -> {"type":"watching","slot":0..3,"threads":N}
 //   client -> plugin: {"cmd":"watch_apply"}  -> same, again for threads started since (slot -1)
 //   client -> plugin: {"cmd":"unwatch"}      -> {"type":"unwatched","threads":N}  (also on disconnect)
+//   client -> plugin: {"cmd":"function","addr":"0x.."} -> {"type":"function","begin":"0x..","end":"0x.."}
+//                      (bounds from the unwind data; begin 0 when the address has none)
 //   client -> plugin: {"cmd":"hits","max":N} -> {"type":"hits","total":T,"lost":L,"sites":[...],"records":[...]}
 //                      (N <= 64 records since the last call; up to 8 per writing instruction; sites count them all)
 //   anything else                             -> {"type":"error","message":"unknown command"}
@@ -48,7 +50,7 @@
 #include "watch.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.4.0-r2"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.5.0-r2b"
 #endif
 
 namespace {
@@ -378,6 +380,16 @@ std::string handle_watch(const std::string& cmd, const std::string& line) {
         log("watch %d: 0x%llx, %llu bytes, %s, %u threads", slot, static_cast<unsigned long long>(addr),
             static_cast<unsigned long long>(size), mode == "access" ? "access" : "write", threads);
         std::snprintf(out, sizeof(out), "{\"type\":\"watching\",\"slot\":%d,\"threads\":%u}", slot, threads);
+        return out;
+    }
+    if (cmd == "function") {
+        const uint64_t addr = parse_u64(json_field(line, "addr"), ok);
+        if (!ok) return error_json("addr must be an integer");
+        DWORD64 image = 0;
+        PRUNTIME_FUNCTION fn = RtlLookupFunctionEntry(addr, &image, nullptr);
+        std::snprintf(out, sizeof(out), "{\"type\":\"function\",\"begin\":\"0x%llx\",\"end\":\"0x%llx\"}",
+                      static_cast<unsigned long long>(fn ? image + fn->BeginAddress : 0),
+                      static_cast<unsigned long long>(fn ? image + fn->EndAddress : 0));
         return out;
     }
     if (cmd == "watch_apply") {

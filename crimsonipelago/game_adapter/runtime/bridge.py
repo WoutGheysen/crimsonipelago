@@ -229,6 +229,13 @@ class ResearchBridge(GameBridge):
             raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
         return int(reply["threads"])
 
+    def function_bounds(self, addr: int) -> tuple[int, int]:
+        """Start and end of the function holding `addr`, from the unwind data; (0, 0) when it has none."""
+        reply = self.request({"cmd": "function", "addr": hex(addr)})
+        if reply.get("type") != "function":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return int(reply["begin"], 16), int(reply["end"], 16)
+
     def hits(self, max_records: int = 64) -> WatchHits:
         """Records since the last call (up to 8 per writing instruction), and every writing instruction seen."""
         reply = self.request({"cmd": "hits", "max": int(max_records)})

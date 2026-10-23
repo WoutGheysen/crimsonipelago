@@ -25,6 +25,16 @@ with ResearchBridge() as bridge:
     first = got.records[0]
     assert first["rip"].startswith("CrimsonDesert.exe+0x") and first["value"] == WATCHED, first
     assert first["frames"] and all(f.startswith("CrimsonDesert.exe+0x") for f in first["frames"][:2]), first
+    # function bounds from the unwind data: at least one frame on the path has them
+    bounds = []
+    for frame in first["frames"]:
+        addr = base + int(frame.split("+")[1], 16)
+        begin, end = bridge.function_bounds(addr)
+        if begin:
+            assert begin <= addr < end, (hex(addr), hex(begin), hex(end))
+            bounds.append((frame, hex(begin - base), hex(end - base)))
+    assert bounds, first["frames"]
+    print("function bounds:", bounds)
     assert bridge.unwatch() >= 1
     time.sleep(0.3)
     after = sum(bridge.hits().sites.values())
