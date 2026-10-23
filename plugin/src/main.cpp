@@ -9,10 +9,12 @@
 //   plugin -> client on connect: {"type":"hello", "plugin":"crimsonipelago", "protocol":1, ...game facts}
 //   client -> plugin: {"cmd":"ping","id":N}   -> {"type":"pong","id":N,"uptime_ms":...}
 //   client -> plugin: {"cmd":"info"}          -> {"type":"info", ...game facts}
-//   client -> plugin: {"cmd":"scan_u64","value":N}            -> {"type":"scan","count":..,"hits":[first 64]}
-//   client -> plugin: {"cmd":"rescan_u64","value":N}          -> same, among the previous hits
+//   client -> plugin: {"cmd":"scan","lo":N,"hi":M,"width":4|8,"align":1|2|4|8}
+//                                                 -> {"type":"scan","count":..,"hits":[first 64]}
+//   client -> plugin: {"cmd":"rescan","lo":N,"hi":M}         -> same, among the previous hits
 //   client -> plugin: {"cmd":"read","addr":"0x..","size":N}   -> {"type":"bytes","hex":".."} (N <= 4096)
-//   client -> plugin: {"cmd":"write_u64","addr":"0x..","expect":N,"value":M} -> {"type":"written",...}
+//   client -> plugin: {"cmd":"write","addr":"0x..","expect":N,"value":M,"width":4|8} -> {"type":"written",...}
+//   ("value":N instead of lo/hi searches one value; scan_u64, rescan_u64, write_u64 are the 8-byte forms)
 //   anything else                             -> {"type":"error","message":"unknown command"}
 
 #ifndef WIN32_LEAN_AND_MEAN
@@ -38,7 +40,7 @@
 #include "memory.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.2.0-r1"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.3.0-r1b"
 #endif
 
 namespace {
@@ -224,24 +226,71 @@ std::string error_json(const char* message) {
     return std::string("{\"type\":\"error\",\"message\":\"") + json_escape(message) + "\"}";
 }
 
-// Research commands (R1). The hit list lives for the connection: one search at a time.
-std::string handle_memory(const std::string& cmd, const std::string& line, std::vector<uint64_t>& hits) {
+struct Search {
+    std::vector<uint64_t> hits;
+    mem::Query query;   // the last search's width: a rescan reads the same size
+};
+
+// Reads the optional "width"/"align" fields; defaults are the R1 u64 search.
+bool read_query(const std::string& line, mem::Query& q, bool with_range, std::string& problem) {
     bool ok = false;
-    if (cmd == "scan_u64" || cmd == "rescan_u64") {
-        const uint64_t value = parse_u64(json_field(line, "value"), ok);
-        if (!ok) return error_json("value must be an integer");
-        const ULONGLONG t0 = GetTickCount64();
-        if (cmd == "scan_u64") {
-            mem::ScanResult r = mem::scan_u64(value);
-            hits.swap(r.hits);
-            log("scan_u64 %llu: %zu hits in %u regions, %llu MB, %llu ms%s", static_cast<unsigned long long>(value),
-                hits.size(), r.regions, static_cast<unsigned long long>(r.bytes_scanned >> 20),
-                static_cast<unsigned long long>(GetTickCount64() - t0), r.truncated ? " (truncated)" : "");
-            return hits_json("scan", hits, r.truncated, r.bytes_scanned, r.regions, GetTickCount64() - t0);
+    if (with_range) {
+        const std::string value = json_field(line, "value");
+        if (!value.empty()) {
+            q.lo = q.hi = parse_u64(value, ok);
+        } else {
+            q.lo = parse_u64(json_field(line, "lo"), ok);
+            if (ok) q.hi = parse_u64(json_field(line, "hi"), ok);
         }
-        hits = mem::rescan_u64(hits, value);
-        log("rescan_u64 %llu: %zu hits", static_cast<unsigned long long>(value), hits.size());
-        return hits_json("scan", hits, false, 0, 0, GetTickCount64() - t0);
+        if (!ok) {
+            problem = "value (or lo and hi) must be integers";
+            return false;
+        }
+    }
+    const std::string width = json_field(line, "width"), align = json_field(line, "align");
+    if (!width.empty()) q.width = static_cast<unsigned>(parse_u64(width, ok));
+    if (!width.empty() && !ok) q.width = 0;
+    if (!align.empty()) q.align = static_cast<unsigned>(parse_u64(align, ok));
+    if (!align.empty() && !ok) q.align = 0;
+    if (!q.valid()) {
+        problem = "width must be 4 or 8, align 1, 2, 4 or 8, lo <= hi, and 4-byte values below 2^32";
+        return false;
+    }
+    return true;
+}
+
+// Research commands (R1). The hit list lives for the connection: one search at a time.
+//   scan   {lo, hi | value, width=8, align=4}  -> new search
+//   rescan {lo, hi | value}                     -> among the previous hits, same width
+//   write  {addr, expect, value, width=8}       -> compare-and-set
+// scan_u64 / rescan_u64 / write_u64 are the same with width 8 (R1's first version).
+std::string handle_memory(const std::string& cmd, const std::string& line, Search& search) {
+    bool ok = false;
+    std::string problem;
+    if (cmd == "scan" || cmd == "scan_u64") {
+        mem::Query q;
+        if (!read_query(line, q, true, problem)) return error_json(problem.c_str());
+        if (cmd == "scan_u64") q.width = 8, q.align = 4;
+        const ULONGLONG t0 = GetTickCount64();
+        mem::ScanResult r = mem::scan(q);
+        search.hits.swap(r.hits);
+        search.query = q;
+        log("scan %llu..%llu (%u bytes, align %u): %zu hits in %u regions, %llu MB, %llu ms%s",
+            static_cast<unsigned long long>(q.lo), static_cast<unsigned long long>(q.hi), q.width, q.align,
+            search.hits.size(), r.regions, static_cast<unsigned long long>(r.bytes_scanned >> 20),
+            static_cast<unsigned long long>(GetTickCount64() - t0), r.truncated ? " (truncated)" : "");
+        return hits_json("scan", search.hits, r.truncated, r.bytes_scanned, r.regions, GetTickCount64() - t0);
+    }
+    if (cmd == "rescan" || cmd == "rescan_u64") {
+        mem::Query q = search.query;
+        if (!read_query(line, q, true, problem)) return error_json(problem.c_str());
+        q.width = search.query.width;   // same size as the search it narrows
+        const ULONGLONG t0 = GetTickCount64();
+        search.hits = mem::rescan(search.hits, q);
+        search.query = q;
+        log("rescan %llu..%llu: %zu hits", static_cast<unsigned long long>(q.lo), static_cast<unsigned long long>(q.hi),
+            search.hits.size());
+        return hits_json("scan", search.hits, false, 0, 0, GetTickCount64() - t0);
     }
     if (cmd == "read") {
         const uint64_t addr = parse_u64(json_field(line, "addr"), ok);
@@ -252,17 +301,21 @@ std::string handle_memory(const std::string& cmd, const std::string& line, std::
         if (!mem::read(addr, data.data(), data.size())) return error_json("address not readable");
         return std::string("{\"type\":\"bytes\",\"hex\":\"") + mem::hex(data.data(), data.size()) + "\"}";
     }
-    if (cmd == "write_u64") {
+    if (cmd == "write" || cmd == "write_u64") {
         const uint64_t addr = parse_u64(json_field(line, "addr"), ok);
         if (!ok) return error_json("addr must be an integer");
         const uint64_t expect = parse_u64(json_field(line, "expect"), ok);
         if (!ok) return error_json("expect must be an integer");
         const uint64_t value = parse_u64(json_field(line, "value"), ok);
         if (!ok) return error_json("value must be an integer");
+        mem::Query q;
+        if (cmd == "write" && !read_query(line, q, false, problem)) return error_json(problem.c_str());
+        if (q.width == 4 && (expect > 0xFFFFFFFFull || value > 0xFFFFFFFFull))
+            return error_json("4-byte writes take values below 2^32");
         uint64_t found = 0;
-        const bool done = mem::write_u64_if(addr, expect, value, found);
-        log("write_u64 0x%llx: expect %llu, found %llu, value %llu -> %s", static_cast<unsigned long long>(addr),
-            static_cast<unsigned long long>(expect), static_cast<unsigned long long>(found),
+        const bool done = mem::write_if(addr, q.width, expect, value, found);
+        log("write 0x%llx (%u bytes): expect %llu, found %llu, value %llu -> %s", static_cast<unsigned long long>(addr),
+            q.width, static_cast<unsigned long long>(expect), static_cast<unsigned long long>(found),
             static_cast<unsigned long long>(value), done ? "written" : "not written");
         char out[200];
         std::snprintf(out, sizeof(out), "{\"type\":\"written\",\"ok\":%s,\"found\":%llu}", done ? "true" : "false",
@@ -279,7 +332,7 @@ void serve_client(SOCKET client, const GameFacts& facts) {
         return;
     }
     std::string pending;
-    std::vector<uint64_t> hits;
+    Search search;
     char buf[1024];
     while (!g_stop.load()) {
         const int n = recv(client, buf, sizeof(buf), 0);
@@ -304,7 +357,7 @@ void serve_client(SOCKET client, const GameFacts& facts) {
                 reply = out;
             } else if (cmd == "info") {
                 reply = facts_json("info", facts);
-            } else if (!(reply = handle_memory(cmd, line, hits)).empty()) {
+            } else if (!(reply = handle_memory(cmd, line, search)).empty()) {
                 // handled
             } else {
                 reply = "{\"type\":\"error\",\"message\":\"unknown command\"}";

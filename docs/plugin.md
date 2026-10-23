@@ -32,9 +32,21 @@ With the game running and a save loaded:
 py -m crimsonipelago.client.main plugin find-copper
 ```
 
-It asks how much money you have, searches the game's memory for it, asks you to change your money in the
-game (buy or sell something) and searches again until one place is left. Then it offers to add 100 copper
-there while you play.
+1. It asks how much money you have.
+2. It looks near the item numbers the client gave to stacks it added to your save (900,000,001 and up),
+   and searches the whole memory for the amount.
+3. It asks you to change your money in the game (buy or sell something). Press Enter instead when nothing
+   changed: that drops places that change by themselves. It needs two changes, or one when the amount sits
+   next to one of our item numbers.
+4. It tries the candidates one by one: adds 100 copper, asks whether the bag shows it, and puts the old
+   amount back when it doesn't.
+
+### First attempt (2026-10-23, plugin 0.2.0-r1)
+
+8.00 → 5.70 left 3 places, none of them the money: one was a stack slot that had moved on by the time it
+was tried (the write was refused, nothing changed), one sat in a table of counters, one in a table of
+small records. 0.3.0-r1b searches 4-byte values (a superset), uses our item numbers as a second way in,
+re-checks candidates before offering them, and asks whether the bag changed.
 
 ## Remove
 
@@ -54,4 +66,5 @@ the `.asi` is attached to every CI run as the `crimsonipelago-plugin` artifact.
 ## Protocol
 
 Newline-delimited JSON on `127.0.0.1:38301` (localhost only). On connect the plugin sends `hello` with the
-game facts; the client sends `{"cmd":"ping","id":N}` or `{"cmd":"info"}`. See `plugin/src/main.cpp`.
+game facts; the client sends `{"cmd":"ping","id":N}` or `{"cmd":"info"}`, and for research `scan`,
+`rescan`, `read` and `write` (4- or 8-byte values, compare-and-set). See `plugin/src/main.cpp`.
