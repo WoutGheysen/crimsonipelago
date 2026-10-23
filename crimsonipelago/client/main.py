@@ -107,6 +107,9 @@ def build_parser() -> argparse.ArgumentParser:
     ssub.add_parser("list", help="list check names")
 
     sub.add_parser("status", help="show the local ledger for the most recent session")
+    pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
+    pl.add_argument("--port", type=int, default=None)
+    pl.add_argument("--pings", type=int, default=5)
     r = sub.add_parser("resolve", help="settle an interrupted delivery")
     r.add_argument("batch_id", help="delivery id (or its first 8 characters)")
     r.add_argument("decision", choices=["delivered", "retry"])
@@ -114,14 +117,41 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-async def run_headless(controller: SyncController) -> None:
+async def run_headless(controller: SyncController, *, watch_plugin: bool = False) -> None:
     loop = asyncio.get_running_loop()
     for sig in (signal.SIGINT, signal.SIGTERM):
         try:
             loop.add_signal_handler(sig, controller.stop)
         except (NotImplementedError, RuntimeError):  # Windows
             pass
-    await controller.run()
+    watcher = asyncio.create_task(watch_game_plugin(controller.bus)) if watch_plugin else None
+    try:
+        await controller.run()
+    finally:
+        if watcher:
+            watcher.cancel()
+
+
+async def watch_game_plugin(bus: ev.EventBus, interval: float = 5.0) -> None:
+    """Report when the in-game plugin (R0) comes and goes. Nothing depends on it yet."""
+    from ..game_adapter.runtime.bridge import BridgeError, GameBridge
+
+    bridge: GameBridge | None = None
+    while True:
+        try:
+            if bridge is None:
+                candidate = GameBridge()
+                info = await asyncio.to_thread(candidate.connect)
+                bridge = candidate
+                bus.emit(ev.CONNECTION, f"Game plugin connected: {info.describe()}")
+            else:
+                await asyncio.to_thread(bridge.ping)
+        except BridgeError:
+            if bridge is not None:
+                bus.emit(ev.CONNECTION, "Game plugin disconnected (game closed?)")
+                bridge.close()
+                bridge = None
+        await asyncio.sleep(interval)
 
 
 def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
@@ -142,10 +172,12 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
     ledger = Ledger(data_dir / "ledger.sqlite3")
     bus = ev.EventBus()
     bus.subscribe(lambda e: e.kind != ev.STATUS and print(f"{e.at:%H:%M:%S}  {e.message}", flush=True))
+    if not args.verbose:
+        logging.getLogger("crimsonipelago.events").setLevel(logging.ERROR)   # printed above already
     config = ClientConfig(server=server, port=args.port, slot_name=slot, password=password, data_dir=data_dir)
     controller = SyncController(config, adapter, ledger, catalogue, bus)
     try:
-        asyncio.run(run_headless(controller))
+        asyncio.run(run_headless(controller, watch_plugin=args.adapter == "save"))
     except KeyboardInterrupt:
         pass
     finally:
@@ -154,6 +186,37 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
         print(f"stopped: {controller.connection.fatal_error}", file=sys.stderr)
         return 1
     return 0
+
+
+def cmd_plugin(args) -> int:
+    import time
+
+    from ..game_adapter.runtime.bridge import DEFAULT_PORT, BridgeError, GameBridge
+
+    bridge = GameBridge(port=args.port or DEFAULT_PORT)
+    try:
+        info = bridge.connect()
+        print("Connected to the game plugin")
+        print(f"  plugin version : {info.plugin_version} (protocol {info.protocol})")
+        print(f"  game           : {info.exe}")
+        print(f"  game version   : {info.exe_version}, build stamp {info.pe_timestamp}")
+        print(f"  process        : pid {info.pid}, module at {info.module_base}, {info.module_size:,} bytes")
+        times = []
+        for _ in range(max(0, args.pings)):
+            start = time.perf_counter()
+            bridge.ping()
+            times.append((time.perf_counter() - start) * 1000)
+        if times:
+            print(f"  round trip     : {min(times):.2f} ms best, {sum(times) / len(times):.2f} ms average "
+                  f"over {len(times)} pings")
+        return 0
+    except BridgeError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        print("Is the game running, with the ASI loader and crimsonipelago.asi in its bin64 folder? "
+              "The plugin writes crimsonipelago_plugin.log next to itself.", file=sys.stderr)
+        return 1
+    finally:
+        bridge.close()
 
 
 def cmd_sim(args, data_dir: Path, catalogue: Catalogue) -> int:
@@ -244,6 +307,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_sim(args, data_dir, catalogue)
     if args.command == "status":
         return cmd_status(data_dir)
+    if args.command == "plugin":
+        return cmd_plugin(args)
     if args.command == "resolve":
         return cmd_resolve(args, data_dir, catalogue)
     if args.command in (None, "ui"):

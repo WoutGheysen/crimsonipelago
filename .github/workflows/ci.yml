@@ -146,3 +146,32 @@ jobs:
       - name: Annotate failures
         if: failure()
         run: python .github/scripts/junit_annotations.py report.xml
+
+  plugin:
+    name: Game plugin (Windows build and load test)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build crimsonipelago.asi (MSVC, static runtime)
+        run: |
+          cmake -S plugin -B build/plugin -A x64 -DCRIMSONIPELAGO_TEST_HOST=ON
+          cmake --build build/plugin --config Release
+      - name: Load it the way the game would and talk to it from the client
+        shell: pwsh
+        run: |
+          pip install -e .
+          $dir = "build/plugin/Release"
+          $host_proc = Start-Process -FilePath "$dir/CrimsonDesert.exe" -ArgumentList "crimsonipelago.asi","60" -WorkingDirectory $dir -PassThru
+          Start-Sleep -Seconds 3
+          python -m crimsonipelago.client.main plugin --pings 20
+          $code = $LASTEXITCODE
+          Get-Content "$dir/crimsonipelago_plugin.log"
+          Stop-Process -Id $host_proc.Id -ErrorAction SilentlyContinue
+          exit $code
+      - uses: actions/upload-artifact@v4
+        with:
+          name: crimsonipelago-plugin
+          path: build/plugin/Release/crimsonipelago.asi
