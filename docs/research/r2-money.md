@@ -76,7 +76,32 @@ That's the pattern to copy for Archipelago items: get the transaction on the gam
 check, commit. The game then mirrors it to the screen side (the total at the top right, the popup) as it
 does for loot.
 
+## Third run: calls of the transaction functions (2026-10-24, plugin 0.6.0-r2c)
+
+Execute watches on add (`+0x277e080`), commit (`+0x2780570`), commit-add (`+0x27aed40`) and commit-remove
+(`+0x27b0b70`) while looting four times, buying and selling. No stutter, no crash.
+
+- **Everything runs on one game-logic thread**, and it uses **one transaction object** for all of them
+  (the same address in every call): get, fill, commit, reuse.
+- **Something commits a transaction all the time**, in pairs (callers `+0x2b753f6`/`+0x2b759e4` under
+  `+0x2bd0bcc` and `+0x2bd064b`), with or without the player doing anything. Those filled the 8-records
+  quota per function, crowding out most of the looting. Plugin 0.6.1 keeps the quota per caller instead.
+- **Looting an item goes through the handler seen before** (`+0x2b4bc8e` → commit `+0x2b4bd92`): the
+  unexplained +22 copper of the second run was a loot.
+- **The shop goes through a wrapper** that adds and commits in one go (`+0x2781588` add, `+0x278164d`
+  commit), called for buying (`+0x2b38b41`, `+0x2781852` ← `+0x286e82e`) and selling (`+0x2c059bd`).
+- **What "add" receives** (loot): the transaction, a result, the same owner object every time (r8), and in
+  r9 a small item description: a pointer, two 4-byte 1s, then a 4-byte item key (0x7BD here; the Copper
+  stack's record has 0x7BC at the same place), followed by more arguments pointing at small structures and
+  flags, among them the reason 0x1C.
+
 ## Next
+
+1. `plugin watch-calls` again with 0.6.1 (quota per caller), then `plugin dump-code` on that report: the
+   code of the add function and its callers shows what each argument means.
+2. R3: make that call ourselves, on the game-logic thread.
+
+## Earlier plan
 
 1. `plugin watch-calls` (plugin 0.6.0): execute watches on `+0x277e080` (add), `+0x2780570` (commit),
    `+0x27aed40` (commit: add items) and `+0x27b0b70` (commit: remove items), recording the arguments and the

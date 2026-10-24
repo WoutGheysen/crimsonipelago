@@ -23,7 +23,8 @@
 //   client -> plugin: {"cmd":"function","addr":"0x.."} -> {"type":"function","begin":"0x..","end":"0x.."}
 //                      (bounds from the unwind data; begin 0 when the address has none)
 //   client -> plugin: {"cmd":"hits","max":N} -> {"type":"hits","total":T,"lost":L,"sites":[...],"records":[...]}
-//                      (N <= 64 records since the last call; up to 8 per instruction per call; sites count
+//                      (N <= 64 records since the last call; up to 8 per instruction (execute watches: per
+//                      caller) per call; sites count
 //                      them all; execute watches add "args" and "memory": {argument index: hex of 512 bytes})
 //   anything else                             -> {"type":"error","message":"unknown command"}
 
@@ -51,7 +52,7 @@
 #include "watch.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.6.0-r2c"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.6.1-r2c"
 #endif
 
 namespace {

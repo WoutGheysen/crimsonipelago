@@ -112,7 +112,8 @@ def build_parser() -> argparse.ArgumentParser:
                     choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls"],
                     help="check: test the link (default); find-copper: research step R1; "
                          "watch-money, dump-code, watch-calls: research step R2")
-    pl.add_argument("--report", default=None, help="dump-code: the watch-money report (default: the newest)")
+    pl.add_argument("--report", default=None,
+                    help="dump-code: the watch-money or watch-calls report (default: the newest)")
     pl.add_argument("--port", type=int, default=None)
     pl.add_argument("--pings", type=int, default=5)
     r = sub.add_parser("resolve", help="settle an interrupted delivery")
@@ -224,10 +225,11 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                 return 0 if find_copper(research) else 1
             report_dir = (data_dir or default_data_dir()) / "research"
             if args.action == "dump-code":
-                reports = sorted(report_dir.glob("r2-money-*.json"))
+                reports = sorted(list(report_dir.glob("r2-money-*.json")) + list(report_dir.glob("r2-calls-*.json")),
+                                 key=lambda p: p.stat().st_mtime)
                 report = Path(args.report) if args.report else (reports[-1] if reports else None)
                 if report is None or not report.exists():
-                    print("error: no watch-money report found; run `plugin watch-money` first", file=sys.stderr)
+                    print("error: no watch-money or watch-calls report found; run one of those first", file=sys.stderr)
                     return 1
                 print(f"Using {report}")
                 return 0 if dump_code(research, report, report_dir) else 1

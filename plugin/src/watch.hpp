@@ -137,7 +137,11 @@ inline LONG CALLBACK on_exception(EXCEPTION_POINTERS* ep) {
     const bool execute = g_watch[slot].kind == kExecute;
     // An execute watch fires before the instruction runs: the resume flag lets it run once without firing again.
     if (execute) c->EFlags |= 0x10000;
-    if (!count_site(c->Rip)) return EXCEPTION_CONTINUE_EXECUTION;
+    // Quotas per writing instruction, or for execute watches per caller (the return address): a caller that
+    // runs every frame can't crowd out the rare one we're after.
+    uint64_t site = c->Rip;
+    if (execute) std::memcpy(&site, reinterpret_cast<const void*>(c->Rsp), 8);
+    if (!count_site(site)) return EXCEPTION_CONTINUE_EXECUTION;
     const uint64_t index = g_total.fetch_add(1, std::memory_order_relaxed);
     Hit& h = g_ring[index % kRing];
     h.seq.store(0, std::memory_order_relaxed);

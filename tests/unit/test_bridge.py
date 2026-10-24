@@ -417,9 +417,9 @@ def test_watch_calls_labels_the_calls_with_what_the_player_did(tmp_path):
                                  "fn": "", "code": "", "frames": [], "stack": [], "args": ["0x1", "0x2"],
                                  "memory": {"0": "00ff"}})
 
-    actions = iter([loot, lambda: None])
+    actions = iter([loot, loot, lambda: None])
     said = []
-    answers = iter(["loot", "d"])
+    answers = iter(["loot", "loot", "d"])
 
     def ask(prompt):
         said.append(prompt)
@@ -431,12 +431,14 @@ def test_watch_calls_labels_the_calls_with_what_the_player_did(tmp_path):
             path = research.watch_calls(bridge, tmp_path, ask=ask, say=said.append,
                                         targets_file=_targets(tmp_path, HELLO["pe_timestamp"]))
         report = json.loads(path.read_text())
-        assert [r["function"] for r in report["records"]] == ["transaction: add", "transaction: commit"]
-        assert {r["event"] for r in report["records"]} == {"loot"}
+        assert [r["function"] for r in report["records"]] == ["transaction: add", "transaction: commit"] * 2
+        assert report["events"] == ["loot", "loot #2"]
+        assert [r["event"] for r in report["records"]] == ["loot", "loot", "loot #2", "loot #2"]
         assert [m["addr"] for m in game.received if m["cmd"] == "watch"] == [hex(0x140001000), hex(0x140002000)]
         assert all(m["mode"] == "execute" for m in game.received if m["cmd"] == "watch")
         assert all(m["max"] == research.CALL_PAGE for m in game.received if m["cmd"] == "hits")
-        assert any("loot: transaction: add x1, transaction: commit x1" in line for line in said)
+        assert any("  loot: transaction: add x1, transaction: commit x1" in line for line in said)
+        assert any("  loot #2: transaction: add x1, transaction: commit x1" in line for line in said)
         assert game.unwatched == 1
     finally:
         game.close()
