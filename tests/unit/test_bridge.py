@@ -996,3 +996,61 @@ def test_live_channel_counts_a_load_by_owner_or_clock_but_not_a_death():
     seen(owner + 0x400, 0x200)                      # a new owner alone
     assert live.loads == 3
     assert [r["event"] for r in logged].count("load") == 3
+
+
+def test_live_channel_waits_for_the_games_own_add_after_a_run_of_items_then_goes_on(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import LiveChannel
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5"}
+    calls = []
+
+    def the_game_takes_two_in_a_row(msg):
+        args = [int(a, 16) for a in msg["args"].split(",")]
+        calls.append(1)
+        game.put(args[1], 0x40128A9B if len(calls) == 3 else 0, 4)   # the third in a row: "not now"
+        return "done"
+
+    game.on_job = the_game_takes_two_in_a_row
+    background, game.on_execute = game.on_execute, None              # the game's own adds come when we say
+    logged = []
+    live = LiveChannel(game.port, targets_file=targets, sleep=lambda s: None, log=logged.append)
+    try:
+        live.give(1, 100)
+        background(0x140000000 + 0x277e080)
+        assert live.give(1, 100).given and live.give(1, 100).given
+        turned_down = live.give(1, 100)
+        assert turned_down.state == "not now" and "turned it down for now" in turned_down.message
+        waiting = live.give(1, 100)
+        assert waiting.state == "not now" and "after its next transaction" in waiting.message and len(calls) == 3
+        assert live.give(75001, 1).state == "not now" and len(calls) == 3   # nothing else either, meanwhile
+        background(0x140000000 + 0x277e080)                             # the game makes an add of its own
+        assert live.give(1, 100).given and len(calls) == 4
+        assert 1 not in live.refused
+    finally:
+        live.close()
+        game.close()
+    gives = [r for r in logged if r["event"] == "give"]
+    assert [r["state"] for r in gives].count("not now") <= 4             # repeated waits logged once
+    assert any(r["event"] == "seen" for r in logged)
+
+
+def test_live_channel_gives_up_on_an_item_turned_down_again_and_again(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import TRANSIENT_TRIES, LiveChannel
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5"}
+    game.on_job = lambda msg: (game.put(int(msg["args"].split(",")[1], 16), 0x40128A9B, 4), "done")[1]
+    background, game.on_execute = game.on_execute, None
+    live = LiveChannel(game.port, targets_file=targets, sleep=lambda s: None)
+    try:
+        live.give(1, 100)
+        results = []
+        for _ in range(TRANSIENT_TRIES):
+            live.poll()                                                 # a client tick arms the watch again
+            background(0x140000000 + 0x277e080)
+            results.append(live.give(1, 100).state)
+        assert results == ["not now"] * (TRANSIENT_TRIES - 1) + ["refused"] and live.refused == {1: 0x40128A9B}
+    finally:
+        live.close()
+        game.close()

@@ -285,3 +285,13 @@ def test_the_live_reason_is_shown_next_to_the_save_reason(setup, ledger, sim, ca
     live.is_ready = False
     report = engine.deliver_pending(sid)
     assert "the game plugin isn't connected" in report.waiting_reason
+
+
+def test_a_refusal_is_shown(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    live.results = [LiveResult("refused", "the game refused it (code 0x7)", 7)]
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "3 Ore")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    assert any("3 Ore: the game refused it (code 0x7)" in e.message and "quit to desktop" in e.message for e in events)

@@ -92,3 +92,26 @@ gap) and how long delivery took afterwards.
 This log is the record of the Phase 1 fresh-seed playthrough. It also answers the open question from R5: the Flight
 refusals (code `0x78c0a4e9`, from the checker at `+0x22ce570`) came before the client recorded the transaction's
 state.
+
+## The live log of 25 Oct: the game says "not now" after a run of items
+
+`live-20261025.jsonl`, two client sessions on the first seed's playthrough:
+
+- 00:59:41: the game took 8 in a row (an Abyss Artifact, 6 × 100 Copper, Flight), each about 0.3 s apart. The 9th
+  (Copper) was refused with code `0x40128a9b`, and an Abyss Artifact 0.4 s later the same way.
+- 01:18:48: it took 11 in a row (Copper and Abyss Artifacts). The 12th was refused with the same code.
+- Before the refusals, the transaction (first 0x1C0 bytes) looked the same as when items are accepted. One
+  difference: two small lists (+0xC8 and +0x1B0, `{pointer, 0, capacity 1}`) were allocated, where the accepted
+  R5 sample had them empty. Not enough yet to say what fills up.
+- The client then wrote Copper and the Abyss Artifact off for the rest of the session. That rule was meant for gear,
+  which the game never takes. Copper sent later waited for the save, without a word in the client window.
+- The log wrote the same "refused before" and "waiting" lines on every tick: 7,342 lines.
+
+Changes:
+
+- After any refusal, the client waits until the game has made an add of its own before trying anything again.
+- An item the game took earlier in the session, or any refusal with code `0x40128a9b`, counts as "not now". It's
+  retried up to 5 times before it's left for the save.
+- Refusals show in the client window. Repeated waits are logged once. Each of the game's own adds is logged
+  (`"seen"`), so the next log shows whether the wait was enough.
+- Still open: what the game counts. `plugin error-sites --code 0x40128a9b` finds where the game produces that code.

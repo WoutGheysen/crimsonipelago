@@ -42,6 +42,8 @@ JOB_WAIT = 6.0               # seconds the game gets to make a queued call
 LEARN_FROM = 25              # "how it was learned", as the saves record story-given knowledge such as Flight
 TX_STATE = 0x1C0             # bytes of the game's transaction kept with a refusal (what state it was in)
 SIGHTINGS = 2000             # transaction sightings kept in memory (the edge-case test reads them)
+TRANSIENT_TRIES = 5          # an item the game took before but turns down now: tries before leaving it for the save
+BUSY_CODES = {0x40128A9B}    # "not now" from the game after a run of items in a row (live log, 25 Oct 2026)
 
 
 class JsonlLog:
@@ -138,6 +140,11 @@ class LiveChannel:
         self.probing = False
         self.unsupported: str | None = None   # why live delivery can't work with this game/plugin
         self.refused: dict = {}               # item key (or ("knowledge", key)) -> the game's result code
+        self.accepted: set[int] = set()       # item keys the game took live this session
+        self.turned_down: dict[int, int] = {} # item key -> refusals in a row of an item it took before
+        self.seen_count = 0                   # uses of the game's own "add" seen so far
+        self._await_seen: int | None = None   # after a refusal: wait until the game has made an add of its own
+        self._last_logged: tuple | None = None
         self.trace: list[int] = []            # research: game functions to watch during a call (3 at most)
         self._last_attempt = -1e9
 
@@ -227,6 +234,8 @@ class LiveChannel:
                     "caller": seen.caller, "clock": seen.clock, "unix": seen.unix_time}
         self.sightings.append(sighting)
         del self.sightings[:-SIGHTINGS]
+        self.seen_count += 1
+        self.log({"event": "seen", "owner": sighting["owner"], "caller": seen.caller, "clock": seen.clock})
         last, self._last_seen = self._last_seen, seen
         self.last_seen_unix = seen.unix_time
         if last is None:
@@ -249,6 +258,10 @@ class LiveChannel:
         """The game-logic thread's transaction, seen within the last PROBE_FRESH seconds; None while waiting."""
         assert self.bridge is not None
         self._update_probe()
+        if self._await_seen is not None:
+            if self.seen_count <= self._await_seen:
+                return None
+            self._await_seen = None
         if self.probe is None or self.clock() - self.probe_seen >= PROBE_FRESH:
             return None
         try:
@@ -291,6 +304,12 @@ class LiveChannel:
                   "caller": result.detail.get("transaction_last_used_by")}
         if result.state != "given":
             record.update({k: result.detail[k] for k in ("tx_before", "job") if k in result.detail})
+            same = (what, key, result.state, result.code, result.message)
+            if same == self._last_logged:
+                return                                   # the same wait again, every tick: logged once
+            self._last_logged = same
+        else:
+            self._last_logged = None
         self.log(record)
 
     def _give(self, item_key: int, count: int) -> LiveResult:
@@ -347,6 +366,9 @@ class LiveChannel:
         assert self.bridge is not None and self.r3 is not None
         probe = self._fresh_probe()
         if probe is None:
+            if self._await_seen is not None:
+                return LiveResult("not now", "the game turned the last item down for now; trying again after its "
+                                             "next transaction of its own")
             return LiveResult("not now", "waiting for the game (it pauses while in the background, in a menu or "
                                          "loading)")
         if self.trace:
@@ -402,10 +424,21 @@ class LiveChannel:
             return LiveResult("not now", "the game didn't get to it (a menu or loading screen?)", detail=detail)
         code = int.from_bytes(self.bridge.read(layout["result"], 4), "little")
         if code != 0:
+            # The game took 8 and 11 items in a row, then turned the next down (code 0x40128a9b, live log of
+            # 25 Oct): give it room until it has made an add of its own before trying anything again.
+            self._await_seen = self.seen_count
+            if refusal_key is not None and (refusal_key in self.accepted or code in BUSY_CODES):
+                tries = self.turned_down[refusal_key] = self.turned_down.get(refusal_key, 0) + 1
+                if tries < TRANSIENT_TRIES:
+                    return LiveResult("not now", f"the game turned it down for now (code {code:#x}); trying again "
+                                                 "after its next transaction of its own", code, detail)
             if refusal_key is not None:
                 self.refused[refusal_key] = code
             return LiveResult("refused", f"the game refused it (code {code:#x}; transaction last used by "
                                          f"{probe.caller})", code, detail)
+        if refusal_key is not None:
+            self.accepted.add(refusal_key)
+            self.turned_down.pop(refusal_key, None)
         return LiveResult("given", code=0, detail=detail)
 
     def close(self) -> None:
