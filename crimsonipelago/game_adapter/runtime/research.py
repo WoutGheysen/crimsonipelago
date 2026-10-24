@@ -1030,7 +1030,8 @@ def give_copper(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
 def give_knowledge(bridge: ResearchBridge, report_dir: Path, key: int, level: int = 1,
                    ask: Callable[[str], str] = input, say: Callable[[str], None] = print,
                    wait: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic,
-                   targets_file: Path = TARGETS_FILE, learn_from: int | None = None) -> Path | None:
+                   targets_file: Path = TARGETS_FILE, learn_from: int | None = None,
+                   trace: list[int] | None = None) -> Path | None:
     """R5: learn a knowledge entry (Flight is 40002) while the game runs, as the skill menu does."""
     from .live import LEARN_FROM, LiveChannel, wait_for_transaction
 
@@ -1041,7 +1042,9 @@ def give_knowledge(bridge: ResearchBridge, report_dir: Path, key: int, level: in
         return None
     if not live.attach(bridge):
         return None
-    report: dict = {"plugin": bridge.info.plugin_version if bridge.info else None, "key": key, "level": level}
+    live.trace = list(trace or [])
+    report: dict = {"plugin": bridge.info.plugin_version if bridge.info else None, "key": key, "level": level,
+                    "trace": [hex(t) for t in live.trace]}
     report_dir.mkdir(parents=True, exist_ok=True)
     path = report_dir / f"r5-learn-{time.strftime('%Y%m%d-%H%M%S')}.json"
     try:
@@ -1068,6 +1071,9 @@ def give_knowledge(bridge: ResearchBridge, report_dir: Path, key: int, level: in
         report["outcome"] = "accepted"
     else:
         say(f"Not learned: {result.message}")
+        if "trace" in result.detail:
+            entered = sorted({t["fn"] for t in result.detail["trace"]})
+            say("   the call went through: " + (", ".join(entered) if entered else "none of the watched functions"))
         fault = (result.detail.get("job") or {}).get("fault")
         if fault:
             say(f"   the fault: {fault.get('rip')} in {fault.get('fn') or '?'}, "
@@ -1149,4 +1155,51 @@ def knowledge_check(bridge: ResearchBridge, report_dir: Path, keys: list[int], s
         say(f"Saved: {code_path}")
     say(f"Saved: {path}")
     say("Send me both files.")
+    return path
+
+
+def error_sites(bridge: ResearchBridge, report_dir: Path, code: int, say: Callable[[str], None] = print) -> Path | None:
+    """Where the game produces a result code: every `mov r32, [rip+disp]` in the code dumps saved so far
+    (r2-code-*.json) whose global holds `code` right now. Read only."""
+    info = bridge.info
+    if info is None:
+        raise BridgeError("not connected")
+    base = int(info.module_base, 16)
+    dumps = sorted(report_dir.glob("r2-code-*.json"))
+    seen: dict[int, None] = {}
+    sites = []
+    for dump in dumps:
+        try:
+            doc = json.loads(dump.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if (doc.get("game") or {}).get("pe_timestamp") not in (None, info.pe_timestamp):
+            continue
+        for f in doc.get("functions", []):
+            start = int(f["rva_begin"], 16)
+            data = bytes.fromhex(f["bytes"])
+            for i in range(len(data) - 6):
+                rex = 1 if data[i] in (0x44, 0x45, 0x4C) and i + 7 <= len(data) else 0
+                op, modrm = data[i + rex], data[i + rex + 1]
+                if op != 0x8B or modrm & 0xC7 != 0x05:
+                    continue
+                disp = struct.unpack_from("<i", data, i + rex + 2)[0]
+                target = start + i + rex + 6 + disp
+                if target in seen:
+                    if seen[target] is not None:
+                        sites.append({"site": hex(start + i), "global": hex(target), "function": f["rva_begin"]})
+                    continue
+                raw = _read(bridge, base + target, 4)
+                hit = raw is not None and int.from_bytes(raw, "little") == code
+                seen[target] = True if hit else None
+                if hit:
+                    sites.append({"site": hex(start + i), "global": hex(target), "function": f["rva_begin"]})
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r5-errors-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    path.write_text(json.dumps({"code": hex(code), "dumps": [d.name for d in dumps], "sites": sites}, indent=1),
+                    encoding="utf-8")
+    say(f"{len(sites)} place(s) in the saved code load result code {code:#x}:")
+    for site in sites[:20]:
+        say(f"  CrimsonDesert.exe+{site['site'][2:]} (function +{site['function'][2:]})")
+    say(f"Saved: {path}")
     return path
