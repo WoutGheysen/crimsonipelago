@@ -5,6 +5,7 @@
 // R1: memory search for research (memory.hpp). The plugin never writes on its own: a write happens only
 //     when the client asks for one and the current value is exactly the one it expects.
 // R2: write watches for research (watch.hpp): which game code changes a value, and what called it.
+// R3: calls of a game function on a game thread (watch.hpp, Job), with memory of our own to build arguments in.
 //
 // Protocol: newline-delimited JSON over TCP on 127.0.0.1:38301 (localhost only).
 //   plugin -> client on connect: {"type":"hello", "plugin":"crimsonipelago", "protocol":1, ...game facts}
@@ -23,6 +24,12 @@
 //   client -> plugin: {"cmd":"unwatch"}      -> {"type":"unwatched","threads":N}  (also on disconnect)
 //   client -> plugin: {"cmd":"function","addr":"0x.."} -> {"type":"function","begin":"0x..","end":"0x.."}
 //                      (bounds from the unwind data; begin 0 when the address has none)
+//   client -> plugin: {"cmd":"alloc","size":N}        -> {"type":"alloc","addr":"0x.."}  (ours, read-write, 1 MB total)
+//   client -> plugin: {"cmd":"poke","addr":"0x..","hex":".."} -> {"type":"poked"}  (only inside our allocations)
+//   client -> plugin: {"cmd":"job","fn":"0x..","tid":N,"runner":"0x..","args":"a,b,..","set":"addr=byte,.."}
+//                      -> {"type":"job","state":"queued"}: calls fn (inside the game's executable) with up to 14
+//                      arguments when `runner` is next entered on thread tid, after setting the given bytes
+//   client -> plugin: {"cmd":"job_status"}  -> {"type":"job","state":"queued|running|done|fault",...}
 //   client -> plugin: {"cmd":"hits","max":N} -> {"type":"hits","total":T,"lost":L,"sites":[...],"records":[...]}
 //                      (N <= 64 records since the last call; up to 8 per instruction (execute watches: per
 //                      caller) per call; sites count
@@ -46,6 +53,7 @@
 #include <cstdio>
 #include <cstdarg>
 #include <cstdint>
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -53,7 +61,7 @@
 #include "watch.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.7.0-r2d"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.8.0-r3"
 #endif
 
 namespace {
@@ -508,6 +516,164 @@ std::string handle_watch(const std::string& cmd, const std::string& line) {
     return {};
 }
 
+// Memory of our own for R3 (arguments, items, entries). Never freed while the game runs: the game may keep
+// pointers into it for a moment after a call.
+struct Allocation {
+    uint64_t addr;
+    uint64_t size;
+};
+std::vector<Allocation> g_allocations;
+uint64_t g_allocated = 0;
+constexpr uint64_t kMaxAllocated = 1 << 20;
+
+bool inside_allocation(uint64_t addr, uint64_t size) {
+    for (const Allocation& a : g_allocations)
+        if (addr >= a.addr && addr + size <= a.addr + a.size && addr + size >= addr) return true;
+    return false;
+}
+
+std::vector<uint64_t> parse_list(const std::string& text, bool& ok) {
+    std::vector<uint64_t> out;
+    ok = true;
+    size_t pos = 0;
+    while (pos < text.size()) {
+        size_t end = text.find(',', pos);
+        if (end == std::string::npos) end = text.size();
+        bool one = false;
+        out.push_back(parse_u64(text.substr(pos, end - pos), one));
+        ok = ok && one;
+        pos = end + 1;
+    }
+    return out;
+}
+
+const char* job_state(int state) {
+    switch (state) {
+        case 1: return "queued";
+        case 2: return "running";
+        case 3: return "done";
+        case 4: return "fault";
+        default: return "none";
+    }
+}
+
+// R3 commands.
+std::string handle_call(const std::string& cmd, const std::string& line) {
+    bool ok = false;
+    char out[400];
+    if (cmd == "alloc") {
+        const uint64_t size = parse_u64(json_field(line, "size"), ok);
+        if (!ok || size == 0 || size > 65536 || g_allocated + size > kMaxAllocated)
+            return error_json("size must be 1..65536, and 1 MB in total");
+        void* p = VirtualAlloc(nullptr, static_cast<SIZE_T>(size), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        if (!p) return error_json("VirtualAlloc failed");
+        g_allocations.push_back({reinterpret_cast<uint64_t>(p), size});
+        g_allocated += size;
+        log("alloc %llu bytes at %p", static_cast<unsigned long long>(size), p);
+        std::snprintf(out, sizeof(out), "{\"type\":\"alloc\",\"addr\":\"0x%llx\"}",
+                      static_cast<unsigned long long>(reinterpret_cast<uint64_t>(p)));
+        return out;
+    }
+    if (cmd == "poke") {
+        const uint64_t addr = parse_u64(json_field(line, "addr"), ok);
+        if (!ok) return error_json("addr must be an integer");
+        const std::string hex = json_field(line, "hex");
+        if (hex.size() % 2 || hex.size() / 2 > 65536) return error_json("hex must be whole bytes, 64 KB at most");
+        std::vector<uint8_t> bytes(hex.size() / 2);
+        for (size_t i = 0; i < bytes.size(); ++i) {
+            char pair[3] = {hex[2 * i], hex[2 * i + 1], 0};
+            char* end = nullptr;
+            bytes[i] = static_cast<uint8_t>(std::strtoul(pair, &end, 16));
+            if (!end || *end) return error_json("hex must be hexadecimal");
+        }
+        if (!inside_allocation(addr, bytes.size())) return error_json("poke only writes inside the plugin's own allocations");
+        std::memcpy(reinterpret_cast<void*>(addr), bytes.data(), bytes.size());
+        return "{\"type\":\"poked\"}";
+    }
+    if (cmd == "job") {
+        watch::Job& j = watch::g_job;
+        const int state = j.state.load();
+        if (state == 1 || state == 2) return error_json("a job is already queued");
+        const uint64_t fn = parse_u64(json_field(line, "fn"), ok);
+        if (!ok || fn < watch::g_image_lo || fn >= watch::g_image_hi)
+            return error_json("fn must be inside the game's executable");
+        const uint64_t runner = parse_u64(json_field(line, "runner"), ok);
+        if (!ok || runner < watch::g_image_lo || runner >= watch::g_image_hi)
+            return error_json("runner must be inside the game's executable");
+        const std::string tid_text = json_field(line, "tid");
+        const uint64_t tid = tid_text.empty() ? 0 : parse_u64(tid_text, ok);
+        if (!ok) return error_json("tid must be an integer");
+        const std::vector<uint64_t> args = parse_list(json_field(line, "args"), ok);
+        if (!ok || args.size() > 14) return error_json("args: up to 14 integers, comma-separated");
+        std::vector<uint64_t> set_addr;
+        std::vector<uint64_t> set_val;
+        const std::string set = json_field(line, "set");
+        size_t pos = 0;
+        while (pos < set.size()) {
+            size_t end = set.find(',', pos);
+            if (end == std::string::npos) end = set.size();
+            const std::string item = set.substr(pos, end - pos);
+            const size_t eq = item.find('=');
+            bool a = false, b = false;
+            if (eq == std::string::npos) return error_json("set: addr=byte,...");
+            set_addr.push_back(parse_u64(item.substr(0, eq), a));
+            set_val.push_back(parse_u64(item.substr(eq + 1), b));
+            if (!a || !b || set_val.back() > 255 || set_addr.size() > 8) return error_json("set: up to 8 addr=byte");
+            pos = end + 1;
+        }
+        j.fn = fn;
+        j.tid = static_cast<uint32_t>(tid);
+        j.nargs = static_cast<unsigned>(args.size());
+        for (unsigned i = 0; i < 14; ++i) j.args[i] = i < args.size() ? args[i] : 0;
+        j.nset = static_cast<unsigned>(set_addr.size());
+        for (unsigned i = 0; i < j.nset; ++i) {
+            j.set_addr[i] = set_addr[i];
+            j.set_val[i] = static_cast<uint8_t>(set_val[i]);
+        }
+        j.rax = 0;
+        j.code = 0;
+        j.ran_tid = 0;
+        j.queued_ms = GetTickCount64();
+        j.state.store(1, std::memory_order_release);
+        int slot = -1;
+        for (unsigned i = 0; i < watch::kSlots && slot < 0; ++i)
+            if ((watch::g_mask.load() & (1u << i)) && watch::g_watch[i].kind == watch::kRunner &&
+                watch::g_watch[i].addr == runner)
+                slot = static_cast<int>(i);
+        if (slot < 0) slot = watch::add(runner, 1, watch::kRunner);
+        if (slot < 0) {
+            j.state.store(0);
+            return error_json("no free watch for the runner (4 at most)");
+        }
+        const unsigned threads = watch::apply(watch::g_mask.load());
+        log("job queued: fn 0x%llx, %u args, thread %llu, runner 0x%llx (watch %d, %u threads)",
+            static_cast<unsigned long long>(fn), j.nargs, static_cast<unsigned long long>(tid),
+            static_cast<unsigned long long>(runner), slot, threads);
+        std::snprintf(out, sizeof(out), "{\"type\":\"job\",\"state\":\"queued\",\"slot\":%d,\"threads\":%u}", slot,
+                      threads);
+        return out;
+    }
+    if (cmd == "job_status") {
+        const watch::Job& j = watch::g_job;
+        const int state = j.state.load(std::memory_order_acquire);
+        if (state == 3 || state == 4)
+            log("job %s on thread %u after %llu ms: rax 0x%llx, exception 0x%x", job_state(state), j.ran_tid,
+                static_cast<unsigned long long>(j.ran_ms - j.queued_ms), static_cast<unsigned long long>(j.rax), j.code);
+        std::snprintf(out, sizeof(out),
+                      "{\"type\":\"job\",\"state\":\"%s\",\"rax\":\"0x%llx\",\"code\":%u,\"tid\":%u,\"waited_ms\":%llu}",
+                      job_state(state), static_cast<unsigned long long>(j.rax), j.code, j.ran_tid,
+                      static_cast<unsigned long long>(state >= 3 ? j.ran_ms - j.queued_ms : GetTickCount64() - j.queued_ms));
+        return out;
+    }
+    if (cmd == "job_cancel") {
+        int queued = 1;
+        const bool cancelled = watch::g_job.state.compare_exchange_strong(queued, 0);
+        std::snprintf(out, sizeof(out), "{\"type\":\"job\",\"state\":\"%s\"}", cancelled ? "cancelled" : job_state(watch::g_job.state.load()));
+        return out;
+    }
+    return {};
+}
+
 void serve_client(SOCKET client, const GameFacts& facts) {
     log("client connected");
     if (!send_line(client, facts_json("hello", facts))) {
@@ -544,6 +710,8 @@ void serve_client(SOCKET client, const GameFacts& facts) {
                 // handled
             } else if (!(reply = handle_watch(cmd, line)).empty()) {
                 // handled
+            } else if (!(reply = handle_call(cmd, line)).empty()) {
+                // handled
             } else {
                 reply = "{\"type\":\"error\",\"message\":\"unknown command\"}";
                 log("unknown command: %s", line.substr(0, 200).c_str());
@@ -551,6 +719,8 @@ void serve_client(SOCKET client, const GameFacts& facts) {
             if (!send_line(client, reply)) break;
         }
     }
+    int queued = 1;
+    if (watch::g_job.state.compare_exchange_strong(queued, 0)) log("client gone: queued job cancelled");
     if (watch::g_mask.load()) log("client gone: watches removed from %u threads", watch::clear());
     log("client disconnected");
 }
