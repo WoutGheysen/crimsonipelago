@@ -275,6 +275,11 @@ def _record_events(bridge: ResearchBridge, ask: Callable[[str], str], say: Calla
         done = text.lower() in ("d", "q", "done")
         got, sites, dropped = _drain(bridge, page)
         label = "before done" if done else (text or "unlabelled")
+        if label in events:                                  # "loot" twice: "loot", then "loot #2"
+            n = 2
+            while f"{label} #{n}" in events:
+                n += 1
+            label = f"{label} #{n}"
         for r in got:
             r["event"] = label
         records += got
@@ -514,7 +519,7 @@ def watch_calls(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
         "records": records,
     }, indent=1), encoding="utf-8")
     say("")
-    say("Calls seen, per thing you did:")
+    say("Calls seen, per thing you did (the same caller is recorded 8 times at most each time):")
     for event in events:
         counts: dict[str, int] = {}
         for r in records:
