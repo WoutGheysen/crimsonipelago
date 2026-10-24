@@ -698,7 +698,10 @@ class LiveGiver:
         if self.probe is not None:
             head = _read(self.bridge, self.probe.tx, 8)
             if head is None or int.from_bytes(head, "little") not in (self.probe.owner, 0):
+                say("   the transaction didn't look right (its first field isn't the owner).")
                 self.probe = None
+        else:
+            say("   the game didn't use its transaction within 90 seconds.")
         return self.probe
 
     def load_table(self) -> ItemTable | None:
@@ -707,8 +710,10 @@ class LiveGiver:
         return self.table
 
     def find_templates(self) -> dict[int, tuple[int, bytes]]:
-        """Item records next to the item numbers the client handed out (in the save, and live)."""
-        report = self.bridge.scan(ITEM_NO_BASE + 1, LIVE_ITEM_NO_END, width=8, align=8)
+        """Item records next to the item numbers the client handed out in the save (900,000,001 up). The
+        search stays narrow: the plugin returns the first 64 places only, and a wide range of numbers
+        turns up thousands of unrelated ones first."""
+        report = self.bridge.scan(ITEM_NO_BASE + 1, ITEM_NO_BASE + ITEM_NO_SPAN, width=8, align=8)
         templates: dict[int, list[tuple[bool, int, bytes]]] = {}
         for addr in report.hits:
             data = _read(self.bridge, addr, RECORD_SIZE)
@@ -807,10 +812,11 @@ def give_item(bridge: ResearchBridge, report_dir: Path, key: int, count: int, as
         return None
     giver = LiveGiver(bridge, r3, wait, clock)
     try:
-        say("1/4 Waiting for the game to use its own transaction (keep playing: walk around)...")
+        say("1/4 Waiting for the game to use its own transaction (walk around; picking something up makes it "
+            "happen at once)...")
         probe = giver.find_transaction(say)
         if probe is None:
-            say("The game didn't use it in time (or it didn't look right). Pick something up, then run this again.")
+            say("Run this again and pick something up (a plant, a coin) while it waits.")
             return save("no transaction seen")
         report["probe"] = {"tx": hex(probe.tx), "owner": hex(probe.owner), "tid": probe.tid, "clock": probe.clock}
         say(f"   transaction found (thread {probe.tid}).")
