@@ -34,7 +34,8 @@ from .research import (
 
 MIN_PLUGIN = (0, 8)
 CONNECT_EVERY = 5.0          # seconds between attempts to reach the plugin
-PROBE_FRESH = 20.0           # a transaction seen longer ago than this is looked for again
+PROBE_FRESH = 300.0          # a transaction seen longer ago than this is looked for again. It stays the same
+                             # all session (r6-edges); a load changes its owner, which _fresh_probe checks
 JOB_WAIT = 6.0               # seconds the game gets to make a queued call
 
 
@@ -123,6 +124,10 @@ class LiveChannel:
         self.targets_file, self.clock, self.sleep = targets_file, clock, sleep
         self.log = log or (lambda record: None)
         self.sightings: list[dict] = []       # every use of the game's "add" seen: when, by whom, on what
+        self.loads = 0                        # saves loaded while connected (the owner changed or the clock went back)
+        self.load_at = 0.0                    # wall-clock time the latest load was noticed
+        self.last_seen_unix: int | None = None   # the game's own time of the latest use seen
+        self._last_seen: Probe | None = None
         self.bridge: ResearchBridge | None = None
         self.r3: dict | None = None
         self.base = 0
@@ -166,6 +171,7 @@ class LiveChannel:
         assert info is not None
         self.bridge, self.base = bridge, int(info.module_base, 16)
         self.table, self.mem, self.probe, self.probing, self.refused = None, None, None, False, {}
+        self._last_seen, self.last_seen_unix = None, None
         self.unsupported = None
         build = load_targets(info.pe_timestamp, self.targets_file)
         if _version(info.plugin_version) < MIN_PLUGIN:
@@ -214,21 +220,30 @@ class LiveChannel:
 
     def _sighted(self, seen: Probe) -> None:
         """Remember a use of the game's "add"; log when the transaction, its owner or the thread changed, or the
-        game's clock went back (a save loaded?)."""
+        game's clock went back. A new owner or the clock going back is a save being loaded: loading a save gave
+        the player a new owner and set the clock back each time, and nothing else did (fast travel, the horse,
+        dying: research/phase1-edge-cases.md)."""
         sighting = {"t": round(self.clock(), 3), "tx": hex(seen.tx), "owner": hex(seen.owner), "tid": seen.tid,
                     "caller": seen.caller, "clock": seen.clock, "unix": seen.unix_time}
         self.sightings.append(sighting)
         del self.sightings[:-SIGHTINGS]
-        last = self.probe
+        last, self._last_seen = self._last_seen, seen
+        self.last_seen_unix = seen.unix_time
         if last is None:
             self.log({"event": "transaction", **sighting})
             return
         changed = [name for name, a, b in (("tx", last.tx, seen.tx), ("owner", last.owner, seen.owner),
                                            ("thread", last.tid, seen.tid)) if a != b]
-        if seen.clock < last.clock:
+        went_back = 0 < last.clock - seen.clock < 1 << 31            # (a 32-bit clock wrapping is not a load)
+        if went_back:
             changed.append("clock went back")
         if changed:
             self.log({"event": "transaction", "changed": changed, "clock_before": last.clock, **sighting})
+        if went_back or seen.owner != last.owner:
+            self.loads += 1
+            self.load_at = time.time()
+            self.log({"event": "load", "loads": self.loads, "owner_before": hex(last.owner),
+                      "clock_before": last.clock, **sighting})
 
     def _fresh_probe(self) -> Probe | None:
         """The game-logic thread's transaction, seen within the last PROBE_FRESH seconds; None while waiting."""

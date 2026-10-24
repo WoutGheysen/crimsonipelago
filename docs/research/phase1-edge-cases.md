@@ -20,16 +20,48 @@ the item was kept.
 The fix is to notice a load from the plugin's side. Items still `IN_GAME` at that moment were never saved, so they go
 back to `PENDING`. A load means anything loaded predates them, whichever save it was.
 
-The candidate signals are the transaction the game's own "add" uses, its owner, the game-logic thread, and the
-game's clock (an argument of every add). The edge-case test records all four around a load and a death, so we can
-see which one changes. The guard goes in once the reports show a dependable signal.
+The candidate signals were the transaction the game's own "add" uses, its owner, the game-logic thread, and the
+game's clock (an argument of every add). The edge-case test recorded all four around a load and a death: see below.
+
+## What the test found (game 2.03.02, 25 Oct 2026)
+
+`r6-edges-20261025-000736.json`, on the first seed's playthrough:
+
+| Step | Silver given just before | Transaction | Delivery after |
+|---|---|---|---|
+| Map open | - | no use of "add" while the game is paused (also when alt-tabbed) | waits until you're back in the game |
+| Horse | - | unchanged | at once |
+| Fast travel | - | unchanged | at once |
+| Load the manual save | **lost** | owner `…0200` → `…0400`, clock 459.0M → 448.9M | 55 s |
+| Die | kept: no reload, you get up where you fell | unchanged, clock goes on | 33 s |
+| Main menu, load again | **lost** | owner → `…3e20`, clock back again | 24 s |
+
+- The transaction's address and the game-logic thread stayed the same all session, across both loads.
+- **A load changes the owner and sets the clock back.** Nothing else did either. The clock is the game's own time,
+  an argument of every "add", and only goes forward in play.
+- The slow deliveries after a load or a death came from the client: it dropped a transaction it had last seen more
+  than 20 s ago, then waited for the game's next "add", which can be 80 s away. The address doesn't change, and
+  `_fresh_probe` already checks that the transaction's first field is still the owner (it isn't after a load). So
+  the client now keeps a sighting for 5 minutes.
+
+## The guard (client)
+
+- `LiveChannel` counts a load whenever the owner changes or the clock goes back. A 32-bit clock wrapping round
+  doesn't count. Each load is logged as `{"event": "load"}`.
+- `DeliveryEngine.notice_loads`: on a new load, items still `IN_GAME` that were given before the load was noticed
+  go back to `PENDING`, and are given again into the loaded game.
+- `settle_in_game`: while the game runs, an item is `COMPLETE` only once there's a save after it **and** the game
+  has been seen running after that save. An autosave right after a load doesn't count until the next sighting
+  shows whether a load came first. With the game closed, a save after the item is enough, as before.
+- Left open: loading a save older than one that already held the item (an older manual save). Knowledge is
+  covered by `reconcile`; a stack would stay lost. That's rare, and the save can't tell spent from lost.
 
 ## The test: `plugin edge-cases`
 
 On a test playthrough (not a seed you're playing), with the game running and the plugin loaded:
 
 ```powershell
-crimsonipelago plugin edge-cases
+py -m crimsonipelago.client.main plugin edge-cases
 ```
 
 It asks you to make a manual save. It then goes through seven steps:

@@ -969,3 +969,30 @@ def test_edge_cases_stops_without_the_players_go_ahead(tmp_path):
         assert game.job_msg is None
     finally:
         game.close()
+
+
+def test_live_channel_counts_a_load_by_owner_or_clock_but_not_a_death():
+    from crimsonipelago.game_adapter.runtime.live import LiveChannel
+    from crimsonipelago.game_adapter.runtime.research import Probe
+
+    live, logged = LiveChannel(log=None), []
+    live.log = logged.append
+    tx, owner = 0x2C7BF7B24C0, 0x2C7CA0E0200
+
+    def seen(owner, clock, unix=1792880000):
+        live._sighted(Probe(tx, owner, 20716, unix, clock, "CrimsonDesert.exe+0x2b753f6"))
+
+    seen(owner, 459001056)
+    seen(owner, 459100000)                          # the horse, fast travel, dying: the clock goes on
+    assert live.loads == 0 and live.last_seen_unix == 1792880000
+    seen(owner + 0x200, 448900260, 1792880454)      # loading the manual save: new owner, clock back
+    assert live.loads == 1 and live.load_at > 0 and live.last_seen_unix == 1792880454
+    seen(owner + 0x200, 448901208)
+    seen(owner + 0x200, 448800000)                  # the clock back alone
+    assert live.loads == 2
+    seen(owner + 0x200, 0xFFFFFF00)
+    seen(owner + 0x200, 0x100)                      # a 32-bit clock wrapping round is not a load
+    assert live.loads == 2
+    seen(owner + 0x400, 0x200)                      # a new owner alone
+    assert live.loads == 3
+    assert [r["event"] for r in logged].count("load") == 3

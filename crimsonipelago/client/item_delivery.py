@@ -43,9 +43,21 @@ class LiveDelivery(Protocol):
     def poll(self) -> None: ...
     def give(self, item_key: int, count: int): ...   # -> LiveResult
     def give_knowledge(self, key: int): ...          # -> LiveResult
+    # Optional, for noticing a save being loaded (LiveChannel has them):
+    #   loads: int                   saves loaded while connected
+    #   load_at: float               wall-clock time the latest load was noticed
+    #   last_seen_unix: int | None   the game's time when it was last seen running
 
 
 LIVE_KNOWLEDGE_TRIES = 3     # knowledge refused live this often waits for the save instead
+
+
+def _given_at(rec: ReceivedItem) -> float:
+    """When an IN_GAME item was given (its last state change)."""
+    try:
+        return datetime.fromisoformat(rec.updated_at).timestamp()
+    except ValueError:
+        return 0.0
 
 
 class DeliveryEngine:
@@ -54,6 +66,7 @@ class DeliveryEngine:
         self.ledger, self.adapter, self.catalogue, self.bus = ledger, adapter, catalogue, bus
         self.live = live
         self.last_waiting_reason: str | None = None
+        self._loads_seen: int | None = None
 
     def _name(self, item_id: int) -> str:
         item = self.catalogue.item_by_id(item_id)
@@ -199,24 +212,47 @@ class DeliveryEngine:
                           live=True)
         return sorted(left, key=lambda r: r.idx), waiting
 
+    def notice_loads(self, session_id: int) -> None:
+        """A save loaded while items given live weren't saved yet: they're gone from the game, give them again.
+        Whatever was loaded predates them, since no save after them has been seen with the game still going."""
+        loads = getattr(self.live, "loads", None)
+        if loads is None:
+            return
+        if self._loads_seen is not None and loads > self._loads_seen:
+            noticed = float(getattr(self.live, "load_at", 0.0) or 0.0) or float("inf")
+            lost = [r for r in self.ledger.items(session_id, (DeliveryState.IN_GAME,))
+                    if _given_at(r) < noticed]       # given after it noticed the load: given into the loaded game
+            if lost:
+                self.ledger.set_item_state(session_id, [r.idx for r in lost], DeliveryState.PENDING,
+                                           expect=(DeliveryState.IN_GAME,),
+                                           error="a save was loaded before the game saved them; giving them again")
+                names = ", ".join(sorted({self._name(r.item_id) for r in lost}))
+                self.bus.emit(ev.REWARD_PENDING, f"A save was loaded before the game saved {names}; "
+                                                 "they will be given again")
+        self._loads_seen = loads
+
     def settle_in_game(self, session_id: int) -> None:
         """Items given live are complete once the game saves after them. If the game closes without saving,
-        they were never saved: give them again."""
+        they were never saved: give them again.
+
+        While the game runs, a save after them isn't enough on its own: a save loaded just before it would have
+        taken them away (the autosave then saves the loaded state). So they also wait until the game has been seen
+        after that save, by which time notice_loads has seen any load in between."""
         live = self.ledger.items(session_id, (DeliveryState.IN_GAME,))
         if not live:
             return
 
-        def given_at(rec: ReceivedItem) -> float:
-            try:
-                return datetime.fromisoformat(rec.updated_at).timestamp()
-            except ValueError:
-                return 0.0
-
-        saved = [r for r in live if self.adapter.save_written_after(given_at(r))]
+        given_at = _given_at
+        running = self.adapter.is_game_running()
+        watches_loads = self.live is not None and hasattr(self.live, "loads")
+        seen = getattr(self.live, "last_seen_unix", None)
+        seen_since_save = seen is not None and not self.adapter.save_written_after(float(seen))
+        saved = [r for r in live if self.adapter.save_written_after(given_at(r))
+                 and (running is False or not watches_loads or seen_since_save)]
         self.ledger.set_item_state(session_id, [r.idx for r in saved], DeliveryState.COMPLETE,
                                    expect=(DeliveryState.IN_GAME,))
-        unsaved = [r for r in live if r not in saved]
-        if unsaved and self.adapter.is_game_running() is False:
+        unsaved = [r for r in live if r not in saved and not self.adapter.save_written_after(given_at(r))]
+        if unsaved and running is False:
             self.ledger.set_item_state(session_id, [r.idx for r in unsaved], DeliveryState.PENDING,
                                        expect=(DeliveryState.IN_GAME,),
                                        error="the game closed before saving them; giving them again")
@@ -228,6 +264,7 @@ class DeliveryEngine:
     def deliver_pending(self, session_id: int) -> DeliveryReport:
         if self.live is not None:
             self.live.poll()
+            self.notice_loads(session_id)
         self.settle_in_game(session_id)
         pending: list[ReceivedItem] = self.ledger.items(session_id, (DeliveryState.PENDING,))
         recovery = len(self.ledger.items(session_id, (DeliveryState.RECOVERY_REQUIRED,)))
