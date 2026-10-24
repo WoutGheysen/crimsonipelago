@@ -172,7 +172,8 @@ maps to the item keys in the save (to give items other than Copper).
 - the plugin made the call 78 ms after queueing it, on that thread, from the task runner; result code 0;
 - **the player saw it straight away: the bag, the money at the top right, and the game's own message**
   for receiving it. Everything the game normally does for a pickup happened, because it was the game's
-  own code doing it.
+  own code doing it;
+- **saved, quit to the main menu, loaded: the money was still there.**
 
 The Copper record the tool read back right after was the screen side's copy (+0x0C = 0), which had not
 caught up yet (468 before and after): the game-logic side's copy wasn't among the records next to our item
