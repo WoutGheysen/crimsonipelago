@@ -875,3 +875,97 @@ def test_error_sites_finds_the_loads_of_a_result_code(tmp_path):
         assert sites == [{"site": "0x1000", "global": "0x1106", "function": "0x1000"}]
     finally:
         game.close()
+
+
+def test_live_channel_logs_deliveries_refusals_and_transaction_changes(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import JsonlLog, LiveChannel
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5"}
+    game.put(TX + 0x10, 0xABCDEF)                                       # something to see in the refusal
+
+    def the_game_commits(msg):
+        args = [int(a, 16) for a in msg["args"].split(",")]
+        item = game.get(game.get(args[4]) + 0x30)
+        game.put(args[1], 0 if game.get(item + 8, 2) != 0 else 7, 4)    # the game refuses handle 0
+        return "done"
+
+    game.on_job = the_game_commits
+    log = JsonlLog(tmp_path / "logs")
+    live = LiveChannel(game.port, targets_file=targets, sleep=lambda s: None, log=log)
+    try:
+        assert live.give(75001, 2).given
+        assert live.give(12345, 1).state == "refused"
+        background = game.on_execute
+
+        def another_owner(addr):                                        # a save loaded: a new owner, clock back
+            background(addr)
+            hit = game.pending[-1]
+            hit["args"][2], hit["args"][10] = hex(OWNER + 0x100), hex(0x100)
+        game.on_execute = another_owner
+        live.poll()
+        live.poll()
+    finally:
+        live.close()
+        game.close()
+    lines = [json.loads(line) for f in (tmp_path / "logs").glob("live-*.jsonl") for line in f.read_text().splitlines()]
+    events = [r["event"] for r in lines]
+    assert events[0] == "connected" and events.count("give") == 2
+    gives = [r for r in lines if r["event"] == "give"]
+    assert gives[0]["state"] == "given" and "tx_before" not in gives[0]
+    assert gives[1]["state"] == "refused" and gives[1]["code"] == 7 and "efcdab" in gives[1]["tx_before"]
+    changed = [r for r in lines if r["event"] == "transaction" and "changed" in r]
+    assert changed and set(changed[-1]["changed"]) == {"owner", "clock went back"}
+    assert len(live.sightings) >= 3 and all("clock" in s for s in live.sightings)
+
+
+def test_edge_cases_gives_silver_around_each_step_and_records_the_transaction(tmp_path):
+    from crimsonipelago.game_adapter.runtime.edge_cases import Step, edge_cases
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5"}
+    given = []
+
+    def the_game_commits(msg):
+        args = [int(a, 16) for a in msg["args"].split(",")]
+        item = game.get(game.get(args[4]) + 0x30)
+        given.append((game.get(item + 8, 2), game.get(item + 0x10)))
+        game.put(args[1], 0, 4)
+        return "done"
+
+    game.on_job = the_game_commits
+    steps = (Step("standing", "Stand still."),
+             Step("menu", "Open the map.", during=True, questions=("Arrived while open?",)),
+             Step("reload", "Load your save.", before=True, questions=("Still there?",)))
+    answers = {"Still there?": "n", "Arrived while open?": "n"}
+    said = []
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = edge_cases(bridge, tmp_path, say=said.append, wait=lambda s: None, targets_file=targets,
+                              ask=lambda p: next((a for q, a in answers.items() if q in p), "y"),
+                              steps=steps, background=False)
+        report = json.loads(path.read_text())
+    finally:
+        game.close()
+    assert report["outcome"] == "done" and [s["step"] for s in report["steps"]] == ["standing", "menu", "reload"]
+    assert given == [(1, 100)] * 5                                      # after each, during the menu, before reload
+    menu, reload = report["steps"][1], report["steps"][2]
+    assert menu["during"]["state"] == "given" and menu["answers"] == {"Arrived while open?": False}
+    assert reload["before"]["arrived"] is True and reload["answers"] == {"Still there?": False}
+    assert reload["after"]["state"] == "given" and reload["transaction"]["count"] >= 1
+    assert reload["transaction"]["owners"] == [hex(OWNER)]
+    assert any("Saved:" in line for line in said)
+
+
+def test_edge_cases_stops_without_the_players_go_ahead(tmp_path):
+    from crimsonipelago.game_adapter.runtime.edge_cases import edge_cases
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5"}
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            assert edge_cases(bridge, tmp_path, ask=lambda p: "n", say=lambda s: None, targets_file=targets,
+                              background=False) is None
+        assert game.job_msg is None
+    finally:
+        game.close()
