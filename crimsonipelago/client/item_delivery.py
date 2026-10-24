@@ -199,6 +199,9 @@ class DeliveryEngine:
                 given.append(rec)
             elif result.state in ("refused", "unknown item"):
                 again = ref["kind"] == "knowledge" and result.state == "refused" and rec.attempts + 1 < LIVE_KNOWLEDGE_TRIES
+                self.bus.emit(ev.REWARD_PENDING, f"{self._name(rec.item_id)}: {result.message}; " +
+                              ("trying again in a moment" if again else "it goes into the save once you quit to desktop"),
+                              index=rec.idx)
                 self.ledger.set_item_state(session_id, [rec.idx], DeliveryState.PENDING, bump_attempts=True,
                                            error=f"not given in the game: {result.message}; " +
                                                  ("trying again in a moment" if again else
