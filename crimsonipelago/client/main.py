@@ -116,10 +116,11 @@ def build_parser() -> argparse.ArgumentParser:
     pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
     pl.add_argument("action", nargs="?", default="check",
                     choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls", "give-copper",
-                             "give-item", "item-table", "give-knowledge", "knowledge-check", "error-sites"],
+                             "give-item", "item-table", "give-knowledge", "knowledge-check", "error-sites",
+                             "edge-cases"],
                     help="check: test the link (default); find-copper: research step R1; "
                          "watch-money, dump-code, watch-calls: research step R2; give-copper: R3; "
-                         "give-item, item-table: R4; give-knowledge: R5")
+                         "give-item, item-table: R4; give-knowledge: R5; edge-cases: phase 1 tests")
     pl.add_argument("--key", type=int, default=None, help="give-item: the item's key, as in the save")
     pl.add_argument("--count", type=int, default=1, help="give-item: how many")
     pl.add_argument("--level", type=int, default=1, help="give-knowledge: the level to learn")
@@ -199,9 +200,10 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
     config = ClientConfig(server=server, port=args.port, slot_name=slot, password=password, data_dir=data_dir)
     live = None
     if args.adapter == "save" and not args.no_live:
-        from ..game_adapter.runtime.live import LiveChannel
+        from ..game_adapter.runtime.live import JsonlLog, LiveChannel
 
-        live = LiveChannel(on_event=lambda message: bus.emit(ev.CONNECTION, message))
+        # every live delivery and refusal goes in logs/live-YYYYMMDD.jsonl: the playtests' record
+        live = LiveChannel(on_event=lambda message: bus.emit(ev.CONNECTION, message), log=JsonlLog(data_dir / "logs"))
     controller = SyncController(config, adapter, ledger, catalogue, bus, live=live)
     try:
         # the plugin serves one client at a time: with live delivery on, the channel is that client
@@ -220,7 +222,7 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
 
 NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4), "dump-code": (0, 5), "watch-calls": (0, 6),
                 "give-copper": (0, 8), "give-item": (0, 8), "item-table": (0, 8), "give-knowledge": (0, 8),
-                "knowledge-check": (0, 8), "error-sites": (0, 8)}
+                "knowledge-check": (0, 8), "error-sites": (0, 8), "edge-cases": (0, 8)}
 
 
 def _plugin_version(text: str) -> tuple[int, int]:
@@ -267,6 +269,10 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                     return 1
                 print(f"Using {report}")
                 return 0 if dump_code(research, report, report_dir) else 1
+            if args.action == "edge-cases":
+                from ..game_adapter.runtime.edge_cases import edge_cases
+
+                return 0 if edge_cases(research, report_dir) else 1
             if args.action == "error-sites":
                 from ..game_adapter.runtime.research import error_sites
 

@@ -12,10 +12,13 @@ if the game doesn't get to it (a menu, a loading screen).
 
 from __future__ import annotations
 
+import json
 import struct
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
 
 from .bridge import BridgeError, ResearchBridge
 from .research import (
@@ -36,6 +39,25 @@ JOB_WAIT = 6.0               # seconds the game gets to make a queued call
 
 
 LEARN_FROM = 25              # "how it was learned", as the saves record story-given knowledge such as Flight
+TX_STATE = 0x1C0             # bytes of the game's transaction kept with a refusal (what state it was in)
+SIGHTINGS = 2000             # transaction sightings kept in memory (the edge-case test reads them)
+
+
+class JsonlLog:
+    """The live delivery log: one JSON line per event in <folder>/live-YYYYMMDD.jsonl. Best effort: a log that
+    can't be written never stops a delivery."""
+
+    def __init__(self, folder: Path):
+        self.folder = Path(folder)
+
+    def __call__(self, record: dict) -> None:
+        now = datetime.now()
+        try:
+            self.folder.mkdir(parents=True, exist_ok=True)
+            with open(self.folder / f"live-{now:%Y%m%d}.jsonl", "a", encoding="utf-8") as fh:
+                fh.write(json.dumps({"at": now.isoformat(timespec="milliseconds"), **record}) + "\n")
+        except OSError:
+            pass
 
 
 def build_knowledge_gift(key: int, level: int, learn_from: int, mem: int) -> tuple[bytes, dict[str, int]]:
@@ -95,9 +117,12 @@ class LiveChannel:
 
     def __init__(self, port: int | None = None, *, on_event: Callable[[str], None] = lambda m: None,
                  bridge_factory: Callable[..., ResearchBridge] = ResearchBridge, targets_file=TARGETS_FILE,
-                 clock: Callable[[], float] = time.monotonic, sleep: Callable[[float], None] = time.sleep):
+                 clock: Callable[[], float] = time.monotonic, sleep: Callable[[float], None] = time.sleep,
+                 log: Callable[[dict], None] | None = None):
         self.port, self.on_event, self.bridge_factory = port, on_event, bridge_factory
         self.targets_file, self.clock, self.sleep = targets_file, clock, sleep
+        self.log = log or (lambda record: None)
+        self.sightings: list[dict] = []       # every use of the game's "add" seen: when, by whom, on what
         self.bridge: ResearchBridge | None = None
         self.r3: dict | None = None
         self.base = 0
@@ -154,6 +179,8 @@ class LiveChannel:
                        for k, v in build["r3"].items()}
         self.on_event(f"Game plugin connected ({info.describe()})"
                       + (f": {self.unsupported}" if self.unsupported else "; items arrive while you play"))
+        self.log({"event": "connected", "plugin": info.plugin_version, "build": info.pe_timestamp,
+                  "game": info.exe_version, "unsupported": self.unsupported})
         return self.unsupported is None
 
     def drop(self, why: str = "") -> None:
@@ -163,6 +190,7 @@ class LiveChannel:
             finally:
                 self.bridge = None
                 self.on_event("Game plugin disconnected" + (f" ({why})" if why else " (game closed?)"))
+                self.log({"event": "disconnected", "why": why})
         self.probe, self.probing = None, False
 
     # ------------------------------------------------------------------ the game's transaction
@@ -178,9 +206,29 @@ class LiveChannel:
         for r in self.bridge.hits(8).records:
             args = [int(a, 16) for a in r.get("args", [])]
             if len(args) >= 11:
-                self.probe = Probe(args[0], args[2], int(r["tid"]), args[9] & 0xFFFFFFFF, args[10] & 0xFFFFFFFF,
-                                   (r.get("frames") or ["?"])[0])
+                seen = Probe(args[0], args[2], int(r["tid"]), args[9] & 0xFFFFFFFF, args[10] & 0xFFFFFFFF,
+                             (r.get("frames") or ["?"])[0])
+                self._sighted(seen)
+                self.probe = seen
                 self.probe_seen = self.clock()
+
+    def _sighted(self, seen: Probe) -> None:
+        """Remember a use of the game's "add"; log when the transaction, its owner or the thread changed, or the
+        game's clock went back (a save loaded?)."""
+        sighting = {"t": round(self.clock(), 3), "tx": hex(seen.tx), "owner": hex(seen.owner), "tid": seen.tid,
+                    "caller": seen.caller, "clock": seen.clock, "unix": seen.unix_time}
+        self.sightings.append(sighting)
+        del self.sightings[:-SIGHTINGS]
+        last = self.probe
+        if last is None:
+            self.log({"event": "transaction", **sighting})
+            return
+        changed = [name for name, a, b in (("tx", last.tx, seen.tx), ("owner", last.owner, seen.owner),
+                                           ("thread", last.tid, seen.tid)) if a != b]
+        if seen.clock < last.clock:
+            changed.append("clock went back")
+        if changed:
+            self.log({"event": "transaction", "changed": changed, "clock_before": last.clock, **sighting})
 
     def _fresh_probe(self) -> Probe | None:
         """The game-logic thread's transaction, seen within the last PROBE_FRESH seconds; None while waiting."""
@@ -214,10 +262,21 @@ class LiveChannel:
         if not self.ready():
             return LiveResult("not now", self.unsupported or "the game plugin isn't connected")
         try:
-            return self._give(item_key, count)
+            result = self._give(item_key, count)
         except BridgeError as exc:
             self.drop(str(exc))
-            return LiveResult("not now", f"lost the game plugin ({exc})")
+            result = LiveResult("not now", f"lost the game plugin ({exc})")
+        self._logged("item", item_key, result, count=count)
+        return result
+
+    def _logged(self, what: str, key: int, result: LiveResult, **extra) -> None:
+        job = result.detail.get("job") or {}
+        record = {"event": "give", "what": what, "key": key, **extra, "state": result.state, "code": result.code,
+                  "message": result.message, "waited_ms": job.get("waited_ms"),
+                  "caller": result.detail.get("transaction_last_used_by")}
+        if result.state != "given":
+            record.update({k: result.detail[k] for k in ("tx_before", "job") if k in result.detail})
+        self.log(record)
 
     def _give(self, item_key: int, count: int) -> LiveResult:
         assert self.bridge is not None and self.r3 is not None
@@ -245,6 +304,12 @@ class LiveChannel:
         of kind 4 {key, level, how it was learned} on the game's transaction."""
         if not self.ready():
             return LiveResult("not now", self.unsupported or "the game plugin isn't connected")
+        result = self._give_knowledge(key, level, learn_from)
+        self._logged("knowledge", key, result, level=level, learn_from=learn_from)
+        return result
+
+    def _give_knowledge(self, key: int, level: int, learn_from: int) -> LiveResult:
+        assert self.r3 is not None
         try:
             if "knowledge_table" in self.r3:
                 # The checker files an unknown key under handle 0xFFFF, which faults later on: look first.
@@ -277,6 +342,12 @@ class LiveChannel:
                 pass
             for rva in self.trace[:3]:
                 self.bridge.watch(self.base + rva, 1, "execute")
+        try:
+            tx_before = self.bridge.read(probe.tx, TX_STATE).hex()   # kept if the game refuses: its state then
+        except BridgeError:
+            if not self.bridge.connected:
+                raise
+            tx_before = None
         if self.mem is None:
             self.mem = self.bridge.alloc(0x200)
         block, layout = build(self.mem)
@@ -296,7 +367,7 @@ class LiveChannel:
             status = self.bridge.job_status()
         self.bridge.unwatch()                        # the runner (and the probe: armed again on the next tick)
         self.probing = False
-        detail = {"job": status}
+        detail = {"job": status, "tx_before": tx_before, "transaction_last_used_by": probe.caller}
         if self.trace:
             entered = []
             while True:
@@ -315,7 +386,6 @@ class LiveChannel:
             self.probe = None                          # look for the transaction again next time
             return LiveResult("not now", "the game didn't get to it (a menu or loading screen?)", detail=detail)
         code = int.from_bytes(self.bridge.read(layout["result"], 4), "little")
-        detail["transaction_last_used_by"] = probe.caller
         if code != 0:
             if refusal_key is not None:
                 self.refused[refusal_key] = code
