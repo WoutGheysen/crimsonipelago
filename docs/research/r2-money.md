@@ -205,3 +205,18 @@ number this session. Harmless here; the bag and the total showed the new amount.
    (`plugin watch-money` now asks what you did): do those also pass `+0x278164d`?
 2. `plugin dump-code` saves the code of each function on these paths (not committed: it's the game's
    code) so the transaction's inputs can be worked out.
+
+## R4: from item keys to handles
+
+The item record holds a 16-bit handle (+0x08; 0x7BC for Copper), not the key the save uses. The lookup the
+checker calls on it, `+0x38ab60`, reads one global pointer, **`+0x6d69aa8`**, to the game's item table:
+
+| field | what |
+|---|---|
+| +0x08 | number of items (handles go from 0 to this) |
+| +0x28 | per handle, 8 bytes: a 4-byte value, then a 4-byte location used to load the item's data |
+| +0x58 | per handle, a pointer to the item's data once loaded (null before); the data starts with the key |
+
+The lookup loads an item's data on first use. The 4-byte value at +0x28 is most likely the key, which
+would give every handle without loading anything; `plugin item-table` checks this against the items that
+are loaded, and falls back to those if it doesn't hold.
