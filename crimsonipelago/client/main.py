@@ -109,6 +109,9 @@ def build_parser() -> argparse.ArgumentParser:
     ssub.add_parser("list", help="list check names")
 
     sub.add_parser("status", help="show the local ledger for the most recent session")
+    rb = sub.add_parser("rebind", help="continue the seed on the playthrough of your newest save (if you lost yours)")
+    rb.add_argument("--yes", action="store_true", help="don't ask")
+    _add_adapter_args(rb)
     it = sub.add_parser("items", help="look up item keys by name (from your CrimsonSaveEditor folder)")
     it.add_argument("words", nargs="*", help="words in the name, e.g. iron ore")
     it.add_argument("--category", default=None, help="only this category (e.g. Weapon, Material)")
@@ -426,6 +429,50 @@ def cmd_status(data_dir: Path) -> int:
     return 0
 
 
+def cmd_rebind(args, data_dir: Path, catalogue: Catalogue, ask=input) -> int:
+    """Tie the seed to the playthrough of the newest save instead (the player saved over theirs)."""
+    from .database import DeliveryState
+
+    editor_dir = args.editor_dir or load_settings(data_dir).get("editor_dir")
+    adapter = build_adapter(args.adapter, catalogue, data_dir, sim_file=args.sim_file, save_path=args.save_path,
+                            editor_dir=editor_dir, steam_manifest=args.steam_manifest)
+    ledger = Ledger(data_dir / "ledger.sqlite3")
+    try:
+        session = ledger.latest_session()
+        if session is None:
+            print("No seed yet: connect to one first.", file=sys.stderr)
+            return 2
+        profile = adapter.get_current_profile()
+        if profile is None:
+            problem = getattr(adapter, "identity_problem", None)
+            print(f"Can't tell which playthrough your newest save is from: {problem or 'no save found'}",
+                  file=sys.stderr)
+            return 1
+        if profile == session.profile_id:
+            print(f"Seed {session.seed_name} is already on this playthrough ({profile}). Nothing to do.")
+            return 0
+        other = [s for s in ledger.sessions_for_profile(profile) if s.id != session.id]
+        if other:
+            print(f"That playthrough ({profile}) belongs to seed {other[0].seed_name}. Load a save of another "
+                  "playthrough first.", file=sys.stderr)
+            return 1
+        had = ledger.items(session.id, (DeliveryState.COMPLETE, DeliveryState.IN_GAME))
+        to_give = [r.idx for r in had if (item := catalogue.item_by_id(r.item_id)) is not None
+                   and adapter.needs_write(item)]
+        print(f"Seed {session.seed_name} is on playthrough {session.profile_id}.")
+        print(f"Your newest save is from playthrough {profile}.")
+        print(f"Moving the seed there. The {len(to_give)} item(s) the seed already gave you will be given again, "
+              "because that playthrough doesn't have them. Checks already sent stay sent.")
+        if not args.yes and not ask("Go ahead? (y/n) ").strip().lower().startswith(("y", "j")):
+            print("Nothing changed.")
+            return 1
+        ledger.rebind_profile(session.id, profile, to_give)
+        print(f"Done. Start the client again (connect): it continues seed {session.seed_name} on this playthrough.")
+        return 0
+    finally:
+        ledger.close()
+
+
 def cmd_resolve(args, data_dir: Path, catalogue: Catalogue) -> int:
     ledger = Ledger(data_dir / "ledger.sqlite3")
     try:
@@ -466,6 +513,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_plugin(args, Path(data_dir))
     if args.command == "resolve":
         return cmd_resolve(args, data_dir, catalogue)
+    if args.command == "rebind":
+        return cmd_rebind(args, data_dir, catalogue)
     if args.command in (None, "ui"):
         try:
             from .ui.main_window import run_ui
