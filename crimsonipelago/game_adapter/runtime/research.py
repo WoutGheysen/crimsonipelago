@@ -1068,6 +1068,10 @@ def give_knowledge(bridge: ResearchBridge, report_dir: Path, key: int, level: in
         report["outcome"] = "accepted"
     else:
         say(f"Not learned: {result.message}")
+        fault = (result.detail.get("job") or {}).get("fault")
+        if fault:
+            say(f"   the fault: {fault.get('rip')} in {fault.get('fn') or '?'}, "
+                f"{'writing' if fault.get('access') == 1 else 'reading'} {fault.get('addr')}")
         report["outcome"] = result.state
     path.write_text(json.dumps(report, indent=1), encoding="utf-8")
     say(f"Saved: {path}")

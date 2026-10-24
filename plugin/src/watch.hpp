@@ -57,6 +57,11 @@ struct Job {
     uint32_t code = 0;                  // exception code when state is 4
     uint32_t ran_tid = 0;
     uint64_t queued_ms = 0, ran_ms = 0;
+    // When the call faults: where, what it touched, and the call chain at that point.
+    uint64_t fault_rip = 0, fault_info[2] = {};
+    uint64_t fault_regs[6] = {};        // rax, rbx, rcx, rdx, rsi, rdi
+    uint8_t fault_nframes = 0;
+    uint64_t fault_frames[16] = {};
 };
 inline Job g_job;
 inline thread_local bool t_in_job = false;
@@ -70,18 +75,41 @@ __declspec(noinline) inline uint64_t call_job_raw(const Job& j) {
     const uint64_t* a = j.args;
     return f(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13]);
 }
+// Records where a fault happened (runs before the stack unwinds, while the faulting context still exists).
+inline int note_fault(EXCEPTION_POINTERS* ep, Job& j) {
+    const EXCEPTION_RECORD* er = ep->ExceptionRecord;
+    const CONTEXT* c = ep->ContextRecord;
+    j.fault_rip = reinterpret_cast<uint64_t>(er->ExceptionAddress);
+    for (unsigned i = 0; i < 2 && i < er->NumberParameters; ++i) j.fault_info[i] = er->ExceptionInformation[i];
+    const uint64_t regs[6] = {c->Rax, c->Rbx, c->Rcx, c->Rdx, c->Rsi, c->Rdi};
+    for (unsigned i = 0; i < 6; ++i) j.fault_regs[i] = regs[i];
+    CONTEXT u = *c;
+    j.fault_nframes = 0;
+    for (unsigned n = 0; n < 16; ++n) {
+        DWORD64 image = 0;
+        PRUNTIME_FUNCTION fn = RtlLookupFunctionEntry(u.Rip, &image, nullptr);
+        if (!fn) break;
+        PVOID data = nullptr;
+        DWORD64 frame = 0;
+        RtlVirtualUnwind(UNW_FLAG_NHANDLER, image, u.Rip, fn, &u, &data, &frame, nullptr);
+        if (!u.Rip) break;
+        j.fault_frames[j.fault_nframes++] = u.Rip;
+    }
+    return EXCEPTION_EXECUTE_HANDLER;
+}
+
 // A fault inside the game function is caught here instead of closing the game at once (the game may still be
 // left in a bad state: the report says so).
-inline uint64_t call_job(const Job& j, uint32_t& code) {
+inline uint64_t call_job(Job& j, uint32_t& code) {
     __try {
         return call_job_raw(j);
-    } __except (EXCEPTION_EXECUTE_HANDLER) {
+    } __except (note_fault(GetExceptionInformation(), j)) {
         code = GetExceptionCode();
         return 0;
     }
 }
 #else
-inline uint64_t call_job(const Job& j, uint32_t& code) {
+inline uint64_t call_job(Job& j, uint32_t& code) {
     code = 0;
     const auto f = reinterpret_cast<Fn14>(j.fn);
     const uint64_t* a = j.args;
@@ -92,6 +120,8 @@ inline uint64_t call_job(const Job& j, uint32_t& code) {
 inline void run_job() {
     Job& j = g_job;
     j.ran_tid = GetCurrentThreadId();
+    j.fault_rip = 0;
+    j.fault_nframes = 0;
     for (unsigned i = 0; i < j.nset; ++i) {
         SIZE_T wrote = 0;
         WriteProcessMemory(GetCurrentProcess(), reinterpret_cast<LPVOID>(j.set_addr[i]), &j.set_val[i], 1, &wrote);

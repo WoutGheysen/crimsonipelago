@@ -97,6 +97,21 @@ with ResearchBridge() as bridge:
     assert bridge.read(buf + 40, 1) == b"\x5a"
     print("job on the game thread, own memory and set bytes: ok")
 
+    # a job that faults (a null pointer as the output): caught, with where it happened
+    assert bridge.job(job_fn, [0] + list(range(2, 15)), runner=tick_fn, tid=main_tid) == "queued"
+    deadline = time.time() + 5
+    status = bridge.job_status()
+    while status["state"] in ("queued", "running") and time.time() < deadline:
+        time.sleep(0.1)
+        status = bridge.job_status()
+    bridge.unwatch()
+    print("faulting job:", status)
+    assert status["state"] == "fault" and status["code"] == 0xC0000005, status
+    fault = status["fault"]
+    assert fault["rip"].startswith("CrimsonDesert.exe+") and fault["access"] == 1 and int(fault["addr"], 16) < 0x100, fault
+    assert fault["fn"] == f"CrimsonDesert.exe+{hex(job_fn - base)}", (fault["fn"], hex(job_fn - base))
+    print("a faulting job is caught and located: ok")
+
     report = bridge.scan_u64(MARKER)
     print(f"scan: {report.count} hit(s) in {report.ms} ms")
     if report.count < 1:
