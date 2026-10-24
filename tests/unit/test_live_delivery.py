@@ -150,3 +150,33 @@ def test_flight_goes_in_live_once_enabled_for_the_build(setup, ledger, sim, cata
     report = engine.deliver_pending(sid)
     assert live.calls == [("knowledge", 40002)] and report.delivered == 1
     assert states(ledger, sid) == [DeliveryState.IN_GAME]
+
+
+def test_flight_refused_is_tried_again_then_left_for_the_save(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    live.learns_knowledge = True
+    live.results = [LiveResult("refused", "the game refused it (code 0x78c0a4e9)", 0x78C0A4E9)] * 3
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "Flight")
+    engine.validate(sid)
+    for _ in range(4):
+        engine.deliver_pending(sid)
+    assert live.calls == [("knowledge", 40002)] * 3                 # three tries, then no more
+    rec = ledger.items(sid)[0]
+    assert rec.state is DeliveryState.PENDING and "quit to desktop" in rec.last_error
+    sim.update(game_running=False)
+    live.is_ready = False
+    assert engine.deliver_pending(sid).delivered == 1                 # through the save
+
+
+def test_flight_learned_on_the_second_try(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    live.learns_knowledge = True
+    live.results = [LiveResult("refused", "the game refused it", 0x78C0A4E9), LiveResult("given")]
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "Flight")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    assert "trying again" in ledger.items(sid)[0].last_error
+    engine.deliver_pending(sid)
+    assert states(ledger, sid) == [DeliveryState.IN_GAME]

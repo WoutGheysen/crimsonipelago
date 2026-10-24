@@ -45,6 +45,9 @@ class LiveDelivery(Protocol):
     def give_knowledge(self, key: int): ...          # -> LiveResult
 
 
+LIVE_KNOWLEDGE_TRIES = 3     # knowledge refused live this often waits for the save instead
+
+
 class DeliveryEngine:
     def __init__(self, ledger: Ledger, adapter: GameAdapter, catalogue: Catalogue, bus: ev.EventBus,
                  live: LiveDelivery | None = None):
@@ -156,9 +159,15 @@ class DeliveryEngine:
         kind = (item.game_ref or {}).get("kind") if item is not None else None
         return kind == "inventory_item" or (kind == "knowledge" and bool(getattr(self.live, "learns_knowledge", False)))
 
+    def _given_up_live(self, rec: ReceivedItem) -> bool:
+        """Knowledge the game refused live a few times (each on a later tick) is left for the save."""
+        item = self.catalogue.item_by_id(rec.item_id)
+        kind = (item.game_ref or {}).get("kind") if item is not None else None
+        return kind == "knowledge" and rec.attempts >= LIVE_KNOWLEDGE_TRIES
+
     def _deliver_live(self, session_id: int, pending: list[ReceivedItem]) -> tuple[list[ReceivedItem], str | None]:
         """Give what can be given in the running game. Returns what's left, and why live delivery is waiting."""
-        candidates = [r for r in pending if self._live_kind(r)]
+        candidates = [r for r in pending if self._live_kind(r) and not self._given_up_live(r)]
         if self.live is None or not candidates or not self.live.ready():
             return pending, None
         left = [r for r in pending if r not in candidates]
@@ -174,9 +183,11 @@ class DeliveryEngine:
                 self.ledger.set_item_state(session_id, [rec.idx], DeliveryState.IN_GAME, expect=(DeliveryState.PENDING,))
                 given.append(rec)
             elif result.state in ("refused", "unknown item"):
+                again = ref["kind"] == "knowledge" and result.state == "refused" and rec.attempts + 1 < LIVE_KNOWLEDGE_TRIES
                 self.ledger.set_item_state(session_id, [rec.idx], DeliveryState.PENDING, bump_attempts=True,
-                                           error=f"not given in the game: {result.message}; "
-                                                 "it will be added to the save once you quit to desktop")
+                                           error=f"not given in the game: {result.message}; " +
+                                                 ("trying again in a moment" if again else
+                                                  "it will be added to the save once you quit to desktop"))
                 left.append(rec)
             else:
                 waiting = result.message

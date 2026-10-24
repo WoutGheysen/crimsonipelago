@@ -192,7 +192,9 @@ Artifacts, Copper) the moment it arrives, the R3/R4 way, with a built-in stackab
 search). The ledger keeps such items as *in the game* until the game writes a save after them; if the game
 closes first, they go back to the queue and are added to the save instead.
 
-- Flight (knowledge) still goes into the save while the game is closed.
+- Flight (knowledge) is learned live as well (on for game build 1790086912 in `targets.json`). The game
+  sometimes refuses it (r5-knowledge.md); the client tries three times on later ticks, then leaves it for
+  the save.
 - An item the game refuses live (gear, for now) waits for the save as well.
 - While the client runs, the plugin is busy with it: the `plugin …` research commands can't connect at the
   same time (the plugin serves one client).

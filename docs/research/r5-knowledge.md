@@ -49,3 +49,9 @@ not what differs. The refusal code comes from the entry checker (`+0x22ce570`) a
 state: the tool used the transaction right after the player's own pickup instead of after a background
 task. `give-knowledge` now records which game code used the transaction last and the transaction's
 first 0x1C0 bytes, to compare a refused attempt with an accepted one.
+
+Attempt 5, standing still and touching nothing: learned, with the transaction last used through the
+add-check-commit wrapper (`+0x2781588`), not the background task. No refusal to compare yet; the client
+now records the transaction's last user with every refusal it meets.
+
+**Switched on** for the client (`knowledge_live`), with three tries before the save path takes over.
