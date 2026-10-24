@@ -88,6 +88,8 @@ def build_parser() -> argparse.ArgumentParser:
     c.add_argument("--port", type=int, default=None)
     c.add_argument("--slot", default=None, help="your slot (player) name")
     c.add_argument("--password", default=None, help="room password (or set CRIMSONIPELAGO_PASSWORD)")
+    c.add_argument("--no-live", action="store_true",
+                   help="don't give items in the running game; only edit the save once you quit to desktop")
     _add_adapter_args(c)
 
     u = sub.add_parser("ui", help="open the desktop UI")
@@ -189,12 +191,20 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
     if not args.verbose:
         logging.getLogger("crimsonipelago.events").setLevel(logging.ERROR)   # printed above already
     config = ClientConfig(server=server, port=args.port, slot_name=slot, password=password, data_dir=data_dir)
-    controller = SyncController(config, adapter, ledger, catalogue, bus)
+    live = None
+    if args.adapter == "save" and not args.no_live:
+        from ..game_adapter.runtime.live import LiveChannel
+
+        live = LiveChannel(on_event=lambda message: bus.emit(ev.CONNECTION, message))
+    controller = SyncController(config, adapter, ledger, catalogue, bus, live=live)
     try:
-        asyncio.run(run_headless(controller, watch_plugin=args.adapter == "save"))
+        # the plugin serves one client at a time: with live delivery on, the channel is that client
+        asyncio.run(run_headless(controller, watch_plugin=args.adapter == "save" and live is None))
     except KeyboardInterrupt:
         pass
     finally:
+        if live is not None:
+            live.close()
         ledger.close()
     if controller.connection and controller.connection.fatal_error:
         print(f"stopped: {controller.connection.fatal_error}", file=sys.stderr)

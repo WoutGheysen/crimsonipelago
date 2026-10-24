@@ -28,6 +28,7 @@ class DeliveryState(str, enum.Enum):
     COMPLETE = "COMPLETE"
     RECOVERY_REQUIRED = "RECOVERY_REQUIRED"
     UNSUPPORTED = "UNSUPPORTED"  # parked: no verified way to deliver this item yet
+    IN_GAME = "IN_GAME"  # given live in the running game; complete once the game saves after that
 
 
 OPEN_STATES = (DeliveryState.RECEIVED, DeliveryState.VALIDATED, DeliveryState.PENDING)
@@ -138,6 +139,7 @@ class ReceivedItem:
     batch_id: str | None
     attempts: int
     last_error: str | None
+    updated_at: str = ""          # ISO time (UTC) of the last state change
 
 
 @dataclass(frozen=True)
@@ -322,7 +324,7 @@ class Ledger:
     def _item(row: sqlite3.Row) -> ReceivedItem:
         return ReceivedItem(row["session_id"], row["idx"], row["item_id"], row["location_id"], row["sender"],
                             row["flags"], DeliveryState(row["state"]), row["batch_id"], row["attempts"],
-                            row["last_error"])
+                            row["last_error"], row["updated_at"])
 
     # ------------------------------------------------------------------ delivery batches
     def begin_batch(self, session_id: int, batch_id: str, indices: list[int], pre_fp: str, post_fp: str,

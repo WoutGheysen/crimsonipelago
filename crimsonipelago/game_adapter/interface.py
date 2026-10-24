@@ -151,6 +151,10 @@ class GameAdapter(ABC):
         the player saved after connecting the seed, never to an old one that happens to be the newest save."""
         return True
 
+    def is_game_running(self) -> bool | None:
+        """Whether the game is running right now (None: can't tell)."""
+        return None
+
     def needs_write(self, item: ItemDef) -> bool:
         """False for items with no effect in the game (filler): they complete without touching the save."""
         return True

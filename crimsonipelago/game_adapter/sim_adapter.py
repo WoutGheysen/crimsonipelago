@@ -102,6 +102,13 @@ class SimulatedGameAdapter(GameAdapter):
             return Result.unsupported(f"{item.name!r} cannot be delivered (simulated restriction)")
         return Result.success()
 
+    def save_written_after(self, timestamp: float) -> bool:
+        saved_at = self.read_state().get("saved_at")
+        return True if saved_at is None else float(saved_at) > timestamp   # tests set "saved_at" to emulate saves
+
+    def is_game_running(self) -> bool | None:
+        return bool(self.read_state().get("game_running"))
+
     def safe_to_write(self) -> Result:
         if not self.path.exists():
             return Result.failure("simulated save missing")

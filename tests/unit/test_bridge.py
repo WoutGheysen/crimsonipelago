@@ -674,6 +674,67 @@ def test_give_item_refuses_an_unknown_key(tmp_path):
         game.close()
 
 
+def test_live_channel_gives_with_a_built_in_record(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import LiveChannel, stackable_record
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.0-r3"}
+    seen = {}
+
+    def the_game_commits(msg):
+        args = [int(a, 16) for a in msg["args"].split(",")]
+        item = game.get(game.get(args[4]) + 0x30)
+        seen.update(handle=game.get(item + 8, 2), count=game.get(item + 0x10), tid=msg["tid"],
+                    copy=game.get(item + 0x90, 2))
+        game.put(args[1], 0 if seen["handle"] != 0 else 7, 4)          # the game refuses handle 0
+        return "done"
+
+    game.on_job = the_game_commits
+    events = []
+    live = LiveChannel(game.port, on_event=events.append, targets_file=targets, sleep=lambda s: None)
+    try:
+        first = live.give(75001, 2)
+        assert first.state == "not now" and "waiting for the game" in first.message   # watch armed
+        second = live.give(75001, 2)
+        assert second.given and seen == {"handle": 2, "count": 2, "tid": LOGIC_TID, "copy": 2}
+        assert any("items arrive while you play" in e for e in events)
+        assert live.give(99999, 1).state == "unknown item"
+        live.probe = None
+        live.give(12345, 1)                                             # arms the watch again
+        refused = live.give(12345, 1)
+        assert refused.state == "refused" and refused.code == 7
+        assert live.give(12345, 1).state == "refused"                  # not tried again
+        assert len([m for m in game.received if m["cmd"] == "job"]) == 2
+        rec = stackable_record(0x4D1, 3, 905000001, 1792869000)
+        assert len(rec) == 0xC8 and rec[0x90:0x92] == (0x4D1).to_bytes(2, "little")
+    finally:
+        live.close()
+        game.close()
+
+
+def test_live_channel_stays_off_for_an_old_plugin_or_unknown_build(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import LiveChannel
+
+    game, targets = _r4_game(tmp_path)                                  # HELLO says 0.1.0-r0
+    events = []
+    live = LiveChannel(game.port, on_event=events.append, targets_file=targets)
+    try:
+        assert not live.ready() and "needs 0.8.0" in live.unsupported
+        result = live.give(1, 100)
+        assert result.state == "not now" and game.job_msg is None
+    finally:
+        live.close()
+        game.close()
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.0-r3", "pe_timestamp": 5}
+    live = LiveChannel(game.port, on_event=events.append, targets_file=targets)
+    try:
+        assert not live.ready() and "doesn't know this game build" in live.unsupported
+    finally:
+        live.close()
+        game.close()
+
+
 def test_build_gift_layout():
     record = bytes(range(256))[:research.RECORD_SIZE]
     block, layout = research.build_gift(record, 100, 905_000_001, 0x5000)
