@@ -108,6 +108,7 @@ class LiveChannel:
         self.probing = False
         self.unsupported: str | None = None   # why live delivery can't work with this game/plugin
         self.refused: dict = {}               # item key (or ("knowledge", key)) -> the game's result code
+        self.trace: list[int] = []            # research: game functions to watch during a call (3 at most)
         self._last_attempt = -1e9
 
     # ------------------------------------------------------------------ connection
@@ -269,6 +270,14 @@ class LiveChannel:
         if probe is None:
             return LiveResult("not now", "waiting for the game (it pauses while in the background, in a menu or "
                                          "loading)")
+        if self.trace:
+            # research: watch which of these game functions our call enters (the probe's watch makes room)
+            self.bridge.unwatch()
+            self.probing = False
+            while len(self.bridge.hits(64).records) == 64:
+                pass
+            for rva in self.trace[:3]:
+                self.bridge.watch(self.base + rva, 1, "execute")
         if self.mem is None:
             self.mem = self.bridge.alloc(0x200)
         block, layout = build(self.mem)
@@ -289,6 +298,15 @@ class LiveChannel:
         self.bridge.unwatch()                        # the runner (and the probe: armed again on the next tick)
         self.probing = False
         detail = {"job": status}
+        if self.trace:
+            entered = []
+            while True:
+                got = self.bridge.hits(64)
+                entered += [{"fn": r["rip"], "from": (r.get("frames") or ["?"])[0], "tid": r["tid"]}
+                            for r in got.records]
+                if len(got.records) < 64:
+                    break
+            detail["trace"] = entered
         if status["state"] == "fault":
             # The game may be in a bad state: stop delivering live until the plugin reconnects.
             self.unsupported = "the game's code faulted during a delivery; reload your last save"

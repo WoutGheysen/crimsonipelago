@@ -116,13 +116,16 @@ def build_parser() -> argparse.ArgumentParser:
     pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
     pl.add_argument("action", nargs="?", default="check",
                     choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls", "give-copper",
-                             "give-item", "item-table", "give-knowledge", "knowledge-check"],
+                             "give-item", "item-table", "give-knowledge", "knowledge-check", "error-sites"],
                     help="check: test the link (default); find-copper: research step R1; "
                          "watch-money, dump-code, watch-calls: research step R2; give-copper: R3; "
                          "give-item, item-table: R4; give-knowledge: R5")
     pl.add_argument("--key", type=int, default=None, help="give-item: the item's key, as in the save")
     pl.add_argument("--count", type=int, default=1, help="give-item: how many")
     pl.add_argument("--level", type=int, default=1, help="give-knowledge: the level to learn")
+    pl.add_argument("--trace", default=None,
+                    help="give-knowledge: up to 3 game function offsets to watch during the call, e.g. 0x22ce360,0x277fe00")
+    pl.add_argument("--code", default=None, help="error-sites: the result code, e.g. 0x78c0a4e9")
     pl.add_argument("--learn-from", type=int, default=None,
                     help="give-knowledge: how it was learned (default 25, as saves record Flight; the skill menu uses 19)")
     pl.add_argument("--report", default=None,
@@ -217,7 +220,7 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
 
 NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4), "dump-code": (0, 5), "watch-calls": (0, 6),
                 "give-copper": (0, 8), "give-item": (0, 8), "item-table": (0, 8), "give-knowledge": (0, 8),
-                "knowledge-check": (0, 8)}
+                "knowledge-check": (0, 8), "error-sites": (0, 8)}
 
 
 def _plugin_version(text: str) -> tuple[int, int]:
@@ -264,6 +267,10 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                     return 1
                 print(f"Using {report}")
                 return 0 if dump_code(research, report, report_dir) else 1
+            if args.action == "error-sites":
+                from ..game_adapter.runtime.research import error_sites
+
+                return 0 if error_sites(research, report_dir, int(args.code or "0x78c0a4e9", 16)) else 1
             if args.action == "knowledge-check":
                 from ..game_adapter.runtime.research import knowledge_check
 
@@ -275,8 +282,9 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                 if args.key is None:
                     print("error: give-knowledge needs --key KEY (Flight is 40002)", file=sys.stderr)
                     return 1
+                trace = [int(t, 16) for t in args.trace.split(",")] if args.trace else None
                 return 0 if give_knowledge(research, report_dir, args.key, args.level,
-                                           learn_from=args.learn_from) else 1
+                                           learn_from=args.learn_from, trace=trace) else 1
             if args.action == "item-table":
                 return 0 if item_table(research, report_dir) else 1
             if args.action == "give-item":

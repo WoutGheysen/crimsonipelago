@@ -856,3 +856,22 @@ def test_knowledge_lookup_follows_the_checkers_hash_map(tmp_path):
         assert missing["problem"] == "not in the table" and "handle" not in missing
     finally:
         game.close()
+
+
+def test_error_sites_finds_the_loads_of_a_result_code(tmp_path):
+    game = FakeMemory()
+    # mov eax, [rip+0x100] at +0x1000: the global is +0x1000 + 6 + 0x100; mov r8d, [rip+0x200] at +0x1010
+    code = bytearray(0x20)
+    code[0:6] = bytes([0x8B, 0x05]) + (0x100).to_bytes(4, "little")
+    code[0x10:0x17] = bytes([0x44, 0x8B, 0x05]) + (0x200).to_bytes(4, "little")
+    (tmp_path / "r2-code-1.json").write_text(json.dumps({"game": {"pe_timestamp": HELLO["pe_timestamp"]},
+                                                         "functions": [{"rva_begin": "0x1000", "bytes": code.hex()}]}))
+    game.overlay[0x140000000 + 0x1106] = (0x78C0A4E9).to_bytes(4, "little")
+    game.overlay[0x140000000 + 0x1217] = (0x1234).to_bytes(4, "little")
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.error_sites(bridge, tmp_path, 0x78C0A4E9, say=lambda s: None)
+        sites = json.loads(path.read_text())["sites"]
+        assert sites == [{"site": "0x1000", "global": "0x1106", "function": "0x1000"}]
+    finally:
+        game.close()
