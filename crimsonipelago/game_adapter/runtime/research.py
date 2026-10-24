@@ -247,14 +247,43 @@ def _try_all(bridge: ResearchBridge, candidates: list[Candidate], amount: int, t
 WATCH_SLOTS = 4
 
 
-def _drain(bridge: ResearchBridge) -> tuple[list[dict], dict[str, int], int]:
+def _drain(bridge: ResearchBridge, page: int = 64) -> tuple[list[dict], dict[str, int], int]:
     records, lost = [], 0
     while True:
-        got = bridge.hits(64)
+        got = bridge.hits(page)
         records += got.records
         lost += got.lost
-        if len(got.records) < 64:
+        if len(got.records) < page:
             return records, got.sites, lost
+
+
+def _record_events(bridge: ResearchBridge, ask: Callable[[str], str], say: Callable[[str], None],
+                   suggestions: str, page: int = 64) -> tuple[list[dict], dict[str, int], list[str], int]:
+    """Lets the player do things one at a time, labelling what the watches saw with what they did."""
+    records: list[dict] = []
+    sites: dict[str, int] = {}
+    events: list[str] = []
+    lost = 0
+    _drain(bridge, page)                                     # anything from before the player's actions
+    say("Now do these in the game, one at a time. After each one, come back here, type what you did and "
+        "press Enter:")
+    say("  " + suggestions)
+    say("Type d and Enter when you're done.")
+    while True:
+        bridge.watch_apply()                                 # threads the game started meanwhile
+        text = ask("What did you just do (e.g. buy, sell, loot, reward), or d when done: ").strip()
+        done = text.lower() in ("d", "q", "done")
+        got, sites, dropped = _drain(bridge, page)
+        label = "before done" if done else (text or "unlabelled")
+        for r in got:
+            r["event"] = label
+        records += got
+        lost += dropped
+        if got or not done:
+            events.append(label)
+            say(f"  {label}: {len(got)} record(s)" + (f", {dropped} lost" if dropped else "") + ".")
+        if done:
+            return records, sites, events, lost
 
 
 def summarize(records: list[dict], sites: dict[str, int], watched: list[Candidate]) -> list[str]:
@@ -307,26 +336,9 @@ def watch_money(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
                 raise BridgeError(f"plugin gave watch slot {slot} for place {watched.index(c)}")
         say(f"Watching {len(watched)} place(s) on {threads} game threads. If the game stutters or closes, "
             "tell me: the watch uses the same processor feature as a debugger.")
-        _drain(bridge)                                       # anything from before the player's actions
-        say("Now do these in the game, one at a time. After each one, come back here, type what you did and "
-            "press Enter:")
-        say("  buy something cheap, sell something, pick up or loot coins, finish a quest that pays money...")
-        say("Type d and Enter when you're done.")
-        while True:
-            bridge.watch_apply()                             # threads the game started meanwhile
-            text = ask("What did you just do (e.g. buy, sell, loot, reward), or d when done: ").strip()
-            done = text.lower() in ("d", "q", "done")
-            got, sites, dropped = _drain(bridge)
-            label = "before done" if done else (text or "unlabelled")
-            for r in got:
-                r["event"] = label
-            records += got
-            lost += dropped
-            if got or not done:
-                events.append(label)
-                say(f"  {label}: {len(got)} write(s) recorded" + (f", {dropped} lost" if dropped else "") + ".")
-            if done:
-                break
+        records, sites, events, lost = _record_events(
+            bridge, ask, say, "buy something cheap, sell something, pick up or loot coins, finish a quest that "
+            "pays money...")
     finally:
         try:
             bridge.unwatch()
@@ -442,4 +454,73 @@ def dump_code(bridge: ResearchBridge, report_path: Path, out_dir: Path,
     say(f"Saved the code of {len(functions)} game functions ({total:,} bytes) on the recorded paths.")
     say(f"Saved: {path}")
     say("Send me that file. It stays between us: it's the game's code, so it doesn't go in the repository.")
+    return path
+
+
+# --------------------------------------------------------------------------- R2c: the calls on those paths
+TARGETS_FILE = Path(__file__).with_name("targets.json")
+CALL_PAGE = 8          # records with argument memory are large: collect a few at a time
+
+
+def load_targets(pe_timestamp: int, path: Path = TARGETS_FILE) -> dict | None:
+    """The functions to watch for this game build (offsets in the executable), or None if unknown."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data.get("builds", {}).get(str(pe_timestamp))
+
+
+def watch_calls(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], str] = input,
+                say: Callable[[str], None] = print, targets_file: Path = TARGETS_FILE) -> Path | None:
+    """R2c: watch calls of the inventory transaction functions while the player gains and spends things."""
+    info = bridge.info
+    if info is None:
+        raise BridgeError("not connected")
+    build = load_targets(info.pe_timestamp, targets_file)
+    if build is None:
+        say(f"I don't know this game build yet (build stamp {info.pe_timestamp}); the function offsets are "
+            "only valid for the build they were found in. Tell me, and I'll redo the search for it.")
+        return None
+    base = int(info.module_base, 16)
+    functions = build["watch_calls"][:WATCH_SLOTS]
+    try:
+        threads = 0
+        for i, f in enumerate(functions):
+            slot, threads = bridge.watch(base + int(f["rva"], 16), 1, "execute")
+            if slot != i:
+                raise BridgeError(f"plugin gave watch slot {slot} for function {i}")
+        say(f"Watching {len(functions)} game functions on {threads} threads:")
+        for f in functions:
+            say(f"  {MODULE}+{f['rva']}: {f['name']}")
+        records, sites, events, lost = _record_events(
+            bridge, ask, say, "loot coins or an item, pick something up, buy, sell, finish a quest that rewards "
+            "something...", page=CALL_PAGE)
+    finally:
+        try:
+            bridge.unwatch()
+        except BridgeError:
+            pass
+
+    for r in records:
+        if r["slot"] < len(functions):
+            r["function"] = functions[r["slot"]]["name"]
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r2-calls-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    path.write_text(json.dumps({
+        "plugin": info.plugin_version,
+        "game": {"exe_version": info.exe_version, "pe_timestamp": info.pe_timestamp, "module_base": info.module_base},
+        "functions": functions,
+        "events": events,
+        "sites": sites,
+        "lost": lost,
+        "records": records,
+    }, indent=1), encoding="utf-8")
+    say("")
+    say("Calls seen, per thing you did:")
+    for event in events:
+        counts: dict[str, int] = {}
+        for r in records:
+            if r.get("event") == event:
+                counts[r.get("function", "?")] = counts.get(r.get("function", "?"), 0) + 1
+        say(f"  {event}: " + (", ".join(f"{name} x{n}" for name, n in counts.items()) or "none"))
+    say(f"Saved: {path}")
+    say("Send me that file.")
     return path

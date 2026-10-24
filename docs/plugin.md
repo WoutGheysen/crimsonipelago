@@ -6,8 +6,9 @@
 - **R1** (passed 2026-10-23): memory search for research; a live Copper change that survives a save.
   The plugin never changes anything by itself: a write happens only when
   the client asks, and only if the value there is exactly the one the client expects.
-- **R2**: write watches: which game code changes your money, and what called it. The first step towards
-  calling the game's own "receive an item" code.
+- **R2**: write watches: which game code changes your money, and what called it; execute watches: what the
+  game's inventory functions are called with. The first steps towards calling the game's own "receive an
+  item" code.
 
 ## Install (Windows)
 
@@ -113,6 +114,17 @@ py -m crimsonipelago.client.main plugin dump-code
 
 saves the game's code for each function on the recorded paths (`r2-code-….json`, plugin 0.5.0 or newer),
 to work out what they expect. It stays on your PC and in our conversation, never in the repository.
+
+### R2c: what the game's inventory functions are called with
+
+```powershell
+py -m crimsonipelago.client.main plugin watch-calls
+```
+
+(plugin 0.6.0 or newer) watches calls of the inventory transaction functions found so far
+(`crimsonipelago/game_adapter/runtime/targets.json`, per game build) and records their arguments and the
+memory behind them while you loot, buy, sell and finish things, each labelled. The report,
+`r2-calls-….json`, holds bits of your game's memory: send it to me, it doesn't go in the repository.
 
 What comes next: the common caller of those writes is the game's code for "money changed"; above it,
 the code for "received an item" (which also refreshes the total at the top right). R3 calls that code.

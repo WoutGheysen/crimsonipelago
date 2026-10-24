@@ -44,7 +44,47 @@ Reading:
   (`+0x27805ad` / `+0x27805da`): a strong candidate for the game's "change the inventory" transaction.
   If looting and quest rewards also pass through it, that's the place to give items from.
 
+## Second run (2026-10-24, plugin 0.5.0-r2b), and the code
+
+4.18 → 4.40 (+22; what the player did wasn't labelled yet). The game-logic thread took a third path into
+the same place:
+
+```
+count change (+0xf4a03c0) <- +0xf48c907 <- +0x27af1e5 <- +0x27805da <- +0x2b4bd92 <- +0x2b4b7df <- +0x2b49ef8 <- +0x2a04f0d
+```
+
+So selling and this event meet one level lower than buying and selling did: at **`+0x2780570`**, not at
+`+0x278164d` (that one belongs to the shop). The other watched places were the screen side: `+0x644970` and
+`+0x644286` on the mirroring thread copy the new amount into what's displayed.
+
+`plugin dump-code` saved the 54 functions on these paths. What they show (offsets only; the code itself
+stays out of the repository):
+
+- **`+0xf4a03c0`** changes a stack by an amount: `(stack, result, change)`, with limits checked against
+  the maximum; result code 0 means done. The stack record is 0xC8 bytes: item number at +0x00, a 4-byte
+  key at +0x08, count at +0x10, a weighted value at +0x18 (recomputed when a stack grows), a time at +0x98.
+- **`+0x2780570` commits an inventory transaction**: `(transaction, result)`. It applies, in order, the
+  removals (transaction +0x38 → `+0x27b0b70`, buying's path), the additions (+0x30 → `+0x27aed40`, selling's
+  and the new event's path), and several more parts (+0x150, +0x40, a list at +0xC8, +0x140 … +0x188).
+  So one transaction can carry many kinds of change, not only items.
+- **The event's handler (`+0x2b4baf0`) shows how a transaction is used:** get the game-logic thread's
+  transaction (`+0x2bbab00`, kept per thread), set two reason bytes (+0x1AB = 9, +0x1AC = 2), add to it
+  with **`+0x277e080`** (a dozen arguments: what, how many, flags), then `+0x277fe00`, `+0x277ffb0`,
+  `+0x2781170`, `+0x2780450` (checks and preparation) and finally the commit, `+0x2780570`.
+
+That's the pattern to copy for Archipelago items: get the transaction on the game-logic thread, add the item,
+check, commit. The game then mirrors it to the screen side (the total at the top right, the popup) as it
+does for loot.
+
 ## Next
+
+1. `plugin watch-calls` (plugin 0.6.0): execute watches on `+0x277e080` (add), `+0x2780570` (commit),
+   `+0x27aed40` (commit: add items) and `+0x27b0b70` (commit: remove items), recording the arguments and the
+   memory behind them while the player loots, buys, sells and finishes something, each labelled. That
+   shows what the "add" call expects for a given item and count.
+2. R3: make that call ourselves, on the game-logic thread.
+
+## Earlier next steps
 
 1. Watch again while looting coins and finishing something that pays money, labelling each action
    (`plugin watch-money` now asks what you did): do those also pass `+0x278164d`?

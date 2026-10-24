@@ -16,14 +16,15 @@
 //   client -> plugin: {"cmd":"read","addr":"0x..","size":N}   -> {"type":"bytes","hex":".."} (N <= 4096)
 //   client -> plugin: {"cmd":"write","addr":"0x..","expect":N,"value":M,"width":4|8} -> {"type":"written",...}
 //   ("value":N instead of lo/hi searches one value; scan_u64, rescan_u64, write_u64 are the 8-byte forms)
-//   client -> plugin: {"cmd":"watch","addr":"0x..","size":1|2|4|8,"mode":"write"|"access"}
+//   client -> plugin: {"cmd":"watch","addr":"0x..","size":1|2|4|8,"mode":"write"|"access"|"execute"}
 //                                                 -> {"type":"watching","slot":0..3,"threads":N}
 //   client -> plugin: {"cmd":"watch_apply"}  -> same, again for threads started since (slot -1)
 //   client -> plugin: {"cmd":"unwatch"}      -> {"type":"unwatched","threads":N}  (also on disconnect)
 //   client -> plugin: {"cmd":"function","addr":"0x.."} -> {"type":"function","begin":"0x..","end":"0x.."}
 //                      (bounds from the unwind data; begin 0 when the address has none)
 //   client -> plugin: {"cmd":"hits","max":N} -> {"type":"hits","total":T,"lost":L,"sites":[...],"records":[...]}
-//                      (N <= 64 records since the last call; up to 8 per writing instruction; sites count them all)
+//                      (N <= 64 records since the last call; up to 8 per instruction per call; sites count
+//                      them all; execute watches add "args" and "memory": {argument index: hex of 512 bytes})
 //   anything else                             -> {"type":"error","message":"unknown command"}
 
 #ifndef WIN32_LEAN_AND_MEAN
@@ -50,7 +51,7 @@
 #include "watch.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.5.0-r2b"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.6.0-r2c"
 #endif
 
 namespace {
@@ -374,11 +375,13 @@ std::string handle_watch(const std::string& cmd, const std::string& line) {
         const uint64_t size = size_text.empty() ? 8 : parse_u64(size_text, ok);
         if (!ok) return error_json("size must be 1, 2, 4 or 8");
         const std::string mode = json_field(line, "mode");
-        const int slot = watch::add(addr, static_cast<unsigned>(size), mode == "access");
+        const watch::Kind kind = mode == "execute" ? watch::kExecute : mode == "access" ? watch::kAccess : watch::kWrite;
+        const int slot = watch::add(addr, static_cast<unsigned>(size), kind);
         if (slot < 0) return error_json("no free watch (4 at most), or the address isn't aligned to its size");
         const unsigned threads = watch::apply(watch::g_mask.load());
         log("watch %d: 0x%llx, %llu bytes, %s, %u threads", slot, static_cast<unsigned long long>(addr),
-            static_cast<unsigned long long>(size), mode == "access" ? "access" : "write", threads);
+            static_cast<unsigned long long>(size), kind == watch::kExecute ? "execute" : kind == watch::kAccess ? "access" : "write",
+            threads);
         std::snprintf(out, sizeof(out), "{\"type\":\"watching\",\"slot\":%d,\"threads\":%u}", slot, threads);
         return out;
     }
@@ -433,9 +436,34 @@ std::string handle_watch(const std::string& cmd, const std::string& line) {
             records += head;
             if (have_code) records += mem::hex(code, sizeof(code));
             records += "\",\"frames\":" + address_list(h.frames, h.nframes);
-            records += ",\"stack\":" + address_list(h.stack, h.nstack) + "}";
+            records += ",\"stack\":" + address_list(h.stack, h.nstack);
+            if (h.nargs) {
+                records += ",\"args\":[";
+                for (unsigned a = 0; a < h.nargs; ++a) {
+                    char v[24];
+                    std::snprintf(v, sizeof(v), "%s\"0x%llx\"", a ? "," : "", static_cast<unsigned long long>(h.args[a]));
+                    records += v;
+                }
+                records += "]";
+            }
+            if (h.snap >= 0) {
+                const watch::Snap& snap = watch::g_snaps[static_cast<uint64_t>(h.snap) % watch::kSnapRing];
+                if (snap.seq.load(std::memory_order_acquire) == static_cast<uint64_t>(h.snap) + 1) {
+                    records += ",\"memory\":{";
+                    bool first_mem = true;
+                    for (unsigned a = 0; a < watch::kArgs; ++a) {
+                        if (!snap.len[a]) continue;
+                        records += (first_mem ? "\"" : ",\"") + std::to_string(a) + "\":\"" +
+                                   mem::hex(snap.data[a], snap.len[a]) + "\"";
+                        first_mem = false;
+                    }
+                    records += "}";
+                }
+            }
+            records += "}";
         }
         watch::g_delivered.store(to);
+        watch::reset_quota();
         std::string sites;
         for (const watch::Site& site : watch::g_sites) {
             const uint64_t rip = site.rip.load();
