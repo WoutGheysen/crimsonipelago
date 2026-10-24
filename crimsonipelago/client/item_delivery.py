@@ -38,6 +38,7 @@ class LiveDelivery(Protocol):
     """Giving items in the running game (game_adapter/runtime/live.py)."""
 
     def ready(self) -> bool: ...
+    def poll(self) -> None: ...
     def give(self, item_key: int, count: int): ...   # -> LiveResult
 
 
@@ -210,6 +211,8 @@ class DeliveryEngine:
 
     # ------------------------------------------------------------------ delivery
     def deliver_pending(self, session_id: int) -> DeliveryReport:
+        if self.live is not None:
+            self.live.poll()
         self.settle_in_game(session_id)
         pending: list[ReceivedItem] = self.ledger.items(session_id, (DeliveryState.PENDING,))
         recovery = len(self.ledger.items(session_id, (DeliveryState.RECOVERY_REQUIRED,)))
