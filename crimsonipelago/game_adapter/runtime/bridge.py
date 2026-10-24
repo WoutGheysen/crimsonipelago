@@ -248,3 +248,40 @@ class ResearchBridge(GameBridge):
             raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
         sites = {str(s["rip"]): int(s["count"]) for s in reply.get("sites", [])}
         return WatchHits(int(reply["total"]), int(reply["lost"]), list(reply["records"]), sites)
+
+    # ------------------------------------------------------------------ calls on a game thread (R3)
+    def alloc(self, size: int) -> int:
+        """Read-write memory of the plugin's own (never freed while the game runs)."""
+        reply = self.request({"cmd": "alloc", "size": int(size)})
+        if reply.get("type") != "alloc":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return int(reply["addr"], 16)
+
+    def poke(self, addr: int, data: bytes) -> None:
+        """Write into memory from alloc() (the plugin refuses anything else)."""
+        reply = self.request({"cmd": "poke", "addr": hex(addr), "hex": data.hex()})
+        if reply.get("type") != "poked":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+
+    def job(self, fn: int, args: list[int], *, runner: int, tid: int = 0,
+            set_bytes: dict[int, int] | None = None) -> str:
+        """Queue a call of `fn` with up to 14 arguments, made the next time `runner` is entered on thread
+        `tid`, after setting the given bytes. Returns the state ("queued")."""
+        message: dict[str, Any] = {"cmd": "job", "fn": hex(fn), "runner": hex(runner), "tid": int(tid),
+                                   "args": ",".join(hex(int(a) & 0xFFFFFFFFFFFFFFFF) for a in args)}
+        if set_bytes:
+            message["set"] = ",".join(f"{hex(a)}={int(v)}" for a, v in set_bytes.items())
+        reply = self.request(message)
+        if reply.get("type") != "job":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return str(reply["state"])
+
+    def job_status(self) -> dict[str, Any]:
+        reply = self.request({"cmd": "job_status"})
+        if reply.get("type") != "job":
+            raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
+        return reply
+
+    def job_cancel(self) -> str:
+        reply = self.request({"cmd": "job_cancel"})
+        return str(reply.get("state"))

@@ -6,9 +6,9 @@
 - **R1** (passed 2026-10-23): memory search for research; a live Copper change that survives a save.
   The plugin never changes anything by itself: a write happens only when
   the client asks, and only if the value there is exactly the one the client expects.
-- **R2**: write watches: which game code changes your money, and what called it; execute watches: what the
-  game's inventory functions are called with. The first steps towards calling the game's own "receive an
-  item" code.
+- **R2** (done 2026-10-24): write watches: which game code changes your money, and what called it; execute
+  watches: what the game's inventory functions are called with. Notes: [research/r2-money.md](research/r2-money.md).
+- **R3**: give Copper while you play, through the game's own inventory transaction.
 
 ## Install (Windows)
 
@@ -128,6 +128,28 @@ memory behind them while you loot, buy, sell and finish things, each labelled. T
 
 What comes next: the common caller of those writes is the game's code for "money changed"; above it,
 the code for "received an item" (which also refreshes the total at the top right). R3 calls that code.
+
+## R3: Copper while you play
+
+```powershell
+py -m crimsonipelago.client.main plugin give-copper
+```
+
+(plugin 0.8.0 or newer, on a playthrough that already has a Copper stack from an Archipelago delivery)
+
+1. You make a manual save, so you can go back to it.
+2. It waits for the game to use its own inventory transaction (it does every few seconds), which tells it
+   which transaction and which game thread.
+3. It finds your Copper stack and copies it as the item to give, with 100 coins.
+4. It asks the game to "add, check and commit" one change entry with that item, the way picking something
+   up does: the plugin makes the call on the game-logic thread, the next time that thread starts one of its
+   own tasks (an execute watch on the task runner), and nowhere else.
+5. It reports whether the game accepted it, and asks what you see: the bag, the total at the top right,
+   a message.
+
+The plugin only calls functions inside the game's executable, and only writes into memory of its own (plus
+one byte of the transaction, set the way the shop sets it). If the game's code faults during the call, the
+plugin catches it and tells you not to save.
 
 ## Remove
 

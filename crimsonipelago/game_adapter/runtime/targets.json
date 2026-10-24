@@ -38,8 +38,26 @@
         "0x2781280",
         "0x2781320",
         "0x27782e0",
-        "0x277d5e0"
-      ]
+        "0x277d5e0",
+        "0x22ccb60",
+        "0x3897f0",
+        "0x240aca0",
+        "0x240af60",
+        "0x240c4d0",
+        "0x240c3f0",
+        "0x20e55a0",
+        "0x20d3460",
+        "0x38ab60",
+        "0x2c00850"
+      ],
+      "r3": {
+        "probe": "0x277e080",
+        "give": "0x2781780",
+        "runner": "0x2774b20",
+        "copper_handle": "0x7bc",
+        "reason": "0x0b",
+        "notes": "give = add-check-commit with defaults (tx, result, owner, removals, additions, 1, unix time, game clock, reason, 0, -, 0xffff, 1, 1); runner = the game-logic thread's task runner; reason 0x0b = picking up"
+      }
     }
   }
 }

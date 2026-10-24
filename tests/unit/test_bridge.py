@@ -107,6 +107,8 @@ def test_plugin_command(plugin, capsys):
 
 # --------------------------------------------------------------------------- research (R1)
 
+import struct  # noqa: E402
+
 from crimsonipelago.game_adapter.runtime import research  # noqa: E402
 from crimsonipelago.game_adapter.runtime.bridge import ResearchBridge  # noqa: E402
 from crimsonipelago.game_adapter.save_edit import ITEM_NO_BASE  # noqa: E402
@@ -123,6 +125,9 @@ class FakeMemory(FakePlugin):
         self.after_rescan = None
         self.after_write = None
         self.watches, self.pending, self.sites, self.unwatched = [], [], {}, 0
+        self.on_execute = None          # called with the address when an execute watch is set
+        self.next_alloc = 0x1C000
+        self.job_msg, self.on_job, self.job_state = None, None, "none"
         super().__init__()
 
     def game_writes(self, addr, value, fn, rip, frames):
@@ -172,7 +177,28 @@ class FakeMemory(FakePlugin):
             if len(self.watches) == 4:
                 return {"type": "error", "message": "no free watch"}
             self.watches.append(int(msg["addr"], 16))
+            if msg.get("mode") == "execute" and self.on_execute:
+                self.on_execute(int(msg["addr"], 16))
             return {"type": "watching", "slot": len(self.watches) - 1, "threads": 12}
+        elif cmd == "alloc":
+            addr, self.next_alloc = self.next_alloc, self.next_alloc + ((msg["size"] + 0xFF) & ~0xFF)
+            return {"type": "alloc", "addr": hex(addr)}
+        elif cmd == "poke":
+            addr, data = int(msg["addr"], 16), bytes.fromhex(msg["hex"])
+            if addr < 0x1C000:
+                return {"type": "error", "message": "poke only writes inside the plugin's own allocations"}
+            self.mem[addr - BASE:addr - BASE + len(data)] = data
+            return {"type": "poked"}
+        elif cmd == "job":
+            self.job_msg, self.job_state = msg, "queued"
+            if self.on_job:
+                self.job_state = self.on_job(msg)
+            return {"type": "job", "state": "queued", "slot": 0, "threads": 12}
+        elif cmd == "job_status":
+            return {"type": "job", "state": self.job_state, "rax": "0x0", "code": 0, "tid": 77, "waited_ms": 5}
+        elif cmd == "job_cancel":
+            self.job_state = "cancelled" if self.job_state == "queued" else self.job_state
+            return {"type": "job", "state": self.job_state}
         elif cmd == "watch_apply":
             return {"type": "watching", "slot": -1, "threads": 12}
         elif cmd == "unwatch":
@@ -467,6 +493,111 @@ def test_shipped_targets_cover_the_researched_build():
             arg, offset, size = (int(x, 0) for x in spec.split(":"))
             assert 0 <= arg < 16 and 0 <= offset <= 4096 and 0 < size <= 2048
     assert all(int(rva, 16) for rva in build["dump_extra"])
+
+
+TX, OWNER, LOGIC_TID = 0x1A000, 0x1A800, 77
+
+
+def _r3_game(tmp_path):
+    """A fake game with a transaction, its owner, the game-logic thread and two Copper stack records."""
+    game = FakeMemory()
+    game.put(TX, OWNER)
+    for addr, side in ((0x18000, 0), (0x18400, 0xFFFFFFFF)):          # the screen side, the game-logic side
+        game.put(addr, ITEM_NO_BASE + 2)
+        game.put(addr + 8, 0x7BC, 4)
+        game.put(addr + 12, side, 4)
+        game.put(addr + 0x10, 468)
+        game.put(addr + 0x20, 0x1A900)                                  # something pointer-like inside
+
+    def background_add(addr):
+        game.pending.append({"slot": 0, "tid": LOGIC_TID, "value": 0, "rip": hex(addr), "fn": "", "code": "",
+                             "frames": ["CrimsonDesert.exe+0x2b753f6"], "stack": [],
+                             "args": [hex(TX), "0x1", hex(OWNER), "0x2", "0x3", "0x4", "0x5", "0x6", "0x7",
+                                      hex(0x6ADC053D), hex(0x18CEBEF0), "0x0", "0x0", "0x0", "0x0", "0x0"]})
+
+    game.on_execute = background_add
+    targets = tmp_path / "targets.json"
+    targets.write_text(json.dumps({"builds": {str(HELLO["pe_timestamp"]): {
+        "r3": {"probe": "0x277e080", "give": "0x2781780", "runner": "0x2774b20", "copper_handle": "0x7bc",
+               "reason": "0x0b"}, "dump_extra": []}}}))
+    return game, targets
+
+
+def test_give_copper_calls_the_game_with_a_kind_0_entry(tmp_path):
+    game, targets = _r3_game(tmp_path)
+
+    def the_game_commits(msg):
+        args = [int(a, 16) for a in msg["args"].split(",")]
+        tx, result, owner, none, adds = args[:5]
+        assert (tx, owner) == (TX, OWNER) and msg["tid"] == LOGIC_TID
+        assert int(msg["fn"], 16) == 0x140000000 + 0x2781780 and int(msg["runner"], 16) == 0x140000000 + 0x2774b20
+        assert msg["set"] == f"{hex(TX + 0x1AB)}=0"
+        assert args[5:] == [1, args[6], 0x18CEBEF0, 0x0B, 0, 0, 0xFFFF, 1, 1]
+        assert game.get(none) == 0 and game.get(none + 8, 4) == 0
+        entry, count = game.get(adds), game.get(adds + 8, 4)
+        assert count == 1 and game.get(entry, 1) == 0 and game.get(entry + 8) == 2**64 - 1
+        item = game.get(entry + 0x30)
+        assert game.get(item + 8, 2) == 0x7BC and game.get(item) >= research.LIVE_ITEM_NO_BASE
+        game.put(0x18400 + 0x10, game.get(0x18400 + 0x10) + game.get(item + 0x10))   # the commit merges it
+        game.put(result, 0, 4)
+        return "done"
+
+    game.on_job = the_game_commits
+    answers = iter(["y", "y", "y", "y", "n"])
+    said = []
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.give_copper(bridge, tmp_path, ask=lambda p: (said.append(p), next(answers))[1],
+                                        say=said.append, wait=lambda s: None, targets_file=targets)
+        report = json.loads(path.read_text())
+        assert report["outcome"] == "accepted" and report["result_code"] == 0
+        assert report["record"]["addr"] == hex(0x18400)                     # the game-logic side's copy
+        assert report["count_after"] == 568 and report["record"]["count_before"] == 468
+        assert report["record"]["pointer_like_fields"] == ["0x20"]
+        assert report["player"] == {"bag": True, "top_right": True, "popup": False}
+        assert any("from 4.68 to 5.68 silver" in line for line in said)
+        assert game.unwatched >= 2                                          # the probe and the runner removed
+    finally:
+        game.close()
+
+
+def test_give_copper_reports_a_refusal_and_a_missing_stack(tmp_path):
+    game, targets = _r3_game(tmp_path)
+    game.on_job = lambda msg: "done"                                       # result stays 0xFFFFFFFF
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.give_copper(bridge, tmp_path, ask=lambda p: "y", say=lambda s: None,
+                                        wait=lambda s: None, targets_file=targets)
+        assert json.loads(path.read_text())["outcome"] == "refused"
+        game.put(0x18400 + 8, 0x123, 4)
+        game.put(0x18000 + 8, 0x123, 4)                                    # no Copper stack any more
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.give_copper(bridge, tmp_path, ask=lambda p: "y", say=lambda s: None,
+                                        wait=lambda s: None, targets_file=targets)
+        assert json.loads(path.read_text())["outcome"] == "no copper stack"
+    finally:
+        game.close()
+
+
+def test_give_copper_stops_without_the_players_go_ahead(tmp_path):
+    game, targets = _r3_game(tmp_path)
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            assert research.give_copper(bridge, tmp_path, ask=lambda p: "n", say=lambda s: None,
+                                        wait=lambda s: None, targets_file=targets) is None
+        assert game.job_msg is None and not [m for m in game.received if m["cmd"] == "watch"]
+    finally:
+        game.close()
+
+
+def test_build_gift_layout():
+    record = bytes(range(256))[:research.RECORD_SIZE]
+    block, layout = research.build_gift(record, 100, 905_000_001, 0x5000)
+    assert struct.unpack_from("<QQ", block, 0x10)[0] == 100 and struct.unpack_from("<Q", block, 0)[0] == 905_000_001
+    assert block[8:16] == record[8:16]                                      # key handle kept
+    assert struct.unpack_from("<Q", block, 0x130)[0] == 0x5000                 # entry +0x30 -> item
+    assert struct.unpack_from("<QII", block, 0x140) == (0x5100, 1, 1)
+    assert struct.unpack_from("<I", block, 0x180)[0] == 0xFFFFFFFF
 
 
 def test_find_copper_gives_up_cleanly_when_nothing_follows():
