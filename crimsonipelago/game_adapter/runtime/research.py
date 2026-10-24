@@ -1073,3 +1073,76 @@ def give_knowledge(bridge: ResearchBridge, report_dir: Path, key: int, level: in
     say(f"Saved: {path}")
     say("Send me that file.")
     return path
+
+
+KNOWLEDGE_BUCKET = 0x100     # the knowledge table's hash buckets: a 4-byte count, then {u32 key, u32 index} pairs
+
+
+def knowledge_lookup(bridge: ResearchBridge, base: int, table_rva: int, key: int) -> dict:
+    """Look `key` up the way the transaction's checker does for a kind-4 entry (+0x22ce807): the global at
+    `table_rva` -> a map with the bucket count at +0x68, buckets at +0x78, records at +0x80; a record holds the
+    key at +4 and the 16-bit handle at +8. Read only."""
+    out: dict = {"key": key}
+    table = int.from_bytes(_read(bridge, base + table_rva, 8) or bytes(8), "little")
+    head = _read(bridge, table, 0x90) if table else None
+    if head is None:
+        out["problem"] = "table not readable"
+        return out
+    out["used"] = struct.unpack_from("<I", head, 0x6C)[0]
+    buckets = struct.unpack_from("<I", head, 0x68)[0]
+    bucket_base, records = struct.unpack_from("<QQ", head, 0x78)
+    out.update(buckets=buckets)
+    if not buckets:
+        out["problem"] = "no buckets"
+        return out
+    bucket = _read(bridge, bucket_base + (key % buckets) * KNOWLEDGE_BUCKET, KNOWLEDGE_BUCKET)
+    if bucket is None:
+        out["problem"] = "bucket not readable"
+        return out
+    count = struct.unpack_from("<I", bucket, 0)[0]
+    out["bucket_entries"] = count
+    for i in range(min(count, (KNOWLEDGE_BUCKET - 8) // 8)):
+        k, index = struct.unpack_from("<II", bucket, 8 + 8 * i)
+        if k != key:
+            continue
+        rec_ptr = int.from_bytes(_read(bridge, records + 8 * index, 8) or bytes(8), "little")
+        rec = _read(bridge, rec_ptr, 0x40) if rec_ptr else None
+        out.update(index=index, record=rec.hex() if rec else None)
+        if rec is not None and struct.unpack_from("<I", rec, 4)[0] == key:
+            out["handle"] = struct.unpack_from("<H", rec, 8)[0]
+        return out
+    out["problem"] = "not in the table"
+    return out
+
+
+def knowledge_check(bridge: ResearchBridge, report_dir: Path, keys: list[int], say: Callable[[str], None] = print,
+                    targets_file: Path = TARGETS_FILE) -> Path | None:
+    """R5: is a knowledge key in the game's knowledge table (read only), plus the code of the functions that
+    learn it, for the Flight fault."""
+    info = bridge.info
+    if info is None:
+        raise BridgeError("not connected")
+    build = load_targets(info.pe_timestamp, targets_file)
+    if build is None or "knowledge_table" not in build.get("r3", {}):
+        say(f"I don't know this game build yet (build stamp {info.pe_timestamp}).")
+        return None
+    base = int(info.module_base, 16)
+    table_rva = int(build["r3"]["knowledge_table"], 16)
+    found = [knowledge_lookup(bridge, base, table_rva, k) for k in keys]
+    for f in found:
+        say(f"  {f['key']}: " + (f"handle {f['handle']:#x}" if "handle" in f else f["problem"] if "problem" in f
+                                 else "found, but the record doesn't match"))
+    extra = [int(t, 16) for t in build.get("r5_dump", [])]
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r5-knowledge-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    path.write_text(json.dumps({"game": {"pe_timestamp": info.pe_timestamp}, "lookups": found}, indent=1),
+                    encoding="utf-8")
+    if extra:
+        code_path = report_dir / f"r2-code-{time.strftime('%Y%m%d-%H%M%S')}.json"
+        code_path.write_text(json.dumps({"plugin": info.plugin_version, "game": {"pe_timestamp": info.pe_timestamp},
+                                         "from_report": path.name, "functions": _dump_functions(bridge, extra)},
+                                        indent=1), encoding="utf-8")
+        say(f"Saved: {code_path}")
+    say(f"Saved: {path}")
+    say("Send me both files.")
+    return path

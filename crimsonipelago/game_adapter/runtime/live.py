@@ -247,6 +247,14 @@ class LiveChannel:
         try:
             if ("knowledge", key) in self.refused:
                 return LiveResult("refused", "the game refused this before", self.refused[("knowledge", key)])
+            if "knowledge_table" in self.r3:
+                # The checker files an unknown key under handle 0xFFFF, which faults later on: look first.
+                from .research import knowledge_lookup
+
+                found = knowledge_lookup(self.bridge, self.base, self.r3["knowledge_table"], key)
+                if "handle" not in found:
+                    return LiveResult("unknown item", f"knowledge {key} isn't in the game's knowledge table "
+                                                      f"({found.get('problem', 'no handle')})", detail=found)
             return self._call(lambda mem: build_knowledge_gift(key, level, learn_from, mem),
                               refusal_key=("knowledge", key))
         except BridgeError as exc:
