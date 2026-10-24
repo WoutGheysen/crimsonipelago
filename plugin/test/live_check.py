@@ -3,7 +3,7 @@
 import sys
 import time
 
-from crimsonipelago.game_adapter.runtime.bridge import ResearchBridge
+from crimsonipelago.game_adapter.runtime.bridge import BridgeError, ResearchBridge
 
 MARKER = 0x00C0FFEE12345678
 WATCHED = 0x00BADC0DE5EED000
@@ -69,6 +69,33 @@ with ResearchBridge() as bridge:
     time.sleep(0.5)                                         # the game (host) kept running after each call
     assert bridge.read_int(fn) is not None
     print("execute watch, arguments, memory and a followed pointer: ok")
+
+    # R3: a job on the main thread, entered through tick(), with memory of our own and a byte set first
+    main_tid = call["tid"]
+    tick_fn, job_fn = bridge.read_int(marker[0] + 16), bridge.read_int(marker[0] + 24)
+    buf = bridge.alloc(64)
+    bridge.poke(buf, bytes(range(64)))
+    assert bridge.read(buf, 4) == bytes(range(4))
+    try:
+        bridge.poke(fn, b"\x90")
+        raise AssertionError("poke outside our memory must be refused")
+    except BridgeError:
+        pass
+    args = [buf] + list(range(2, 15))
+    state = bridge.job(job_fn, args, runner=tick_fn, tid=main_tid, set_bytes={buf + 40: 0x5A})
+    assert state == "queued", state
+    deadline = time.time() + 5
+    status = bridge.job_status()
+    while status["state"] in ("queued", "running") and time.time() < deadline:
+        time.sleep(0.1)
+        status = bridge.job_status()
+    bridge.unwatch()
+    print("job:", status)
+    assert status["state"] == "done" and int(status["rax"], 16) == 0x600D, status
+    assert bridge.read_int(buf) == sum(range(2, 15)), bridge.read(buf, 16).hex()
+    assert bridge.read_int(buf + 8) == main_tid == status["tid"], (bridge.read_int(buf + 8), main_tid, status)
+    assert bridge.read(buf + 40, 1) == b"\x5a"
+    print("job on the game thread, own memory and set bytes: ok")
 
     report = bridge.scan_u64(MARKER)
     print(f"scan: {report.count} hit(s) in {report.ms} ms")

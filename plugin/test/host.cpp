@@ -24,7 +24,19 @@ __declspec(noinline) uint64_t add_to_bag(Bag* bag, uint64_t delta, uint64_t a3, 
 }
 using AddFn = uint64_t (*)(Bag*, uint64_t, uint64_t, uint64_t, uint64_t);
 volatile AddFn g_add = add_to_bag;   // called through a pointer, so it can't be inlined
-volatile uint64_t g_fn_marker[2] = {0x00F00DF00DF00D00ull, 0};
+
+// The job test (R3): the plugin calls this on the main thread, from inside tick(), with 14 arguments.
+__declspec(noinline) uint64_t host_job(uint64_t* out, uint64_t a2, uint64_t a3, uint64_t a4, uint64_t a5, uint64_t a6,
+                                       uint64_t a7, uint64_t a8, uint64_t a9, uint64_t a10, uint64_t a11, uint64_t a12,
+                                       uint64_t a13, uint64_t a14) {
+    out[0] = a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + a13 + a14;
+    out[1] = GetCurrentThreadId();
+    return 0x600D;
+}
+
+void tick();
+// Addresses for the tests, after a marker they can search for: add_to_bag, tick, host_job.
+volatile uint64_t g_fn_marker[4] = {0x00F00DF00DF00D00ull, 0, 0, 0};
 
 __declspec(noinline) void tick() {
     poke_watched();
@@ -35,6 +47,8 @@ int wmain(int argc, wchar_t** argv) {
     const wchar_t* plugin = argc > 1 ? argv[1] : L"crimsonipelago.asi";
     const DWORD seconds = argc > 2 ? static_cast<DWORD>(_wtoi(argv[2])) : 60;
     g_fn_marker[1] = reinterpret_cast<uint64_t>(add_to_bag);
+    g_fn_marker[2] = reinterpret_cast<uint64_t>(tick);
+    g_fn_marker[3] = reinterpret_cast<uint64_t>(host_job);
     HMODULE m = LoadLibraryW(plugin);
     if (!m) {
         std::fprintf(stderr, "LoadLibrary failed: %lu\n", GetLastError());

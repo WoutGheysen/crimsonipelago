@@ -415,7 +415,6 @@ def dump_code(bridge: ResearchBridge, report_path: Path, out_dir: Path,
     info = bridge.info
     if info is None:
         raise BridgeError("not connected")
-    base = int(info.module_base, 16)
     recorded = (report.get("game") or {}).get("pe_timestamp")
     if recorded and recorded != info.pe_timestamp:
         say(f"That report is from another game build ({recorded}, now {info.pe_timestamp}): the addresses "
@@ -430,6 +429,26 @@ def dump_code(bridge: ResearchBridge, report_path: Path, out_dir: Path,
     if not rvas:
         say("That report has no game addresses in it.")
         return None
+    functions = _dump_functions(bridge, rvas)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"r2-code-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    path.write_text(json.dumps({
+        "plugin": info.plugin_version,
+        "game": {"exe_version": info.exe_version, "pe_timestamp": info.pe_timestamp},
+        "from_report": report_path.name,
+        "functions": functions,
+    }, indent=1), encoding="utf-8")
+    total = sum(len(f["bytes"]) // 2 for f in functions)
+    say(f"Saved the code of {len(functions)} game functions ({total:,} bytes) on the recorded paths.")
+    say(f"Saved: {path}")
+    say("Send me that file. It stays between us: it's the game's code, so it doesn't go in the repository.")
+    return path
+
+
+def _dump_functions(bridge: ResearchBridge, rvas: list[int]) -> list[dict]:
+    info = bridge.info
+    assert info is not None
+    base = int(info.module_base, 16)
     functions: dict[int, dict] = {}
     for rva in rvas:
         addr = base + rva
@@ -452,19 +471,7 @@ def dump_code(bridge: ResearchBridge, report_path: Path, out_dir: Path,
             data += chunk
         functions[key] = {"rva_begin": hex(key), "rva_end": hex(end - base), "kind": kind,
                           "truncated": end - begin > len(data), "refs": [hex(rva)], "bytes": data.hex()}
-    out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"r2-code-{time.strftime('%Y%m%d-%H%M%S')}.json"
-    path.write_text(json.dumps({
-        "plugin": info.plugin_version,
-        "game": {"exe_version": info.exe_version, "pe_timestamp": info.pe_timestamp},
-        "from_report": report_path.name,
-        "functions": list(functions.values()),
-    }, indent=1), encoding="utf-8")
-    total = sum(len(f["bytes"]) // 2 for f in functions.values())
-    say(f"Saved the code of {len(functions)} game functions ({total:,} bytes) on the recorded paths.")
-    say(f"Saved: {path}")
-    say("Send me that file. It stays between us: it's the game's code, so it doesn't go in the repository.")
-    return path
+    return list(functions.values())
 
 
 # --------------------------------------------------------------------------- R2c: the calls on those paths
@@ -533,4 +540,207 @@ def watch_calls(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
         say(f"  {event}: " + (", ".join(f"{name} x{n}" for name, n in counts.items()) or "none"))
     say(f"Saved: {path}")
     say("Send me that file.")
+    return path
+
+
+# --------------------------------------------------------------------------- R3: give Copper live
+RECORD_SIZE = 0xC8          # an item stack record, in the bag and as the item of a change entry
+ENTRY_SIZE = 0x38           # a change entry of a transaction
+LIVE_ITEM_NO_BASE = 905_000_000   # item numbers of stacks made live (the save editor uses 900,000,001 up)
+PROBE_SECONDS = 90
+JOB_SECONDS = 15
+
+
+@dataclass
+class Probe:
+    tx: int
+    owner: int
+    tid: int
+    unix_time: int
+    clock: int
+    caller: str
+
+
+def probe_transaction(bridge: ResearchBridge, add_addr: int, say: Callable[[str], None],
+                      wait: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic,
+                      seconds: float = PROBE_SECONDS) -> Probe | None:
+    """The transaction and owner the game-logic thread uses, from the next call of "add" (the game makes
+    some every few seconds by itself)."""
+    bridge.watch(add_addr, 1, "execute")
+    try:
+        start = clock()
+        while clock() - start < seconds:
+            for r in bridge.hits(8).records:
+                args = [int(a, 16) for a in r.get("args", [])]
+                if len(args) >= 11:
+                    return Probe(args[0], args[2], int(r["tid"]), args[9] & 0xFFFFFFFF, args[10] & 0xFFFFFFFF,
+                                 (r.get("frames") or ["?"])[0])
+            wait(0.5)
+    finally:
+        bridge.unwatch()
+    return None
+
+
+def find_stack_record(bridge: ResearchBridge, handle: int, say: Callable[[str], None]) -> tuple[int, bytes] | None:
+    """The game-logic side's record of a stack the client added to the save (item numbers from 900,000,001),
+    for the item with this key handle."""
+    report = bridge.scan(ITEM_NO_BASE + 1, ITEM_NO_BASE + ITEM_NO_SPAN, width=8, align=8)
+    found = []
+    for addr in report.hits:
+        data = _read(bridge, addr, RECORD_SIZE)
+        if data is None:
+            continue
+        key, side = struct.unpack_from("<HxxI", data, 8)
+        count = struct.unpack_from("<Q", data, 0x10)[0]
+        if key == handle and 0 < count < 10**9:
+            found.append((side != 0xFFFFFFFF, addr, data))      # the game-logic side (0xFFFFFFFF) first
+    if not found:
+        return None
+    found.sort()
+    say(f"Found your Copper stack ({len(found)} cop{'y' if len(found) == 1 else 'ies'} in memory).")
+    return found[0][1], found[0][2]
+
+
+def build_gift(record: bytes, amount: int, item_no: int, mem: int) -> tuple[bytes, dict[str, int]]:
+    """Our memory block: the item (a copy of the stack record with the new amount), one change entry of kind
+    0 pointing at it, the list {entries, 1, 1}, an empty list, and the result."""
+    item = bytearray(record[:RECORD_SIZE])
+    struct.pack_into("<Q", item, 0, item_no)
+    struct.pack_into("<Q", item, 0x10, amount)
+    layout = {"item": mem, "entry": mem + 0x100, "adds": mem + 0x140, "none": mem + 0x160, "result": mem + 0x180}
+    block = bytearray(0x200)
+    block[0:RECORD_SIZE] = item
+    entry = bytearray(ENTRY_SIZE)                          # kind 0 at +0, -1 at +8, the item at +0x30
+    struct.pack_into("<Q", entry, 0x08, 0xFFFFFFFFFFFFFFFF)
+    struct.pack_into("<Q", entry, 0x30, layout["item"])
+    block[0x100:0x100 + ENTRY_SIZE] = entry
+    struct.pack_into("<QII", block, 0x140, layout["entry"], 1, 1)
+    struct.pack_into("<QII", block, 0x160, 0, 0, 0)
+    struct.pack_into("<I", block, 0x180, 0xFFFFFFFF)       # the game writes 0 here when the change worked
+    return bytes(block), layout
+
+
+def give_copper(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], str] = input,
+                say: Callable[[str], None] = print, amount: int = 100,
+                wait: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic,
+                targets_file: Path = TARGETS_FILE) -> Path | None:
+    """R3: give `amount` copper while the game runs, through the game's own add-check-commit, on the
+    game-logic thread."""
+    info = bridge.info
+    if info is None:
+        raise BridgeError("not connected")
+    build = load_targets(info.pe_timestamp, targets_file)
+    if build is None or "r3" not in build:
+        say(f"I don't know this game build yet (build stamp {info.pe_timestamp}). Tell me.")
+        return None
+    r3 = {k: int(v, 16) if isinstance(v, str) and v.startswith("0x") else v for k, v in build["r3"].items()}
+    base = int(info.module_base, 16)
+    report: dict = {"plugin": info.plugin_version, "game": {"exe_version": info.exe_version,
+                    "pe_timestamp": info.pe_timestamp, "module_base": info.module_base}, "amount": amount}
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r3-give-{time.strftime('%Y%m%d-%H%M%S')}.json"
+
+    def save(outcome: str) -> Path:
+        report["outcome"] = outcome
+        path.write_text(json.dumps(report, indent=1), encoding="utf-8")
+        return path
+
+    say(f"R3: giving you {shown(amount)} silver ({amount} copper) while you play, the way looting does.")
+    say("Use your test playthrough. Make a manual save first, so you can go back to it.")
+    if not _yes(ask("Saved, and standing somewhere quiet (not in a menu)? (y/n) ")):
+        return None
+
+    say("1/4 Waiting for the game to use its own transaction (keep playing: walk around)...")
+    probe = probe_transaction(bridge, base + r3["probe"], say, wait, clock)
+    if probe is None:
+        say("The game didn't use it in time. Pick something up, then run this again.")
+        save("no transaction seen")
+        return path
+    report["probe"] = {"tx": hex(probe.tx), "owner": hex(probe.owner), "tid": probe.tid,
+                       "unix_time": probe.unix_time, "clock": probe.clock, "caller": probe.caller}
+    head = _read(bridge, probe.tx, 8)
+    if head is None or int.from_bytes(head, "little") not in (probe.owner, 0):
+        say("That doesn't look like the transaction I expected (its first field isn't the owner). Stopping.")
+        save("transaction check failed")
+        return path
+    say(f"   transaction found (thread {probe.tid}).")
+
+    say("2/4 Finding your Copper stack...")
+    found = find_stack_record(bridge, r3["copper_handle"], say)
+    if found is None:
+        say("No Copper stack from the client's own deliveries is in memory. This test needs one: get Copper "
+            "through an Archipelago delivery first (or use the playthrough from the first seed).")
+        save("no copper stack")
+        return path
+    record_addr, record = found
+    before = struct.unpack_from("<Q", record, 0x10)[0]
+    report["record"] = {"addr": hex(record_addr), "bytes": record.hex(), "count_before": before}
+    pointers = [hex(off) for off in range(8, RECORD_SIZE, 8)                 # +0 is the item number
+                if 0x10000 < struct.unpack_from("<Q", record, off)[0] < 0x7FFFFFFFFFFF]
+    report["record"]["pointer_like_fields"] = pointers
+    say(f"   {shown(before)} silver in it.")
+
+    say("3/4 Preparing the change...")
+    mem = bridge.alloc(0x200)
+    item_no = LIVE_ITEM_NO_BASE + int(time.time()) % 1_000_000
+    block, layout = build_gift(record, amount, item_no, mem)
+    bridge.poke(mem, block)
+    unix_now = int(time.time())
+    args = [probe.tx, layout["result"], probe.owner, layout["none"], layout["adds"], 1, unix_now, probe.clock,
+            r3["reason"], 0, 0, 0xFFFF, 1, 1]
+    report["call"] = {"fn": hex(base + r3["give"]), "args": [hex(a) for a in args],
+                      "layout": {k: hex(v) for k, v in layout.items()}, "item_no": item_no,
+                      "set": {hex(probe.tx + 0x1AB): 0}}
+    if not _yes(ask(f"Give {amount} copper now? (y/n) ")):
+        save("cancelled before the call")
+        return path
+
+    say("4/4 Asking the game to do it, between two of its own tasks...")
+    bridge.job(base + r3["give"], args, runner=base + r3["runner"], tid=probe.tid, set_bytes={probe.tx + 0x1AB: 0})
+    start = clock()
+    status = bridge.job_status()
+    while status["state"] in ("queued", "running") and clock() - start < JOB_SECONDS:
+        wait(0.2)
+        status = bridge.job_status()
+    if status["state"] == "queued":
+        bridge.job_cancel()
+        status = bridge.job_status()
+    bridge.unwatch()
+    report["job"] = status
+    result = _read(bridge, layout["result"], 4)
+    code = int.from_bytes(result, "little") if result else None
+    after_data = _read(bridge, record_addr + 0x10, 8)
+    after = int.from_bytes(after_data, "little") if after_data else None
+    report["result_code"] = code
+    report["count_after"] = after
+
+    if status["state"] == "fault":
+        say(f"The game's code hit a fault during the call (exception 0x{status['code']:08x}). Don't save: quit "
+            "to the main menu or desktop and load your manual save.")
+        save("fault")
+    elif status["state"] != "done":
+        say("The game didn't get to it in time (cancelled; nothing was changed).")
+        save("not run")
+    elif code != 0:
+        say(f"The game refused the change (result code {code}); nothing was added.")
+        save("refused")
+    else:
+        say(f"The game accepted it: your stack went from {shown(before)} to {shown(after or 0)} silver.")
+        saw = _yes(ask(f"Does your bag show it (about {shown(after or before + amount)} silver)? (y/n) "))
+        top = _yes(ask("And the money at the top right, did that change too? (y/n) "))
+        popup = _yes(ask("Did the game show a message or popup for it? (y/n) "))
+        report["player"] = {"bag": saw, "top_right": top, "popup": popup}
+        say("Last part: save in the game, quit to the main menu, load that save, and tell me the amount.")
+        save("accepted")
+
+    # The helper functions' code, for what comes next (stays on your PC and in our conversation).
+    extra = [int(t, 16) for t in build.get("dump_extra", [])]
+    if extra:
+        code_path = report_dir / f"r2-code-{time.strftime('%Y%m%d-%H%M%S')}.json"
+        code_path.write_text(json.dumps({"plugin": info.plugin_version, "game": report["game"],
+                                         "from_report": path.name,
+                                         "functions": _dump_functions(bridge, extra)}, indent=1), encoding="utf-8")
+        say(f"Saved: {code_path}")
+    say(f"Saved: {path}")
+    say("Send me both files.")
     return path

@@ -39,7 +39,71 @@ constexpr unsigned kSnapBytes = 512;
 constexpr unsigned kFollows = 4;      // execute watches: pointers followed one level further
 constexpr unsigned kFollowBytes = 2048;
 
-enum Kind : uint8_t { kWrite = 0, kAccess = 1, kExecute = 2 };
+// kRunner: an execute watch that runs a queued job (R3) when the watched function is entered on the right
+// thread, then lets the function carry on. It records nothing.
+enum Kind : uint8_t { kWrite = 0, kAccess = 1, kExecute = 2, kRunner = 3 };
+
+// R3: one call of a game function, made on a chosen game thread at a moment the game is between tasks.
+struct Job {
+    std::atomic<int> state{0};          // 0 none, 1 queued, 2 running, 3 done, 4 the call raised an exception
+    uint64_t fn = 0;
+    uint32_t tid = 0;                   // run only on this thread (0: any)
+    unsigned nargs = 0;
+    uint64_t args[14] = {};
+    unsigned nset = 0;                  // bytes to set just before the call, on the same thread
+    uint64_t set_addr[8] = {};
+    uint8_t set_val[8] = {};
+    uint64_t rax = 0;
+    uint32_t code = 0;                  // exception code when state is 4
+    uint32_t ran_tid = 0;
+    uint64_t queued_ms = 0, ran_ms = 0;
+};
+inline Job g_job;
+inline thread_local bool t_in_job = false;
+
+using Fn14 = uint64_t (*)(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t,
+                          uint64_t, uint64_t, uint64_t, uint64_t, uint64_t);
+
+#if defined(_MSC_VER)
+__declspec(noinline) inline uint64_t call_job_raw(const Job& j) {
+    const auto f = reinterpret_cast<Fn14>(j.fn);
+    const uint64_t* a = j.args;
+    return f(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13]);
+}
+// A fault inside the game function is caught here instead of closing the game at once (the game may still be
+// left in a bad state: the report says so).
+inline uint64_t call_job(const Job& j, uint32_t& code) {
+    __try {
+        return call_job_raw(j);
+    } __except (EXCEPTION_EXECUTE_HANDLER) {
+        code = GetExceptionCode();
+        return 0;
+    }
+}
+#else
+inline uint64_t call_job(const Job& j, uint32_t& code) {
+    code = 0;
+    const auto f = reinterpret_cast<Fn14>(j.fn);
+    const uint64_t* a = j.args;
+    return f(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13]);
+}
+#endif
+
+inline void run_job() {
+    Job& j = g_job;
+    j.ran_tid = GetCurrentThreadId();
+    for (unsigned i = 0; i < j.nset; ++i) {
+        SIZE_T wrote = 0;
+        WriteProcessMemory(GetCurrentProcess(), reinterpret_cast<LPVOID>(j.set_addr[i]), &j.set_val[i], 1, &wrote);
+    }
+    uint32_t code = 0;
+    t_in_job = true;
+    j.rax = call_job(j, code);
+    t_in_job = false;
+    j.code = code;
+    j.ran_ms = GetTickCount64();
+    j.state.store(code ? 4 : 3, std::memory_order_release);
+}
 
 // "Argument `arg` points at a structure; at `offset` in it is a pointer; save `size` bytes from there."
 struct Follow {
@@ -122,8 +186,9 @@ inline uint64_t dr7_for(unsigned mask) {
     for (unsigned i = 0; i < kSlots; ++i) {
         if (!(mask & (1u << i))) continue;
         const Watch& w = g_watch[i];
-        const uint64_t rw = w.kind == kExecute ? 0 : w.kind == kAccess ? 3 : 1;
-        const uint64_t len = w.kind == kExecute || w.size == 1 ? 0 : w.size == 2 ? 1 : w.size == 8 ? 2 : 3;
+        const bool exec = w.kind == kExecute || w.kind == kRunner;
+        const uint64_t rw = exec ? 0 : w.kind == kAccess ? 3 : 1;
+        const uint64_t len = exec || w.size == 1 ? 0 : w.size == 2 ? 1 : w.size == 8 ? 2 : 3;
         dr7 |= 1ull << (i * 2);                    // local enable
         dr7 |= rw << (16 + i * 4);
         dr7 |= len << (18 + i * 4);
@@ -144,14 +209,23 @@ inline LONG CALLBACK on_exception(EXCEPTION_POINTERS* ep) {
     const unsigned ours = fired & g_ever.load(std::memory_order_relaxed);
     if (!ours) return EXCEPTION_CONTINUE_SEARCH;
     c->Dr6 = 0;
+    // An execute watch fires before the instruction runs: the resume flag lets it run once without firing
+    // again. Harmless for data watches, so always set (also for a watch removed meanwhile).
+    c->EFlags |= 0x10000;
     const unsigned active = g_mask.load(std::memory_order_relaxed);
     if (!(ours & active)) return EXCEPTION_CONTINUE_EXECUTION;   // removed meanwhile: swallow
 
     unsigned slot = 0;
     while (!((ours & active) & (1u << slot))) ++slot;
+    if (g_watch[slot].kind == kRunner) {
+        if (!t_in_job && g_job.state.load(std::memory_order_acquire) == 1 &&
+            (g_job.tid == 0 || g_job.tid == GetCurrentThreadId())) {
+            int queued = 1;
+            if (g_job.state.compare_exchange_strong(queued, 2)) run_job();
+        }
+        return EXCEPTION_CONTINUE_EXECUTION;
+    }
     const bool execute = g_watch[slot].kind == kExecute;
-    // An execute watch fires before the instruction runs: the resume flag lets it run once without firing again.
-    if (execute) c->EFlags |= 0x10000;
     // Quotas per writing instruction, or for execute watches per caller (the return address): a caller that
     // runs every frame can't crowd out the rare one we're after.
     uint64_t site = c->Rip;
@@ -302,7 +376,7 @@ inline void init(uint64_t image_base, uint64_t image_size) {
 
 // Adds a watch; returns the slot, or -1 when all four are taken or the address doesn't suit.
 inline int add(uint64_t addr, unsigned size, Kind kind, const Follow* follow = nullptr, unsigned nfollow = 0) {
-    if (kind == kExecute) size = 1;
+    if (kind == kExecute || kind == kRunner) size = 1;
     if (!(size == 1 || size == 2 || size == 4 || size == 8) || addr % size) return -1;
     unsigned mask = g_mask.load();
     if (mask == 0) {
