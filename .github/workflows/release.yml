@@ -42,7 +42,7 @@ jobs:
         run: |
           ./dist/CrimsonipelagoClient.exe --version
           ./dist/CrimsonipelagoClient.exe --data-dir smoke sim init
-          ./dist/CrimsonipelagoClient.exe --data-dir smoke sim complete "Prologue Quest 1"
+          ./dist/CrimsonipelagoClient.exe --data-dir smoke sim complete "Unfamiliar Lands: Head to the cabin"
           ./dist/CrimsonipelagoClient.exe --data-dir smoke sim show
 
       - name: Assemble release folder
