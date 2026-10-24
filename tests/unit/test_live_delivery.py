@@ -17,10 +17,16 @@ def _item(ap_id, name, item_key, count):
 
 
 class FakeLive:
+    learns_knowledge = False
+
     def __init__(self, *results):
         self.results = list(results)
         self.calls = []
         self.is_ready = True
+
+    def give_knowledge(self, key):
+        self.calls.append(("knowledge", key))
+        return self.results.pop(0) if self.results else LiveResult("given")
 
     def ready(self):
         return self.is_ready
@@ -133,3 +139,14 @@ def test_without_the_plugin_nothing_changes(setup, ledger, sim, catalogue):
     report = engine.deliver_pending(sid)
     assert live.calls == [] and "running" in report.waiting_reason
     assert live.polls == 1                                       # the channel still gets its tick
+
+
+def test_flight_goes_in_live_once_enabled_for_the_build(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    live.learns_knowledge = True
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "Flight")
+    engine.validate(sid)
+    report = engine.deliver_pending(sid)
+    assert live.calls == [("knowledge", 40002)] and report.delivered == 1
+    assert states(ledger, sid) == [DeliveryState.IN_GAME]

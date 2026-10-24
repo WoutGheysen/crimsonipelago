@@ -175,6 +175,15 @@ py -m crimsonipelago.client.main plugin give-item --key 75001 --count 1
   and the count, and asks the game to add it. Finding the records takes about a minute (one search of the
   game's memory).
 
+## R5: abilities (knowledge)
+
+```powershell
+py -m crimsonipelago.client.main plugin give-knowledge --key 40002
+```
+
+learns a knowledge entry (Flight is 40002) the way the skill menu does: a change entry of kind 4 on the
+game's transaction. Notes: [research/r5-knowledge.md](research/r5-knowledge.md).
+
 ## Live delivery in the client
 
 With the plugin installed and the game running, `crimsonipelago connect` connects to it by itself
