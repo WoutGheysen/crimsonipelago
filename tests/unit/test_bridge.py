@@ -401,6 +401,65 @@ def test_dump_code_refuses_a_report_from_another_build(tmp_path):
         game.close()
 
 
+def _targets(tmp_path, stamp):
+    path = tmp_path / "targets.json"
+    path.write_text(json.dumps({"builds": {str(stamp): {"watch_calls": [
+        {"rva": "0x1000", "name": "transaction: add"}, {"rva": "0x2000", "name": "transaction: commit"}]}}}))
+    return path
+
+
+def test_watch_calls_labels_the_calls_with_what_the_player_did(tmp_path):
+    game = FakeMemory()
+
+    def loot():
+        for slot in (0, 1):
+            game.pending.append({"slot": slot, "tid": 7, "value": 0, "rip": f"CrimsonDesert.exe+0x{slot + 1}000",
+                                 "fn": "", "code": "", "frames": [], "stack": [], "args": ["0x1", "0x2"],
+                                 "memory": {"0": "00ff"}})
+
+    actions = iter([loot, lambda: None])
+    said = []
+    answers = iter(["loot", "d"])
+
+    def ask(prompt):
+        said.append(prompt)
+        next(actions)()
+        return next(answers)
+
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.watch_calls(bridge, tmp_path, ask=ask, say=said.append,
+                                        targets_file=_targets(tmp_path, HELLO["pe_timestamp"]))
+        report = json.loads(path.read_text())
+        assert [r["function"] for r in report["records"]] == ["transaction: add", "transaction: commit"]
+        assert {r["event"] for r in report["records"]} == {"loot"}
+        assert [m["addr"] for m in game.received if m["cmd"] == "watch"] == [hex(0x140001000), hex(0x140002000)]
+        assert all(m["mode"] == "execute" for m in game.received if m["cmd"] == "watch")
+        assert all(m["max"] == research.CALL_PAGE for m in game.received if m["cmd"] == "hits")
+        assert any("loot: transaction: add x1, transaction: commit x1" in line for line in said)
+        assert game.unwatched == 1
+    finally:
+        game.close()
+
+
+def test_watch_calls_refuses_an_unknown_build(tmp_path):
+    game = FakeMemory()
+    said = []
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            assert research.watch_calls(bridge, tmp_path, ask=lambda p: "d", say=said.append,
+                                        targets_file=_targets(tmp_path, 1)) is None
+        assert any("don't know this game build" in line for line in said)
+        assert not [m for m in game.received if m["cmd"] == "watch"]
+    finally:
+        game.close()
+
+
+def test_shipped_targets_cover_the_researched_build():
+    build = research.load_targets(1790086912)
+    assert build and len(build["watch_calls"]) == 4
+
+
 def test_find_copper_gives_up_cleanly_when_nothing_follows():
     game = FakeMemory()
     game.put(0x11000, 800)

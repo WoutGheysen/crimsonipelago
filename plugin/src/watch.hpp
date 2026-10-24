@@ -1,4 +1,5 @@
-// Write watches for research (R2): which game code changes a value, and what called it.
+// Watches for research (R2): which game code changes a value, and what called it; and (R2c) execute watches
+// on a function's first instruction, recording the arguments it was called with and the memory behind them.
 //
 // Uses the processor's debug registers (up to 4 addresses): every thread of the game gets the same
 // watches, and a vectored exception handler records each hit (the instruction that wrote, the call
@@ -29,7 +30,13 @@ constexpr unsigned kStack = 16;
 constexpr size_t kRing = 1024;
 constexpr uint64_t kStackScanBytes = 4096;
 constexpr unsigned kSites = 64;       // distinct writing instructions tracked
-constexpr uint64_t kPerSite = 8;      // full records kept per instruction: a write every frame can't crowd out rare ones
+constexpr uint64_t kPerSite = 8;      // full records per instruction between two collections: a write every
+                                      // frame can't crowd out rare ones
+constexpr unsigned kArgs = 16;        // execute watches: rcx, rdx, r8, r9 and 12 stack arguments
+constexpr unsigned kSnapRing = 32;    // execute watches: memory behind the arguments, for the last 32 calls
+constexpr unsigned kSnapBytes = 512;
+
+enum Kind : uint8_t { kWrite = 0, kAccess = 1, kExecute = 2 };
 
 struct Hit {
     std::atomic<uint64_t> seq{0};   // index + 1 once complete: lets the reader skip a record being rewritten
@@ -38,12 +45,22 @@ struct Hit {
     uint8_t slot = 0, nframes = 0, nstack = 0;
     uint64_t frames[kFrames] = {};
     uint64_t stack[kStack] = {};
+    uint8_t nargs = 0;
+    uint64_t args[kArgs] = {};
+    int64_t snap = -1;              // index into g_snaps, or -1
+};
+
+// The memory each pointer argument pointed at when the function was entered.
+struct Snap {
+    std::atomic<uint64_t> seq{0};
+    uint16_t len[kArgs] = {};
+    uint8_t data[kArgs][kSnapBytes] = {};
 };
 
 struct Watch {
     uint64_t addr = 0;
-    unsigned size = 0;     // 1, 2, 4 or 8
-    bool access = false;   // false: writes only; true: reads and writes
+    unsigned size = 0;     // 1, 2, 4 or 8 (1 for execute)
+    Kind kind = kWrite;
 };
 
 inline Hit g_ring[kRing];
@@ -54,12 +71,19 @@ inline std::atomic<unsigned> g_ever{0};        // slots ever used: stray hits af
 inline Watch g_watch[kSlots];
 inline uint64_t g_image_lo = 0, g_image_hi = 0; // the game's executable: stack values inside it are return addresses
 inline PVOID g_handler = nullptr;
+inline Snap g_snaps[kSnapRing];
+inline std::atomic<uint64_t> g_snap_total{0};
 
 struct Site {
     std::atomic<uint64_t> rip{0};
-    std::atomic<uint64_t> count{0};
+    std::atomic<uint64_t> count{0};      // every hit
+    std::atomic<uint64_t> recorded{0};   // full records since the last collection
 };
 inline Site g_sites[kSites];
+
+inline void reset_quota() {
+    for (Site& site : g_sites) site.recorded.store(0);
+}
 
 // Counts a hit for its instruction; false when that instruction already has kPerSite records.
 inline bool count_site(uint64_t rip) {
@@ -70,7 +94,10 @@ inline bool count_site(uint64_t rip) {
             if (g_sites[i].rip.compare_exchange_strong(expected, rip)) cur = rip;
             else cur = expected;
         }
-        if (cur == rip) return g_sites[i].count.fetch_add(1, std::memory_order_relaxed) < kPerSite;
+        if (cur == rip) {
+            g_sites[i].count.fetch_add(1, std::memory_order_relaxed);
+            return g_sites[i].recorded.fetch_add(1, std::memory_order_relaxed) < kPerSite;
+        }
     }
     return true;   // table full: record anyway
 }
@@ -80,8 +107,8 @@ inline uint64_t dr7_for(unsigned mask) {
     for (unsigned i = 0; i < kSlots; ++i) {
         if (!(mask & (1u << i))) continue;
         const Watch& w = g_watch[i];
-        const uint64_t rw = w.access ? 3 : 1;
-        const uint64_t len = w.size == 1 ? 0 : w.size == 2 ? 1 : w.size == 8 ? 2 : 3;
+        const uint64_t rw = w.kind == kExecute ? 0 : w.kind == kAccess ? 3 : 1;
+        const uint64_t len = w.kind == kExecute || w.size == 1 ? 0 : w.size == 2 ? 1 : w.size == 8 ? 2 : 3;
         dr7 |= 1ull << (i * 2);                    // local enable
         dr7 |= rw << (16 + i * 4);
         dr7 |= len << (18 + i * 4);
@@ -107,6 +134,9 @@ inline LONG CALLBACK on_exception(EXCEPTION_POINTERS* ep) {
 
     unsigned slot = 0;
     while (!((ours & active) & (1u << slot))) ++slot;
+    const bool execute = g_watch[slot].kind == kExecute;
+    // An execute watch fires before the instruction runs: the resume flag lets it run once without firing again.
+    if (execute) c->EFlags |= 0x10000;
     if (!count_site(c->Rip)) return EXCEPTION_CONTINUE_EXECUTION;
     const uint64_t index = g_total.fetch_add(1, std::memory_order_relaxed);
     Hit& h = g_ring[index % kRing];
@@ -116,11 +146,46 @@ inline LONG CALLBACK on_exception(EXCEPTION_POINTERS* ep) {
     h.tid = GetCurrentThreadId();
     h.slot = static_cast<uint8_t>(slot);
     h.value = 0;
-    std::memcpy(&h.value, reinterpret_cast<const void*>(g_watch[slot].addr), g_watch[slot].size);
+    if (!execute) std::memcpy(&h.value, reinterpret_cast<const void*>(g_watch[slot].addr), g_watch[slot].size);
 
     // Stack bounds of this thread (the handler runs on the thread that wrote).
     const auto* tib = reinterpret_cast<const NT_TIB*>(NtCurrentTeb());
     const uint64_t stack_lo = c->Rsp, stack_hi = reinterpret_cast<uint64_t>(tib->StackBase);
+
+    // Execute watches: the arguments as the function receives them (x64: rcx, rdx, r8, r9, then the stack
+    // above the return address and the 32-byte shadow space), and the memory behind those that point somewhere.
+    h.nargs = 0;
+    h.snap = -1;
+    if (execute) {
+        h.args[0] = c->Rcx;
+        h.args[1] = c->Rdx;
+        h.args[2] = c->R8;
+        h.args[3] = c->R9;
+        h.nargs = 4;
+        for (unsigned i = 0; i < kArgs - 4; ++i) {
+            uint64_t v;
+            if (!stack_read(c->Rsp + 0x28 + 8 * i, stack_lo, stack_hi, v)) break;
+            h.args[h.nargs++] = v;
+        }
+        const uint64_t si = g_snap_total.fetch_add(1, std::memory_order_relaxed);
+        Snap& snap = g_snaps[si % kSnapRing];
+        snap.seq.store(0, std::memory_order_relaxed);
+        for (unsigned i = 0; i < kArgs; ++i) {
+            snap.len[i] = 0;
+            const uint64_t p = i < h.nargs ? h.args[i] : 0;
+            if (p < 0x10000 || p > 0x7FFFFFFFFFFFull) continue;
+            SIZE_T got = 0;
+            for (SIZE_T want = kSnapBytes; want >= 64; want /= 2) {   // smaller when it runs into an unmapped page
+                if (ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(p), snap.data[i], want, &got) &&
+                    got == want) {
+                    snap.len[i] = static_cast<uint16_t>(want);
+                    break;
+                }
+            }
+        }
+        snap.seq.store(si + 1, std::memory_order_release);
+        h.snap = static_cast<int64_t>(si);
+    }
 
     // Call chain from the unwind data. Functions without it are treated as leaves.
     CONTEXT u = *c;
@@ -197,18 +262,20 @@ inline void init(uint64_t image_base, uint64_t image_size) {
 }
 
 // Adds a watch; returns the slot, or -1 when all four are taken or the address doesn't suit.
-inline int add(uint64_t addr, unsigned size, bool access) {
+inline int add(uint64_t addr, unsigned size, Kind kind) {
+    if (kind == kExecute) size = 1;
     if (!(size == 1 || size == 2 || size == 4 || size == 8) || addr % size) return -1;
     unsigned mask = g_mask.load();
     if (mask == 0) {
         for (Site& site : g_sites) {
             site.count.store(0);
+            site.recorded.store(0);
             site.rip.store(0);
         }
     }
     for (unsigned i = 0; i < kSlots; ++i) {
         if (mask & (1u << i)) continue;
-        g_watch[i] = Watch{addr, size, access};
+        g_watch[i] = Watch{addr, size, kind};
         g_ever.fetch_or(1u << i);
         g_mask.store(mask | (1u << i));
         return static_cast<int>(i);

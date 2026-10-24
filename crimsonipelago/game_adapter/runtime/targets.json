@@ -1,0 +1,14 @@
+{
+  "about": "Game functions found by research, per game build (build stamp from the executable's PE header). Offsets are relative to CrimsonDesert.exe and only valid for that build. See docs/research/r2-money.md.",
+  "builds": {
+    "1790086912": {
+      "game": "1.0.0.2976 (2.03.02)",
+      "watch_calls": [
+        {"rva": "0x277e080", "name": "transaction: add (called before validating and committing)"},
+        {"rva": "0x2780570", "name": "transaction: commit"},
+        {"rva": "0x27aed40", "name": "commit: add items"},
+        {"rva": "0x27b0b70", "name": "commit: remove items"}
+      ]
+    }
+  }
+}

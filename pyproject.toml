@@ -48,6 +48,7 @@ crimson_desert = "apworld/crimson_desert"
 
 [tool.setuptools.package-data]
 "crimsonipelago.game_data" = ["patches/*.json"]
+"crimsonipelago.game_adapter.runtime" = ["targets.json"]
 crimson_desert = ["data/*.json", "archipelago.json", "docs/*.md"]
 
 [tool.pytest.ini_options]

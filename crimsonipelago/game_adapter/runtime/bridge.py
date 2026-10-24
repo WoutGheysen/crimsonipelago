@@ -125,7 +125,7 @@ class GameBridge:
                 self.close()
                 raise BridgeError("the game plugin closed the connection")
             self._buffer += chunk
-            if len(self._buffer) > 1 << 20:
+            if len(self._buffer) > 16 << 20:
                 self.close()
                 raise BridgeError("oversized message from the game plugin")
         line, self._buffer = self._buffer.split(b"\n", 1)
@@ -210,7 +210,8 @@ class ResearchBridge(GameBridge):
 
     # ------------------------------------------------------------------ write watches (R2)
     def watch(self, addr: int, size: int = 8, mode: str = "write") -> tuple[int, int]:
-        """Watch writes (or, with mode "access", reads too) to `addr`. Returns (slot, threads armed)."""
+        """Watch writes to `addr` (mode "access": reads too; "execute": calls of the function starting there,
+        with their arguments). Returns (slot, threads armed)."""
         reply = self.request({"cmd": "watch", "addr": hex(addr), "size": int(size), "mode": mode})
         if reply.get("type") != "watching":
             raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
