@@ -61,7 +61,7 @@ game's clock (an argument of every add). The edge-case test recorded all four ar
 On a test playthrough (not a seed you're playing), with the game running and the plugin loaded:
 
 ```powershell
-crimsonipelago plugin edge-cases
+py -m crimsonipelago.client.main plugin edge-cases
 ```
 
 It asks you to make a manual save. It then goes through seven steps:
