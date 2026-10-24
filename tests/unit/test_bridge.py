@@ -728,3 +728,17 @@ def test_money_is_read_as_shown():
     assert research.parse_money("-1") is None
     assert research.parse_money("abc") is None
     assert research.shown(570) == "5.70"
+
+
+def test_items_lookup_reads_the_editor_list(tmp_path, capsys):
+    editor = tmp_path / "editor"
+    editor.mkdir()
+    rows = [{"itemKey": 1, "name": "Copper", "category": "Currency", "maxStack": 100000},
+            {"itemKey": 75001, "name": "Abyss Artifact", "category": "Material", "maxStack": 10},
+            {"itemKey": 4242, "name": "Iron Sword", "category": "Weapon", "maxStack": 1}]
+    (editor / "item_names.json").write_text(json.dumps({"items": repr(rows)}))      # the editor's literal form
+    assert client_main(["--data-dir", str(tmp_path), "items", "sword", "--editor-dir", str(editor)]) == 0
+    out = capsys.readouterr().out
+    assert "4242" in out and "Iron Sword" in out and "Copper" not in out
+    assert client_main(["--data-dir", str(tmp_path), "items", "--category", "material", "--editor-dir", str(editor)]) == 0
+    assert "75001" in capsys.readouterr().out

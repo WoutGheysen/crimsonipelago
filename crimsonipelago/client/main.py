@@ -107,6 +107,10 @@ def build_parser() -> argparse.ArgumentParser:
     ssub.add_parser("list", help="list check names")
 
     sub.add_parser("status", help="show the local ledger for the most recent session")
+    it = sub.add_parser("items", help="look up item keys by name (from your CrimsonSaveEditor folder)")
+    it.add_argument("words", nargs="*", help="words in the name, e.g. iron ore")
+    it.add_argument("--category", default=None, help="only this category (e.g. Weapon, Material)")
+    it.add_argument("--editor-dir", default=None, help="the CrimsonSaveEditor folder (default: the one connect used)")
     pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
     pl.add_argument("action", nargs="?", default="check",
                     choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls", "give-copper",
@@ -292,6 +296,40 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
         bridge.close()
 
 
+def load_item_list(editor_dir: Path) -> list[dict]:
+    """item_names.json from the user's CrimsonSaveEditor folder (game data: read there, never shipped)."""
+    import ast
+
+    raw = json.loads((editor_dir / "item_names.json").read_text(encoding="utf-8"))
+    items = raw.get("items", raw) if isinstance(raw, dict) else raw
+    if isinstance(items, str):                       # the editor stores this list as a Python-literal string
+        items = ast.literal_eval(items)
+    return [it for it in items if isinstance(it, dict) and "itemKey" in it]
+
+
+def cmd_items(args, data_dir: Path) -> int:
+    editor_dir = args.editor_dir or load_settings(data_dir).get("editor_dir")
+    if not editor_dir or not (Path(editor_dir) / "item_names.json").is_file():
+        print("error: no CrimsonSaveEditor folder with item_names.json; pass --editor-dir", file=sys.stderr)
+        return 1
+    words = [w.lower() for w in args.words]
+    found = []
+    for it in load_item_list(Path(editor_dir)):
+        name = str(it.get("name") or it.get("internalName") or "")
+        text = f"{name} {it.get('internalName', '')}".lower()
+        if all(w in text for w in words) and (not args.category or
+                                              str(it.get("category", "")).lower() == args.category.lower()):
+            found.append(it)
+    for it in found[:40]:
+        print(f"{int(it['itemKey']):>10}  {str(it.get('name') or it.get('internalName')):<40} "
+              f"{str(it.get('category') or ''):<14} stack {it.get('maxStack', '?')}")
+    if len(found) > 40:
+        print(f"... and {len(found) - 40} more: add words or --category to narrow it down")
+    if not found:
+        print("nothing matches")
+    return 0
+
+
 def cmd_sim(args, data_dir: Path, catalogue: Catalogue) -> int:
     path = Path(args.sim_file) if args.sim_file else data_dir / "simulated_game.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -380,6 +418,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_sim(args, data_dir, catalogue)
     if args.command == "status":
         return cmd_status(data_dir)
+    if args.command == "items":
+        return cmd_items(args, data_dir)
     if args.command == "plugin":
         return cmd_plugin(args, Path(data_dir))
     if args.command == "resolve":
