@@ -225,3 +225,13 @@ Newline-delimited JSON on `127.0.0.1:38301` (localhost only). On connect the plu
 game facts; the client sends `{"cmd":"ping","id":N}` or `{"cmd":"info"}`, and for research `scan`,
 `rescan`, `read` and `write` (4- or 8-byte values, compare-and-set), and `watch`, `watch_apply`,
 `unwatch` and `hits` for write watches. See `plugin/src/main.cpp`.
+
+## Game updates: `find-functions`
+
+```powershell
+py -m crimsonipelago.client.main plugin find-functions
+```
+
+Searches the game's code for the functions live delivery uses, by signature, and compares the result with the
+build's known offsets. After a game update the client does the same search by itself the first time it connects
+(about a minute, once per version). See docs/research/phase1b-game-updates.md.

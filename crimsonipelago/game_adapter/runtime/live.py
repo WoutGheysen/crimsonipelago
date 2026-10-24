@@ -121,10 +121,12 @@ class LiveChannel:
     def __init__(self, port: int | None = None, *, on_event: Callable[[str], None] = lambda m: None,
                  bridge_factory: Callable[..., ResearchBridge] = ResearchBridge, targets_file=TARGETS_FILE,
                  clock: Callable[[], float] = time.monotonic, sleep: Callable[[float], None] = time.sleep,
-                 log: Callable[[dict], None] | None = None):
+                 log: Callable[[dict], None] | None = None, found_file: Path | None = None):
         self.port, self.on_event, self.bridge_factory = port, on_event, bridge_factory
         self.targets_file, self.clock, self.sleep = targets_file, clock, sleep
         self.log = log or (lambda record: None)
+        self.found_file = found_file          # builds found by signature (phase 1b), kept between runs
+        self._search_failed: dict[int, str] = {}   # build -> why the signature search didn't find everything
         self.sightings: list[dict] = []       # every use of the game's "add" seen: when, by whom, on what
         self.loads = 0                        # saves loaded while connected (the owner changed or the clock went back)
         self.load_at = 0.0                    # wall-clock time the latest load was noticed
@@ -181,20 +183,56 @@ class LiveChannel:
         self._last_seen, self.last_seen_unix = None, None
         self.unsupported = None
         build = load_targets(info.pe_timestamp, self.targets_file)
+        known = build["r3"] if build and "item_table" in build.get("r3", {}) else None
         if _version(info.plugin_version) < MIN_PLUGIN:
             self.unsupported = (f"the game plugin is {info.plugin_version}; live delivery needs "
                                 f"{MIN_PLUGIN[0]}.{MIN_PLUGIN[1]}.0 or newer")
-        elif build is None or "r3" not in build or "item_table" not in build["r3"]:
-            self.unsupported = (f"live delivery doesn't know this game build yet (build stamp {info.pe_timestamp});"
-                                " items arrive when you quit to desktop")
-        else:
-            self.r3 = {k: int(v, 16) if isinstance(v, str) and v.startswith("0x") else v
-                       for k, v in build["r3"].items()}
+        elif known is None and (known := self._find_targets(bridge, info)) is None:
+            self.unsupported = (f"live delivery doesn't know this game version yet (build stamp {info.pe_timestamp}: "
+                                f"{self._search_failed.get(info.pe_timestamp, 'no signatures')}); items arrive when "
+                                "you quit to desktop")
+        if known is not None and self.unsupported is None:
+            self.r3 = {k: int(v, 16) if isinstance(v, str) and v.startswith("0x") else v for k, v in known.items()}
         self.on_event(f"Game plugin connected ({info.describe()})"
                       + (f": {self.unsupported}" if self.unsupported else "; items arrive while you play"))
         self.log({"event": "connected", "plugin": info.plugin_version, "build": info.pe_timestamp,
                   "game": info.exe_version, "unsupported": self.unsupported})
         return self.unsupported is None
+
+    def _find_targets(self, bridge: ResearchBridge, info) -> dict | None:
+        """A game version not in targets.json: look for the functions by signature, once per version (phase 1b)."""
+        from .signatures import FoundTargets, load_signatures, r3_from, reader, scan
+
+        stamp = info.pe_timestamp
+        record = FoundTargets(self.found_file) if self.found_file else None
+        if record is not None and (r3 := record.get(stamp)) is not None:
+            return r3
+        if stamp in self._search_failed:
+            return None
+        try:
+            sigs, defaults = load_signatures(self.targets_file)
+        except (OSError, ValueError, KeyError):
+            sigs, defaults = {}, {}
+        if not sigs:
+            self._search_failed[stamp] = "no signatures"
+            return None
+        self.on_event(f"Game version {info.exe_version} is new to Crimsonipelago: looking for the game's functions "
+                      "(about a minute, once per game version)...")
+        try:
+            found = scan(reader(bridge), int(info.module_base, 16), sigs)
+        except ValueError as exc:
+            self._search_failed[stamp] = str(exc)
+            return None
+        self.log({"event": "signatures", "build": stamp, "found": {k: hex(v) for k, v in found.targets.items()},
+                  "problems": found.problems, "seconds": found.seconds})
+        if not found.complete:
+            self._search_failed[stamp] = "; ".join(f"{k} {v}" for k, v in found.problems.items())
+            return None
+        r3 = r3_from(found, defaults)
+        if record is not None:
+            record.put(stamp, r3, info.exe_version, found)
+        self.on_event(f"Found them all ({found.seconds:.0f} s)")
+        return r3
 
     def drop(self, why: str = "") -> None:
         if self.bridge is not None:
