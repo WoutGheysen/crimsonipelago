@@ -270,7 +270,7 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
             if args.action == "error-sites":
                 from ..game_adapter.runtime.research import error_sites
 
-                return 0 if error_sites(research, report_dir, int(args.code or "0x78c0a4e9", 16)) else 1
+                return 0 if error_sites(research, report_dir, int(args.code or "0x78c0a4e9", 0)) else 1
             if args.action == "knowledge-check":
                 from ..game_adapter.runtime.research import knowledge_check
 
@@ -282,7 +282,8 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                 if args.key is None:
                     print("error: give-knowledge needs --key KEY (Flight is 40002)", file=sys.stderr)
                     return 1
-                trace = [int(t, 16) for t in args.trace.split(",")] if args.trace else None
+                # int(t, 0): PowerShell turns an unquoted 0x22ce360,0x277fe00 into decimal numbers
+                trace = [int(t, 0) for t in args.trace.replace(" ", ",").split(",") if t] if args.trace else None
                 return 0 if give_knowledge(research, report_dir, args.key, args.level,
                                            learn_from=args.learn_from, trace=trace) else 1
             if args.action == "item-table":

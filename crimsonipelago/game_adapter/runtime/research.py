@@ -1054,6 +1054,12 @@ def give_knowledge(bridge: ResearchBridge, report_dir: Path, key: int, level: in
             report["outcome"] = "no transaction seen"
             path.write_text(json.dumps(report, indent=1), encoding="utf-8")
             return path
+        probe = live.probe
+        if probe is not None:
+            tx = _read(bridge, probe.tx, 0x1C0)
+            report["probe"] = {"caller": probe.caller, "tid": probe.tid, "tx": hex(probe.tx), "owner": hex(probe.owner),
+                               "tx_bytes": tx.hex() if tx else None}
+            say(f"   the game's transaction, last used by {probe.caller}")
         say("2/2 Asking the game to learn it, between two of its own tasks...")
         result = live.give_knowledge(key, level, LEARN_FROM if learn_from is None else learn_from)
         report["result"] = {"state": result.state, "code": result.code, "message": result.message, **result.detail}
