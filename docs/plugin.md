@@ -12,7 +12,8 @@
   total and the game's own message updated at once; still there after a save and reload.
 - **R4** (passed 2026-10-24): any stackable item by its key (an ore the playthrough never had included);
   gear is refused by the game's checks for now (it needs the game's own item creation).
-- **Live delivery** in the client: `crimsonipelago connect` gives inventory items while you play.
+- **Live delivery** in the client (works, 2026-10-24): `crimsonipelago connect` gives inventory items while
+  you play.
 
 ## Install (Windows)
 
@@ -187,6 +188,10 @@ closes first, they go back to the queue and are added to the save instead.
 - While the client runs, the plugin is busy with it: the `plugin …` research commands can't connect at the
   same time (the plugin serves one client).
 - `--no-live` turns it off.
+
+Tested 2026-10-24 with the first seed and the server's `/send`: Abyss Artifact and Copper arrived in the
+game within a few seconds (while the game is in the foreground: it pauses in the background); after
+quitting to desktop without saving, the client gave the Copper again through the save.
 
 ## Remove
 
