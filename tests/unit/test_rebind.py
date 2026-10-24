@@ -7,9 +7,9 @@ from crimsonipelago.client.main import cmd_rebind
 from crimsonipelago.game_adapter.sim_adapter import SimulatedGameAdapter
 
 
-def _args(tmp_path, yes=False):
+def _args(tmp_path, yes=False, give_again="ask"):
     return argparse.Namespace(adapter="sim", sim_file=str(tmp_path / "sim.json"), save_path=None, editor_dir=None,
-                              steam_manifest=None, yes=yes)
+                              steam_manifest=None, yes=yes, give_again=give_again)
 
 
 def _seed(tmp_path, catalogue, profile="sim/old", other_seed_on_new=False):
@@ -59,3 +59,16 @@ def test_rebind_refuses_a_playthrough_of_another_seed(tmp_path, catalogue):
     assert ledger.latest_session().id == session.id
     ledger.close()
     assert cmd_rebind(_args(tmp_path, yes=True), tmp_path, catalogue) == 1
+
+
+def test_rebind_back_to_a_playthrough_that_has_the_items_gives_nothing_again(tmp_path, catalogue):
+    ledger, session = _seed(tmp_path, catalogue)
+    ledger.close()
+    answers = iter(["y", "n"])
+    assert cmd_rebind(_args(tmp_path), tmp_path, catalogue, ask=lambda p: next(answers)) == 0
+    ledger = Ledger(tmp_path / "ledger.sqlite3")
+    try:
+        assert ledger.session(session.id).profile_id == "sim/new"
+        assert [r.state for r in ledger.items(session.id)] == [DeliveryState.COMPLETE] * 2 + [DeliveryState.PENDING]
+    finally:
+        ledger.close()

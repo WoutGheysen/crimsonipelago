@@ -111,6 +111,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("status", help="show the local ledger for the most recent session")
     rb = sub.add_parser("rebind", help="continue the seed on the playthrough of your newest save (if you lost yours)")
     rb.add_argument("--yes", action="store_true", help="don't ask")
+    rb.add_argument("--give-again", choices=["ask", "yes", "no"], default="ask",
+                    help="give the items the seed already delivered again (no: the playthrough has them already)")
     _add_adapter_args(rb)
     it = sub.add_parser("items", help="look up item keys by name (from your CrimsonSaveEditor folder)")
     it.add_argument("words", nargs="*", help="words in the name, e.g. iron ore")
@@ -459,14 +461,21 @@ def cmd_rebind(args, data_dir: Path, catalogue: Catalogue, ask=input) -> int:
         had = ledger.items(session.id, (DeliveryState.COMPLETE, DeliveryState.IN_GAME))
         to_give = [r.idx for r in had if (item := catalogue.item_by_id(r.item_id)) is not None
                    and adapter.needs_write(item)]
+        def yes(prompt: str) -> bool:
+            return ask(prompt).strip().lower().startswith(("y", "j"))
+
         print(f"Seed {session.seed_name} is on playthrough {session.profile_id}.")
-        print(f"Your newest save is from playthrough {profile}.")
-        print(f"Moving the seed there. The {len(to_give)} item(s) the seed already gave you will be given again, "
-              "because that playthrough doesn't have them. Checks already sent stay sent.")
-        if not args.yes and not ask("Go ahead? (y/n) ").strip().lower().startswith(("y", "j")):
+        print(f"Your newest save is from playthrough {profile}. Moving the seed there; checks already sent stay sent.")
+        if not args.yes and not yes("Go ahead? (y/n) "):
             print("Nothing changed.")
             return 1
-        ledger.rebind_profile(session.id, profile, to_give)
+        give_again = args.give_again
+        if give_again == "ask" and to_give:
+            print(f"The seed already gave you {len(to_give)} item(s). If this playthrough doesn't have them (a new or "
+                  "different playthrough), answer y. If it's the one they went into (you're moving back), answer n.")
+            give_again = "yes" if yes("Give them again? (y/n) ") else "no"
+        ledger.rebind_profile(session.id, profile, to_give if give_again == "yes" else [])
+        print(f"{len(to_give) if give_again == 'yes' else 0} item(s) will be given again.")
         print(f"Done. Start the client again (connect): it continues seed {session.seed_name} on this playthrough.")
         return 0
     finally:

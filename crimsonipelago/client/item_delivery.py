@@ -181,8 +181,10 @@ class DeliveryEngine:
     def _deliver_live(self, session_id: int, pending: list[ReceivedItem]) -> tuple[list[ReceivedItem], str | None]:
         """Give what can be given in the running game. Returns what's left, and why live delivery is waiting."""
         candidates = [r for r in pending if self._live_kind(r) and not self._given_up_live(r)]
-        if self.live is None or not candidates or not self.live.ready():
+        if self.live is None or not candidates:
             return pending, None
+        if not self.live.ready():
+            return pending, (getattr(self.live, "unsupported", None) or "the game plugin isn't connected")
         left = [r for r in pending if r not in candidates]
         given: list[ReceivedItem] = []
         waiting = None
@@ -299,6 +301,11 @@ class DeliveryEngine:
         if not safe.ok:
             if live_waiting and all(self._live_kind(r) for r in pending):
                 return self._waiting(len(pending), live_waiting, recovery, delivered_live)
+            in_game = sum(1 for r in pending if self._live_kind(r) and not self._given_up_live(r))
+            if live_waiting and in_game:
+                # say both: why the save can't be written, and why the ones that go in live haven't
+                reason = f"{safe.message} ({in_game} of them go in while you play, but: {live_waiting})"
+                return self._waiting(len(pending), reason, recovery, delivered_live)
             return self._waiting(len(pending), safe.message, recovery, delivered_live)
 
         chunk = pending[:MAX_BATCH]
