@@ -693,14 +693,17 @@ def test_live_channel_gives_with_a_built_in_record(tmp_path):
     events = []
     live = LiveChannel(game.port, on_event=events.append, targets_file=targets, sleep=lambda s: None)
     try:
+        game.on_execute, background = None, game.on_execute
         first = live.give(75001, 2)
-        assert first.state == "not now" and "waiting for the game" in first.message   # watch armed
+        assert first.state == "not now" and "waiting for the game" in first.message   # watch armed, nothing yet
+        background(0x140000000 + 0x277e080)                             # the game makes an "add" of its own
         second = live.give(75001, 2)
         assert second.given and seen == {"handle": 2, "count": 2, "tid": LOGIC_TID, "copy": 2}
+        game.on_execute = background
         assert any("items arrive while you play" in e for e in events)
         assert live.give(99999, 1).state == "unknown item"
         live.probe = None
-        live.give(12345, 1)                                             # arms the watch again
+        live.poll()                                                     # a client tick arms the watch again
         refused = live.give(12345, 1)
         assert refused.state == "refused" and refused.code == 7
         assert live.give(12345, 1).state == "refused"                  # not tried again

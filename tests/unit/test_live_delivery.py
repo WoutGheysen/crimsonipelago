@@ -25,6 +25,9 @@ class FakeLive:
     def ready(self):
         return self.is_ready
 
+    def poll(self):
+        self.polls = getattr(self, "polls", 0) + 1
+
     def give(self, key, count):
         self.calls.append((key, count))
         return self.results.pop(0) if self.results else LiveResult("given")
@@ -129,3 +132,4 @@ def test_without_the_plugin_nothing_changes(setup, ledger, sim, catalogue):
     engine.validate(sid)
     report = engine.deliver_pending(sid)
     assert live.calls == [] and "running" in report.waiting_reason
+    assert live.polls == 1                                       # the channel still gets its tick

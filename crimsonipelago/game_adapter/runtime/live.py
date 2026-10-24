@@ -31,7 +31,7 @@ from .research import (
 
 MIN_PLUGIN = (0, 8)
 CONNECT_EVERY = 5.0          # seconds between attempts to reach the plugin
-PROBE_FRESH = 4.0            # a transaction seen longer ago than this is looked for again
+PROBE_FRESH = 20.0           # a transaction seen longer ago than this is looked for again
 JOB_WAIT = 6.0               # seconds the game gets to make a queued call
 
 
@@ -135,28 +135,28 @@ class LiveChannel:
         self.probe, self.probing = None, False
 
     # ------------------------------------------------------------------ the game's transaction
-    def _fresh_probe(self) -> Probe | None:
-        """The game-logic thread's transaction, seen within the last few seconds; None while still waiting.
-        The watch stays armed between calls, so this never waits."""
+    def _update_probe(self) -> None:
+        """Keep a watch on the game's own "add" armed and remember the latest transaction it used. Never waits:
+        the game makes such calls by itself every so often, and each client tick reads what came in."""
         assert self.bridge is not None and self.r3 is not None
-        if self.probe is not None and self.clock() - self.probe_seen < PROBE_FRESH:
-            return self.probe
         if not self.probing:
             while len(self.bridge.hits(8).records) == 8:   # leftovers from earlier watches
                 pass
             self.bridge.watch(self.base + self.r3["probe"], 1, "execute")
             self.probing = True
-            return None
         for r in self.bridge.hits(8).records:
             args = [int(a, 16) for a in r.get("args", [])]
             if len(args) >= 11:
                 self.probe = Probe(args[0], args[2], int(r["tid"]), args[9] & 0xFFFFFFFF, args[10] & 0xFFFFFFFF,
                                    (r.get("frames") or ["?"])[0])
                 self.probe_seen = self.clock()
+
+    def _fresh_probe(self) -> Probe | None:
+        """The game-logic thread's transaction, seen within the last PROBE_FRESH seconds; None while waiting."""
+        assert self.bridge is not None
+        self._update_probe()
         if self.probe is None or self.clock() - self.probe_seen >= PROBE_FRESH:
             return None
-        self.bridge.unwatch()
-        self.probing = False
         try:
             head = self.bridge.read(self.probe.tx, 8)
         except BridgeError:
@@ -167,6 +167,16 @@ class LiveChannel:
             self.probe = None
             return None
         return self.probe
+
+    def poll(self) -> None:
+        """Called every client tick: connect when the game starts, and keep the transaction fresh, so an item
+        that arrives can go in at once."""
+        if not self.ready() or self.bridge is None:
+            return
+        try:
+            self._update_probe()
+        except BridgeError as exc:
+            self.drop(str(exc))
 
     # ------------------------------------------------------------------ giving
     def give(self, item_key: int, count: int) -> LiveResult:
@@ -194,7 +204,8 @@ class LiveChannel:
             return LiveResult("unknown item", f"the game has no item {item_key}")
         probe = self._fresh_probe()
         if probe is None:
-            return LiveResult("not now", "waiting for the game (it may be paused, in a menu or loading)")
+            return LiveResult("not now", "waiting for the game (it pauses while in the background, in a menu or "
+                                         "loading)")
         if self.mem is None:
             self.mem = self.bridge.alloc(0x200)
         now = int(time.time())
@@ -213,7 +224,8 @@ class LiveChannel:
         if status["state"] == "queued":
             self.bridge.job_cancel()
             status = self.bridge.job_status()
-        self.bridge.unwatch()                        # the runner
+        self.bridge.unwatch()                        # the runner (and the probe: armed again on the next tick)
+        self.probing = False
         detail = {"handle": hex(handle), "item_no": item_no, "job": status}
         if status["state"] == "fault":
             # The game may be in a bad state: stop delivering live until the plugin reconnects.
