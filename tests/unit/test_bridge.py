@@ -404,7 +404,8 @@ def test_dump_code_refuses_a_report_from_another_build(tmp_path):
 def _targets(tmp_path, stamp):
     path = tmp_path / "targets.json"
     path.write_text(json.dumps({"builds": {str(stamp): {"watch_calls": [
-        {"rva": "0x1000", "name": "transaction: add"}, {"rva": "0x2000", "name": "transaction: commit"}]}}}))
+        {"rva": "0x1000", "name": "transaction: add", "follow": "5:0:896"},
+        {"rva": "0x2000", "name": "transaction: commit"}]}}}))
     return path
 
 
@@ -436,6 +437,7 @@ def test_watch_calls_labels_the_calls_with_what_the_player_did(tmp_path):
         assert [r["event"] for r in report["records"]] == ["loot", "loot", "loot #2", "loot #2"]
         assert [m["addr"] for m in game.received if m["cmd"] == "watch"] == [hex(0x140001000), hex(0x140002000)]
         assert all(m["mode"] == "execute" for m in game.received if m["cmd"] == "watch")
+        assert [m.get("follow") for m in game.received if m["cmd"] == "watch"] == ["5:0:896", None]
         assert all(m["max"] == research.CALL_PAGE for m in game.received if m["cmd"] == "hits")
         assert any("  loot: transaction: add x1, transaction: commit x1" in line for line in said)
         assert any("  loot #2: transaction: add x1, transaction: commit x1" in line for line in said)
@@ -460,6 +462,11 @@ def test_watch_calls_refuses_an_unknown_build(tmp_path):
 def test_shipped_targets_cover_the_researched_build():
     build = research.load_targets(1790086912)
     assert build and len(build["watch_calls"]) == 4
+    for f in build["watch_calls"]:
+        for spec in filter(None, f.get("follow", "").split(",")):
+            arg, offset, size = (int(x, 0) for x in spec.split(":"))
+            assert 0 <= arg < 16 and 0 <= offset <= 4096 and 0 < size <= 2048
+    assert all(int(rva, 16) for rva in build["dump_extra"])
 
 
 def test_find_copper_gives_up_cleanly_when_nothing_follows():

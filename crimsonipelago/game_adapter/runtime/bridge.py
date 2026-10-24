@@ -209,10 +209,14 @@ class ResearchBridge(GameBridge):
         return bool(reply["ok"]), int(reply["found"])
 
     # ------------------------------------------------------------------ write watches (R2)
-    def watch(self, addr: int, size: int = 8, mode: str = "write") -> tuple[int, int]:
+    def watch(self, addr: int, size: int = 8, mode: str = "write", follow: str | None = None) -> tuple[int, int]:
         """Watch writes to `addr` (mode "access": reads too; "execute": calls of the function starting there,
-        with their arguments). Returns (slot, threads armed)."""
-        reply = self.request({"cmd": "watch", "addr": hex(addr), "size": int(size), "mode": mode})
+        with their arguments; `follow` "arg:offset:size,..." also saves what a pointer inside an argument points
+        at). Returns (slot, threads armed)."""
+        message = {"cmd": "watch", "addr": hex(addr), "size": int(size), "mode": mode}
+        if follow:
+            message["follow"] = follow
+        reply = self.request(message)
         if reply.get("type") != "watching":
             raise BridgeError(reply.get("message") or f"unexpected reply: {reply}")
         return int(reply["slot"]), int(reply["threads"])

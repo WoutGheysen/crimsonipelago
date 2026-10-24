@@ -9,6 +9,7 @@ MARKER = 0x00C0FFEE12345678
 WATCHED = 0x00BADC0DE5EED000
 FN_MARKER = 0x00F00DF00DF00D00
 BAG_MAGIC = 0x00BA6BA6BA6BA600
+TAG = 0x007A67007A67007A
 
 with ResearchBridge() as bridge:
     print("connected:", bridge.info.describe())
@@ -50,7 +51,7 @@ with ResearchBridge() as bridge:
     assert len(marker) == 1, marker
     fn = bridge.read_int(marker[0] + 8)
     assert base <= fn < base + size, hex(fn)
-    slot, threads = bridge.watch(fn, 1, "execute")
+    slot, threads = bridge.watch(fn, 1, "execute", follow="0:16:64")
     time.sleep(1.0)
     got = bridge.hits(8)
     assert bridge.unwatch() >= 1
@@ -63,9 +64,11 @@ with ResearchBridge() as bridge:
     bag = bytes.fromhex(call["memory"]["0"])
     assert int.from_bytes(bag[:8], "little") == BAG_MAGIC, bag[:16].hex()
     assert call["rip"] == f"CrimsonDesert.exe+{hex(fn - base)}", (call["rip"], hex(fn - base))
+    followed = bytes.fromhex(call["follow"][0]["hex"])
+    assert int.from_bytes(followed[:8], "little") == TAG, call["follow"]
     time.sleep(0.5)                                         # the game (host) kept running after each call
     assert bridge.read_int(fn) is not None
-    print("execute watch, arguments and memory: ok")
+    print("execute watch, arguments, memory and a followed pointer: ok")
 
     report = bridge.scan_u64(MARKER)
     print(f"scan: {report.count} hit(s) in {report.ms} ms")

@@ -95,7 +95,32 @@ Execute watches on add (`+0x277e080`), commit (`+0x2780570`), commit-add (`+0x27
   stack's record has 0x7BC at the same place), followed by more arguments pointing at small structures and
   flags, among them the reason 0x1C.
 
+## Fourth run: looting items, a copper pouch, buying (2026-10-24, plugin 0.6.1-r2c)
+
+With a quota per caller, every action showed its own callers of "add" (`+0x277e080`), each with its own
+reason code (the low word of the 13th argument): picking up items `0x0B` (`+0x2b83513`), opening the
+pouch `0x1C` (`+0x2b4bc8e`), looting `0x20`/`0x0E`/`0x16`/`0x23` (several handlers), buying `0x3F`
+(`+0x2b38b41`) and `0x02` (`+0x2c00f17`).
+
+From the code (second dump, 58 functions):
+
+- **`+0x2781490` is "add, check and commit" in one call**, with the same arguments as add; most game
+  code uses it (directly or through the smaller `+0x2781780`, which fills in defaults). After the commit it
+  tidies up the transaction (`+0x2780820`, `+0x2781280`, `+0x2781320`).
+- **Add's arguments:** rcx the transaction, rdx the result, r8 the owner (the same object every time:
+  stored at the transaction's start), r9 a 12-byte identifier (copied), and **the 6th argument a list:
+  `{pointer, count}` of 0x38-byte entries**, one per change, each checked by `+0x22ce360`. That list is
+  where the item and amount must be. The 10th argument goes to transaction +0x20, the 18th (a byte) to +0x28.
+- The entries themselves live on the heap, out of reach of a one-level snapshot: plugin 0.7.0 follows a
+  pointer one level further (`follow`), and `targets.json` now asks for those entries.
+
 ## Next
+
+1. `plugin watch-calls` with 0.7.0: the change entries of loot, pouch and purchase; `plugin dump-code`
+   adds the entry checker and the transaction helpers (`dump_extra` in `targets.json`).
+2. R3: build such an entry for an Archipelago item and call `+0x2781490` on the game-logic thread.
+
+## Plan after the third run
 
 1. `plugin watch-calls` again with 0.6.1 (quota per caller), then `plugin dump-code` on that report: the
    code of the add function and its callers shows what each argument means.

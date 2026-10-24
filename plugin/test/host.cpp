@@ -15,8 +15,9 @@ __declspec(noinline) void poke_watched() { g_watched = 0x00BADC0DE5EED000ull; }
 
 // The execute-watch test: a function with five arguments, the first pointing at a known value. Its address
 // sits right after a marker the test can search for.
-struct Bag { uint64_t magic; uint64_t count; };
-Bag g_bag = {0x00BA6BA6BA6BA600ull, 0};
+const uint64_t g_tag[2] = {0x007A67007A67007Aull, 0x1122334455667788ull};
+struct Bag { uint64_t magic; uint64_t count; const uint64_t* tag; };
+Bag g_bag = {0x00BA6BA6BA6BA600ull, 0, g_tag};
 __declspec(noinline) uint64_t add_to_bag(Bag* bag, uint64_t delta, uint64_t a3, uint64_t a4, uint64_t a5) {
     bag->count += delta;
     return bag->count + a3 + a4 + a5;

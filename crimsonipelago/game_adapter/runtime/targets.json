@@ -4,10 +4,41 @@
     "1790086912": {
       "game": "1.0.0.2976 (2.03.02)",
       "watch_calls": [
-        {"rva": "0x277e080", "name": "transaction: add (called before validating and committing)"},
-        {"rva": "0x2780570", "name": "transaction: commit"},
-        {"rva": "0x27aed40", "name": "commit: add items"},
-        {"rva": "0x27b0b70", "name": "commit: remove items"}
+        {
+          "rva": "0x277e080",
+          "name": "transaction: add",
+          "follow": "5:0:896",
+          "notes": "rcx transaction, rdx result, r8 owner, r9 12-byte id; 6th argument: list {pointer, count} of 0x38-byte entries"
+        },
+        {
+          "rva": "0x2781490",
+          "name": "add and commit (wrapper)",
+          "follow": "5:0:896"
+        },
+        {
+          "rva": "0x2780570",
+          "name": "transaction: commit",
+          "follow": "0:48:512,0:56:512",
+          "notes": "rcx transaction: +0x30 additions, +0x38 removals"
+        },
+        {
+          "rva": "0x27aed40",
+          "name": "commit: add items",
+          "follow": "0:0:512"
+        }
+      ],
+      "dump_extra": [
+        "0x22ce360",
+        "0x2bbab00",
+        "0x277fe00",
+        "0x277ffb0",
+        "0x2781170",
+        "0x2780450",
+        "0x2780820",
+        "0x2781280",
+        "0x2781320",
+        "0x27782e0",
+        "0x277d5e0"
       ]
     }
   }
