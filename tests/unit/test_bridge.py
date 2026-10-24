@@ -715,6 +715,31 @@ def test_live_channel_gives_with_a_built_in_record(tmp_path):
         game.close()
 
 
+def test_live_channel_learns_knowledge_with_a_kind_4_entry(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import LiveChannel
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.0-r3"}
+    seen = {}
+
+    def the_game_commits(msg):
+        args = [int(a, 16) for a in msg["args"].split(",")]
+        entry = game.get(args[4])
+        seen.update(kind=game.get(entry, 1), key=game.get(entry + 8, 4), level=game.get(entry + 12, 4),
+                    learn_from=game.get(entry + 16, 1), count=game.get(args[4] + 8, 4))
+        game.put(args[1], 0, 4)
+        return "done"
+
+    game.on_job = the_game_commits
+    live = LiveChannel(game.port, targets_file=targets, sleep=lambda s: None)
+    try:
+        result = live.give_knowledge(40002)
+        assert result.given and seen == {"kind": 4, "key": 40002, "level": 1, "learn_from": 25, "count": 1}
+    finally:
+        live.close()
+        game.close()
+
+
 def test_live_channel_stays_off_for_an_old_plugin_or_unknown_build(tmp_path):
     from crimsonipelago.game_adapter.runtime.live import LiveChannel
 

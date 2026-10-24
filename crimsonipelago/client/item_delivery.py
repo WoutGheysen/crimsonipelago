@@ -37,12 +37,12 @@ class DeliveryReport:
 class LiveDelivery(Protocol):
     """Giving items in the running game (game_adapter/runtime/live.py)."""
 
+    learns_knowledge: bool          # knowledge (abilities) can go in live too, for this game build
+
     def ready(self) -> bool: ...
     def poll(self) -> None: ...
     def give(self, item_key: int, count: int): ...   # -> LiveResult
-
-
-LIVE_KINDS = ("inventory_item",)
+    def give_knowledge(self, key: int): ...          # -> LiveResult
 
 
 class DeliveryEngine:
@@ -153,7 +153,8 @@ class DeliveryEngine:
     # ------------------------------------------------------------------ live delivery
     def _live_kind(self, rec: ReceivedItem) -> bool:
         item = self.catalogue.item_by_id(rec.item_id)
-        return item is not None and (item.game_ref or {}).get("kind") in LIVE_KINDS
+        kind = (item.game_ref or {}).get("kind") if item is not None else None
+        return kind == "inventory_item" or (kind == "knowledge" and bool(getattr(self.live, "learns_knowledge", False)))
 
     def _deliver_live(self, session_id: int, pending: list[ReceivedItem]) -> tuple[list[ReceivedItem], str | None]:
         """Give what can be given in the running game. Returns what's left, and why live delivery is waiting."""
@@ -165,7 +166,10 @@ class DeliveryEngine:
         waiting = None
         for n, rec in enumerate(candidates):
             ref = self.catalogue.item_by_id(rec.item_id).game_ref
-            result = self.live.give(int(ref["item_key"]), int(ref.get("count", 1)))
+            if ref["kind"] == "knowledge":
+                result = self.live.give_knowledge(int(ref["knowledge_key"]))
+            else:
+                result = self.live.give(int(ref["item_key"]), int(ref.get("count", 1)))
             if result.given:
                 self.ledger.set_item_state(session_id, [rec.idx], DeliveryState.IN_GAME, expect=(DeliveryState.PENDING,))
                 given.append(rec)

@@ -35,6 +35,25 @@ PROBE_FRESH = 20.0           # a transaction seen longer ago than this is looked
 JOB_WAIT = 6.0               # seconds the game gets to make a queued call
 
 
+LEARN_FROM = 25              # "how it was learned", as the saves record story-given knowledge such as Flight
+
+
+def build_knowledge_gift(key: int, level: int, learn_from: int, mem: int) -> tuple[bytes, dict[str, int]]:
+    """Our memory block for learning knowledge: one change entry of kind 4 {u32 key at +8, u32 level at +0xC,
+    u8 how-learned at +0x10} (as the skill menu writes it: docs/research/r5-knowledge.md), the list
+    {entries, 1, 1}, an empty list and the result. Same layout as build_gift, without the item."""
+    layout = {"entry": mem + 0x100, "adds": mem + 0x140, "none": mem + 0x160, "result": mem + 0x180}
+    block = bytearray(0x200)
+    entry = bytearray(0x38)
+    entry[0] = 4
+    struct.pack_into("<IIB", entry, 0x08, key, level, learn_from)
+    block[0x100:0x138] = entry
+    struct.pack_into("<QII", block, 0x140, layout["entry"], 1, 1)
+    struct.pack_into("<QII", block, 0x160, 0, 0, 0)
+    struct.pack_into("<I", block, 0x180, 0xFFFFFFFF)
+    return bytes(block), layout
+
+
 def stackable_record(handle: int, count: int, item_no: int, unix_time: int) -> bytes:
     """An item record for a stackable item, as the game's own stacks look (a Copper stack, read in R3; the game
     accepted the same layout for an ore it had never seen). Pointer-free: everything a copy needs is inline."""
@@ -88,10 +107,15 @@ class LiveChannel:
         self.probe_seen = 0.0
         self.probing = False
         self.unsupported: str | None = None   # why live delivery can't work with this game/plugin
-        self.refused: dict[int, int] = {}     # item key -> the game's result code: not tried live again
+        self.refused: dict = {}               # item key (or ("knowledge", key)) -> the game's result code
         self._last_attempt = -1e9
 
     # ------------------------------------------------------------------ connection
+    @property
+    def learns_knowledge(self) -> bool:
+        """Whether knowledge (Flight) goes in live too: only once verified for this game build (targets.json)."""
+        return bool(self.r3 and self.r3.get("knowledge_live"))
+
     @property
     def connected(self) -> bool:
         return self.bridge is not None and self.bridge.connected
@@ -105,9 +129,15 @@ class LiveChannel:
         self._last_attempt = self.clock()
         bridge = self.bridge_factory(port=self.port, timeout=5.0) if self.port else self.bridge_factory(timeout=5.0)
         try:
-            info = bridge.connect()
+            bridge.connect()
         except BridgeError:
             return False
+        return self.attach(bridge)
+
+    def attach(self, bridge: ResearchBridge) -> bool:
+        """Use a bridge that is already connected (the research commands share theirs)."""
+        info = bridge.info
+        assert info is not None
         self.bridge, self.base = bridge, int(info.module_base, 16)
         self.table, self.mem, self.probe, self.probing, self.refused = None, None, None, False, {}
         self.unsupported = None
@@ -202,16 +232,40 @@ class LiveChannel:
         handle = self.table.handles.get(item_key)
         if handle is None:
             return LiveResult("unknown item", f"the game has no item {item_key}")
+        now = int(time.time())
+        item_no = LIVE_ITEM_NO_BASE + int(time.time() * 1000) % 1_000_000
+        result = self._call(lambda mem: build_gift(stackable_record(handle, count, item_no, now), count, item_no, mem),
+                            refusal_key=item_key)
+        result.detail.update(handle=hex(handle), item_no=item_no)
+        return result
+
+    def give_knowledge(self, key: int, level: int = 1, learn_from: int = LEARN_FROM) -> LiveResult:
+        """Learn a knowledge entry (an ability such as Flight, 40002) the way the skill menu does: a change entry
+        of kind 4 {key, level, how it was learned} on the game's transaction."""
+        if not self.ready():
+            return LiveResult("not now", self.unsupported or "the game plugin isn't connected")
+        try:
+            if ("knowledge", key) in self.refused:
+                return LiveResult("refused", "the game refused this before", self.refused[("knowledge", key)])
+            return self._call(lambda mem: build_knowledge_gift(key, level, learn_from, mem),
+                              refusal_key=("knowledge", key))
+        except BridgeError as exc:
+            self.drop(str(exc))
+            return LiveResult("not now", f"lost the game plugin ({exc})")
+
+    def _call(self, build, refusal_key) -> LiveResult:
+        """One add-check-commit of the game's own with the change entry `build(mem)` makes, on the game-logic
+        thread."""
+        assert self.bridge is not None and self.r3 is not None
         probe = self._fresh_probe()
         if probe is None:
             return LiveResult("not now", "waiting for the game (it pauses while in the background, in a menu or "
                                          "loading)")
         if self.mem is None:
             self.mem = self.bridge.alloc(0x200)
-        now = int(time.time())
-        item_no = LIVE_ITEM_NO_BASE + int(time.time() * 1000) % 1_000_000
-        block, layout = build_gift(stackable_record(handle, count, item_no, now), count, item_no, self.mem)
+        block, layout = build(self.mem)
         self.bridge.poke(self.mem, block)
+        now = int(time.time())
         args = [probe.tx, layout["result"], probe.owner, layout["none"], layout["adds"], 1, now, probe.clock,
                 self.r3["reason"], 0, 0, 0xFFFF, 1, 1]
         self.bridge.job(self.base + self.r3["give"], args, runner=self.base + self.r3["runner"], tid=probe.tid,
@@ -226,7 +280,7 @@ class LiveChannel:
             status = self.bridge.job_status()
         self.bridge.unwatch()                        # the runner (and the probe: armed again on the next tick)
         self.probing = False
-        detail = {"handle": hex(handle), "item_no": item_no, "job": status}
+        detail = {"job": status}
         if status["state"] == "fault":
             # The game may be in a bad state: stop delivering live until the plugin reconnects.
             self.unsupported = "the game's code faulted during a delivery; reload your last save"
@@ -237,7 +291,7 @@ class LiveChannel:
             return LiveResult("not now", "the game didn't get to it (a menu or loading screen?)", detail=detail)
         code = int.from_bytes(self.bridge.read(layout["result"], 4), "little")
         if code != 0:
-            self.refused[item_key] = code
+            self.refused[refusal_key] = code
             return LiveResult("refused", f"the game refused it (code {code:#x})", code, detail)
         return LiveResult("given", code=0, detail=detail)
 
@@ -249,3 +303,14 @@ class LiveChannel:
                 pass
             self.bridge.close()
             self.bridge = None
+
+
+def wait_for_transaction(live: LiveChannel, seconds: float = 90.0) -> bool:
+    """For the research commands: poll until the game's transaction has been seen (or give up)."""
+    start = live.clock()
+    while live.clock() - start < seconds:
+        live.poll()
+        if live.probe is not None and live.clock() - live.probe_seen < PROBE_FRESH:
+            return True
+        live.sleep(0.5)
+    return False

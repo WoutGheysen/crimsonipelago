@@ -1024,3 +1024,52 @@ def give_copper(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
     say(f"Saved: {path}")
     say("Send me both files.")
     return path
+
+
+# --------------------------------------------------------------------------- R5: knowledge (abilities) live
+def give_knowledge(bridge: ResearchBridge, report_dir: Path, key: int, level: int = 1,
+                   ask: Callable[[str], str] = input, say: Callable[[str], None] = print,
+                   wait: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic,
+                   targets_file: Path = TARGETS_FILE, learn_from: int | None = None) -> Path | None:
+    """R5: learn a knowledge entry (Flight is 40002) while the game runs, as the skill menu does."""
+    from .live import LEARN_FROM, LiveChannel, wait_for_transaction
+
+    live = LiveChannel(on_event=say, targets_file=targets_file, clock=clock, sleep=wait)
+    say(f"Learning knowledge {key} (level {level}) while you play" + (" (Flight)" if key == 40002 else "") + ".")
+    say("Use a save that doesn't have it yet, and make a manual save first.")
+    if not _yes(ask("Saved, and standing somewhere quiet (not in a menu)? (y/n) ")):
+        return None
+    if not live.attach(bridge):
+        return None
+    report: dict = {"plugin": bridge.info.plugin_version if bridge.info else None, "key": key, "level": level}
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r5-learn-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    try:
+        say("1/2 Waiting for the game to use its own transaction (walk around, or pick something up)...")
+        if not wait_for_transaction(live):
+            say("The game didn't use it within 90 seconds. Run this again and pick something up while it waits.")
+            report["outcome"] = "no transaction seen"
+            path.write_text(json.dumps(report, indent=1), encoding="utf-8")
+            return path
+        say("2/2 Asking the game to learn it, between two of its own tasks...")
+        result = live.give_knowledge(key, level, LEARN_FROM if learn_from is None else learn_from)
+        report["result"] = {"state": result.state, "code": result.code, "message": result.message, **result.detail}
+    finally:
+        try:
+            bridge.unwatch()
+        except BridgeError:
+            pass
+    if result.given:
+        say("The game accepted it.")
+        question = "Can you glide now?" if key == 40002 else "Do you have it now (check the skill menu)?"
+        report["player"] = {"has_it": _yes(ask(f"{question} (y/n) ")),
+                            "popup": _yes(ask("Did the game show a message for it? (y/n) "))}
+        say("Last part: save, quit to the main menu, load that save, and check you still have it.")
+        report["outcome"] = "accepted"
+    else:
+        say(f"Not learned: {result.message}")
+        report["outcome"] = result.state
+    path.write_text(json.dumps(report, indent=1), encoding="utf-8")
+    say(f"Saved: {path}")
+    say("Send me that file.")
+    return path
