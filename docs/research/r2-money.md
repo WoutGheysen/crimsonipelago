@@ -163,6 +163,21 @@ maps to the item keys in the save (to give items other than Copper).
   our item number, with count 100 and a new item number from 905,000,000. The checker copies it into the
   transaction (stackable items merge), so the game never keeps a pointer to our copy.
 
+### Result: R3 worked (2026-10-24, 20:39)
+
+`plugin give-copper` on the first seed's playthrough, game 2.03.02:
+
+- the transaction, owner and game-logic thread came from the game's own next "add" (a background task,
+  `+0x2b753f6`);
+- the plugin made the call 78 ms after queueing it, on that thread, from the task runner; result code 0;
+- **the player saw it straight away: the bag, the money at the top right, and the game's own message**
+  for receiving it. Everything the game normally does for a pickup happened, because it was the game's
+  own code doing it.
+
+The Copper record the tool read back right after was the screen side's copy (+0x0C = 0), which had not
+caught up yet (468 before and after): the game-logic side's copy wasn't among the records next to our item
+number this session. Harmless here; the bag and the total showed the new amount.
+
 ## Earlier: next after the fourth run
 
 1. `plugin watch-calls` with 0.7.0: the change entries of loot, pouch and purchase; `plugin dump-code`

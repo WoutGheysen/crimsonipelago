@@ -8,7 +8,8 @@
   the client asks, and only if the value there is exactly the one the client expects.
 - **R2** (done 2026-10-24): write watches: which game code changes your money, and what called it; execute
   watches: what the game's inventory functions are called with. Notes: [research/r2-money.md](research/r2-money.md).
-- **R3**: give Copper while you play, through the game's own inventory transaction.
+- **R3** (passed 2026-10-24): 100 Copper while you play, through the game's own inventory transaction: bag,
+  total and the game's own message updated at once.
 
 ## Install (Windows)
 
