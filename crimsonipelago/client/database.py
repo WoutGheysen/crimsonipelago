@@ -239,6 +239,17 @@ class Ledger:
         with self.tx() as c:
             c.execute("UPDATE sessions SET profile_id=? WHERE id=? AND profile_id IS NULL", (profile_id, session_id))
 
+    def rebind_profile(self, session_id: int, profile_id: str, redeliver: list[int] = ()) -> None:
+        """Move a seed to another playthrough (the player lost theirs). Items in `redeliver` are given again,
+        from scratch: the new playthrough doesn't have them."""
+        with self.tx() as c:
+            c.execute("UPDATE sessions SET profile_id=? WHERE id=?", (profile_id, session_id))
+            for idx in redeliver:
+                c.execute("UPDATE received_items SET state=?, last_error=?, attempts=0, updated_at=? "
+                          "WHERE session_id=? AND idx=?",
+                          (DeliveryState.PENDING.value, f"moved to playthrough {profile_id}; giving it again", now(),
+                           session_id, idx))
+
     def set_goal(self, session_id: int, *, detected: bool | None = None, reported: bool | None = None) -> None:
         with self.tx() as c:
             if detected is not None:
