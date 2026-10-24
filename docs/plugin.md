@@ -165,6 +165,8 @@ py -m crimsonipelago.client.main plugin give-item --key 75001 --count 1
 - `item-table` reads the game's own item list: for every item key (the numbers in the save, e.g. 1 for
   Copper, 75001 for the Abyss Artifact), the 16-bit handle the game uses in memory. It checks its reading
   against the items already loaded and says whether it's confirmed.
+- `py -m crimsonipelago.client.main items iron ore` finds item keys by name, from the item list in your
+  CrimsonSaveEditor folder (`--category Weapon` narrows it down).
 - `give-item` works like `give-copper` for any item: it looks up the handle, copies a record of the same
   item if one of the client's deliveries left one in memory (otherwise the Copper record), sets the handle
   and the count, and asks the game to add it. Finding the records takes about a minute (one search of the
