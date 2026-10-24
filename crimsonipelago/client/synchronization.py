@@ -62,6 +62,7 @@ class StatusSnapshot:
     pending_deliveries: int = 0
     waiting_reason: str | None = None
     unsupported_items: int = 0
+    in_game: int = 0              # given live, not saved by the game yet
     recovery_required: int = 0
     delivered: int = 0
     checks_detected: int = 0
@@ -72,11 +73,11 @@ class StatusSnapshot:
 
 class SyncController:
     def __init__(self, config: ClientConfig, adapter: GameAdapter, ledger: Ledger, catalogue: Catalogue,
-                 bus: ev.EventBus | None = None):
+                 bus: ev.EventBus | None = None, live=None):
         self.config, self.adapter, self.ledger, self.catalogue = config, adapter, ledger, catalogue
         self.bus = bus or ev.EventBus()
         self.tracker = CheckTracker(ledger, adapter, catalogue, self.bus)
-        self.engine = DeliveryEngine(ledger, adapter, catalogue, self.bus)
+        self.engine = DeliveryEngine(ledger, adapter, catalogue, self.bus, live=live)
         self.names = DataPackageCache(Path(config.data_dir) / "datapackage")
         self.connection: APConnection | None = None
         self._adapter_lock = asyncio.Lock()
@@ -426,6 +427,7 @@ class SyncController:
                                        (DeliveryState.RECEIVED, DeliveryState.VALIDATED, DeliveryState.PENDING,
                                         DeliveryState.APPLYING))
             s.unsupported_items = counts.get(DeliveryState.UNSUPPORTED.value, 0)
+            s.in_game = counts.get(DeliveryState.IN_GAME.value, 0)
             s.recovery_required = counts.get(DeliveryState.RECOVERY_REQUIRED.value, 0)
             s.delivered = counts.get(DeliveryState.COMPLETE.value, 0)
             checks = self.ledger.check_counts(self.session.id)

@@ -10,7 +10,9 @@
   watches: what the game's inventory functions are called with. Notes: [research/r2-money.md](research/r2-money.md).
 - **R3** (passed 2026-10-24): 100 Copper while you play, through the game's own inventory transaction: bag,
   total and the game's own message updated at once; still there after a save and reload.
-- **R4**: any item by its key.
+- **R4** (passed 2026-10-24): any stackable item by its key (an ore the playthrough never had included);
+  gear is refused by the game's checks for now (it needs the game's own item creation).
+- **Live delivery** in the client: `crimsonipelago connect` gives inventory items while you play.
 
 ## Install (Windows)
 
@@ -171,6 +173,20 @@ py -m crimsonipelago.client.main plugin give-item --key 75001 --count 1
   item if one of the client's deliveries left one in memory (otherwise the Copper record), sets the handle
   and the count, and asks the game to add it. Finding the records takes about a minute (one search of the
   game's memory).
+
+## Live delivery in the client
+
+With the plugin installed and the game running, `crimsonipelago connect` connects to it by itself
+(`Game plugin connected (…); items arrive while you play`) and gives every inventory item in the seed (Abyss
+Artifacts, Copper) the moment it arrives, the R3/R4 way, with a built-in stackable item record (no memory
+search). The ledger keeps such items as *in the game* until the game writes a save after them; if the game
+closes first, they go back to the queue and are added to the save instead.
+
+- Flight (knowledge) still goes into the save while the game is closed.
+- An item the game refuses live (gear, for now) waits for the save as well.
+- While the client runs, the plugin is busy with it: the `plugin …` research commands can't connect at the
+  same time (the plugin serves one client).
+- `--no-live` turns it off.
 
 ## Remove
 

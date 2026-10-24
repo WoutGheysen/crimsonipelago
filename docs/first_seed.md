@@ -63,9 +63,13 @@ crimsonipelago connect --server localhost:38281 --slot Wout --editor-dir "C:\pat
 1. Start Crimson Desert and begin a **new game**.
 2. The client only takes on a playthrough you save **after** connecting the seed, so an older playthrough can never claim it. For the first 15 minutes or so of the new game, it says it is *waiting*: a new game looks the same for everyone until then. That's normal: nothing is lost, it catches up.
 3. **Checks are sent when the game saves.** Autosaves are about every 15 minutes. A manual save sends them right away. The client prints `Sent check: …` for each one.
-4. **Items are added while the game is closed.** When the client says you received something:
-   - Quit to desktop. The client prints `Delivered: …`.
-   - Start the game and load the newest save. Flight lets you glide; Abyss Artifacts and Copper are in your bag.
+4. **Items arrive while you play** when the game plugin is installed (see [plugin.md](plugin.md)): Abyss
+   Artifacts and Copper go straight into your bag, with the game's own message, and the client prints
+   `Delivered in the game: …`. They count as delivered once the game saves (an autosave or a manual save);
+   if the game closes before saving, the client gives them again.
+   - **Flight** still needs the game closed: quit to desktop, the client prints `Delivered: Flight`, start
+     the game and load the newest save.
+   - Without the plugin (or with `--no-live`), everything waits until you quit to desktop, as before.
    - Crow Feathers do nothing in the game and count as received straight away.
 5. The goal is **speaking with the woman in white**. The client reports victory to the server.
 

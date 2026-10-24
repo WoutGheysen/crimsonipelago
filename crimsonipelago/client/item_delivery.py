@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Protocol
 
 from crimson_desert.catalogue import Catalogue
 
@@ -32,9 +34,21 @@ class DeliveryReport:
     recovery_required: int = 0
 
 
+class LiveDelivery(Protocol):
+    """Giving items in the running game (game_adapter/runtime/live.py)."""
+
+    def ready(self) -> bool: ...
+    def give(self, item_key: int, count: int): ...   # -> LiveResult
+
+
+LIVE_KINDS = ("inventory_item",)
+
+
 class DeliveryEngine:
-    def __init__(self, ledger: Ledger, adapter: GameAdapter, catalogue: Catalogue, bus: ev.EventBus):
+    def __init__(self, ledger: Ledger, adapter: GameAdapter, catalogue: Catalogue, bus: ev.EventBus,
+                 live: LiveDelivery | None = None):
         self.ledger, self.adapter, self.catalogue, self.bus = ledger, adapter, catalogue, bus
+        self.live = live
         self.last_waiting_reason: str | None = None
 
     def _name(self, item_id: int) -> str:
@@ -135,8 +149,68 @@ class DeliveryEngine:
             self.bus.emit(ev.REWARD_PENDING, f"The loaded save is missing {names}; it will be given again")
         return len(again)
 
+    # ------------------------------------------------------------------ live delivery
+    def _live_kind(self, rec: ReceivedItem) -> bool:
+        item = self.catalogue.item_by_id(rec.item_id)
+        return item is not None and (item.game_ref or {}).get("kind") in LIVE_KINDS
+
+    def _deliver_live(self, session_id: int, pending: list[ReceivedItem]) -> tuple[list[ReceivedItem], str | None]:
+        """Give what can be given in the running game. Returns what's left, and why live delivery is waiting."""
+        candidates = [r for r in pending if self._live_kind(r)]
+        if self.live is None or not candidates or not self.live.ready():
+            return pending, None
+        left = [r for r in pending if r not in candidates]
+        given: list[ReceivedItem] = []
+        waiting = None
+        for n, rec in enumerate(candidates):
+            ref = self.catalogue.item_by_id(rec.item_id).game_ref
+            result = self.live.give(int(ref["item_key"]), int(ref.get("count", 1)))
+            if result.given:
+                self.ledger.set_item_state(session_id, [rec.idx], DeliveryState.IN_GAME, expect=(DeliveryState.PENDING,))
+                given.append(rec)
+            elif result.state in ("refused", "unknown item"):
+                self.ledger.set_item_state(session_id, [rec.idx], DeliveryState.PENDING, bump_attempts=True,
+                                           error=f"not given in the game: {result.message}; "
+                                                 "it will be added to the save once you quit to desktop")
+                left.append(rec)
+            else:
+                waiting = result.message
+                left.extend(candidates[n:])
+                break
+        if given:
+            names = ", ".join(self._name(r.item_id) for r in given)
+            self.bus.emit(ev.REWARD_DELIVERED, f"Delivered in the game: {names}", indices=[r.idx for r in given],
+                          live=True)
+        return sorted(left, key=lambda r: r.idx), waiting
+
+    def settle_in_game(self, session_id: int) -> None:
+        """Items given live are complete once the game saves after them. If the game closes without saving,
+        they were never saved: give them again."""
+        live = self.ledger.items(session_id, (DeliveryState.IN_GAME,))
+        if not live:
+            return
+
+        def given_at(rec: ReceivedItem) -> float:
+            try:
+                return datetime.fromisoformat(rec.updated_at).timestamp()
+            except ValueError:
+                return 0.0
+
+        saved = [r for r in live if self.adapter.save_written_after(given_at(r))]
+        self.ledger.set_item_state(session_id, [r.idx for r in saved], DeliveryState.COMPLETE,
+                                   expect=(DeliveryState.IN_GAME,))
+        unsaved = [r for r in live if r not in saved]
+        if unsaved and self.adapter.is_game_running() is False:
+            self.ledger.set_item_state(session_id, [r.idx for r in unsaved], DeliveryState.PENDING,
+                                       expect=(DeliveryState.IN_GAME,),
+                                       error="the game closed before saving them; giving them again")
+            names = ", ".join(sorted({self._name(r.item_id) for r in unsaved}))
+            self.bus.emit(ev.REWARD_PENDING, f"The game closed without saving after {names} arrived; "
+                                             "they will be given again")
+
     # ------------------------------------------------------------------ delivery
     def deliver_pending(self, session_id: int) -> DeliveryReport:
+        self.settle_in_game(session_id)
         pending: list[ReceivedItem] = self.ledger.items(session_id, (DeliveryState.PENDING,))
         recovery = len(self.ledger.items(session_id, (DeliveryState.RECOVERY_REQUIRED,)))
         if not pending:
@@ -155,6 +229,12 @@ class DeliveryEngine:
             if not pending:
                 self.last_waiting_reason = None
                 return DeliveryReport(delivered=len(no_write), recovery_required=recovery)
+        before = len(pending)
+        pending, live_waiting = self._deliver_live(session_id, pending)
+        delivered_live = before - len(pending)
+        if not pending:
+            self.last_waiting_reason = None
+            return DeliveryReport(delivered=delivered_live, recovery_required=recovery)
         if recovery:
             # never stack new writes on top of a save in an unknown state
             reason = "a previous delivery needs your decision first"
@@ -162,7 +242,9 @@ class DeliveryEngine:
 
         safe = self.adapter.safe_to_write()
         if not safe.ok:
-            return self._waiting(len(pending), safe.message, recovery)
+            if live_waiting and all(self._live_kind(r) for r in pending):
+                return self._waiting(len(pending), live_waiting, recovery, delivered_live)
+            return self._waiting(len(pending), safe.message, recovery, delivered_live)
 
         chunk = pending[:MAX_BATCH]
         entries = []
@@ -218,8 +300,8 @@ class DeliveryEngine:
         self._needs_recovery(batch.batch_id, result.message)
         return DeliveryReport(pending=len(pending) - len(indices), recovery_required=recovery + len(indices))
 
-    def _waiting(self, pending: int, reason: str, recovery: int) -> DeliveryReport:
+    def _waiting(self, pending: int, reason: str, recovery: int, delivered: int = 0) -> DeliveryReport:
         if reason != self.last_waiting_reason:
             self.bus.emit(ev.REWARD_PENDING, f"{pending} reward(s) waiting: {reason}")
             self.last_waiting_reason = reason
-        return DeliveryReport(pending=pending, waiting_reason=reason, recovery_required=recovery)
+        return DeliveryReport(delivered=delivered, pending=pending, waiting_reason=reason, recovery_required=recovery)

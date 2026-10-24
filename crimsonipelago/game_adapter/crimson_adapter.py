@@ -304,6 +304,9 @@ class CrimsonDesertSaveAdapter(GameAdapter):
         except OSError:
             return False
 
+    def is_game_running(self) -> bool | None:
+        return game_running()
+
     def needs_write(self, item: ItemDef) -> bool:
         return (item.game_ref or {}).get("kind") != "nothing"
 
