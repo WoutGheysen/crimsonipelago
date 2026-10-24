@@ -31,3 +31,21 @@ as Flight (see items.md and flight-gating.md).
 `plugin give-knowledge --key K [--level L]` (Flight is 40002) makes the same call as `give-item`, with one
 kind-4 entry `{key, level, 25}` instead of an item. The client's live delivery can learn knowledge too
 (`LiveChannel.give_knowledge`), switched on per game build in `targets.json` (`knowledge_live`) once tested.
+
+## Flight (2026-10-24)
+
+On a save past the woman in white with the story's grant removed (the AP situation):
+
+| attempt | how-learned | result |
+|---|---|---|
+| 1 (plugin 0.8.0) | 25 | fault inside the game (access violation; caught) |
+| 2 | 19 (skill menu) | refused, 0x78c0a4e9 |
+| 3 | 25 | refused, 0x78c0a4e9 |
+| 4 | 25, after picking up a bug while the tool waited | **learned: the game's message, gliding works** |
+
+Both keys are in the knowledge table (40002 → handle 4694, the skill 1005839 → 4605), so the lookup is
+not what differs. The refusal code comes from the entry checker (`+0x22ce570`) and a handler
+(`+0x2b4a8c3`) in the code saved so far. What changed for attempt 4 is most likely the transaction's
+state: the tool used the transaction right after the player's own pickup instead of after a background
+task. `give-knowledge` now records which game code used the transaction last and the transaction's
+first 0x1C0 bytes, to compare a refused attempt with an accepted one.
