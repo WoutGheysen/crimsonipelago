@@ -656,6 +656,8 @@ def test_give_item_uses_the_handle_and_a_copper_template(tmp_path):
         report = json.loads(path.read_text())
         assert report["outcome"] == "accepted" and seen == {"handle": 2, "count": 2}
         assert report["give"]["template_same_item"] is False and report["table"]["source"] == "keys"
+        scans = [m for m in game.received if m["cmd"] == "scan" and m["width"] == 8]
+        assert scans and all(m["hi"] - m["lo"] < 1000 for m in scans)          # narrow: first 64 hits only
         assert game.watches == []                                         # runner removed after the call
     finally:
         game.close()
