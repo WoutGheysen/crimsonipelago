@@ -123,6 +123,8 @@ def build_parser() -> argparse.ArgumentParser:
     pl.add_argument("--key", type=int, default=None, help="give-item: the item's key, as in the save")
     pl.add_argument("--count", type=int, default=1, help="give-item: how many")
     pl.add_argument("--level", type=int, default=1, help="give-knowledge: the level to learn")
+    pl.add_argument("--learn-from", type=int, default=None,
+                    help="give-knowledge: how it was learned (default 25, as saves record Flight; the skill menu uses 19)")
     pl.add_argument("--report", default=None,
                     help="dump-code: the watch-money or watch-calls report (default: the newest)")
     pl.add_argument("--port", type=int, default=None)
@@ -273,7 +275,8 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                 if args.key is None:
                     print("error: give-knowledge needs --key KEY (Flight is 40002)", file=sys.stderr)
                     return 1
-                return 0 if give_knowledge(research, report_dir, args.key, args.level) else 1
+                return 0 if give_knowledge(research, report_dir, args.key, args.level,
+                                           learn_from=args.learn_from) else 1
             if args.action == "item-table":
                 return 0 if item_table(research, report_dir) else 1
             if args.action == "give-item":

@@ -61,7 +61,7 @@
 #include "watch.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.8.0-r3"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.8.1-r5"
 #endif
 
 namespace {
@@ -660,10 +660,27 @@ std::string handle_call(const std::string& cmd, const std::string& line) {
             log("job %s on thread %u after %llu ms: rax 0x%llx, exception 0x%x", job_state(state), j.ran_tid,
                 static_cast<unsigned long long>(j.ran_ms - j.queued_ms), static_cast<unsigned long long>(j.rax), j.code);
         std::snprintf(out, sizeof(out),
-                      "{\"type\":\"job\",\"state\":\"%s\",\"rax\":\"0x%llx\",\"code\":%u,\"tid\":%u,\"waited_ms\":%llu}",
+                      "{\"type\":\"job\",\"state\":\"%s\",\"rax\":\"0x%llx\",\"code\":%u,\"tid\":%u,\"waited_ms\":%llu",
                       job_state(state), static_cast<unsigned long long>(j.rax), j.code, j.ran_tid,
                       static_cast<unsigned long long>(state >= 3 ? j.ran_ms - j.queued_ms : GetTickCount64() - j.queued_ms));
-        return out;
+        std::string reply = out;
+        if (state == 4) {
+            reply += ",\"fault\":{\"rip\":\"" + describe(j.fault_rip) + "\",\"fn\":\"" + function_of(j.fault_rip) + "\"";
+            char info[160];
+            std::snprintf(info, sizeof(info), ",\"access\":%llu,\"addr\":\"0x%llx\",\"regs\":[",
+                          static_cast<unsigned long long>(j.fault_info[0]), static_cast<unsigned long long>(j.fault_info[1]));
+            reply += info;
+            for (unsigned i = 0; i < 6; ++i) {
+                char r[24];
+                std::snprintf(r, sizeof(r), "%s\"0x%llx\"", i ? "," : "", static_cast<unsigned long long>(j.fault_regs[i]));
+                reply += r;
+            }
+            reply += "],\"frames\":" + address_list(j.fault_frames, j.fault_nframes);
+            uint8_t code[48] = {};
+            if (mem::read(j.fault_rip - 24, code, sizeof(code))) reply += ",\"code\":\"" + mem::hex(code, sizeof(code)) + "\"";
+            reply += "}";
+        }
+        return reply + "}";
     }
     if (cmd == "job_cancel") {
         int queued = 1;
