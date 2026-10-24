@@ -137,7 +137,7 @@ def test_without_the_plugin_nothing_changes(setup, ledger, sim, catalogue):
     receive(ledger, sid, catalogue, "100 Copper")
     engine.validate(sid)
     report = engine.deliver_pending(sid)
-    assert live.calls == [] and "running" in report.waiting_reason
+    assert live.calls == [] and "plugin isn't connected" in report.waiting_reason
     assert live.polls == 1                                       # the channel still gets its tick
 
 
@@ -271,3 +271,17 @@ def test_items_given_after_the_load_was_noticed_stay(watching, ledger, sim, cata
     engine.deliver_pending(sid)
     engine.notice_loads(sid)                                          # no new load: nothing changes
     assert states(ledger, sid) == [DeliveryState.IN_GAME] and len(live.calls) == 1
+
+
+def test_the_live_reason_is_shown_next_to_the_save_reason(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    live.results = [LiveResult("not now", "waiting for the game (it pauses while in the background)")]
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "100 Copper", "Traversal Unlock B")
+    engine.validate(sid)
+    report = engine.deliver_pending(sid)
+    assert "running" in report.waiting_reason and "1 of them go in while you play" in report.waiting_reason
+    assert "pauses while in the background" in report.waiting_reason
+    live.is_ready = False
+    report = engine.deliver_pending(sid)
+    assert "the game plugin isn't connected" in report.waiting_reason
