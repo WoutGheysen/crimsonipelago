@@ -67,8 +67,9 @@ crimsonipelago connect --server localhost:38281 --slot Wout --editor-dir "C:\pat
    Artifacts and Copper go straight into your bag, with the game's own message, and the client prints
    `Delivered in the game: …`. They count as delivered once the game saves (an autosave or a manual save);
    if the game closes before saving, the client gives them again.
-   - **Flight** still needs the game closed: quit to desktop, the client prints `Delivered: Flight`, start
-     the game and load the newest save.
+   - **Flight** is learned live too (`Delivered in the game: Flight`, with the game's message). If the game
+     refuses it three times in a row, it waits for the game to be closed instead: quit to desktop, the client
+     prints `Delivered: Flight`, start the game and load the newest save.
    - Without the plugin (or with `--no-live`), everything waits until you quit to desktop, as before.
    - Crow Feathers do nothing in the game and count as received straight away.
 5. The goal is **speaking with the woman in white**. The client reports victory to the server.

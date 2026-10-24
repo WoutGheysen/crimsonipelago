@@ -246,8 +246,6 @@ class LiveChannel:
         if not self.ready():
             return LiveResult("not now", self.unsupported or "the game plugin isn't connected")
         try:
-            if ("knowledge", key) in self.refused:
-                return LiveResult("refused", "the game refused this before", self.refused[("knowledge", key)])
             if "knowledge_table" in self.r3:
                 # The checker files an unknown key under handle 0xFFFF, which faults later on: look first.
                 from .research import knowledge_lookup
@@ -256,8 +254,9 @@ class LiveChannel:
                 if "handle" not in found:
                     return LiveResult("unknown item", f"knowledge {key} isn't in the game's knowledge table "
                                                       f"({found.get('problem', 'no handle')})", detail=found)
-            return self._call(lambda mem: build_knowledge_gift(key, level, learn_from, mem),
-                              refusal_key=("knowledge", key))
+            # Not remembered as refused: Flight was refused at some moments and learned at others (r5-knowledge.md),
+            # so the engine tries again a few times before leaving it for the save.
+            return self._call(lambda mem: build_knowledge_gift(key, level, learn_from, mem), refusal_key=None)
         except BridgeError as exc:
             self.drop(str(exc))
             return LiveResult("not now", f"lost the game plugin ({exc})")
@@ -316,9 +315,12 @@ class LiveChannel:
             self.probe = None                          # look for the transaction again next time
             return LiveResult("not now", "the game didn't get to it (a menu or loading screen?)", detail=detail)
         code = int.from_bytes(self.bridge.read(layout["result"], 4), "little")
+        detail["transaction_last_used_by"] = probe.caller
         if code != 0:
-            self.refused[refusal_key] = code
-            return LiveResult("refused", f"the game refused it (code {code:#x})", code, detail)
+            if refusal_key is not None:
+                self.refused[refusal_key] = code
+            return LiveResult("refused", f"the game refused it (code {code:#x}; transaction last used by "
+                                         f"{probe.caller})", code, detail)
         return LiveResult("given", code=0, detail=detail)
 
     def close(self) -> None:

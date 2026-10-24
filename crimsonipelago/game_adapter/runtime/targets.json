@@ -59,7 +59,7 @@
         "notes": "give = add-check-commit with defaults (tx, result, owner, removals, additions, 1, unix time, game clock, reason, 0, -, 0xffff, 1, 1); runner = the game-logic thread's task runner; reason 0x0b = picking up; item_table = the pointer the item lookup (+0x38ab60) reads: count at +8, {key, location} column at +0x28, loaded item data at +0x58",
         "item_table": "0x6d69aa8",
         "knowledge_table": "0x6d69a98",
-        "knowledge_live": false
+        "knowledge_live": true
       },
       "r5_dump": [
         "0x17e6cd0",
