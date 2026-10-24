@@ -3,7 +3,7 @@ project(crimsonipelago_plugin CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CRIMSONIPELAGO_PLUGIN_VERSION "0.6.1-r2c" CACHE STRING "plugin version reported to the client")
+set(CRIMSONIPELAGO_PLUGIN_VERSION "0.7.0-r2d" CACHE STRING "plugin version reported to the client")
 
 add_library(crimsonipelago SHARED src/main.cpp)
 target_compile_definitions(crimsonipelago PRIVATE CRIMSONIPELAGO_PLUGIN_VERSION="${CRIMSONIPELAGO_PLUGIN_VERSION}"

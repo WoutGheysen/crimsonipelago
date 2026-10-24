@@ -16,7 +16,8 @@
 //   client -> plugin: {"cmd":"read","addr":"0x..","size":N}   -> {"type":"bytes","hex":".."} (N <= 4096)
 //   client -> plugin: {"cmd":"write","addr":"0x..","expect":N,"value":M,"width":4|8} -> {"type":"written",...}
 //   ("value":N instead of lo/hi searches one value; scan_u64, rescan_u64, write_u64 are the 8-byte forms)
-//   client -> plugin: {"cmd":"watch","addr":"0x..","size":1|2|4|8,"mode":"write"|"access"|"execute"}
+//   client -> plugin: {"cmd":"watch","addr":"0x..","size":1|2|4|8,"mode":"write"|"access"|"execute",
+//                      "follow":"arg:offset:size,..."}   (execute only: pointers to save one level further)
 //                                                 -> {"type":"watching","slot":0..3,"threads":N}
 //   client -> plugin: {"cmd":"watch_apply"}  -> same, again for threads started since (slot -1)
 //   client -> plugin: {"cmd":"unwatch"}      -> {"type":"unwatched","threads":N}  (also on disconnect)
@@ -52,7 +53,7 @@
 #include "watch.hpp"
 
 #ifndef CRIMSONIPELAGO_PLUGIN_VERSION
-#define CRIMSONIPELAGO_PLUGIN_VERSION "0.6.1-r2c"
+#define CRIMSONIPELAGO_PLUGIN_VERSION "0.7.0-r2d"
 #endif
 
 namespace {
@@ -377,7 +378,25 @@ std::string handle_watch(const std::string& cmd, const std::string& line) {
         if (!ok) return error_json("size must be 1, 2, 4 or 8");
         const std::string mode = json_field(line, "mode");
         const watch::Kind kind = mode == "execute" ? watch::kExecute : mode == "access" ? watch::kAccess : watch::kWrite;
-        const int slot = watch::add(addr, static_cast<unsigned>(size), kind);
+        // "follow":"5:0:896,3:16:64": argument 5 points at a structure whose first 8 bytes point at the data
+        // to save (896 bytes); and so on. Up to 4.
+        watch::Follow follow[watch::kFollows];
+        unsigned nfollow = 0;
+        const std::string spec = json_field(line, "follow");
+        size_t pos = 0;
+        while (pos < spec.size() && nfollow < watch::kFollows) {
+            size_t end = spec.find(',', pos);
+            if (end == std::string::npos) end = spec.size();
+            int arg = 0, offset = 0, bytes = 0;
+            if (std::sscanf(spec.substr(pos, end - pos).c_str(), "%i:%i:%i", &arg, &offset, &bytes) != 3 || arg < 0 ||
+                arg >= static_cast<int>(watch::kArgs) || offset < 0 || offset > 4096 || bytes <= 0 ||
+                bytes > static_cast<int>(watch::kFollowBytes))
+                return error_json("follow: arg:offset:size, arg < 16, size up to 2048");
+            follow[nfollow++] = watch::Follow{static_cast<uint8_t>(arg), static_cast<uint16_t>(offset),
+                                              static_cast<uint16_t>(bytes)};
+            pos = end + 1;
+        }
+        const int slot = watch::add(addr, static_cast<unsigned>(size), kind, follow, nfollow);
         if (slot < 0) return error_json("no free watch (4 at most), or the address isn't aligned to its size");
         const unsigned threads = watch::apply(watch::g_mask.load());
         log("watch %d: 0x%llx, %llu bytes, %s, %u threads", slot, static_cast<unsigned long long>(addr),
@@ -459,6 +478,17 @@ std::string handle_watch(const std::string& cmd, const std::string& line) {
                         first_mem = false;
                     }
                     records += "}";
+                    const watch::Watch& w = watch::g_watch[h.slot];
+                    records += ",\"follow\":[";
+                    for (unsigned f = 0; f < w.nfollow; ++f) {
+                        char head2[96];
+                        std::snprintf(head2, sizeof(head2), "%s{\"spec\":\"%u:%u:%u\",\"addr\":\"0x%llx\",\"hex\":\"",
+                                      f ? "," : "", w.follow[f].arg, w.follow[f].offset, w.follow[f].size,
+                                      static_cast<unsigned long long>(snap.faddr[f]));
+                        records += head2;
+                        records += mem::hex(snap.fdata[f], snap.flen[f]) + "\"}";
+                    }
+                    records += "]";
                 }
             }
             records += "}";

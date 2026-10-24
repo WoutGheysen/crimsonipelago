@@ -422,6 +422,11 @@ def dump_code(bridge: ResearchBridge, report_path: Path, out_dir: Path,
             "don't match any more. Record a new one with watch-money first.")
         return None
     rvas = addresses_in_report(report)
+    build = load_targets(info.pe_timestamp) if TARGETS_FILE.exists() else None
+    for text in (build or {}).get("dump_extra", []):
+        rva = int(text, 16)
+        if rva not in rvas:
+            rvas.append(rva)
     if not rvas:
         say("That report has no game addresses in it.")
         return None
@@ -489,7 +494,7 @@ def watch_calls(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], s
     try:
         threads = 0
         for i, f in enumerate(functions):
-            slot, threads = bridge.watch(base + int(f["rva"], 16), 1, "execute")
+            slot, threads = bridge.watch(base + int(f["rva"], 16), 1, "execute", follow=f.get("follow"))
             if slot != i:
                 raise BridgeError(f"plugin gave watch slot {slot} for function {i}")
         say(f"Watching {len(functions)} game functions on {threads} threads:")

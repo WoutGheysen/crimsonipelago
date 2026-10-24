@@ -36,7 +36,17 @@ constexpr unsigned kArgs = 16;        // execute watches: rcx, rdx, r8, r9 and 1
 constexpr unsigned kSnapRing = 32;    // execute watches: memory behind the arguments, for the last 32 calls
 constexpr unsigned kSnapBytes = 512;
 
+constexpr unsigned kFollows = 4;      // execute watches: pointers followed one level further
+constexpr unsigned kFollowBytes = 2048;
+
 enum Kind : uint8_t { kWrite = 0, kAccess = 1, kExecute = 2 };
+
+// "Argument `arg` points at a structure; at `offset` in it is a pointer; save `size` bytes from there."
+struct Follow {
+    uint8_t arg = 0;
+    uint16_t offset = 0;
+    uint16_t size = 0;
+};
 
 struct Hit {
     std::atomic<uint64_t> seq{0};   // index + 1 once complete: lets the reader skip a record being rewritten
@@ -55,12 +65,17 @@ struct Snap {
     std::atomic<uint64_t> seq{0};
     uint16_t len[kArgs] = {};
     uint8_t data[kArgs][kSnapBytes] = {};
+    uint64_t faddr[kFollows] = {};
+    uint16_t flen[kFollows] = {};
+    uint8_t fdata[kFollows][kFollowBytes] = {};
 };
 
 struct Watch {
     uint64_t addr = 0;
     unsigned size = 0;     // 1, 2, 4 or 8 (1 for execute)
     Kind kind = kWrite;
+    unsigned nfollow = 0;
+    Follow follow[kFollows] = {};
 };
 
 inline Hit g_ring[kRing];
@@ -187,6 +202,26 @@ inline LONG CALLBACK on_exception(EXCEPTION_POINTERS* ep) {
                 }
             }
         }
+        const Watch& w = g_watch[slot];
+        for (unsigned f = 0; f < kFollows; ++f) {
+            snap.flen[f] = 0;
+            snap.faddr[f] = 0;
+            if (f >= w.nfollow) continue;
+            const Follow& fo = w.follow[f];
+            if (fo.arg >= kArgs || snap.len[fo.arg] < fo.offset + 8u) continue;
+            uint64_t p;
+            std::memcpy(&p, snap.data[fo.arg] + fo.offset, 8);
+            snap.faddr[f] = p;
+            if (p < 0x10000 || p > 0x7FFFFFFFFFFFull) continue;
+            SIZE_T got = 0;
+            for (SIZE_T want = fo.size; want >= 64; want /= 2) {
+                if (ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(p), snap.fdata[f], want, &got) &&
+                    got == want) {
+                    snap.flen[f] = static_cast<uint16_t>(want);
+                    break;
+                }
+            }
+        }
         snap.seq.store(si + 1, std::memory_order_release);
         h.snap = static_cast<int64_t>(si);
     }
@@ -266,7 +301,7 @@ inline void init(uint64_t image_base, uint64_t image_size) {
 }
 
 // Adds a watch; returns the slot, or -1 when all four are taken or the address doesn't suit.
-inline int add(uint64_t addr, unsigned size, Kind kind) {
+inline int add(uint64_t addr, unsigned size, Kind kind, const Follow* follow = nullptr, unsigned nfollow = 0) {
     if (kind == kExecute) size = 1;
     if (!(size == 1 || size == 2 || size == 4 || size == 8) || addr % size) return -1;
     unsigned mask = g_mask.load();
@@ -279,7 +314,13 @@ inline int add(uint64_t addr, unsigned size, Kind kind) {
     }
     for (unsigned i = 0; i < kSlots; ++i) {
         if (mask & (1u << i)) continue;
-        g_watch[i] = Watch{addr, size, kind};
+        Watch w;
+        w.addr = addr;
+        w.size = size;
+        w.kind = kind;
+        w.nfollow = nfollow < kFollows ? nfollow : kFollows;
+        for (unsigned f = 0; f < w.nfollow; ++f) w.follow[f] = follow[f];
+        g_watch[i] = w;
         g_ever.fetch_or(1u << i);
         g_mask.store(mask | (1u << i));
         return static_cast<int>(i);
