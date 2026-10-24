@@ -60,7 +60,16 @@
         "item_table": "0x6d69aa8",
         "knowledge_table": "0x6d69a98",
         "knowledge_live": false
-      }
+      },
+      "r5_dump": [
+        "0x17e6cd0",
+        "0x3d1960",
+        "0x2780570",
+        "0x2780820",
+        "0x22ce360",
+        "0x2b744ed",
+        "0x2b74065"
+      ]
     }
   }
 }

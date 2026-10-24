@@ -116,7 +116,7 @@ def build_parser() -> argparse.ArgumentParser:
     pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
     pl.add_argument("action", nargs="?", default="check",
                     choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls", "give-copper",
-                             "give-item", "item-table", "give-knowledge"],
+                             "give-item", "item-table", "give-knowledge", "knowledge-check"],
                     help="check: test the link (default); find-copper: research step R1; "
                          "watch-money, dump-code, watch-calls: research step R2; give-copper: R3; "
                          "give-item, item-table: R4; give-knowledge: R5")
@@ -214,7 +214,8 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
 
 
 NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4), "dump-code": (0, 5), "watch-calls": (0, 6),
-                "give-copper": (0, 8), "give-item": (0, 8), "item-table": (0, 8), "give-knowledge": (0, 8)}
+                "give-copper": (0, 8), "give-item": (0, 8), "item-table": (0, 8), "give-knowledge": (0, 8),
+                "knowledge-check": (0, 8)}
 
 
 def _plugin_version(text: str) -> tuple[int, int]:
@@ -261,6 +262,11 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                     return 1
                 print(f"Using {report}")
                 return 0 if dump_code(research, report, report_dir) else 1
+            if args.action == "knowledge-check":
+                from ..game_adapter.runtime.research import knowledge_check
+
+                keys = [args.key] if args.key is not None else [40002, 1005839]
+                return 0 if knowledge_check(research, report_dir, keys) else 1
             if args.action == "give-knowledge":
                 from ..game_adapter.runtime.research import give_knowledge
 

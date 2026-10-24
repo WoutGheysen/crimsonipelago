@@ -831,3 +831,28 @@ def test_items_lookup_reads_the_editor_list(tmp_path, capsys):
     assert "4242" in out and "Iron Sword" in out and "Copper" not in out
     assert client_main(["--data-dir", str(tmp_path), "items", "--category", "material", "--editor-dir", str(editor)]) == 0
     assert "75001" in capsys.readouterr().out
+
+
+def test_knowledge_lookup_follows_the_checkers_hash_map(tmp_path):
+    game, targets = _r4_game(tmp_path)
+    table, buckets, records = 0x1C800, 0x1D000, 0x1CF00
+    game.overlay[0x140000000 + 0x6D69A98] = table.to_bytes(8, "little")
+    game.put(table + 0x68, 4, 4)                        # 4 buckets
+    game.put(table + 0x6C, 2, 4)                        # 2 used
+    game.put(table + 0x78, buckets)
+    game.put(table + 0x80, records)
+    key = 1005839                                       # bucket 1005839 % 4 = 3
+    game.put(buckets + 3 * 0x100, 1, 4)
+    game.put(buckets + 3 * 0x100 + 8, key, 4)
+    game.put(buckets + 3 * 0x100 + 12, 1, 4)            # record index 1
+    game.put(records + 8, 0x1CE00)
+    game.put(0x1CE00 + 4, key, 4)
+    game.put(0x1CE00 + 8, 0x1234, 2)
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            found = research.knowledge_lookup(bridge, 0x140000000, 0x6D69A98, key)
+            missing = research.knowledge_lookup(bridge, 0x140000000, 0x6D69A98, 40002)
+        assert found["handle"] == 0x1234 and found["index"] == 1
+        assert missing["problem"] == "not in the table" and "handle" not in missing
+    finally:
+        game.close()
