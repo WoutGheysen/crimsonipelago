@@ -163,6 +163,22 @@ maps to the item keys in the save (to give items other than Copper).
   our item number, with count 100 and a new item number from 905,000,000. The checker copies it into the
   transaction (stackable items merge), so the game never keeps a pointer to our copy.
 
+### Result: R3 worked (2026-10-24, 20:39)
+
+`plugin give-copper` on the first seed's playthrough, game 2.03.02:
+
+- the transaction, owner and game-logic thread came from the game's own next "add" (a background task,
+  `+0x2b753f6`);
+- the plugin made the call 78 ms after queueing it, on that thread, from the task runner; result code 0;
+- **the player saw it straight away: the bag, the money at the top right, and the game's own message**
+  for receiving it. Everything the game normally does for a pickup happened, because it was the game's
+  own code doing it;
+- **saved, quit to the main menu, loaded: the money was still there.**
+
+The Copper record the tool read back right after was the screen side's copy (+0x0C = 0), which had not
+caught up yet (468 before and after): the game-logic side's copy wasn't among the records next to our item
+number this session. Harmless here; the bag and the total showed the new amount.
+
 ## Earlier: next after the fourth run
 
 1. `plugin watch-calls` with 0.7.0: the change entries of loot, pouch and purchase; `plugin dump-code`
@@ -189,3 +205,18 @@ maps to the item keys in the save (to give items other than Copper).
    (`plugin watch-money` now asks what you did): do those also pass `+0x278164d`?
 2. `plugin dump-code` saves the code of each function on these paths (not committed: it's the game's
    code) so the transaction's inputs can be worked out.
+
+## R4: from item keys to handles
+
+The item record holds a 16-bit handle (+0x08; 0x7BC for Copper), not the key the save uses. The lookup the
+checker calls on it, `+0x38ab60`, reads one global pointer, **`+0x6d69aa8`**, to the game's item table:
+
+| field | what |
+|---|---|
+| +0x08 | number of items (handles go from 0 to this) |
+| +0x28 | per handle, 8 bytes: a 4-byte value, then a 4-byte location used to load the item's data |
+| +0x58 | per handle, a pointer to the item's data once loaded (null before); the data starts with the key |
+
+The lookup loads an item's data on first use. The 4-byte value at +0x28 is most likely the key, which
+would give every handle without loading anything; `plugin item-table` checks this against the items that
+are loaded, and falls back to those if it doesn't hold.

@@ -620,6 +620,280 @@ def build_gift(record: bytes, amount: int, item_no: int, mem: int) -> tuple[byte
     return bytes(block), layout
 
 
+# --------------------------------------------------------------------------- R4: any item
+TABLE_COUNT, TABLE_KEYS, TABLE_DATA = 0x08, 0x28, 0x58     # fields of the game's item table
+LIVE_ITEM_NO_END = LIVE_ITEM_NO_BASE + 999_999
+
+
+@dataclass
+class ItemTable:
+    handles: dict[int, int]        # item key (as in the save) -> the game's 16-bit handle
+    count: int
+    loaded: int                    # entries whose item data is already in memory
+    checked: int                   # loaded entries whose key matched the table's key column
+    source: str                    # "keys" (the table's key column) or "loaded" (item data only)
+
+
+def read_item_table(bridge: ResearchBridge, base: int, table_rva: int) -> ItemTable | None:
+    """The game's item table (found through its lookup function, +0x38ab60): a count, a column of
+    {key, location} pairs, and pointers to item data loaded on first use (key in its first 4 bytes)."""
+    table = int.from_bytes(_read(bridge, base + table_rva, 8) or b"\0" * 8, "little")
+    head = _read(bridge, table, 0x60) if table else None
+    if head is None:
+        return None
+    count = struct.unpack_from("<I", head, TABLE_COUNT)[0]
+    keys_at, data_at = struct.unpack_from("<Q", head, TABLE_KEYS)[0], struct.unpack_from("<Q", head, TABLE_DATA)[0]
+    if not 0 < count < 1_000_000:
+        return None
+
+    def array(addr: int) -> bytes:
+        out = b""
+        while len(out) < count * 8:
+            chunk = _read(bridge, addr + len(out), min(4096, count * 8 - len(out)))
+            if chunk is None:
+                break
+            out += chunk
+        return out
+
+    keys, data = array(keys_at), array(data_at)
+    column = {i: struct.unpack_from("<I", keys, 8 * i)[0] for i in range(len(keys) // 8)}
+    loaded = {i: struct.unpack_from("<Q", data, 8 * i)[0] for i in range(len(data) // 8)}
+    loaded = {i: p for i, p in loaded.items() if p}
+    from_data: dict[int, int] = {}
+    for i, p in loaded.items():
+        raw = _read(bridge, p, 4)
+        if raw is not None:
+            from_data[i] = struct.unpack_from("<I", raw)[0]
+    checked = sum(1 for i, k in from_data.items() if column.get(i) == k)
+    if from_data and checked == len(from_data):
+        return ItemTable({k: i for i, k in column.items()}, count, len(loaded), checked, "keys")
+    return ItemTable({k: i for i, k in from_data.items()}, count, len(loaded), checked, "loaded")
+
+
+@dataclass
+class GiveResult:
+    state: str                     # done, fault, not run, unknown item, no template
+    code: int | None = None        # the game's result code (0: accepted)
+    detail: dict | None = None
+
+
+class LiveGiver:
+    """Gives items while the game runs: one add-check-commit of the game's own per item, made on the
+    game-logic thread between two of its tasks. Finds what it needs once and reuses it."""
+
+    def __init__(self, bridge: ResearchBridge, r3: dict, wait: Callable[[float], None] = time.sleep,
+                 clock: Callable[[], float] = time.monotonic):
+        info = bridge.info
+        if info is None:
+            raise BridgeError("not connected")
+        self.bridge, self.r3, self.wait, self.clock = bridge, r3, wait, clock
+        self.base = int(info.module_base, 16)
+        self.probe: Probe | None = None
+        self.table: ItemTable | None = None
+        self.templates: dict[int, tuple[int, bytes]] = {}       # handle -> (address, record)
+        self.mem: int | None = None
+
+    def find_transaction(self, say: Callable[[str], None]) -> Probe | None:
+        self.probe = probe_transaction(self.bridge, self.base + self.r3["probe"], say, self.wait, self.clock)
+        if self.probe is not None:
+            head = _read(self.bridge, self.probe.tx, 8)
+            if head is None or int.from_bytes(head, "little") not in (self.probe.owner, 0):
+                self.probe = None
+        return self.probe
+
+    def load_table(self) -> ItemTable | None:
+        if "item_table" in self.r3:
+            self.table = read_item_table(self.bridge, self.base, self.r3["item_table"])
+        return self.table
+
+    def find_templates(self) -> dict[int, tuple[int, bytes]]:
+        """Item records next to the item numbers the client handed out (in the save, and live)."""
+        report = self.bridge.scan(ITEM_NO_BASE + 1, LIVE_ITEM_NO_END, width=8, align=8)
+        templates: dict[int, list[tuple[bool, int, bytes]]] = {}
+        for addr in report.hits:
+            data = _read(self.bridge, addr, RECORD_SIZE)
+            if data is None:
+                continue
+            number = struct.unpack_from("<Q", data, 0)[0]
+            if not (ITEM_NO_BASE < number <= ITEM_NO_BASE + ITEM_NO_SPAN or LIVE_ITEM_NO_BASE <= number <= LIVE_ITEM_NO_END):
+                continue
+            handle, side = struct.unpack_from("<HxxI", data, 8)
+            count = struct.unpack_from("<Q", data, 0x10)[0]
+            if 0 < count < 10**9:
+                templates.setdefault(handle, []).append((side != 0xFFFFFFFF, addr, data))
+        self.templates = {h: (sorted(v)[0][1], sorted(v)[0][2]) for h, v in templates.items()}
+        return self.templates
+
+    def template_for(self, handle: int) -> tuple[int, bytes] | None:
+        """A record of the same item if there is one, else Copper's, else any."""
+        for h in (handle, self.r3.get("copper_handle")):
+            if h in self.templates:
+                return self.templates[h]
+        return next(iter(self.templates.values()), None)
+
+    def give(self, key: int, count: int, reason: int | None = None) -> GiveResult:
+        if self.probe is None:
+            return GiveResult("not run", detail={"why": "no transaction"})
+        handle = self.table.handles.get(key) if self.table else (self.r3.get("copper_handle") if key == 1 else None)
+        if handle is None:
+            return GiveResult("unknown item", detail={"key": key})
+        template = self.template_for(handle)
+        if template is None:
+            return GiveResult("no template")
+        record = bytearray(template[1])
+        same_item = struct.unpack_from("<H", record, 8)[0] == handle
+        struct.pack_into("<H", record, 8, handle)
+        if self.mem is None:
+            self.mem = self.bridge.alloc(0x200)
+        item_no = LIVE_ITEM_NO_BASE + int(time.time() * 1000) % 1_000_000
+        block, layout = build_gift(bytes(record), count, item_no, self.mem)
+        self.bridge.poke(self.mem, block)
+        p = self.probe
+        args = [p.tx, layout["result"], p.owner, layout["none"], layout["adds"], 1, int(time.time()), p.clock,
+                self.r3["reason"] if reason is None else reason, 0, 0, 0xFFFF, 1, 1]
+        self.bridge.job(self.base + self.r3["give"], args, runner=self.base + self.r3["runner"], tid=p.tid,
+                        set_bytes={p.tx + 0x1AB: 0})
+        start = self.clock()
+        status = self.bridge.job_status()
+        while status["state"] in ("queued", "running") and self.clock() - start < JOB_SECONDS:
+            self.wait(0.2)
+            status = self.bridge.job_status()
+        if status["state"] == "queued":
+            self.bridge.job_cancel()
+            status = self.bridge.job_status()
+        result = _read(self.bridge, layout["result"], 4)
+        code = int.from_bytes(result, "little") if result else None
+        detail = {"key": key, "handle": hex(handle), "count": count, "item_no": item_no, "template": hex(template[0]),
+                  "template_same_item": same_item, "args": [hex(a) for a in args], "job": status}
+        state = status["state"] if status["state"] in ("done", "fault") else "not run"
+        self.bridge.unwatch()                       # the runner: the game's tasks run without it until the next
+        return GiveResult(state, code, detail)
+
+    def close(self) -> None:
+        try:
+            self.bridge.unwatch()
+        except BridgeError:
+            pass
+
+
+def give_item(bridge: ResearchBridge, report_dir: Path, key: int, count: int, ask: Callable[[str], str] = input,
+              say: Callable[[str], None] = print, wait: Callable[[float], None] = time.sleep,
+              clock: Callable[[], float] = time.monotonic, targets_file: Path = TARGETS_FILE,
+              label: str | None = None) -> Path | None:
+    """R4: give `count` of the item with this key (as in the save) while the game runs."""
+    info = bridge.info
+    if info is None:
+        raise BridgeError("not connected")
+    build = load_targets(info.pe_timestamp, targets_file)
+    if build is None or "r3" not in build:
+        say(f"I don't know this game build yet (build stamp {info.pe_timestamp}). Tell me.")
+        return None
+    r3 = {k: int(v, 16) if isinstance(v, str) and v.startswith("0x") else v for k, v in build["r3"].items()}
+    label = label or f"item {key}"
+    report: dict = {"plugin": info.plugin_version, "game": {"exe_version": info.exe_version,
+                    "pe_timestamp": info.pe_timestamp, "module_base": info.module_base},
+                    "key": key, "count": count}
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r4-give-{time.strftime('%Y%m%d-%H%M%S')}.json"
+
+    def save(outcome: str) -> Path:
+        report["outcome"] = outcome
+        path.write_text(json.dumps(report, indent=1), encoding="utf-8")
+        return path
+
+    say(f"Giving you {count} x {label} while you play.")
+    say("Use your test playthrough. Make a manual save first, so you can go back to it.")
+    if not _yes(ask("Saved, and standing somewhere quiet (not in a menu)? (y/n) ")):
+        return None
+    giver = LiveGiver(bridge, r3, wait, clock)
+    try:
+        say("1/4 Waiting for the game to use its own transaction (keep playing: walk around)...")
+        probe = giver.find_transaction(say)
+        if probe is None:
+            say("The game didn't use it in time (or it didn't look right). Pick something up, then run this again.")
+            return save("no transaction seen")
+        report["probe"] = {"tx": hex(probe.tx), "owner": hex(probe.owner), "tid": probe.tid, "clock": probe.clock}
+        say(f"   transaction found (thread {probe.tid}).")
+
+        say("2/4 Reading the game's item list...")
+        table = giver.load_table()
+        if table is not None:
+            report["table"] = {"count": table.count, "loaded": table.loaded, "checked": table.checked,
+                               "source": table.source}
+            say(f"   {table.count} items, {table.loaded} loaded; key column "
+                + ("confirmed" if table.source == "keys" else f"not confirmed ({table.checked} of {table.loaded})"))
+        if key not in (table.handles if table else {1: 0}):
+            say(f"The game's item list has no item {key}" + ("" if table and table.source == "keys" else
+                " among the items loaded so far") + ". Check the key, or pick one up once and try again.")
+            return save("unknown item")
+
+        say("3/4 Finding an item record to copy...")
+        giver.find_templates()
+        report["templates"] = {hex(h): hex(a) for h, (a, _) in giver.templates.items()}
+        if not giver.templates:
+            say("No item from the client's own deliveries is in memory; this needs one (the first seed's "
+                "playthrough has some).")
+            return save("no template")
+        if not _yes(ask(f"Give {count} x {label} now? (y/n) ")):
+            return save("cancelled before the call")
+
+        say("4/4 Asking the game to do it, between two of its own tasks...")
+        result = giver.give(key, count)
+        report["give"] = {"state": result.state, "code": result.code, **(result.detail or {})}
+    finally:
+        giver.close()
+
+    if result.state == "fault":
+        say(f"The game's code hit a fault during the call (exception 0x{result.detail['job']['code']:08x}). "
+            "Don't save: quit to the main menu or desktop and load your manual save.")
+        save("fault")
+    elif result.state != "done":
+        say("The game didn't get to it in time (cancelled; nothing was changed).")
+        save("not run")
+    elif result.code != 0:
+        say(f"The game refused the change (result code {result.code}); nothing was added.")
+        save("refused")
+    else:
+        say("The game accepted it.")
+        report["player"] = {
+            "bag": _yes(ask(f"Is it in your bag ({count} x {label})? (y/n) ")),
+            "popup": _yes(ask("Did the game show its message for it? (y/n) ")),
+        }
+        say("Last part: save in the game, quit to the main menu, load that save, and check it's still there.")
+        save("accepted")
+    say(f"Saved: {path}")
+    say("Send me that file.")
+    return path
+
+
+def item_table(bridge: ResearchBridge, report_dir: Path, say: Callable[[str], None] = print,
+               targets_file: Path = TARGETS_FILE) -> Path | None:
+    """Saves the game's item keys and handles (numbers only), to check the table is read right."""
+    info = bridge.info
+    if info is None:
+        raise BridgeError("not connected")
+    build = load_targets(info.pe_timestamp, targets_file)
+    if build is None or "item_table" not in build.get("r3", {}):
+        say(f"I don't know this game build yet (build stamp {info.pe_timestamp}).")
+        return None
+    table = read_item_table(bridge, int(info.module_base, 16), int(build["r3"]["item_table"], 16))
+    if table is None:
+        say("The item table isn't where I expected it.")
+        return None
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r4-items-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    path.write_text(json.dumps({"game": {"pe_timestamp": info.pe_timestamp}, "count": table.count,
+                                "loaded": table.loaded, "checked": table.checked, "source": table.source,
+                                "handles": {str(k): v for k, v in sorted(table.handles.items())}}, indent=1),
+                    encoding="utf-8")
+    say(f"{table.count} items; {table.loaded} loaded, {table.checked} of those match the key column "
+        f"({'confirmed' if table.source == 'keys' else 'NOT confirmed'}).")
+    for key, name in ((1, "Copper"), (75001, "Abyss Artifact")):
+        say(f"  {name} ({key}): handle {hex(table.handles[key]) if key in table.handles else 'not found'}")
+    say(f"Saved: {path}")
+    return path
+
+
 def give_copper(bridge: ResearchBridge, report_dir: Path, ask: Callable[[str], str] = input,
                 say: Callable[[str], None] = print, amount: int = 100,
                 wait: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic,

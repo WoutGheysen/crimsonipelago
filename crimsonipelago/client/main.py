@@ -109,9 +109,13 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("status", help="show the local ledger for the most recent session")
     pl = sub.add_parser("plugin", help="check the link to the in-game plugin (start the game first)")
     pl.add_argument("action", nargs="?", default="check",
-                    choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls", "give-copper"],
+                    choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls", "give-copper",
+                             "give-item", "item-table"],
                     help="check: test the link (default); find-copper: research step R1; "
-                         "watch-money, dump-code, watch-calls: research step R2; give-copper: R3")
+                         "watch-money, dump-code, watch-calls: research step R2; give-copper: R3; "
+                         "give-item, item-table: R4")
+    pl.add_argument("--key", type=int, default=None, help="give-item: the item's key, as in the save")
+    pl.add_argument("--count", type=int, default=1, help="give-item: how many")
     pl.add_argument("--report", default=None,
                     help="dump-code: the watch-money or watch-calls report (default: the newest)")
     pl.add_argument("--port", type=int, default=None)
@@ -195,7 +199,7 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
 
 
 NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4), "dump-code": (0, 5), "watch-calls": (0, 6),
-                "give-copper": (0, 8)}
+                "give-copper": (0, 8), "give-item": (0, 8), "item-table": (0, 8)}
 
 
 def _plugin_version(text: str) -> tuple[int, int]:
@@ -212,7 +216,15 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
     from ..game_adapter.runtime.bridge import DEFAULT_PORT, BridgeError, GameBridge, ResearchBridge
 
     if args.action in NEEDS_PLUGIN:
-        from ..game_adapter.runtime.research import dump_code, find_copper, give_copper, watch_calls, watch_money
+        from ..game_adapter.runtime.research import (
+            dump_code,
+            find_copper,
+            give_copper,
+            give_item,
+            item_table,
+            watch_calls,
+            watch_money,
+        )
 
         research = ResearchBridge(port=args.port or DEFAULT_PORT)
         try:
@@ -234,6 +246,13 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                     return 1
                 print(f"Using {report}")
                 return 0 if dump_code(research, report, report_dir) else 1
+            if args.action == "item-table":
+                return 0 if item_table(research, report_dir) else 1
+            if args.action == "give-item":
+                if args.key is None or not 0 < args.count <= 9999:
+                    print("error: give-item needs --key KEY (as in the save) and --count 1..9999", file=sys.stderr)
+                    return 1
+                return 0 if give_item(research, report_dir, args.key, args.count) else 1
             if args.action == "give-copper":
                 return 0 if give_copper(research, report_dir) else 1
             if args.action == "watch-calls":

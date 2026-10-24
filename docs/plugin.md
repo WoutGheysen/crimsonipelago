@@ -8,7 +8,9 @@
   the client asks, and only if the value there is exactly the one the client expects.
 - **R2** (done 2026-10-24): write watches: which game code changes your money, and what called it; execute
   watches: what the game's inventory functions are called with. Notes: [research/r2-money.md](research/r2-money.md).
-- **R3**: give Copper while you play, through the game's own inventory transaction.
+- **R3** (passed 2026-10-24): 100 Copper while you play, through the game's own inventory transaction: bag,
+  total and the game's own message updated at once; still there after a save and reload.
+- **R4**: any item by its key.
 
 ## Install (Windows)
 
@@ -150,6 +152,23 @@ py -m crimsonipelago.client.main plugin give-copper
 The plugin only calls functions inside the game's executable, and only writes into memory of its own (plus
 one byte of the transaction, set the way the shop sets it). If the game's code faults during the call, the
 plugin catches it and tells you not to save.
+
+## R4: any item
+
+```powershell
+py -m crimsonipelago.client.main plugin item-table
+py -m crimsonipelago.client.main plugin give-item --key 75001 --count 1
+```
+
+(plugin 0.8.0 or newer)
+
+- `item-table` reads the game's own item list: for every item key (the numbers in the save, e.g. 1 for
+  Copper, 75001 for the Abyss Artifact), the 16-bit handle the game uses in memory. It checks its reading
+  against the items already loaded and says whether it's confirmed.
+- `give-item` works like `give-copper` for any item: it looks up the handle, copies a record of the same
+  item if one of the client's deliveries left one in memory (otherwise the Copper record), sets the handle
+  and the count, and asks the game to add it. Finding the records takes about a minute (one search of the
+  game's memory).
 
 ## Remove
 

@@ -128,6 +128,7 @@ class FakeMemory(FakePlugin):
         self.on_execute = None          # called with the address when an execute watch is set
         self.next_alloc = 0x1C000
         self.job_msg, self.on_job, self.job_state = None, None, "none"
+        self.overlay = {}               # address -> bytes, read before everything else (the game's executable)
         super().__init__()
 
     def game_writes(self, addr, value, fn, rip, frames):
@@ -156,6 +157,9 @@ class FakeMemory(FakePlugin):
             pool = self.hits
         elif cmd == "read":
             start = int(msg["addr"], 16)
+            for addr, data in self.overlay.items():
+                if addr <= start and start + msg["size"] <= addr + len(data):
+                    return {"type": "bytes", "hex": data[start - addr:start - addr + msg["size"]].hex()}
             if start >= 0x140000000:                                  # "code": a recognisable pattern
                 return {"type": "bytes", "hex": bytes((start + i) & 0xFF for i in range(msg["size"])).hex()}
             return {"type": "bytes", "hex": self.mem[start - BASE:start - BASE + msg["size"]].hex()}
@@ -586,6 +590,84 @@ def test_give_copper_stops_without_the_players_go_ahead(tmp_path):
             assert research.give_copper(bridge, tmp_path, ask=lambda p: "n", say=lambda s: None,
                                         wait=lambda s: None, targets_file=targets) is None
         assert game.job_msg is None and not [m for m in game.received if m["cmd"] == "watch"]
+    finally:
+        game.close()
+
+
+def _r4_game(tmp_path, *, column_right=True):
+    """_r3_game plus the game's item table: 3 items, Copper (key 1, handle 0x7BC in the real game; here 1),
+    Abyss Artifact (75001, handle 2) and an unloaded one (12345, handle 0)."""
+    game, targets = _r3_game(tmp_path)
+    table, keys, data = 0x1B000, 0x1B100, 0x1B200
+    game.overlay[0x140000000 + 0x6D69AA8] = table.to_bytes(8, "little")
+    game.put(table + 8, 3, 4)
+    game.put(table + 0x28, keys)
+    game.put(table + 0x58, data)
+    for handle, key in ((0, 12345), (1, 1), (2, 75001)):
+        game.put(keys + 8 * handle, key if column_right else key + 1, 4)
+    for handle, key in ((1, 1), (2, 75001)):                      # loaded item data: the key first
+        game.put(data + 8 * handle, 0x1B400 + 0x10 * handle)
+        game.put(0x1B400 + 0x10 * handle, key, 4)
+    for addr in (0x18000, 0x18400):                                # the Copper records use handle 1 here
+        game.put(addr + 8, 1, 2)
+    t = json.loads(targets.read_text())
+    t["builds"][str(HELLO["pe_timestamp"])]["r3"].update({"item_table": "0x6d69aa8", "copper_handle": "0x1"})
+    targets.write_text(json.dumps(t))
+    return game, targets
+
+
+def test_item_table_maps_keys_to_handles(tmp_path):
+    game, targets = _r4_game(tmp_path)
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            table = research.read_item_table(bridge, 0x140000000, 0x6D69AA8)
+        assert table.handles == {12345: 0, 1: 1, 75001: 2} and table.source == "keys"
+        assert (table.count, table.loaded, table.checked) == (3, 2, 2)
+    finally:
+        game.close()
+
+
+def test_item_table_falls_back_to_loaded_items_when_the_column_disagrees(tmp_path):
+    game, targets = _r4_game(tmp_path, column_right=False)
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            table = research.read_item_table(bridge, 0x140000000, 0x6D69AA8)
+        assert table.handles == {1: 1, 75001: 2} and table.source == "loaded" and table.checked == 0
+    finally:
+        game.close()
+
+
+def test_give_item_uses_the_handle_and_a_copper_template(tmp_path):
+    game, targets = _r4_game(tmp_path)
+    seen = {}
+
+    def the_game_commits(msg):
+        args = [int(a, 16) for a in msg["args"].split(",")]
+        item = game.get(game.get(args[4]) + 0x30)
+        seen.update(handle=game.get(item + 8, 2), count=game.get(item + 0x10))
+        game.put(args[1], 0, 4)
+        return "done"
+
+    game.on_job = the_game_commits
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.give_item(bridge, tmp_path, 75001, 2, ask=lambda p: "y", say=lambda s: None,
+                                      wait=lambda s: None, targets_file=targets, label="Abyss Artifact")
+        report = json.loads(path.read_text())
+        assert report["outcome"] == "accepted" and seen == {"handle": 2, "count": 2}
+        assert report["give"]["template_same_item"] is False and report["table"]["source"] == "keys"
+        assert game.watches == []                                         # runner removed after the call
+    finally:
+        game.close()
+
+
+def test_give_item_refuses_an_unknown_key(tmp_path):
+    game, targets = _r4_game(tmp_path)
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = research.give_item(bridge, tmp_path, 99999, 1, ask=lambda p: "y", say=lambda s: None,
+                                      wait=lambda s: None, targets_file=targets)
+        assert json.loads(path.read_text())["outcome"] == "unknown item" and game.job_msg is None
     finally:
         game.close()
 
