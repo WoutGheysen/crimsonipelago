@@ -180,3 +180,94 @@ def test_flight_learned_on_the_second_try(setup, ledger, sim, catalogue):
     assert "trying again" in ledger.items(sid)[0].last_error
     engine.deliver_pending(sid)
     assert states(ledger, sid) == [DeliveryState.IN_GAME]
+
+
+class WatchingLive(FakeLive):
+    """FakeLive that notices loads, as LiveChannel does."""
+
+    def __init__(self, *results):
+        super().__init__(*results)
+        self.loads, self.load_at, self.last_seen_unix = 0, 0.0, None
+
+    def load(self, at=None):
+        self.loads += 1
+        self.load_at = time.time() + 1 if at is None else at
+
+
+@pytest.fixture
+def watching(ledger, sim, catalogue, bus, setup):
+    sid, _engine, _live, events = setup
+    live = WatchingLive()
+    return sid, DeliveryEngine(ledger, sim, catalogue, bus, live=live), live, events
+
+
+def test_a_save_loaded_before_the_game_saved_gives_them_again(watching, ledger, sim, catalogue):
+    sid, engine, live, events = watching
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "100 Copper")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    assert states(ledger, sid) == [DeliveryState.IN_GAME]
+    live.load()
+    engine.deliver_pending(sid)
+    assert live.calls == [(1, 100), (1, 100)]                        # given again, into the loaded game
+    assert states(ledger, sid) == [DeliveryState.IN_GAME]
+    assert any("A save was loaded before the game saved 100 Copper" in e.message for e in events)
+    engine.deliver_pending(sid)
+    assert len(live.calls) == 2                                       # once per load
+
+
+def test_an_autosave_after_a_load_does_not_count(watching, ledger, sim, catalogue):
+    sid, engine, live, events = watching
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "100 Copper")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    live.last_seen_unix = int(time.time()) - 1                       # the game was last seen before the save
+    sim.update(saved_at=time.time() + 5)                              # an autosave, just after a load
+    engine.deliver_pending(sid)
+    assert states(ledger, sid) == [DeliveryState.IN_GAME]            # not complete: not seen since that save
+    live.load()                                                       # the next sighting shows the load
+    engine.deliver_pending(sid)
+    assert len(live.calls) == 2 and states(ledger, sid) == [DeliveryState.IN_GAME]
+
+
+def test_complete_once_the_game_is_seen_after_its_save(watching, ledger, sim, catalogue):
+    sid, engine, live, events = watching
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "100 Copper")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    saved = time.time() + 5
+    sim.update(saved_at=saved)
+    live.last_seen_unix = int(saved) + 2                              # the game went on after the save
+    engine.deliver_pending(sid)
+    assert states(ledger, sid) == [DeliveryState.COMPLETE]
+    live.load()                                                       # loading later doesn't take it back
+    engine.deliver_pending(sid)
+    assert states(ledger, sid) == [DeliveryState.COMPLETE] and len(live.calls) == 1
+
+
+def test_saved_then_closed_is_complete_without_seeing_the_game_again(watching, ledger, sim, catalogue):
+    sid, engine, live, events = watching
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "100 Copper")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    sim.update(saved_at=time.time() + 5, game_running=False)          # save and quit
+    live.is_ready = False
+    engine.deliver_pending(sid)
+    assert states(ledger, sid) == [DeliveryState.COMPLETE] and len(live.calls) == 1
+    assert sim.get_inventory_snapshot() == {}                         # not written to the save a second time
+
+
+def test_items_given_after_the_load_was_noticed_stay(watching, ledger, sim, catalogue):
+    sid, engine, live, events = watching
+    sim.update(game_running=True, saved_at=0)
+    live.load(at=time.time() - 60)                                    # an earlier load, already noticed
+    engine.deliver_pending(sid)
+    receive(ledger, sid, catalogue, "100 Copper")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    engine.notice_loads(sid)                                          # no new load: nothing changes
+    assert states(ledger, sid) == [DeliveryState.IN_GAME] and len(live.calls) == 1
