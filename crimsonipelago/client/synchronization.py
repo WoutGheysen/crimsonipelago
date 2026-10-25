@@ -229,7 +229,22 @@ class SyncController:
         """The seed's catalogue is this client's, for what the seed covers (its goal's slices). Seeds from before
         slices sent the hash of the whole catalogue: that still matches an unchanged catalogue."""
         seed = slot_data.get("catalogue_fingerprint")
-        return seed in (self._client_fingerprint(slot_data.get("goal")), self.catalogue.fingerprint)
+        if seed in (self._client_fingerprint(slot_data.get("goal")), self.catalogue.fingerprint):
+            return True
+        return self._same_play(slot_data)
+
+    def _same_play(self, slot_data: dict) -> bool:
+        """The catalogue changed since the seed was made, but not in anything the client plays it by (names,
+        confirmed drafts, logic): which checks, how they're detected, which items and how they're delivered. The
+        seed says so itself (play_fingerprint), or, for seeds from before that, the record of earlier catalogues
+        does (data/seed_fingerprints.json)."""
+        goal = slot_data.get("goal") or self.catalogue.default_goal
+        play = getattr(self.catalogue, "play_fingerprint", None)
+        if play is None or goal not in self.catalogue.goals:
+            return False
+        seed_play = slot_data.get("play_fingerprint") or self.catalogue.recorded_play_fingerprint(
+            str(slot_data.get("catalogue_fingerprint")))
+        return seed_play is not None and seed_play == play(goal)
 
     async def _on_Connected(self, cmd: dict) -> None:
         seed = (self.room_info or {}).get("seed_name")

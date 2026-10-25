@@ -144,6 +144,7 @@ class Catalogue:
     filler_weights: dict[str, int]
     trap_weights: dict[str, int]
     compatibility: dict[str, Any]
+    seed_fingerprints: dict[str, str] = field(default_factory=dict)   # scope fingerprint -> play fingerprint
     _by_item_id: dict[int, ItemDef] = field(default_factory=dict, repr=False)
     _by_location_id: dict[int, LocationDef] = field(default_factory=dict, repr=False)
 
@@ -235,6 +236,29 @@ class Catalogue:
         canonical = json.dumps(scope, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
 
+    def play_fingerprint(self, goal_key: str) -> str:
+        """Hash of what the client needs to play a seed that's already generated: which checks it detects and how,
+        which items it delivers and how, and how it sees the goal. Names, evidence, verified flags and logic aren't
+        in it: confirming a draft check, naming it or relaxing a rule after a playthrough leaves running seeds
+        playable with the updated client."""
+        regions = set(self.regions_in_scope(goal_key))
+        raw = self.raw
+        play = {
+            "locations": sorted(([loc["ap_id"], loc.get("category"), loc.get("detection")]
+                                 for loc in raw["locations"].get("locations", []) if loc["region"] in regions),
+                                key=lambda row: row[0]),
+            "items": sorted(([i.ap_id, i.name, i.game_ref, i.quantity, i.repeatable]
+                             for i in self.items_in_scope(goal_key)), key=lambda row: row[0]),
+            "goal": self.goals[goal_key].detection,
+        }
+        canonical = json.dumps(play, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
+
+    def recorded_play_fingerprint(self, scope_fingerprint: str) -> str | None:
+        """For a seed's catalogue fingerprint from an earlier catalogue: the play fingerprint it had then
+        (data/seed_fingerprints.json), so a seed generated before an update can still be matched."""
+        return self.seed_fingerprints.get(scope_fingerprint)
+
     def pool_item_eligible(self, item: ItemDef, drafts: bool = False) -> bool:
         """Whether an item may be placed in the randomized pool.
 
@@ -278,9 +302,23 @@ def default_catalogue() -> Catalogue:
     return _DEFAULT
 
 
+SEED_FINGERPRINTS = "seed_fingerprints"   # data/seed_fingerprints.json: not part of the catalogue's own hashes
+
+
+def load_seed_fingerprints(directory: str | Path | None = None) -> dict[str, str]:
+    """Earlier catalogues' scope fingerprints and their play fingerprints (tools/record_fingerprints.py)."""
+    try:
+        doc = (_read_package_json(SEED_FINGERPRINTS) if directory is None else
+               json.loads((Path(directory) / f"{SEED_FINGERPRINTS}.json").read_text(encoding="utf-8")))
+    except (FileNotFoundError, OSError):
+        return {}
+    return {str(k): str(v) for k, v in doc.get("seeds", {}).items()}
+
+
 def load(directory: str | Path | None = None, *, validate: bool = True) -> Catalogue:
     raw = load_raw(directory)
     catalogue = build(raw)
+    catalogue.seed_fingerprints = load_seed_fingerprints(directory)
     if validate:
         problems = validate_catalogue(catalogue)
         if problems:
@@ -584,7 +622,9 @@ def validate_catalogue(cat: Catalogue) -> list[str]:
         if goal.slice < cat.region_slices.get(goal.region, 1):
             problems.append(f"goal {goal.key!r}: slice {goal.slice} doesn't include its region {goal.region!r}")
         if goal.verified:
-            unverified = [loc.name for loc in cat.locations_in_scope(goal.key) if not loc.verified]
+            # optional checks (filler only) are left out of seeds without drafts, so they may stay unverified
+            unverified = [loc.name for loc in cat.locations_in_scope(goal.key)
+                          if not loc.verified and not loc.no_progression]
             if unverified:
                 problems.append(f"goal {goal.key!r} is verified but its seeds would hold unverified checks: "
                                 f"{unverified[:3]}{' ...' if len(unverified) > 3 else ''}")

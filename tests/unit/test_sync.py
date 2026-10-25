@@ -215,3 +215,28 @@ async def test_tick_in_flight_cannot_switch_session_back(tmp_path, catalogue, si
     finally:
         await a.stop()
         await b.stop()
+
+
+@pytest.mark.parametrize("how", ["recorded", "slot_data", "different"])
+async def test_a_seed_from_an_earlier_catalogue_is_accepted_when_it_plays_the_same(how, tmp_path, sim, ledger,
+                                                                                   catalogue, bus):
+    goal = catalogue.default_goal
+    slot = {"catalogue_fingerprint": "0ldca7a1060e0000", "goal": goal, "world_version": "0.1.0",
+            "included_check_categories": []}
+    if how == "recorded":
+        catalogue.seed_fingerprints = {"0ldca7a1060e0000": catalogue.play_fingerprint(goal)}
+    elif how == "slot_data":
+        slot["play_fingerprint"] = catalogue.play_fingerprint(goal)
+    else:
+        slot["play_fingerprint"] = "0000000000000000"
+    srv = await FakeAPServer(slot_data=slot).start()
+    try:
+        c = make_controller(tmp_path, srv, sim, ledger, catalogue, bus)
+        if how == "different":
+            await asyncio.wait_for(c.run(), 5)
+            assert c.paused and "different Crimson Desert APWorld" in c.paused
+        else:
+            await run_until(c, lambda: c.session is not None)
+            assert not (c.paused and "different Crimson Desert APWorld" in c.paused)
+    finally:
+        await srv.stop()

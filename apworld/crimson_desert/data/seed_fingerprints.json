@@ -1,0 +1,32 @@
+{
+  "_comment": "Seed (scope) fingerprints of every catalogue so far, with the play fingerprint they had. The client accepts a seed from an earlier catalogue when its play fingerprint is unchanged. Written by crimsonipelago.tools.record_fingerprints; never remove entries.",
+  "seeds": {
+    "f54c24f4aa3f38d5": "dccd16592d29b39f",
+    "56f0212a8e5e3d37": "e3e667f9ee26b191",
+    "9e168c9c4f14eef6": "dccd16592d29b39f",
+    "0b4c47d84001467a": "01deaeeac062fad6",
+    "0231630262681279": "c0c6fafec366b5fa",
+    "babe56d00caef94d": "a83d8b394d230254",
+    "033984ac425ab60f": "bb7aa82f0d0d879d",
+    "19a6f4f1caabf3fb": "ab6d8b8f2f97430f",
+    "88600aff8bb08ba5": "6fa99caab02d8ed3",
+    "7d409c42b3dc842d": "84f48e7129f2ce28",
+    "f7290eeb2d94b76e": "9bd273b78f3783da",
+    "e6103a3daa9f0de2": "26f083ce3b6dee8e",
+    "d516387b12a78bae": "f2b474c01294f3a7",
+    "a4e2b36dffa80023": "77fe2b89ee11d045",
+    "a5a10912f61c9f93": "1a2a45b33747b67a",
+    "5862ee58f7da0134": "9a60eeb89a2de464",
+    "0dc4e5ec1896c698": "93a174684982d2c3",
+    "6ee032fe970ba12d": "a1a2995bd8b34ffe",
+    "b16bb1030b11154d": "053a031c3542489b",
+    "1c824cc2e9405c3f": "d042639e47b7136f",
+    "30a32dbabd4a9845": "6372b072049ec68f",
+    "6d631ccd496527a5": "f7dcfaa72d4e2a06",
+    "cc6ca5def2280a1b": "30de9693d32cc0f3",
+    "51426d1f555f776d": "760703eaeb9ce76b",
+    "7557d73b0f1f081d": "f0857a028f04c6a7",
+    "bf31df7b7e58ecbd": "ab3db96f3fa8e377",
+    "be57305105771212": "6bd764be6b280577"
+  }
+}

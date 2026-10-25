@@ -20,8 +20,11 @@ class CrimsonDesertLocation(Location):
 
 
 def enabled_locations(world: CrimsonDesertWorld) -> list[LocationDef]:
+    """The goal's checks in the chosen categories. Without draft slices, unverified optional checks (filler only)
+    are left out: the client wouldn't detect them, and nothing depends on them."""
     categories = world.options.included_check_categories.value
-    return [loc for loc in world.catalogue.locations_in_scope(world.goal_key) if loc.category in categories]
+    return [loc for loc in world.catalogue.locations_in_scope(world.goal_key) if loc.category in categories
+            and (world.drafts or loc.verified or not loc.no_progression)]
 
 
 def create_all_locations(world: CrimsonDesertWorld) -> None:

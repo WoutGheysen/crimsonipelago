@@ -37,6 +37,18 @@ The client window shows them as "Completed check: … (draft: now seen in play)"
 which checks fired; those are marked verified (`"verified": true`, evidence: the log). A slice whose checks have all
 fired, and whose goal was reached, becomes verified, and its goal no longer needs the option.
 
+```powershell
+py -m crimsonipelago.tools.verify_drafts logs\live-20261026.jsonl logs\live-20261027.jsonl            # report
+py -m crimsonipelago.tools.verify_drafts crimsonipelago_data\logs --write                              # all logs, and mark
+```
+
+The report lists per chapter how many draft checks were seen, story checks of a finished chapter that never fired,
+draft items the game accepted (Double Jump, the Abyss stat items: confirmed by hand once they did what they should),
+and checks done before an item their logic waits for had arrived (where a gate can be relaxed). `--write` marks
+checks and goals verified and records the new seed fingerprints, so the playthrough that produced the logs keeps
+going on the updated client (*Updating while a seed runs*, below). Seeds without draft slices leave unverified
+optional checks (regional quests, ruins) out, so a chapter's goal is verified once its story checks are.
+
 Things to note while playing, for the logic:
 
 - **A check that never fires:** an objective the story skipped, or one that isn't what the data suggests. It's
@@ -69,3 +81,22 @@ earlier than the guess can't hold anything another player waits for.
 - **Later abilities** (Back Hang, Aerial Maneuver, Focused Force Palm, Call Dragon) stay with the story: no override
   for them yet, so no gates past Double Jump.
 - **Discoveries, treasure** (Abyss gates, Sealed Abyss Artifacts): not yet.
+
+## Updating while a seed runs
+
+A seed carries two fingerprints of the catalogue it was made from. The **scope** fingerprint is the whole of what
+the seed is made of, names and logic included. The **play** fingerprint is only what the client plays it by: which
+checks, how each is detected, which items, how each is delivered, and how the goal is seen.
+
+A client with a newer catalogue accepts the seed when the play fingerprint still matches. Seeds from before the play
+fingerprint existed are looked up in `data/seed_fingerprints.json`, the record of every catalogue's fingerprints.
+So these updates are safe in the middle of a playthrough:
+
+- confirming draft checks, goals and items (`verified`, evidence);
+- readable names for checks;
+- relaxing or tightening logic (it only matters when a seed is generated).
+
+Adding or removing checks in a seed's chapters, or changing how one is detected, isn't safe: it needs a new seed.
+
+After any change to the catalogue data, run `python -m crimsonipelago.tools.record_fingerprints`. A test fails
+until it's done.

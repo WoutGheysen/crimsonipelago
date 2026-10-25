@@ -156,3 +156,25 @@ def test_detection_shape_is_checked():
     problems = _broken(m)
     assert any("integer mission_key" in p for p in problems)
     assert any("non-empty list of integer states" in p for p in problems)
+
+
+def test_every_goal_of_the_shipped_catalogue_has_its_seed_fingerprint_recorded(real_catalogue):
+    """Seeds generated now must stay playable after later updates: run tools/record_fingerprints after changes."""
+    for goal in real_catalogue.goals:
+        assert real_catalogue.recorded_play_fingerprint(real_catalogue.scope_fingerprint(goal)) == \
+            real_catalogue.play_fingerprint(goal), f"{goal}: run python -m crimsonipelago.tools.record_fingerprints"
+
+
+def test_confirming_naming_or_relaxing_a_check_keeps_running_seeds_playable(real_catalogue):
+    goal = "journeys_end"
+    raw = {k: copy.deepcopy(v) for k, v in real_catalogue.raw.items() if not k.startswith("_")}
+    loc = next(loc for loc in raw["locations"]["locations"] if not loc["verified"])
+    loc.update(verified=True, name=loc["name"] + " (readable)", requires=None, evidence="a playthrough log")
+    jump = next(i for i in raw["items"]["items"] if i["name"] == "Double Jump")
+    jump.update(verified=True, capability="supported", evidence="live test")
+    changed = cat_mod.build(raw)
+    assert changed.scope_fingerprint(goal) != real_catalogue.scope_fingerprint(goal)
+    assert changed.play_fingerprint(goal) == real_catalogue.play_fingerprint(goal)
+    # how a check is detected is part of playing the seed
+    loc["detection"] = {**loc["detection"], "states": [4]}
+    assert cat_mod.build(raw).play_fingerprint(goal) != real_catalogue.play_fingerprint(goal)
