@@ -1153,3 +1153,36 @@ def test_find_functions_compares_what_it_finds_with_the_known_build(tmp_path):
     rows = {r["name"]: r for r in report["targets"]}
     assert rows["give"]["verdict"] == "found, where expected" and rows["give"]["found"] == "0x2781780"
     assert rows["runner"]["verdict"] == "not found" and report["outcome"] == "not all found"
+
+
+def test_live_channel_records_what_the_games_own_transactions_change(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import LiveChannel
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5"}
+    background = game.on_execute
+    adds = bytearray(0x38 * 2)
+    adds[0], adds[0x38] = 0, 4                                          # an item, then knowledge 40002 level 1
+    struct.pack_into("<II", adds, 0x38 + 8, 40002, 1)
+
+    def with_changes(addr):
+        background(addr)
+        hit = game.pending[-1]
+        hit["memory"] = {"5": (0x1F000).to_bytes(8, "little").hex() + (2).to_bytes(4, "little").hex(),
+                         "3": (0).to_bytes(8, "little").hex() + (0).to_bytes(4, "little").hex()}
+        hit["follow"] = [{"spec": "5:0:896", "addr": "0x1f000", "hex": bytes(adds).hex()},
+                         {"spec": "3:0:896", "addr": "0x0", "hex": ""}]
+
+    game.on_execute = with_changes
+    logged = []
+    live = LiveChannel(game.port, targets_file=targets, sleep=lambda s: None, log=logged.append)
+    try:
+        live.poll()
+        live.poll()
+        assert any(m["cmd"] == "watch" and m.get("follow") == "5:0:896,3:0:896" for m in game.received)
+    finally:
+        live.close()
+        game.close()
+    seen = [r for r in logged if r["event"] == "seen"]
+    assert seen and [(e["kind"], e["a"], e["b"]) for e in seen[0]["adds"]] == [(0, 0, 0), (4, 40002, 1)]
+    assert "removes" not in seen[0]
