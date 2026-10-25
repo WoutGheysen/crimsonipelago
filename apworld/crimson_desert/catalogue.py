@@ -119,6 +119,17 @@ class GoalDef:
     slice: int = 1                  # seeds with this goal cover slices 1..slice
 
 
+@dataclass
+class SeedComparison:
+    """How a seed from an earlier catalogue fits this one (Catalogue.compare_seed)."""
+    missing: list[str] = field(default_factory=list)   # checks/items the seed has that this catalogue doesn't
+    changed: list[str] = field(default_factory=list)   # detected or delivered differently now (fixes)
+
+    @property
+    def playable(self) -> bool:
+        return not self.missing
+
+
 @dataclass(frozen=True)
 class Connection:
     source: str
@@ -144,7 +155,7 @@ class Catalogue:
     filler_weights: dict[str, int]
     trap_weights: dict[str, int]
     compatibility: dict[str, Any]
-    seed_fingerprints: dict[str, str] = field(default_factory=dict)   # scope fingerprint -> play fingerprint
+    seed_fingerprints: dict[str, Any] = field(default_factory=dict)   # data/seed_fingerprints.json
     _by_item_id: dict[int, ItemDef] = field(default_factory=dict, repr=False)
     _by_location_id: dict[int, LocationDef] = field(default_factory=dict, repr=False)
 
@@ -236,28 +247,50 @@ class Catalogue:
         canonical = json.dumps(scope, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
 
-    def play_fingerprint(self, goal_key: str) -> str:
-        """Hash of what the client needs to play a seed that's already generated: which checks it detects and how,
-        which items it delivers and how, and how it sees the goal. Names, evidence, verified flags and logic aren't
-        in it: confirming a draft check, naming it or relaxing a rule after a playthrough leaves running seeds
-        playable with the updated client."""
-        regions = set(self.regions_in_scope(goal_key))
-        raw = self.raw
-        play = {
-            "locations": sorted(([loc["ap_id"], loc.get("category"), loc.get("detection")]
-                                 for loc in raw["locations"].get("locations", []) if loc["region"] in regions),
-                                key=lambda row: row[0]),
-            "items": sorted(([i.ap_id, i.name, i.game_ref, i.quantity, i.repeatable]
-                             for i in self.items_in_scope(goal_key)), key=lambda row: row[0]),
-            "goal": self.goals[goal_key].detection,
+    def play_entries(self) -> dict[str, dict[str, Any]]:
+        """What the client plays seeds by, per entry: each check's detection, each item's delivery, each goal's
+        detection (a short hash each, with the slice it belongs to). Names, evidence, verified flags and logic
+        aren't in it. Recorded per catalogue in data/seed_fingerprints.json."""
+        def h(value: Any) -> str:
+            return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()[:8]
+        return {
+            "locations": {str(loc.ap_id): [self.region_slices.get(loc.region, 1), h([loc.category, loc.detection])]
+                          for loc in self.locations.values()},
+            "items": {str(i.ap_id): [i.slice, h([i.name, i.game_ref, i.quantity, i.repeatable])]
+                      for i in self.items.values()},
+            "goals": {key: [g.slice, h(g.detection)] for key, g in self.goals.items()},
         }
-        canonical = json.dumps(play, sort_keys=True, separators=(",", ":"))
-        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
 
-    def recorded_play_fingerprint(self, scope_fingerprint: str) -> str | None:
-        """For a seed's catalogue fingerprint from an earlier catalogue: the play fingerprint it had then
-        (data/seed_fingerprints.json), so a seed generated before an update can still be matched."""
-        return self.seed_fingerprints.get(scope_fingerprint)
+    def compare_seed(self, scope_fingerprint: str, goal_key: str) -> SeedComparison | None:
+        """A seed made from an earlier catalogue (its scope fingerprint is in data/seed_fingerprints.json), against
+        this one. None when that catalogue isn't recorded. The seed is playable when every check and item it was
+        made with still exists here; ids are never reused, so a changed detection or delivery is a fix, and checks
+        or items added since aren't in the seed (the server's list of the seed's checks decides)."""
+        known = self.seed_fingerprints.get("seeds", {}).get(scope_fingerprint)
+        if known is None:
+            return None
+        cat_id, goal = known
+        if goal != goal_key:
+            return None
+        then = self.seed_fingerprints.get("catalogues", {}).get(cat_id)
+        if then is None:
+            return None
+        now = self.play_entries()
+        top = then["goals"].get(goal, [0])[0]
+        result = SeedComparison()
+        for kind in ("locations", "items"):
+            for key, (slice_no, digest) in then[kind].items():
+                if slice_no > top:
+                    continue
+                if key not in now[kind]:
+                    result.missing.append(f"{kind[:-1]} {key}")
+                elif now[kind][key][1] != digest:
+                    result.changed.append(f"{kind[:-1]} {key}")
+        if goal not in now["goals"]:
+            result.missing.append(f"goal {goal}")
+        elif now["goals"][goal][1] != then["goals"][goal][1]:
+            result.changed.append(f"goal {goal}")
+        return result
 
     def pool_item_eligible(self, item: ItemDef, drafts: bool = False) -> bool:
         """Whether an item may be placed in the randomized pool.
@@ -305,14 +338,13 @@ def default_catalogue() -> Catalogue:
 SEED_FINGERPRINTS = "seed_fingerprints"   # data/seed_fingerprints.json: not part of the catalogue's own hashes
 
 
-def load_seed_fingerprints(directory: str | Path | None = None) -> dict[str, str]:
-    """Earlier catalogues' scope fingerprints and their play fingerprints (tools/record_fingerprints.py)."""
+def load_seed_fingerprints(directory: str | Path | None = None) -> dict[str, Any]:
+    """Every catalogue's seed fingerprints and what seeds made from it play by (tools/record_fingerprints.py)."""
     try:
-        doc = (_read_package_json(SEED_FINGERPRINTS) if directory is None else
-               json.loads((Path(directory) / f"{SEED_FINGERPRINTS}.json").read_text(encoding="utf-8")))
+        return (_read_package_json(SEED_FINGERPRINTS) if directory is None else
+                json.loads((Path(directory) / f"{SEED_FINGERPRINTS}.json").read_text(encoding="utf-8")))
     except (FileNotFoundError, OSError):
         return {}
-    return {str(k): str(v) for k, v in doc.get("seeds", {}).items()}
 
 
 def load(directory: str | Path | None = None, *, validate: bool = True) -> Catalogue:

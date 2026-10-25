@@ -33,7 +33,7 @@ class TestDefault(CrimsonDesertTestBase):
 
     def test_slot_data(self) -> None:
         slot_data = self.world.fill_slot_data()
-        for key in ("catalogue_fingerprint", "play_fingerprint", "catalogue_status", "world_version", "goal", "slot_data_version"):
+        for key in ("catalogue_fingerprint", "catalogue_status", "world_version", "goal", "slot_data_version"):
             self.assertIn(key, slot_data)
         self.assertEqual(slot_data["goal"], "first_slice")
         self.assertEqual(slot_data["catalogue_status"], "partial")

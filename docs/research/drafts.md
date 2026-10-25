@@ -84,19 +84,22 @@ earlier than the guess can't hold anything another player waits for.
 
 ## Updating while a seed runs
 
-A seed carries two fingerprints of the catalogue it was made from. The **scope** fingerprint is the whole of what
-the seed is made of, names and logic included. The **play** fingerprint is only what the client plays it by: which
-checks, how each is detected, which items, how each is delivered, and how the goal is seen.
+A seed carries the fingerprint of the catalogue it was made from (its *scope* fingerprint: everything the seed is
+made of, names and logic included). Each catalogue's fingerprints are recorded in `data/seed_fingerprints.json`,
+with what its seeds play by: every check's detection and every item's delivery, as a short hash each.
 
-A client with a newer catalogue accepts the seed when the play fingerprint still matches. Seeds from before the play
-fingerprint existed are looked up in `data/seed_fingerprints.json`, the record of every catalogue's fingerprints.
-So these updates are safe in the middle of a playthrough:
+A client with a newer catalogue looks the seed up there and accepts it when **every check and item the seed was
+made with still exists**. So these updates are safe in the middle of a playthrough:
 
-- confirming draft checks, goals and items (`verified`, evidence);
-- readable names for checks;
-- relaxing or tightening logic (it only matters when a seed is generated).
+- confirming draft checks, goals and items (`verified`, evidence), and readable names;
+- relaxing or tightening logic (it only matters when a seed is generated);
+- adding checks, items or whole categories: they aren't in the running seed (the server's list of its checks
+  decides), and new seeds get them;
+- fixing how a check is detected or an item delivered: ids are never reused, so a changed entry is a fix, and the
+  running seed uses it (the client says how many changed).
 
-Adding or removing checks in a seed's chapters, or changing how one is detected, isn't safe: it needs a new seed.
+Removing a check or item the seed holds isn't safe: the client refuses the seed, naming what's gone. A check that
+turns out to be wrong is fixed in place, not removed, while someone plays it.
 
 After any change to the catalogue data, run `python -m crimsonipelago.tools.record_fingerprints`. A test fails
 until it's done.

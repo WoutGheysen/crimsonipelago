@@ -43,11 +43,12 @@ def test_a_finished_chapter_in_the_logs_confirms_its_checks_and_goal(tmp_path):
     assert marked["goals"] == 1 and after.goals["chapter_2"].verified
     assert all(loc.verified for loc in after.locations_in_scope("chapter_2") if not loc.no_progression)
     assert not after.goals["chapter_3"].verified
-    # the seed fingerprints of the new catalogue are recorded, and running seeds still play the same
+    # the new catalogue's fingerprints are recorded, and seeds made before it still play
     seeds = json.loads((data / "seed_fingerprints.json").read_text())["seeds"]
     for goal in after.goals:
-        assert seeds[after.scope_fingerprint(goal)] == after.play_fingerprint(goal) == cat.play_fingerprint(goal)
-
+        assert after.scope_fingerprint(goal) in seeds
+        old = after.compare_seed(cat.scope_fingerprint(goal), goal)
+        assert old.playable and not old.changed
 
 def test_nothing_seen_marks_nothing(tmp_path):
     data = tmp_path / "data"

@@ -234,17 +234,24 @@ class SyncController:
         return self._same_play(slot_data)
 
     def _same_play(self, slot_data: dict) -> bool:
-        """The catalogue changed since the seed was made, but not in anything the client plays it by (names,
-        confirmed drafts, logic): which checks, how they're detected, which items and how they're delivered. The
-        seed says so itself (play_fingerprint), or, for seeds from before that, the record of earlier catalogues
-        does (data/seed_fingerprints.json)."""
+        """The catalogue changed since the seed was made (a newer client): still fine when every check and item the
+        seed was made with exists here (data/seed_fingerprints.json records what each catalogue's seeds hold).
+        Confirmed drafts, names and logic don't matter to a running seed; changed detections are fixes."""
+        compare = getattr(self.catalogue, "compare_seed", None)
         goal = slot_data.get("goal") or self.catalogue.default_goal
-        play = getattr(self.catalogue, "play_fingerprint", None)
-        if play is None or goal not in self.catalogue.goals:
+        if compare is None:
             return False
-        seed_play = slot_data.get("play_fingerprint") or self.catalogue.recorded_play_fingerprint(
-            str(slot_data.get("catalogue_fingerprint")))
-        return seed_play is not None and seed_play == play(goal)
+        result = compare(str(slot_data.get("catalogue_fingerprint")), goal)
+        if result is None:
+            return False
+        if not result.playable:
+            self.bus.emit(ev.ERROR, "This client no longer has some of the seed's checks or items: "
+                                    + ", ".join(result.missing[:5]) + (" …" if len(result.missing) > 5 else ""))
+            return False
+        if result.changed:
+            self.bus.emit(ev.CONNECTION, f"This seed was made with an earlier catalogue; {len(result.changed)} of its "
+                                         "checks or items are detected or delivered the updated way")
+        return True
 
     async def _on_Connected(self, cmd: dict) -> None:
         seed = (self.room_info or {}).get("seed_name")

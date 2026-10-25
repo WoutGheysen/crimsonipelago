@@ -108,7 +108,6 @@ class CrimsonDesertWorld(World):
             "slot_data_version": SLOT_DATA_VERSION,
             "world_version": WORLD_VERSION,
             "catalogue_fingerprint": self.catalogue.scope_fingerprint(self.goal_key),
-            "play_fingerprint": self.catalogue.play_fingerprint(self.goal_key),
             "slice": self.catalogue.goal_slice(self.goal_key),
             "catalogue_status": self.catalogue.status,
             "goal": self.goal_key,

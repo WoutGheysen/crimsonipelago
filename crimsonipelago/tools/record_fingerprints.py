@@ -3,17 +3,21 @@
     python -m crimsonipelago.tools.record_fingerprints
 
 A seed carries its catalogue's scope fingerprint. A later catalogue (a draft check confirmed, a name filled in, a
-rule relaxed) has a different one, so the client would refuse the seed. This records, for every goal, the scope
-fingerprint and the play fingerprint (what the client plays a seed by) in data/seed_fingerprints.json. A client
-with a newer catalogue looks the seed's fingerprint up there and accepts the seed when the play fingerprint is
-still the same.
+rule relaxed, checks or items added) has a different one. This records, in data/seed_fingerprints.json:
 
-Run it after every change to the catalogue data (a test fails until it's recorded). Entries are never removed.
+- `seeds`: every goal's scope fingerprint -> [catalogue id, goal];
+- `catalogues`: per catalogue id, what its seeds play by (Catalogue.play_entries: each check's detection and each
+  item's delivery as a short hash, with its slice).
+
+A client with a newer catalogue looks a seed's fingerprint up and accepts the seed when every check and item it was
+made with still exists (Catalogue.compare_seed). Run this after every change to the catalogue data (a test fails
+until it's recorded). Entries are never removed.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -22,26 +26,38 @@ from crimson_desert import catalogue as cat_mod
 
 from .draft_slices import DATA
 
+COMMENT = ("Seed fingerprints of every catalogue so far, and what seeds made from each play by. The client accepts "
+           "a seed from an earlier catalogue when every check and item it was made with still exists. Written by "
+           "crimsonipelago.tools.record_fingerprints; never remove entries.")
+
+
+def catalogue_id(entries: dict) -> str:
+    return hashlib.sha256(json.dumps(entries, sort_keys=True, separators=(",", ":")).encode()).hexdigest()[:12]
+
+
+def add(doc: dict, cat) -> list[str]:
+    """Record this catalogue's fingerprints in doc; returns what was new."""
+    entries = cat.play_entries()
+    cat_id = catalogue_id(entries)
+    doc.setdefault("catalogues", {})
+    seeds = doc.setdefault("seeds", {})
+    added = []
+    for goal in sorted(cat.goals):
+        scope = cat.scope_fingerprint(goal)
+        if scope not in seeds:
+            seeds[scope] = [cat_id, goal]
+            doc["catalogues"].setdefault(cat_id, entries)
+            added.append(f"{goal}: {scope} (catalogue {cat_id})")
+    return added
+
 
 def record(data: Path = DATA) -> list[str]:
     cat = cat_mod.load(data)
     path = data / f"{cat_mod.SEED_FINGERPRINTS}.json"
-    doc = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {
-        "_comment": "Seed (scope) fingerprints of every catalogue so far, with the play fingerprint they had. The "
-                    "client accepts a seed from an earlier catalogue when its play fingerprint is unchanged. "
-                    "Written by crimsonipelago.tools.record_fingerprints; never remove entries.",
-        "seeds": {}}
-    added = []
-    for goal in sorted(cat.goals):
-        scope, play = cat.scope_fingerprint(goal), cat.play_fingerprint(goal)
-        known = doc["seeds"].get(scope)
-        if known is None:
-            doc["seeds"][scope] = play
-            added.append(f"{goal}: {scope} -> {play}")
-        elif known != play:
-            raise SystemExit(f"{goal}: {scope} was recorded with play fingerprint {known}, now {play}. The play "
-                             f"fingerprint's definition changed: that would break running seeds.")
-    path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    doc = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"_comment": COMMENT}
+    added = add(doc, cat)
+    if added:
+        path.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return added
 
 

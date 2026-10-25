@@ -217,26 +217,29 @@ async def test_tick_in_flight_cannot_switch_session_back(tmp_path, catalogue, si
         await b.stop()
 
 
-@pytest.mark.parametrize("how", ["recorded", "slot_data", "different"])
-async def test_a_seed_from_an_earlier_catalogue_is_accepted_when_it_plays_the_same(how, tmp_path, sim, ledger,
-                                                                                   catalogue, bus):
+@pytest.mark.parametrize("how", ["recorded", "missing", "unknown"])
+async def test_a_seed_from_an_earlier_catalogue_is_accepted_when_its_checks_and_items_still_exist(
+        how, tmp_path, sim, ledger, catalogue, bus):
+    from crimsonipelago.tools.record_fingerprints import add
     goal = catalogue.default_goal
+    doc = {}
+    add(doc, catalogue)
+    entries = next(iter(doc["catalogues"].values()))
+    # pretend the seed came from an earlier catalogue with that content
+    doc["seeds"] = {"0ldca7a1060e0000": [next(iter(doc["catalogues"])), goal]}
+    if how == "missing":
+        entries["locations"]["123456789"] = [1, "00000000"]
+    catalogue.seed_fingerprints = doc if how != "unknown" else {}
     slot = {"catalogue_fingerprint": "0ldca7a1060e0000", "goal": goal, "world_version": "0.1.0",
             "included_check_categories": []}
-    if how == "recorded":
-        catalogue.seed_fingerprints = {"0ldca7a1060e0000": catalogue.play_fingerprint(goal)}
-    elif how == "slot_data":
-        slot["play_fingerprint"] = catalogue.play_fingerprint(goal)
-    else:
-        slot["play_fingerprint"] = "0000000000000000"
     srv = await FakeAPServer(slot_data=slot).start()
     try:
         c = make_controller(tmp_path, srv, sim, ledger, catalogue, bus)
-        if how == "different":
-            await asyncio.wait_for(c.run(), 5)
-            assert c.paused and "different Crimson Desert APWorld" in c.paused
-        else:
+        if how == "recorded":
             await run_until(c, lambda: c.session is not None)
             assert not (c.paused and "different Crimson Desert APWorld" in c.paused)
+        else:
+            await asyncio.wait_for(c.run(), 5)
+            assert c.paused and "different Crimson Desert APWorld" in c.paused
     finally:
         await srv.stop()
