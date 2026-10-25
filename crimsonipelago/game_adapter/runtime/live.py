@@ -43,6 +43,10 @@ LEARN_FROM = 25              # "how it was learned", as the saves record story-g
 TX_STATE = 0x1C0             # bytes of the game's transaction kept with a refusal (what state it was in)
 SIGHTINGS = 2000             # transaction sightings kept in memory (the edge-case test reads them)
 TRANSIENT_TRIES = 5          # an item the game took before but turns down now: tries before leaving it for the save
+# Phase 2 research: what each of the game's own transactions changes. "add" takes &removals as its 4th argument
+# and &additions as its 6th, each {pointer to 0x38-byte entries, count}; the plugin saves 16 entries of each.
+PROBE_FOLLOW = "5:0:896,3:0:896"
+ENTRY = 0x38
 BUSY_CODES = {0x40128A9B}    # "not now" from the game after a run of items in a row (live log, 25 Oct 2026)
 
 
@@ -105,6 +109,37 @@ class LiveResult:
     @property
     def given(self) -> bool:
         return self.state == "given"
+
+
+def _entries(listing: str | None, data: str | None) -> list[dict]:
+    """Change entries from a {pointer, count} argument snapshot and the entries it points at (as saved)."""
+    if not listing or not data:
+        return []
+    raw = bytes.fromhex(listing)
+    if len(raw) < 12:
+        return []
+    count = struct.unpack_from("<I", raw, 8)[0]
+    body = bytes.fromhex(data)
+    out = []
+    for n in range(min(count, len(body) // ENTRY)):
+        e = body[n * ENTRY:(n + 1) * ENTRY]
+        out.append({"kind": e[0], "a": struct.unpack_from("<I", e, 8)[0], "b": struct.unpack_from("<I", e, 0xC)[0],
+                    "hex": e.hex()})
+    if count > len(out):
+        out.append({"more": count - len(out)})
+    return out
+
+
+def changes(record: dict) -> dict:
+    """What one of the game's own transactions adds and removes (Phase 2 research: do quests go this way too?)."""
+    memory = record.get("memory") or {}
+    follow = {f.get("spec"): f.get("hex") for f in record.get("follow") or []}
+    args = record.get("args") or []
+    out = {"adds": _entries(memory.get("5"), follow.get("5:0:896")),
+           "removes": _entries(memory.get("3"), follow.get("3:0:896"))}
+    if len(args) > 8:
+        out["args"] = args[5:9]
+    return {k: v for k, v in out.items() if v}
 
 
 def _version(text: str) -> tuple[int, int]:
@@ -252,18 +287,18 @@ class LiveChannel:
         if not self.probing:
             while len(self.bridge.hits(8).records) == 8:   # leftovers from earlier watches
                 pass
-            self.bridge.watch(self.base + self.r3["probe"], 1, "execute")
+            self.bridge.watch(self.base + self.r3["probe"], 1, "execute", follow=PROBE_FOLLOW)
             self.probing = True
         for r in self.bridge.hits(8).records:
             args = [int(a, 16) for a in r.get("args", [])]
             if len(args) >= 11:
                 seen = Probe(args[0], args[2], int(r["tid"]), args[9] & 0xFFFFFFFF, args[10] & 0xFFFFFFFF,
                              (r.get("frames") or ["?"])[0])
-                self._sighted(seen)
+                self._sighted(seen, changes(r))
                 self.probe = seen
                 self.probe_seen = self.clock()
 
-    def _sighted(self, seen: Probe) -> None:
+    def _sighted(self, seen: Probe, change: dict | None = None) -> None:
         """Remember a use of the game's "add"; log when the transaction, its owner or the thread changed, or the
         game's clock went back. A new owner or the clock going back is a save being loaded: loading a save gave
         the player a new owner and set the clock back each time, and nothing else did (fast travel, the horse,
@@ -273,7 +308,8 @@ class LiveChannel:
         self.sightings.append(sighting)
         del self.sightings[:-SIGHTINGS]
         self.seen_count += 1
-        self.log({"event": "seen", "owner": sighting["owner"], "caller": seen.caller, "clock": seen.clock})
+        self.log({"event": "seen", "owner": sighting["owner"], "caller": seen.caller, "clock": seen.clock,
+                  **(change or {})})
         last, self._last_seen = self._last_seen, seen
         self.last_seen_unix = seen.unix_time
         if last is None:
