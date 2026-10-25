@@ -76,7 +76,9 @@ class SyncController:
                  bus: ev.EventBus | None = None, live=None):
         self.config, self.adapter, self.ledger, self.catalogue = config, adapter, ledger, catalogue
         self.bus = bus or ev.EventBus()
-        self.tracker = CheckTracker(ledger, adapter, catalogue, self.bus)
+        from ..game_adapter.runtime.live import JsonlLog
+
+        self.tracker = CheckTracker(ledger, adapter, catalogue, self.bus, log=JsonlLog(Path(config.data_dir) / "logs"))
         self.engine = DeliveryEngine(ledger, adapter, catalogue, self.bus, live=live)
         self.names = DataPackageCache(Path(config.data_dir) / "datapackage")
         self.connection: APConnection | None = None
@@ -261,6 +263,10 @@ class SyncController:
             self.bus.emit(ev.CONNECTION, f"Switched from seed {self.session.seed_name} to {seed}")
         self.session = session
         self.goal_key = self.slot_data.get("goal", self.catalogue.default_goal)
+        self.adapter.include_drafts = bool(self.slot_data.get("include_draft_slices"))
+        if self.adapter.include_drafts:
+            self.bus.emit(ev.CONNECTION, "This seed includes draft chapters: checks there are confirmed as you play "
+                                         "(logged in logs/live-*.jsonl)")
         categories = set(self.slot_data.get("included_check_categories", []))
         in_scope = getattr(self.catalogue, "locations_in_scope", None)
         candidates = (in_scope(self.goal_key) if in_scope is not None and self.goal_key in self.catalogue.goals

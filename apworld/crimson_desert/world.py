@@ -55,6 +55,7 @@ class CrimsonDesertWorld(World):
     origin_region_name = CATALOGUE.origin
 
     goal_key: str
+    drafts: bool = False
     enabled_location_defs: list[LocationDef]
     logic_item_names: set[str]
     planned_pool: tuple[list[str], list[str]]
@@ -64,6 +65,10 @@ class CrimsonDesertWorld(World):
         self.goal_key = self.options.goal.current_key
         if self.goal_key not in cat.goals:
             raise OptionError(f"Crimson Desert: goal {self.goal_key!r} is not available in this catalogue")
+        self.drafts = bool(self.options.include_draft_slices.value)
+        if not cat.goals[self.goal_key].verified and not self.drafts:
+            raise OptionError(f"Crimson Desert: goal {self.goal_key!r} is still a draft (not yet confirmed in play). "
+                              "Set include_draft_slices: true to play it anyway.")
         if cat.is_placeholder:
             logger.warning(
                 "Crimson Desert (player %s): generating from the PLACEHOLDER catalogue. "
@@ -108,5 +113,6 @@ class CrimsonDesertWorld(World):
             "goal": self.goal_key,
             "item_pool_mode": self.options.item_pool_mode.current_key,
             "included_check_categories": sorted(self.options.included_check_categories.value),
+            "include_draft_slices": self.drafts,
             "death_link": False,
         }

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from Options import Choice, OptionGroup, OptionSet, PerGameCommonOptions
+from Options import Choice, OptionGroup, OptionSet, PerGameCommonOptions, Toggle
 
 from .catalogue import LOCATION_CATEGORIES
 
@@ -17,13 +17,38 @@ from .catalogue import LOCATION_CATEGORIES
 class Goal(Choice):
     """Victory condition.
 
-    first_slice: speak with the woman in white (end of the first playable slice: prologue and chapter 1).
-    Only goals with reliable in-game detection are offered; longer goals come with more of the game.
+    first_slice: speak with the woman in white (the prologue and chapter 1). Verified.
+    chapter_2 ... chapter_12: the end of that chapter. journeys_end: the epilogue, the whole game.
+    Every goal after first_slice is a draft (built from the game's data, not yet confirmed in play): it needs
+    include_draft_slices.
     """
 
     display_name = "Goal"
     option_first_slice = 0
+    option_chapter_2 = 2
+    option_chapter_3 = 3
+    option_chapter_4 = 4
+    option_chapter_5 = 5
+    option_chapter_6 = 6
+    option_chapter_7 = 7
+    option_chapter_8 = 8
+    option_chapter_9 = 9
+    option_chapter_10 = 10
+    option_chapter_11 = 11
+    option_chapter_12 = 12
+    option_journeys_end = 13
     default = 0
+
+
+class IncludeDraftSlices(Toggle):
+    """Experimental: allow the chapters that are still drafts (every goal after first_slice).
+
+    Their checks come straight from the game's data and are detected from your save like the verified ones, but
+    nobody has played them through with the randomizer yet: a check may never fire, or a story ability may be
+    needed earlier than the logic thinks. The client logs every draft check it sees, which is how they get verified.
+    """
+
+    display_name = "Include Draft Slices"
 
 
 class ItemPoolMode(Choice):
@@ -55,10 +80,12 @@ class IncludedCheckCategories(OptionSet):
 @dataclass
 class CrimsonDesertOptions(PerGameCommonOptions):
     goal: Goal
+    include_draft_slices: IncludeDraftSlices
     item_pool_mode: ItemPoolMode
     included_check_categories: IncludedCheckCategories
 
 
 option_groups = [
     OptionGroup("Randomization", [ItemPoolMode, IncludedCheckCategories]),
+    OptionGroup("Experimental", [IncludeDraftSlices]),
 ]

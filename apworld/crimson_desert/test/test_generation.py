@@ -66,3 +66,50 @@ class TestTooFewChecks(CrimsonDesertTestBase):
     def test_generation_fails_cleanly(self) -> None:
         with self.assertRaises(OptionError):
             self.world_setup()
+
+
+class TestDraftGoalNeedsTheOption(CrimsonDesertTestBase):
+    options = {"goal": "chapter_5"}
+    run_default_tests = False
+
+    def setUp(self) -> None:
+        pass
+
+    def test_draft_goal_without_include_draft_slices_fails_cleanly(self) -> None:
+        with self.assertRaises(OptionError):
+            self.world_setup()
+
+
+class TestWholeGameDraft(CrimsonDesertTestBase):
+    options = {"goal": "journeys_end", "include_draft_slices": True}
+
+    def test_every_chapter_is_in_the_seed(self) -> None:
+        checks = {loc.name for loc in self.multiworld.get_locations(self.player) if loc.address is not None}
+        self.assertGreater(len(checks), 400)
+        self.assertIn(GOAL_CHECK, checks)
+        self.assertIn("Woman in White: Chapter Transition", checks)
+        self.assertTrue(self.world.fill_slot_data()["include_draft_slices"])
+
+    def test_flight_then_double_jump_gate_the_story(self) -> None:
+        names = [item.name for item in self.multiworld.itempool if item.player == self.player]
+        self.assertEqual(names.count("Flight"), 1)
+        self.assertEqual(names.count("Double Jump"), 1)
+        self.assertGreater(names.count("Abyss Artifact"), 40)
+        self.assertEqual(names.count("Vitality of the Abyss"), 4)
+        self.assertFalse(self.can_reach_location("Woman in White: Return to Hernand"))
+        self.collect_by_name(["Flight"])
+        self.assertTrue(self.can_reach_location("Woman in White: Return to Hernand"))
+        self.assertTrue(self.can_reach_location("Reunion: step 5"))
+        self.assertFalse(self.can_reach_location("For Honor: step 1"))
+        self.collect_by_name(["Double Jump"])
+        self.assertTrue(self.can_reach_location("For Honor: step 1"))
+
+
+class TestChapterTwoDraftIsSmaller(CrimsonDesertTestBase):
+    options = {"goal": "chapter_2", "include_draft_slices": True}
+
+    def test_only_slices_one_and_two(self) -> None:
+        checks = [loc for loc in self.multiworld.get_locations(self.player) if loc.address is not None]
+        self.assertEqual(len(checks), 92)
+        names = [item.name for item in self.multiworld.itempool if item.player == self.player]
+        self.assertNotIn("Vitality of the Abyss", names)

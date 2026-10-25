@@ -65,6 +65,13 @@ class ItemDef:
         """True when the adapter is allowed to try to grant this item."""
         return self.verified and self.capability in DELIVERABLE_CAPABILITIES and self.game_ref is not None
 
+    @property
+    def draft_deliverable(self) -> bool:
+        """An unverified item of a kind the client delivers (knowledge, inventory items): playable in a seed with
+        include_draft_slices, where the playthrough confirms it."""
+        return self.deliverable or (self.game_ref is not None
+                                    and self.game_ref.get("kind") in ("knowledge", "inventory_item", "nothing"))
+
 
 @dataclass(frozen=True)
 class LocationDef:
@@ -84,6 +91,11 @@ class LocationDef:
     def detectable(self) -> bool:
         """True when the real adapter can detect this check from save data."""
         return self.verified and self.detection.get("kind") != "placeholder"
+
+    @property
+    def draft_detectable(self) -> bool:
+        """Detectable once drafts are allowed: any real detection method, verified or not."""
+        return self.detection.get("kind") != "placeholder"
 
 
 @dataclass(frozen=True)
@@ -125,6 +137,7 @@ class Catalogue:
     goals: dict[str, GoalDef]
     default_goal: str
     item_pools: dict[str, dict[str, int]]
+    slice_pools: dict[int, dict[str, int]]
     filler_weights: dict[str, int]
     trap_weights: dict[str, int]
     compatibility: dict[str, Any]
@@ -208,6 +221,8 @@ class Catalogue:
             "items": [i for i in raw["items"].get("items", []) if i["name"] in items],
             "item_pool": {mode: {n: c for n, c in pool.items() if n in items}
                           for mode, pool in raw["items"].get("item_pool", {}).items()},
+            "slice_pool": {k: v for k, v in raw["items"].get("slice_pool", {}).items()
+                           if not k.startswith("_") and int(k) <= top},
             "filler_weights": raw["items"].get("filler_weights", {}),
             "trap_weights": raw["items"].get("trap_weights", {}),
             "events": [e for e in raw["progression"].get("events", []) if e["region"] in regions],
@@ -217,7 +232,7 @@ class Catalogue:
         canonical = json.dumps(scope, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
 
-    def pool_item_eligible(self, item: ItemDef) -> bool:
+    def pool_item_eligible(self, item: ItemDef, drafts: bool = False) -> bool:
         """Whether an item may be placed in the randomized pool.
 
         Unsupported or detection-only rewards must never be randomized
@@ -227,7 +242,7 @@ class Catalogue:
         """
         if self.is_placeholder:
             return True
-        return item.deliverable
+        return item.draft_deliverable if drafts else item.deliverable
 
 
 # --------------------------------------------------------------------------- loading
@@ -346,6 +361,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
         goals=goals,
         default_goal=prog_doc.get("default_goal", next(iter(goals), "")),
         item_pools={k: dict(v) for k, v in items_doc.get("item_pool", {}).items()},
+        slice_pools={int(k): dict(v) for k, v in items_doc.get("slice_pool", {}).items() if not k.startswith("_")},
         filler_weights=dict(items_doc.get("filler_weights", {})),
         trap_weights=dict(items_doc.get("trap_weights", {})),
         compatibility=raw["compatibility"],
@@ -583,6 +599,14 @@ def validate_catalogue(cat: Catalogue) -> list[str]:
                 problems.append(f"item_pool {pool_name!r}: {name!r} is not repeatable but appears {count} times")
         if sum(pool.values()) > len(cat.locations):
             problems.append(f"item_pool {pool_name!r} has more items than there are locations")
+    for slice_no, pool in cat.slice_pools.items():
+        for name, count in pool.items():
+            if name not in cat.items:
+                problems.append(f"slice_pool {slice_no}: unknown item {name!r}")
+            elif count < 1:
+                problems.append(f"slice_pool {slice_no}: count for {name!r} must be >= 1")
+            elif cat.items[name].slice > slice_no:
+                problems.append(f"slice_pool {slice_no}: {name!r} belongs to slice {cat.items[name].slice}")
     for weights_name, weights in (("filler_weights", cat.filler_weights), ("trap_weights", cat.trap_weights)):
         for name, weight in weights.items():
             if name not in cat.items:

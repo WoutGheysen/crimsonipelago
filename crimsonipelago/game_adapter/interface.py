@@ -122,6 +122,10 @@ class GameAdapter(ABC):
         identity = self.get_save_identity()
         return identity.profile_id if identity else None
 
+    # Set by the client from the seed: a seed with include_draft_slices also reports draft checks and delivers draft
+    # items (unverified, of a kind the client handles). The playthrough confirms them.
+    include_drafts: bool = False
+
     # ------------------------------------------------------------------ writing
     @abstractmethod
     def can_grant_item(self, item: ItemDef) -> Result:

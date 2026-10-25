@@ -1842,6 +1842,6346 @@
       "verified": false,
       "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
       "caveats": null
+    },
+    {
+      "ap_id": 14294964463,
+      "name": "Old Friend: step 1",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964463,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000215
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964462,
+      "name": "First Step to Rebuilding: step 1",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964462,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000216
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964461,
+      "name": "First Step to Rebuilding: step 2",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964461,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000216
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964460,
+      "name": "First Step to Rebuilding: step 3",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964460,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000216
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964459,
+      "name": "A Fresh Start: step 1",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964459,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000218
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964458,
+      "name": "A Fresh Start: step 2",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964458,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000218
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964457,
+      "name": "A Fresh Start: step 3",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964457,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000218
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964456,
+      "name": "A Fresh Start: step 4",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964456,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000218
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964455,
+      "name": "A Fresh Start: step 5",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964455,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000218
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964454,
+      "name": "Reward for Their Sweat: step 1",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964454,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000219
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964453,
+      "name": "Reward for Their Sweat: step 2",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964453,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000219
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964452,
+      "name": "Reward for Their Sweat: step 3",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964452,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000219
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964451,
+      "name": "Return of the Comrade: step 1",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964451,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000220
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964450,
+      "name": "Familiar Curses: step 1",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964450,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000237
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964449,
+      "name": "Familiar Curses: step 2",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964449,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000237
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964448,
+      "name": "Familiar Curses: step 3",
+      "region": "Homestead",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964448,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000237
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964311,
+      "name": "Return: step 1",
+      "region": "The Face Behind the Mask",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964311,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000504
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964310,
+      "name": "Traces in the Manor: step 1",
+      "region": "The Face Behind the Mask",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964310,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000282
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964309,
+      "name": "Traces in the Manor: step 2",
+      "region": "The Face Behind the Mask",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964309,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000282
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964308,
+      "name": "Nonhuman: step 1",
+      "region": "The Face Behind the Mask",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964308,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000235
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964307,
+      "name": "Nonhuman: step 2",
+      "region": "The Face Behind the Mask",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964307,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000235
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964306,
+      "name": "Seed of Unease: step 1",
+      "region": "The Face Behind the Mask",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964306,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001417
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964305,
+      "name": "Seed of Unease: step 2",
+      "region": "The Face Behind the Mask",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964305,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001417
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964303,
+      "name": "Dance with the Devil: step 1",
+      "region": "The Face Behind the Mask",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964303,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000284
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964302,
+      "name": "Hope After the Draught: step 1",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964302,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001018
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964301,
+      "name": "Scattered Comrades: step 1",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964301,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000373
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964300,
+      "name": "Rumors from the Sawmill: step 1",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964300,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000660
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964299,
+      "name": "A Gentle Touch: step 1",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964299,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000116
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964298,
+      "name": "A Gentle Touch: step 2",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964298,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000116
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964297,
+      "name": "A Gentle Touch: step 3",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964297,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000116
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964296,
+      "name": "A Gentle Touch: step 4",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964296,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000116
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964295,
+      "name": "Bustling Hill: step 1",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964295,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000852
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964294,
+      "name": "Bustling Hill: step 2",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964294,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000852
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964293,
+      "name": "Greymanes Reunited: step 1",
+      "region": "Pioneering",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964293,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001206
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964418,
+      "name": "Kilnden Workshop: step 1",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964418,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000012
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964417,
+      "name": "Kiln Repair at the Kilnden Workshop: step 1",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964417,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000013
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964416,
+      "name": "Kiln Repair at the Kilnden Workshop: step 2",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964416,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000013
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964415,
+      "name": "Kiln Repair at the Kilnden Workshop: step 3",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964415,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000013
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964414,
+      "name": "Kiln Repair at the Kilnden Workshop: step 4",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964414,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000013
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964413,
+      "name": "Kiln Repair at the Kilnden Workshop: step 5",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964413,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000013
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002817,
+      "name": "Kiln Repair at the Kilnden Workshop: step 6",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002817,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000013
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964410,
+      "name": "The Mysterious Pot: step 1",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964410,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000019
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964409,
+      "name": "The Mysterious Pot: step 2",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964409,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000019
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964408,
+      "name": "The Pot's Use: step 1",
+      "region": "Mysterious Pot",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964408,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000225
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964407,
+      "name": "Disturbance at the Arena: step 1",
+      "region": "Daily Life",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964407,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001219
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964406,
+      "name": "Disturbance at the Arena: step 2",
+      "region": "Daily Life",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964406,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001219
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964405,
+      "name": "Disturbance at the Arena: step 3",
+      "region": "Daily Life",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964405,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001219
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964404,
+      "name": "Skilled in Archery: step 1",
+      "region": "Daily Life",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964404,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001389
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964403,
+      "name": "Skilled in Archery: step 2",
+      "region": "Daily Life",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964403,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001389
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964402,
+      "name": "Skilled in Archery: step 3",
+      "region": "Daily Life",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964402,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001389
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964220,
+      "name": "The Words of Alustin: step 1",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964220,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000281
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964219,
+      "name": "The Words of Alustin: step 2",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964219,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000281
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001004075,
+      "name": "The Words of Alustin: step 3",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1004075,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000281
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964218,
+      "name": "Scholastone: step 1",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964218,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001066
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964217,
+      "name": "Scholastone: step 2",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964217,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001066
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964216,
+      "name": "Scholastone: step 3",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964216,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001066
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964215,
+      "name": "Scholastone: step 4",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964215,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001066
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964214,
+      "name": "On the Right Path: step 1",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964214,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000265
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964213,
+      "name": "Gate to the Otherworld: step 1",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964213,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000266
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001745,
+      "name": "Gate to the Otherworld: step 2",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001745,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000266
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964212,
+      "name": "Spire of the Stars: step 1",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964212,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000267
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964211,
+      "name": "Spire of the Stars: step 2",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964211,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000267
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964210,
+      "name": "Spire of the Stars: step 3",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964210,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000267
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964209,
+      "name": "Obsession and Madness: step 1",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964209,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000268
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964208,
+      "name": "Obsession and Madness: step 2",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964208,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000268
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964207,
+      "name": "Cast Shadow: step 1",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964207,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000269
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964206,
+      "name": "Cast Shadow: step 2",
+      "region": "Forbidden Knowledge",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964206,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000269
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964439,
+      "name": "Double-sided Invitation: step 1",
+      "region": "Uninvited Guest",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964439,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000432
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964438,
+      "name": "Unwelcomed Guests: step 1",
+      "region": "Uninvited Guest",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964438,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000240
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964437,
+      "name": "Unwelcomed Guests: step 2",
+      "region": "Uninvited Guest",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964437,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000240
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964436,
+      "name": "Demenissian Delegation: step 1",
+      "region": "Uninvited Guest",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964436,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000242
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964435,
+      "name": "Exposed Plot: step 1",
+      "region": "Uninvited Guest",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964435,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000243
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001575,
+      "name": "The Missing Seal: step 1",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001575,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001574
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001576,
+      "name": "The Missing Seal: step 2",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001576,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001574
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001004418,
+      "name": "The Missing Seal: step 3",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1004418,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001574
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964512,
+      "name": "Crowcaller: step 1",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964512,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000580
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964511,
+      "name": "Crowcaller: step 2",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964511,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000580
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964510,
+      "name": "Crowcaller: step 3",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964510,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000580
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001578,
+      "name": "Crowcaller: step 4",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001578,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000580
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964509,
+      "name": "The Crow's Warning: step 1",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964509,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000244
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964508,
+      "name": "Bloodwind: step 1",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964508,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000245
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964507,
+      "name": "Secret at the Church: step 1",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964507,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000247
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964506,
+      "name": "Secret at the Church: step 2",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964506,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000247
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964505,
+      "name": "Secret at the Church: step 3",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964505,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000247
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964504,
+      "name": "Toward the Nest: step 1",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964504,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000248
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964503,
+      "name": "Toward the Nest: step 2",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964503,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000248
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964502,
+      "name": "Toward the Nest: step 3",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964502,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000248
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964501,
+      "name": "Toward the Nest: step 4",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964501,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000248
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964500,
+      "name": "Toward the Nest: step 5",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964500,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000248
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964499,
+      "name": "Toward the Nest: step 6",
+      "region": "Black and White",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964499,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000248
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964292,
+      "name": "News: step 1",
+      "region": "Blazing Beacon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964292,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000137
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964291,
+      "name": "News: step 2",
+      "region": "Blazing Beacon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964291,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000137
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964290,
+      "name": "To the Battlefield: step 1",
+      "region": "Blazing Beacon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964290,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000139
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964289,
+      "name": "To the Battlefield: step 2",
+      "region": "Blazing Beacon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964289,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000139
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964288,
+      "name": "To the Battlefield: step 3",
+      "region": "Blazing Beacon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964288,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000139
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964287,
+      "name": "To the Battlefield: step 4",
+      "region": "Blazing Beacon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964287,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000139
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964286,
+      "name": "The Counterattack: step 1",
+      "region": "Blazing Beacon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964286,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000142
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964285,
+      "name": "The Counterattack: step 2",
+      "region": "Blazing Beacon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964285,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000142
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964281,
+      "name": "Cradle of Defense: step 1",
+      "region": "Below the Banners",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964281,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001231
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964280,
+      "name": "Cradle of Defense: step 2",
+      "region": "Below the Banners",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964280,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001231
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964279,
+      "name": "Cradle of Defense: step 3",
+      "region": "Below the Banners",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964279,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001231
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964278,
+      "name": "Hand of Deliverance: step 1",
+      "region": "Below the Banners",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964278,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000419
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964277,
+      "name": "Hand of Deliverance: step 2",
+      "region": "Below the Banners",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964277,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000419
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964276,
+      "name": "Hand of Deliverance: step 3",
+      "region": "Below the Banners",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964276,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000419
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964275,
+      "name": "Fire on the Frontlines: step 1",
+      "region": "Below the Banners",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964275,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000161
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001197,
+      "name": "Fire Support: step 1",
+      "region": "Turning Tides",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001197,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000866
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003188,
+      "name": "Fire Support: step 2",
+      "region": "Turning Tides",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003188,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000866
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964274,
+      "name": "In Ashes (Chapter 6): step 1",
+      "region": "Turning Tides",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964274,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000783
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964273,
+      "name": "In Ashes (Chapter 6): step 2",
+      "region": "Turning Tides",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964273,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000783
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964272,
+      "name": "In Ashes (Chapter 6): step 3",
+      "region": "Turning Tides",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964272,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000783
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964271,
+      "name": "Hidden Fangs: step 1",
+      "region": "Turning Tides",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964271,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000784
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964282,
+      "name": "Reclamation: step 1",
+      "region": "Turning Tides",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964282,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001397
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964270,
+      "name": "A Thousand Troops: step 1",
+      "region": "The Unyielding Shields",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964270,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000150
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964269,
+      "name": "A Thousand Troops: step 2",
+      "region": "The Unyielding Shields",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964269,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000150
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964268,
+      "name": "Traitor: step 1",
+      "region": "The Unyielding Shields",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964268,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000151
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964267,
+      "name": "All Quiet on the Front: step 1",
+      "region": "The Unyielding Shields",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964267,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000152
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964266,
+      "name": "News of Victory: step 1",
+      "region": "The Unyielding Shields",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964266,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001398
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964265,
+      "name": "News of Victory: step 2",
+      "region": "The Unyielding Shields",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964265,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001398
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964264,
+      "name": "News of Victory: step 3",
+      "region": "The Unyielding Shields",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964264,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001398
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964399,
+      "name": "Ashes of Treachery: step 1",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964399,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000195
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964398,
+      "name": "Ashes of Treachery: step 2",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964398,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000195
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964397,
+      "name": "Ashes of Treachery: step 3",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964397,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000195
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964396,
+      "name": "Ashes of Treachery: step 4",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964396,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000195
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001817,
+      "name": "Trust Lost: step 1",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001817,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001774
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001818,
+      "name": "Trust Lost: step 2",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001818,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001774
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001694,
+      "name": "Bared Fang: step 1",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001694,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001692
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001695,
+      "name": "Bared Fang: step 2",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001695,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001692
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001696,
+      "name": "Bared Fang: step 3",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001696,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001692
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001697,
+      "name": "Bared Fang: step 4",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001697,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001692
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964391,
+      "name": "Rekindled Hope: step 1",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964391,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000163
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964390,
+      "name": "Rekindled Hope: step 2",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964390,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000163
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964389,
+      "name": "Rekindled Hope: step 3",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964389,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000163
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001699,
+      "name": "Rekindled Hope: step 4",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001699,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000163
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964388,
+      "name": "Podium of Resolve: step 1",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964388,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000134
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964387,
+      "name": "Podium of Resolve: step 2",
+      "region": "Dawn Mist",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964387,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000134
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964385,
+      "name": "Shadows Over Pailune: step 1",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964385,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000004
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964384,
+      "name": "Shadows Over Pailune: step 2",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964384,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000004
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964383,
+      "name": "Driving out the Shadows: step 1",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964383,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000207
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964382,
+      "name": "Driving out the Shadows: step 2",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964382,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000207
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964381,
+      "name": "Driving out the Shadows: step 3",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964381,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000207
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964380,
+      "name": "Lurking Wolves: step 1",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964380,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000208
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964379,
+      "name": "Lurking Wolves: step 2",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964379,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000208
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964378,
+      "name": "Reclamation (Chapter 7): step 1",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964378,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000460
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964376,
+      "name": "Lonely Jackals: step 1",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964376,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000210
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964375,
+      "name": "Lonely Jackals: step 2",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964375,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000210
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964374,
+      "name": "Resolution: step 1",
+      "region": "Dawn",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964374,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000621
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964342,
+      "name": "The Counterattack (Chapter 7): step 1",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964342,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000253
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964341,
+      "name": "The Counterattack (Chapter 7): step 2",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964341,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000253
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964340,
+      "name": "Unleashed Fury: step 1",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964340,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000255
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964339,
+      "name": "The Final Bridge: step 1",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964339,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000256
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964338,
+      "name": "The Final Bridge: step 2",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964338,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000256
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964337,
+      "name": "The Final Bridge: step 3",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964337,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000256
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964336,
+      "name": "The Final Bridge: step 4",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964336,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000256
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964335,
+      "name": "The Final Bridge: step 5",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964335,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000256
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964334,
+      "name": "The Final Bridge: step 6",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964334,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000256
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001004688,
+      "name": "The Final Bridge: step 7",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1004688,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000256
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964332,
+      "name": "Battle at Silver Wolf Mountain: step 1",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964332,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000258
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964331,
+      "name": "Battle at Silver Wolf Mountain: step 2",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964331,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000258
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964330,
+      "name": "Incomplete Victory: step 1",
+      "region": "Decisive Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964330,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000259
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964518,
+      "name": "Ludvig's Whereabouts: step 1",
+      "region": "Twisted Fate",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964518,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000174
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964517,
+      "name": "Time to Face Justice: step 1",
+      "region": "Twisted Fate",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964517,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000176
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964516,
+      "name": "Time to Face Justice: step 2",
+      "region": "Twisted Fate",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964516,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000176
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964515,
+      "name": "Time to Face Justice: step 3",
+      "region": "Twisted Fate",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964515,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000176
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964514,
+      "name": "Time to Face Justice: step 4",
+      "region": "Twisted Fate",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964514,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000176
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964513,
+      "name": "Time to Face Justice: step 5",
+      "region": "Twisted Fate",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964513,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000176
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964553,
+      "name": "Healing Pailune: step 1",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964553,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000092
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001004452,
+      "name": "Healing Pailune: step 2",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1004452,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000092
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964552,
+      "name": "A Bond: step 1",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964552,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001213
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964551,
+      "name": "A Bond: step 2",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964551,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001213
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965670,
+      "name": "Ritual Preparations: step 1",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965670,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000058
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000972,
+      "name": "Ritual Preparations: step 2",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000972,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000058
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965669,
+      "name": "Where the Wind Guides You: step 1",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965669,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000083
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965668,
+      "name": "Where the Wind Guides You: step 2",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965668,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000083
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965667,
+      "name": "Where the Wind Guides You: step 3",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965667,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000083
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965666,
+      "name": "Where the Wind Guides You: step 4",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965666,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000083
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965665,
+      "name": "Where the Wind Guides You: step 5",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965665,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000083
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002612,
+      "name": "Where the Wind Guides You: step 6",
+      "region": "Ashen Steps",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002612,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000083
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964549,
+      "name": "Chasing a Shadow: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964549,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000047
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964548,
+      "name": "Chasing a Shadow: step 2",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964548,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000047
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964547,
+      "name": "Chasing a Shadow: step 3",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964547,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000047
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964546,
+      "name": "Chasing a Shadow: step 4",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964546,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000047
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964544,
+      "name": "Blazing Fire: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964544,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000272
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001131,
+      "name": "Blazing Fire: step 2",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001131,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000272
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964543,
+      "name": "Whispering Shadows: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964543,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000212
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000879,
+      "name": "Whispering Shadows: step 2",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000879,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000212
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002640,
+      "name": "Whispering Shadows: step 3",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002640,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000212
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000519,
+      "name": "Bloodied Invitation: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000519,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000388
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002641,
+      "name": "Bloodied Invitation: step 2",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002641,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000388
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964540,
+      "name": "Resolve Amidst a Storm: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964540,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000276
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965647,
+      "name": "Preparations for Advance: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965647,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000135
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965646,
+      "name": "Rebel Suppression: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965646,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001390
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002645,
+      "name": "Rebel Suppression: step 2",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002645,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001390
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003952,
+      "name": "Rebel Suppression: step 3",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003952,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001390
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003953,
+      "name": "Rebel Suppression: step 4",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003953,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001390
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003954,
+      "name": "Rebel Suppression: step 5",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003954,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001390
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965640,
+      "name": "The Cursed Knight: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965640,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001215
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965639,
+      "name": "The Cursed Knight: step 2",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965639,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001215
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965638,
+      "name": "The Cursed Knight: step 3",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965638,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001215
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964538,
+      "name": "The Blood Coronation: step 1",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964538,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000283
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964537,
+      "name": "The Blood Coronation: step 2",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964537,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000283
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001698,
+      "name": "The Blood Coronation: step 3",
+      "region": "To Demeniss",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001698,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000283
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964536,
+      "name": "Clue: step 1",
+      "region": "Traitor",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964536,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000271
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964535,
+      "name": "Clue: step 2",
+      "region": "Traitor",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964535,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000271
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002802,
+      "name": "Clue: step 3",
+      "region": "Traitor",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002802,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000271
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002803,
+      "name": "Clue: step 4",
+      "region": "Traitor",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002803,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000271
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964534,
+      "name": "A Fleeting Dream: step 1",
+      "region": "Traitor",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964534,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000287
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001616,
+      "name": "A Fleeting Dream: step 2",
+      "region": "Traitor",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001616,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000287
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964492,
+      "name": "An Unknown Voice: step 1",
+      "region": "The Calling",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964492,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000060
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964491,
+      "name": "An Unknown Voice: step 2",
+      "region": "The Calling",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964491,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000060
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964490,
+      "name": "An Unknown Voice: step 3",
+      "region": "The Calling",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964490,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000060
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002835,
+      "name": "Cloister of Enlightenment: step 1",
+      "region": "The Calling",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002835,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1002627
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964485,
+      "name": "Mark of the Scar: step 1",
+      "region": "Shattered Ties",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964485,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000159
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964484,
+      "name": "Mark of the Scar: step 2",
+      "region": "Shattered Ties",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964484,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000159
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002836,
+      "name": "Shackles of Fate: step 1",
+      "region": "Shattered Ties",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002836,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1002821
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964482,
+      "name": "Crossing Point: step 1",
+      "region": "Thinning Blade",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964482,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000162
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964481,
+      "name": "Crossing Point: step 2",
+      "region": "Thinning Blade",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964481,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000162
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002837,
+      "name": "Unwavering Steps: step 1",
+      "region": "Thinning Blade",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002837,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1002833
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002838,
+      "name": "Unwavering Steps: step 2",
+      "region": "Thinning Blade",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002838,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1002833
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964489,
+      "name": "Morning Fog: step 1",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964489,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000158
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964488,
+      "name": "Morning Fog: step 2",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964488,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000158
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965663,
+      "name": "Jijeong Temple in Chaos: step 1",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965663,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000285
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965662,
+      "name": "Jijeong Temple in Chaos: step 2",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965662,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000285
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965661,
+      "name": "Jijeong Temple in Chaos: step 3",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965661,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000285
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965660,
+      "name": "Jijeong Temple in Chaos: step 4",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965660,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000285
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965659,
+      "name": "Jijeong Temple in Chaos: step 5",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965659,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000285
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965658,
+      "name": "Jijeong Temple in Chaos: step 6",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965658,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000285
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965657,
+      "name": "Jijeong Temple in Chaos: step 7",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965657,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000285
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965655,
+      "name": "Path to Enlightenment: step 1",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965655,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000296
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965654,
+      "name": "Path of the Disciple: step 1",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965654,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000297
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965653,
+      "name": "Path of the Disciple: step 2",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965653,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000297
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000421,
+      "name": "Path of the Disciple: step 3",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000421,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000297
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965652,
+      "name": "True Strength: step 1",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965652,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000117
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965651,
+      "name": "True Strength: step 2",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965651,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000117
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002839,
+      "name": "Face the Inner Self: step 1",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002839,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1002834
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002840,
+      "name": "Face the Inner Self: step 2",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002840,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1002834
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002841,
+      "name": "Face the Inner Self: step 3",
+      "region": "Six Statues and the Beast",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002841,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1002834
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964478,
+      "name": "Fragments of Darkness: step 1",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964478,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000683
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964477,
+      "name": "Fragments of Darkness: step 2",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964477,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000683
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964476,
+      "name": "Fragments of Darkness: step 3",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964476,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000683
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964475,
+      "name": "Fragments of Darkness: step 4",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964475,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000683
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965679,
+      "name": "Pursuit Beyond the Veil: step 1",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965679,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001224
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965678,
+      "name": "Pursuit Beyond the Veil: step 2",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965678,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001224
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965677,
+      "name": "Pursuit Beyond the Veil: step 3",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965677,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001224
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965676,
+      "name": "Pursuit Beyond the Veil: step 4",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965676,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001224
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965675,
+      "name": "Pursuit Beyond the Veil: step 5",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965675,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001224
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294965672,
+      "name": "Black Witch: step 1",
+      "region": "Veiled Witch",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294965672,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000026
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964473,
+      "name": "The Cloister of Enlightenment: step 1",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964473,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000250
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964472,
+      "name": "The Cloister of Enlightenment: step 2",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964472,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000250
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964471,
+      "name": "The Cloister of Enlightenment: step 3",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964471,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000250
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964470,
+      "name": "The Sage of the Desert: step 1",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964470,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000251
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964469,
+      "name": "New Perspectives: step 1",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964469,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000252
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964468,
+      "name": "New Perspectives: step 2",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964468,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000252
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964467,
+      "name": "New Perspectives: step 3",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964467,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000252
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964466,
+      "name": "New Perspectives: step 4",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964466,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000252
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002203,
+      "name": "New Perspectives: step 5",
+      "region": "Enlightenment",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002203,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000252
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964329,
+      "name": "Untouchable: step 1",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964329,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000223
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001004343,
+      "name": "Untouchable: step 2",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1004343,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000223
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964328,
+      "name": "The Gate of War: step 1",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964328,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000224
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964327,
+      "name": "The Gate of War: step 2",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964327,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000224
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964326,
+      "name": "The Gate of War: step 3",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964326,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000224
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964324,
+      "name": "Master of the Ironworks: step 1",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964324,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000411
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964323,
+      "name": "Hidden Ace: step 1",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964323,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000229
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964322,
+      "name": "Hidden Ace: step 2",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964322,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000229
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964321,
+      "name": "Hidden Ace: step 3",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964321,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000229
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964320,
+      "name": "Hidden Ace: step 4",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964320,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000229
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964325,
+      "name": "Clockwork Insect Clash: step 1",
+      "region": "Secret Weapon",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964325,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001404
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964319,
+      "name": "Beating Heart: step 1",
+      "region": "Greater Firepower",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964319,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000418
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964318,
+      "name": "Beating Heart: step 2",
+      "region": "Greater Firepower",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964318,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000418
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964317,
+      "name": "Invaders from the East: step 1",
+      "region": "Greater Firepower",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964317,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000069
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964316,
+      "name": "Invaders from the East: step 2",
+      "region": "Greater Firepower",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964316,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000069
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964315,
+      "name": "Invaders from the East: step 3",
+      "region": "Greater Firepower",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964315,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000069
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964314,
+      "name": "Frozen Hearted Predator: step 1",
+      "region": "Greater Firepower",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964314,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000232
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964313,
+      "name": "Lingering Shadow: step 1",
+      "region": "Greater Firepower",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964313,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000233
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964312,
+      "name": "Lingering Shadow: step 2",
+      "region": "Greater Firepower",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964312,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000233
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964373,
+      "name": "The City of Steel: step 1",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964373,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000107
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001838,
+      "name": "Crossroads: step 1",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001838,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000616
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964371,
+      "name": "Strange Manor: step 1",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964371,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000434
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964370,
+      "name": "Strange Manor: step 2",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964370,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000434
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964369,
+      "name": "Strange Manor: step 3",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964369,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000434
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964368,
+      "name": "Fortress Keys: step 1",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964368,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000110
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964367,
+      "name": "Fortress Keys: step 2",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964367,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000110
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964366,
+      "name": "Fortress Keys: step 3",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964366,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000110
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964363,
+      "name": "Truth and Lies: step 1",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964363,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000184
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000636,
+      "name": "Truth and Lies: step 2",
+      "region": "Brave New World",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000636,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000184
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964362,
+      "name": "Master of a Forgotten Land: step 1",
+      "region": "Foreboding Shadow",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964362,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000111
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964361,
+      "name": "Master of a Forgotten Land: step 2",
+      "region": "Foreboding Shadow",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964361,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000111
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964360,
+      "name": "Whispers in the Wind: step 1",
+      "region": "Foreboding Shadow",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964360,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000113
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964359,
+      "name": "Flying Fortress Orbian: step 1",
+      "region": "Foreboding Shadow",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964359,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000114
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964358,
+      "name": "Flying Fortress Orbian: step 2",
+      "region": "Foreboding Shadow",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964358,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000114
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964533,
+      "name": "Precise Execution: step 1",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964533,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001226
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964532,
+      "name": "Deferred Advance: step 1",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964532,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001227
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964531,
+      "name": "Deferred Advance: step 2",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964531,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001227
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964530,
+      "name": "Deferred Advance: step 3",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964530,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001227
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964529,
+      "name": "Deferred Advance: step 4",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964529,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001227
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964526,
+      "name": "Departure of the Brave: step 1",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964526,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000046
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964525,
+      "name": "Departure of the Brave: step 2",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964525,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000046
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002314,
+      "name": "Departure of the Brave: step 3",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002314,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000046
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964523,
+      "name": "Forbidden Gate: step 1",
+      "region": "The Final Battle",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964523,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000041
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964522,
+      "name": "A Shadow in the Void: step 1",
+      "region": "The Void",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964522,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000106
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964521,
+      "name": "A Shadow in the Void: step 2",
+      "region": "The Void",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964521,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000106
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964520,
+      "name": "Blinding Darkness: step 1",
+      "region": "The Void",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964520,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000108
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001840,
+      "name": "Blinding Darkness: step 2",
+      "region": "The Void",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001840,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000108
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964498,
+      "name": "A New Beginning: step 1",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964498,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000112
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964497,
+      "name": "Peace in Hernand: step 1",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964497,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000531
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000840,
+      "name": "Peace in Hernand: step 2",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000840,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000531
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964496,
+      "name": "The Unyielding Shields: step 1",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964496,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000532
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000845,
+      "name": "The Unyielding Shields: step 2",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000845,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000532
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964495,
+      "name": "The Heart of Pywel: step 1",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964495,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000540
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000858,
+      "name": "The Heart of Pywel: step 2",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000858,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000540
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964493,
+      "name": "The Enduring Flame: step 1",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964493,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000536
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000863,
+      "name": "The Enduring Flame: step 2",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000863,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000536
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001691,
+      "name": "Evolving City: step 1",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001691,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001690
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000865,
+      "name": "Evolving City: step 2",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000865,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001690
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964494,
+      "name": "The Desert's Edge: step 1",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964494,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000534
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000859,
+      "name": "The Desert's Edge: step 2",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000859,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000534
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000971,
+      "name": "New Horizons: step 1",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000971,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000329
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000980,
+      "name": "New Horizons: step 2",
+      "region": "Journey's End",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000980,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000329
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/drafts.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
     }
   ]
 }

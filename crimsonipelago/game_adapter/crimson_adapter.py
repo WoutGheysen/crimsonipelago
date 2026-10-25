@@ -158,14 +158,15 @@ class CrimsonDesertSaveAdapter(GameAdapter):
             return set()
         done = set()
         for loc in catalogue.locations.values():
-            if loc.detectable and self._detected(dict(loc.detection), state):
+            if (loc.detectable or (self.include_drafts and loc.draft_detectable)) \
+                    and self._detected(dict(loc.detection), state):
                 done.add(loc.ap_id)
         return done
 
     def is_goal_complete(self, catalogue: Catalogue, goal_key: str) -> bool:
         goal = catalogue.goals.get(goal_key)
         state = self._deep_state()
-        if goal is None or state is None or not goal.verified:
+        if goal is None or state is None or not (goal.verified or self.include_drafts):
             return False
         return self._detected(dict(goal.detection), state)
 
@@ -184,7 +185,7 @@ class CrimsonDesertSaveAdapter(GameAdapter):
 
     # ------------------------------------------------------------------ writing
     def can_grant_item(self, item: ItemDef) -> Result:
-        if not item.deliverable:
+        if not (item.deliverable or (self.include_drafts and item.draft_deliverable)):
             return Result.unsupported(f"{item.name!r} has no verified delivery procedure (capability: {item.capability})")
         kind = (item.game_ref or {}).get("kind")
         if kind not in self.transforms:
@@ -330,7 +331,8 @@ class CrimsonDesertSaveAdapter(GameAdapter):
                     "folder (the one with save_parser.py)."]
 
         needed = {name: patches for name, patches in REQUIRED_OVERRIDES.items()
-                  if name in self.catalogue.items and self.catalogue.items[name].deliverable}
+                  if name in self.catalogue.items and (self.catalogue.items[name].deliverable or
+                                                       (self.include_drafts and self.catalogue.items[name].draft_deliverable))}
         if not needed:
             return []
         try:

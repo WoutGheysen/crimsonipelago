@@ -101,15 +101,21 @@ def plan_item_pool(world: CrimsonDesertWorld, location_count: int) -> tuple[list
         raise OptionError(f"Crimson Desert: catalogue has no item pool for mode {mode!r}")
 
     in_scope = {i.name for i in cat.items_in_scope(world.goal_key)}
+    drafts = getattr(world, "drafts", False)
+    wanted = dict(wanted)
+    for slice_no, extra in sorted(cat.slice_pools.items()):
+        if slice_no <= cat.goal_slice(world.goal_key):
+            for name, count in extra.items():
+                wanted[name] = wanted.get(name, 0) + count
     pool: list[str] = []
     for name, count in wanted.items():
-        if name in in_scope and cat.pool_item_eligible(cat.items[name]):
+        if name in in_scope and cat.pool_item_eligible(cat.items[name], drafts):
             pool.extend([name] * count)
 
     precollected: list[str] = []
     for name in sorted(required_progression_names(world) - set(pool)):
         item = cat.items[name]
-        if item.starting_safe and cat.pool_item_eligible(item):
+        if item.starting_safe and cat.pool_item_eligible(item, drafts):
             precollected.append(name)
         else:
             raise OptionError(

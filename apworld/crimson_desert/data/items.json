@@ -97,6 +97,66 @@
       "evidence": "docs/research/slice-2.md (story reward of Reunion; needs a live test and the story-grants-removed override)",
       "game_versions": [],
       "slice": 2
+    },
+    {
+      "ap_id": 2102,
+      "name": "Breath of the Abyss",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 19994,
+        "count": 1,
+        "max_stack": 5
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/drafts.md (stackable Misc item: delivered like Copper and Abyss Artifacts, live and in the save; not yet tested itself) Permanent stamina upgrade.",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 2103,
+      "name": "Spirit of the Abyss",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 19995,
+        "count": 1,
+        "max_stack": 5
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/drafts.md (stackable Misc item: delivered like Copper and Abyss Artifacts, live and in the save; not yet tested itself) Permanent spirit upgrade.",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 2104,
+      "name": "Vitality of the Abyss",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 19996,
+        "count": 1,
+        "max_stack": 5
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/drafts.md (stackable Misc item: delivered like Copper and Abyss Artifacts, live and in the save; not yet tested itself) Permanent health upgrade.",
+      "game_versions": [],
+      "slice": 2
     }
   ],
   "item_pool": {
@@ -115,5 +175,56 @@
     "100 Copper": 3,
     "Crow Feather": 1
   },
-  "trap_weights": {}
+  "trap_weights": {},
+  "slice_pool": {
+    "_comment": "Added to the item pool for seeds whose goal reaches the slice: about one Abyss Artifact per 8 checks (the skill tree carries chapters 2 to 9, docs/research/ruleset-draft.md), and the three permanent stat upgrades every third chapter. First guess, for the balance pass.",
+    "2": {
+      "Abyss Artifact": 6
+    },
+    "3": {
+      "Abyss Artifact": 4,
+      "Breath of the Abyss": 1,
+      "Spirit of the Abyss": 1,
+      "Vitality of the Abyss": 1
+    },
+    "4": {
+      "Abyss Artifact": 4
+    },
+    "5": {
+      "Abyss Artifact": 3
+    },
+    "6": {
+      "Abyss Artifact": 4,
+      "Breath of the Abyss": 1,
+      "Spirit of the Abyss": 1,
+      "Vitality of the Abyss": 1
+    },
+    "7": {
+      "Abyss Artifact": 6
+    },
+    "8": {
+      "Abyss Artifact": 5
+    },
+    "9": {
+      "Abyss Artifact": 6,
+      "Breath of the Abyss": 1,
+      "Spirit of the Abyss": 1,
+      "Vitality of the Abyss": 1
+    },
+    "10": {
+      "Abyss Artifact": 2
+    },
+    "11": {
+      "Abyss Artifact": 2
+    },
+    "12": {
+      "Abyss Artifact": 2,
+      "Breath of the Abyss": 1,
+      "Spirit of the Abyss": 1,
+      "Vitality of the Abyss": 1
+    },
+    "13": {
+      "Abyss Artifact": 2
+    }
+  }
 }
