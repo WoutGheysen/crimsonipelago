@@ -45,6 +45,20 @@ Things to note while playing, for the logic:
 - **Never needed an item where the logic said so:** Double Jump in *Hernand in Chaos*, for example. The gate
   can be relaxed.
 
+## Optional categories: regional quests and Abyss ruins
+
+`tools/draft_extras.py` adds two categories, off by default (`included_check_categories`):
+
+| Category | Checks | Where |
+|---|---|---|
+| `regional` | 200: every objective of the 35 regional quests (the four Witches and their sanctums, *Legendary Wolf*, *Emperor of the Bonepit*…) | "Regional quests: Hernand", "…: Calphade", … |
+| `abyss_ruins` | 547: one per ruin (100 per region, 47 Abyss islands) | "Abyss ruins: Hernand", … (islands need Flight) |
+
+A region's checks open with the chapter the story first goes there: Hernand and the Abyss islands 2, Calphade 6,
+Pailune and Beighen 7, Demeniss 8, the Crimson Desert and the Wayward Woods 9, Delesyia 10. That's a guess, so these
+checks **only ever hold filler** (`no_progression`, Archipelago's "excluded" locations): a check that opens later or
+earlier than the guess can't hold anything another player waits for.
+
 ## What the drafts don't have yet
 
 - **Readable names:** checks are "Mission: step N". The quest log's lines come from the save editor's
@@ -54,4 +68,4 @@ Things to note while playing, for the logic:
   extract adds them. Chapter 9's goal is *New Perspectives* until then.
 - **Later abilities** (Back Hang, Aerial Maneuver, Focused Force Palm, Call Dragon) stay with the story: no override
   for them yet, so no gates past Double Jump.
-- **Abyss ruins, regional quests** and the other categories: story objectives only for now.
+- **Discoveries, treasure** (Abyss gates, Sealed Abyss Artifacts): not yet.

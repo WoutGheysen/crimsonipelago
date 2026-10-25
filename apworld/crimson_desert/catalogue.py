@@ -28,7 +28,9 @@ CATALOGUE_FILES = ("items", "locations", "regions", "progression", "compatibilit
 CLASSIFICATIONS = {"progression", "useful", "filler", "trap"}
 CAPABILITIES = {"supported", "restricted", "detection_only", "unsupported"}
 DELIVERABLE_CAPABILITIES = {"supported", "restricted"}
-LOCATION_CATEGORIES = {"quest", "boss", "discovery", "treasure", "ability", "exploration"}
+LOCATION_CATEGORIES = {"quest", "boss", "discovery", "treasure", "ability", "exploration", "regional", "abyss_ruins"}
+# on unless a player's options say otherwise (the later, optional categories are off by default)
+DEFAULT_CATEGORIES = frozenset({"quest", "boss", "discovery", "treasure", "ability", "exploration"})
 DETECTION_KINDS = {"placeholder", "quest_state", "mission_state", "knowledge"}
 GAME_REF_KINDS = {"inventory_item", "knowledge", "quest_state", "nothing"}  # nothing: filler with no in-game effect
 CATALOGUE_STATUSES = {"placeholder", "partial", "verified"}
@@ -86,6 +88,7 @@ class LocationDef:
     verified: bool
     evidence: str | None
     caveats: str | None
+    no_progression: bool = False    # only ever holds filler (unsure when it's reachable, or missable)
 
     @property
     def detectable(self) -> bool:
@@ -322,6 +325,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
             verified=bool(entry.get("verified", False)),
             evidence=entry.get("evidence"),
             caveats=entry.get("caveats"),
+            no_progression=bool(entry.get("no_progression", False)),
         )
         locations.setdefault(loc.name, loc)
 

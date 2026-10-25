@@ -32,6 +32,9 @@ Crimson Desert:
   item_pool_mode: expanded
 
   # Which kinds of activities count as checks. Removing categories shortens the seed.
+  # Two more, off by default (drafts, filler only; need include_draft_slices):
+  #   regional: the regional quests of each region the seed reaches (200 checks over the whole game)
+  #   abyss_ruins: every Abyss ruin of those regions (547 over the whole game)
   included_check_categories:
     - quest
     - boss

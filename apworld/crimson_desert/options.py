@@ -11,7 +11,7 @@ from dataclasses import dataclass
 
 from Options import Choice, OptionGroup, OptionSet, PerGameCommonOptions, Toggle
 
-from .catalogue import LOCATION_CATEGORIES
+from .catalogue import DEFAULT_CATEGORIES, LOCATION_CATEGORIES
 
 
 class Goal(Choice):
@@ -67,14 +67,16 @@ class ItemPoolMode(Choice):
 class IncludedCheckCategories(OptionSet):
     """Which kinds of activities count as checks.
 
-    Valid values: quest, boss, discovery, treasure, ability, exploration.
+    Valid values: quest, boss, discovery, treasure, ability, exploration, regional, abyss_ruins.
+    regional: the regional quests (the Witches, Legendary Wolf...). abyss_ruins: the Abyss ruins of each region the
+    seed reaches, about 100 per region. Both are drafts (need include_draft_slices) and only ever hold filler.
     Removing categories shortens the seed; generation fails if too few checks remain
     to hold the required progression.
     """
 
     display_name = "Included Check Categories"
     valid_keys = sorted(LOCATION_CATEGORIES)
-    default = frozenset(LOCATION_CATEGORIES)
+    default = DEFAULT_CATEGORIES
 
 
 @dataclass

@@ -113,3 +113,26 @@ class TestChapterTwoDraftIsSmaller(CrimsonDesertTestBase):
         self.assertEqual(len(checks), 92)
         names = [item.name for item in self.multiworld.itempool if item.player == self.player]
         self.assertNotIn("Vitality of the Abyss", names)
+
+
+class TestOptionalCategories(CrimsonDesertTestBase):
+    options = {"goal": "journeys_end", "include_draft_slices": True,
+               "included_check_categories": ["quest", "boss", "exploration", "regional", "abyss_ruins"]}
+
+    def test_regional_quests_and_ruins_hold_only_filler(self) -> None:
+        from BaseClasses import LocationProgressType
+
+        extras = [loc for loc in self.multiworld.get_locations(self.player)
+                  if loc.name.startswith("Abyss Ruin:") or loc.parent_region.name.startswith("Regional quests")]
+        self.assertGreater(len(extras), 700)
+        self.assertTrue(all(loc.progress_type == LocationProgressType.EXCLUDED for loc in extras))
+        self.assertFalse(any(loc.item.advancement or loc.item.useful for loc in extras if loc.item))
+
+
+class TestOptionalCategoriesAreOffByDefault(CrimsonDesertTestBase):
+    options = {"goal": "chapter_2", "include_draft_slices": True}
+
+    def test_no_ruins_or_regional_quests(self) -> None:
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        self.assertFalse(any(n.startswith("Abyss Ruin:") for n in names))
+        self.assertEqual(len([n for n in names if n]), 93)          # 92 checks and the goal event

@@ -198,6 +198,71 @@
       "name": "Journey's End",
       "slice": 13,
       "description": "Epilogue: Journey's End: Journey's End (draft)."
+    },
+    {
+      "name": "Regional quests: Calphade",
+      "slice": 6,
+      "description": "Optional (regional quests), from chapter 6 (draft)."
+    },
+    {
+      "name": "Regional quests: the Crimson Desert",
+      "slice": 9,
+      "description": "Optional (regional quests), from chapter 9 (draft)."
+    },
+    {
+      "name": "Regional quests: Delesyia",
+      "slice": 10,
+      "description": "Optional (regional quests), from chapter 10 (draft)."
+    },
+    {
+      "name": "Regional quests: Demeniss",
+      "slice": 8,
+      "description": "Optional (regional quests), from chapter 8 (draft)."
+    },
+    {
+      "name": "Regional quests: Hernand",
+      "slice": 2,
+      "description": "Optional (regional quests), from chapter 2 (draft)."
+    },
+    {
+      "name": "Regional quests: Pailune and Beighen",
+      "slice": 7,
+      "description": "Optional (regional quests), from chapter 7 (draft)."
+    },
+    {
+      "name": "Regional quests: the Wayward Woods",
+      "slice": 9,
+      "description": "Optional (regional quests), from chapter 9 (draft)."
+    },
+    {
+      "name": "Abyss ruins: the Abyss islands",
+      "slice": 2,
+      "description": "Optional (abyss ruins), from chapter 2 (draft)."
+    },
+    {
+      "name": "Abyss ruins: the Crimson Desert",
+      "slice": 9,
+      "description": "Optional (abyss ruins), from chapter 9 (draft)."
+    },
+    {
+      "name": "Abyss ruins: Delesyia",
+      "slice": 10,
+      "description": "Optional (abyss ruins), from chapter 10 (draft)."
+    },
+    {
+      "name": "Abyss ruins: Demeniss",
+      "slice": 8,
+      "description": "Optional (abyss ruins), from chapter 8 (draft)."
+    },
+    {
+      "name": "Abyss ruins: Hernand",
+      "slice": 2,
+      "description": "Optional (abyss ruins), from chapter 2 (draft)."
+    },
+    {
+      "name": "Abyss ruins: Pailune and Beighen",
+      "slice": 7,
+      "description": "Optional (abyss ruins), from chapter 7 (draft)."
     }
   ],
   "connections": [
@@ -393,6 +458,73 @@
     {
       "from": "The Void",
       "to": "Journey's End",
+      "requires": null
+    },
+    {
+      "from": "Blazing Beacon",
+      "to": "Regional quests: Calphade",
+      "requires": null
+    },
+    {
+      "from": "The Calling",
+      "to": "Regional quests: the Crimson Desert",
+      "requires": null
+    },
+    {
+      "from": "Secret Weapon",
+      "to": "Regional quests: Delesyia",
+      "requires": null
+    },
+    {
+      "from": "Ashen Steps",
+      "to": "Regional quests: Demeniss",
+      "requires": null
+    },
+    {
+      "from": "After the Jump",
+      "to": "Regional quests: Hernand",
+      "requires": null
+    },
+    {
+      "from": "Dawn Mist",
+      "to": "Regional quests: Pailune and Beighen",
+      "requires": null
+    },
+    {
+      "from": "The Calling",
+      "to": "Regional quests: the Wayward Woods",
+      "requires": null
+    },
+    {
+      "from": "After the Jump",
+      "to": "Abyss ruins: the Abyss islands",
+      "requires": {
+        "item": "Flight"
+      }
+    },
+    {
+      "from": "The Calling",
+      "to": "Abyss ruins: the Crimson Desert",
+      "requires": null
+    },
+    {
+      "from": "Secret Weapon",
+      "to": "Abyss ruins: Delesyia",
+      "requires": null
+    },
+    {
+      "from": "Ashen Steps",
+      "to": "Abyss ruins: Demeniss",
+      "requires": null
+    },
+    {
+      "from": "After the Jump",
+      "to": "Abyss ruins: Hernand",
+      "requires": null
+    },
+    {
+      "from": "Dawn Mist",
+      "to": "Abyss ruins: Pailune and Beighen",
       "requires": null
     }
   ]
