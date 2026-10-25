@@ -73,7 +73,7 @@
     }
   },
   "signatures": {
-    "_about": "Phase 1b: how to find each r3 target in a game build not listed under builds (runtime/signatures.py). Patterns from tools/make_signatures.py; ?? = a byte a rebuild moves. made_from: where the pattern starts in build 1790086912.",
+    "_about": "Phase 1b: how to find each r3 target in a game build not listed under builds (runtime/signatures.py). Patterns from tools/make_signatures.py; ?? = a byte a rebuild moves. made_from: where the pattern starts in build 1790086912. via_call: follow the call at call_at, then find `then` in the called function (the item lookup is shared by 120 other tables, r7-signatures of 25 Oct).",
     "probe": {
       "kind": "function",
       "pattern": "48 89 5c 24 18 48 89 54 24 10 48 89 4c 24 08 55 56 57 41 54 41 55 41 56 41 57 48 8d ac 24 30 ff ff ff 48 81 ec d0 01 00 00 4d 8b e1 4d 8b e8 4c 8b c2 4c 8b f1 4c 89 29 48 8b bd 58 01 00 00 48 89 79 20 44 0f b6 bd 98 01 00 00",
@@ -89,19 +89,21 @@
       "pattern": "48 89 4c 24 08 53 48 83 ec 20 4c 8b ca 48 8b d9 c7 01 00 00 00 00 48 8b 02 48 8d 54 24 48 49 8b c9 ff 50 10 8b 08 89 0b eb ?? 48 8b 5c 24 30 48 8b c3 48 83 c4 20 5b c3",
       "made_from": "0x2774b20"
     },
-    "item_table": {
-      "kind": "global",
-      "pattern": "57 41 56 48 83 ec 50 0f b7 39 48 8b 1d ?? ?? ?? ?? 3b 7b 08 0f 83 ?? ?? ?? ?? 48 8d 34 fd 00 00 00 00 48 8b 43 58 48 8b 04 06 48 85 c0 0f 85 ?? ?? ?? ?? 4c 8d b3 90 00 00 00 49 39 06",
-      "disp_at": 13,
-      "insn_end": 17,
-      "made_from": "0x38ab6b"
-    },
     "knowledge_table": {
       "kind": "global",
       "pattern": "0f 84 ?? ?? ?? ?? 45 0f b6 78 10 45 8b 60 0c 41 8b 48 08 4c 8b 1d ?? ?? ?? ?? 41 83 7b 6c 00 74 ?? 45 8b 43 68 45 85 c0 74 ?? 33 d2 8b c1 41 f7 f0 44 8b d2 49 c1 e2 08 4d 03 53 78",
       "disp_at": 22,
       "insn_end": 26,
       "made_from": "0x22ce80e"
+    },
+    "item_table": {
+      "kind": "via_call",
+      "pattern": "0f 88 ?? ?? ?? ?? 48 63 fb 48 c1 e7 04 0f 1f 44 00 00 48 8b b6 d8 00 00 00 49 8d 4e 08 e8 ?? ?? ?? ?? 8b 14 3e 3b 10 74 ?? 48 83 ef 10 83 eb 01 48 8b 75 88 79 ?? e9 ?? ?? ?? ?? 48 8b 4c 3e 08",
+      "call_at": 29,
+      "then": "0f b7 39 48 8b 1d ?? ?? ?? ?? 3b 7b 08 0f 83 ?? ?? ?? ?? 48 8d 34 fd 00 00 00 00 48 8b 43 58",
+      "then_disp_at": 6,
+      "then_insn_end": 10,
+      "made_from": "0x27aeeee"
     }
   },
   "signature_defaults": {

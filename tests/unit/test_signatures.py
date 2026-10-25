@@ -102,7 +102,11 @@ def test_shipped_signatures_load_and_cover_live_delivery():
     sigs, defaults = load_signatures()
     assert set(sigs) == {"probe", "give", "runner", "item_table", "knowledge_table"}
     assert all(len(s.pattern) >= 40 for s in sigs.values())
-    assert sigs["item_table"].kind == "global" and 0 < sigs["item_table"].disp_at < sigs["item_table"].insn_end
+    assert sigs["knowledge_table"].kind == "global"
+    assert 0 < sigs["knowledge_table"].disp_at < sigs["knowledge_table"].insn_end
+    items = sigs["item_table"]
+    assert items.kind == "via_call" and items.pattern[items.call_at] == 0xE8 and items.then
+    assert 0 < items.then_disp_at < items.then_insn_end
     r3 = r3_from(scan(_reader(_image({})), BASE, {}), defaults)
     assert r3["reason"] == "0x0b" and r3["knowledge_live"] is True and "_about" not in r3
 
@@ -114,3 +118,28 @@ def test_found_targets_are_kept_per_build(tmp_path):
     record.put(5, r3_from(found, {"reason": "0x0b"}), "1.0.0.3000", found)
     assert record.get(5) == {"reason": "0x0b", "give": "0x2000", "found_by": "signatures"}
     assert json.loads((tmp_path / "found-targets.json").read_text())["5"]["game"] == "1.0.0.3000"
+
+
+def _reads_table(at: int, table: int) -> bytes:
+    """movzx edi, word [rcx]; mov rbx, [rip+disp] -> table; cmp edi, [rbx+8], placed at rva `at`."""
+    return bytes.fromhex("0fb739488b1d") + struct.pack("<i", table - (at + 10)) + bytes.fromhex("3b7b08")
+
+
+def test_a_global_found_several_times_counts_when_all_lead_to_the_same_table():
+    sig = {"item_table": _sigs()["item_table"]}
+    image = _image({0x2000: _reads_table(0x2000, 0x6D69AA8), 0x5000: _reads_table(0x5000, 0x6D69AA8)})
+    assert scan(_reader(image), BASE, sig).targets == {"item_table": 0x6D69AA8}
+    image = _image({0x2000: _reads_table(0x2000, 0x6D69AA8), 0x5000: _reads_table(0x5000, 0x6D69A00)})
+    found = scan(_reader(image), BASE, sig)
+    assert found.problems == {"item_table": "found 2 times, leading to 2 different places"}
+
+
+def test_via_call_follows_the_call_into_the_function_that_reads_the_table():
+    lookup, site = 0x9000, 0x4000
+    call = bytes.fromhex("498d4e08e8") + struct.pack("<i", lookup - (site + 9)) + bytes.fromhex("8b143e3b10")
+    image = _image({site: call, lookup: bytes.fromhex("574156") + _reads_table(lookup + 3, 0x6D69AA8),
+                    0x7000: bytes.fromhex("498d4e08e8") + struct.pack("<i", 0x100) + bytes.fromhex("8b143e3b10")})
+    sig = Signature("item_table", "via_call", parse_pattern("49 8d 4e 08 e8 ?? ?? ?? ?? 8b 14 3e 3b 10"), call_at=4,
+                    then=parse_pattern("0f b7 39 48 8b 1d ?? ?? ?? ?? 3b 7b 08"), then_disp_at=6, then_insn_end=10)
+    found = scan(_reader(image), BASE, {"item_table": sig})
+    assert found.targets == {"item_table": 0x6D69AA8} and len(found.matches["item_table"]) == 2

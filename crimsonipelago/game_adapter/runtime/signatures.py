@@ -35,10 +35,14 @@ BATCH = 256 * READ        # bytes searched at a time
 @dataclass(frozen=True)
 class Signature:
     name: str
-    kind: str                       # "function" | "global"
+    kind: str                       # "function" | "global" | "via_call"
     pattern: tuple[int | None, ...]  # None = any byte
     disp_at: int = 0                # global: where the displacement is, from the match
     insn_end: int = 0               # global: where the instruction reading it ends
+    call_at: int = 0                # via_call: where the call (e8 rel32) is, from the match
+    then: tuple[int | None, ...] = ()   # via_call: the instruction reading the global, in the called function
+    then_disp_at: int = 0
+    then_insn_end: int = 0
 
     @property
     def regex(self) -> re.Pattern:
@@ -53,7 +57,8 @@ def load_signatures(path: Path = TARGETS_FILE) -> tuple[dict[str, Signature], di
     """The signatures in targets.json, and the values that go with them (r3 settings that don't move)."""
     doc = json.loads(Path(path).read_text(encoding="utf-8"))
     sigs = {name: Signature(name, s["kind"], parse_pattern(s["pattern"]), int(s.get("disp_at", 0)),
-                            int(s.get("insn_end", 0)))
+                            int(s.get("insn_end", 0)), int(s.get("call_at", 0)), parse_pattern(s.get("then", "")),
+                            int(s.get("then_disp_at", 0)), int(s.get("then_insn_end", 0)))
             for name, s in doc.get("signatures", {}).items() if not name.startswith("_")}
     return sigs, dict(doc.get("signature_defaults", {}))
 
@@ -137,19 +142,50 @@ def scan(read: Callable[[int, int], bytes | None], base: int, sigs: dict[str, Si
             progress(found.scanned, total)
     for name, sig in sigs.items():
         hits = found.matches[name]
-        if len(hits) != 1:
-            found.problems[name] = "not found" if not hits else f"found {len(hits)} times"
-            continue
-        if sig.kind == "function":
-            found.targets[name] = hits[0]
+        if not hits:
+            found.problems[name] = "not found"
+        elif sig.kind == "function":
+            if len(hits) == 1:
+                found.targets[name] = hits[0]
+            else:
+                found.problems[name] = f"found {len(hits)} times"
         else:
-            raw = read(base + hits[0] + sig.disp_at, 4)
-            if raw is None:
-                found.problems[name] = "found, but its displacement couldn't be read"
-                continue
-            found.targets[name] = hits[0] + sig.insn_end + struct.unpack("<i", raw)[0]
+            # a global: several matches are fine as long as they all lead to the same one
+            values = {v for v in (_resolve(read, base, sig, at) for at in hits) if v is not None}
+            if len(values) == 1:
+                found.targets[name] = values.pop()
+            else:
+                found.problems[name] = (f"found {len(hits)} times, leading to {len(values)} different places"
+                                        if values else f"found {len(hits)} times, but couldn't be followed")
     found.seconds = round(clock() - start, 1)
     return found
+
+
+def _rel32(read, addr: int) -> int | None:
+    raw = read(addr, 4)
+    return None if raw is None else struct.unpack("<i", raw)[0]
+
+
+def _resolve(read: Callable[[int, int], bytes | None], base: int, sig: Signature, at: int) -> int | None:
+    """The global a match of `sig` at rva `at` leads to."""
+    if sig.kind == "global":
+        disp = _rel32(read, base + at + sig.disp_at)
+        return None if disp is None else at + sig.insn_end + disp
+    if sig.kind == "via_call":
+        head = read(base + at + sig.call_at, 1)
+        rel = _rel32(read, base + at + sig.call_at + 1)
+        if head != b"\xe8" or rel is None:
+            return None
+        callee = at + sig.call_at + 5 + rel
+        body = read(base + callee, 96)
+        if body is None:
+            return None
+        m = Signature("then", "global", sig.then).regex.search(body)
+        if m is None:
+            return None
+        disp = _rel32(read, base + callee + m.start() + sig.then_disp_at)
+        return None if disp is None else callee + m.start() + sig.then_insn_end + disp
+    return None
 
 
 def r3_from(found: Found, defaults: dict) -> dict:

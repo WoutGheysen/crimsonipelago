@@ -24,7 +24,11 @@ from pathlib import Path
 
 # What live delivery needs, as in targets.json's r3 section for build 1790086912 (game 2.03.02).
 FUNCTIONS = {"probe": 0x277E080, "give": 0x2781780, "runner": 0x2774B20}
-GLOBALS = {"item_table": (0x6D69AA8, 0x38AB60), "knowledge_table": (0x6D69A98, 0x22CE360)}   # (global, a reader)
+GLOBALS = {"knowledge_table": (0x6D69A98, 0x22CE360)}   # (global, a reader)
+# A global read by a small function the game has a copy of for every table (the item lookup reads the item table
+# with the same instructions 120 other functions use for theirs): found by following a call to that function from
+# code that only calls it for items. (global, the reading function, call sites to try)
+VIA_CALL = {"item_table": (0x6D69AA8, 0x38AB60, (0x27AEF0B, 0x22CE434, 0x22CE514))}
 
 MIN_BYTES = 72           # at least this much of a function's start (a prologue alone is common)
 MIN_FIXED = 48           # ... with at least this many bytes that aren't blanked out
@@ -83,6 +87,29 @@ def load_code(paths: list[Path]) -> dict[int, bytes]:
     return code
 
 
+def _containing(code: dict[int, bytes], rva: int) -> int | None:
+    return next((b for b, d in code.items() if b <= rva < b + len(d)), None)
+
+
+def _matches(code: dict[int, bytes], pattern: list[str]) -> list[int]:
+    import re
+
+    rx = re.compile(b"".join(b"." if t == "??" else re.escape(bytes([int(t, 16)])) for t in pattern), re.S)
+    return sorted({b + m.start() for b, d in code.items() for m in rx.finditer(d)})
+
+
+def _reading(md, data: bytes, at: int, target: int):
+    """The instructions of the function at `at`, and the index of the one reading `target` RIP-relative."""
+    from capstone import x86
+
+    insns = list(md.disasm(data, at))
+    for n, insn in enumerate(insns):
+        mem = [op for op in insn.operands if op.type == x86.X86_OP_MEM and op.mem.base == x86.X86_REG_RIP]
+        if mem and insn.address + insn.size + mem[0].mem.disp == target:
+            return insns, n
+    return insns, None
+
+
 def make(code: dict[int, bytes]) -> dict:
     md, capstone = _decoder()
     sigs: dict[str, dict] = {}
@@ -112,6 +139,32 @@ def make(code: dict[int, bytes]) -> dict:
                 break
         else:
             sys.exit(f"{reader:#x} doesn't read {name} ({target:#x})")
+    for name, (target, reader, sites) in VIA_CALL.items():
+        if reader not in code:
+            sys.exit(f"no dump of the function reading {name} ({reader:#x})")
+        insns, n = _reading(md, code[reader], reader, target)
+        if n is None:
+            sys.exit(f"{reader:#x} doesn't read {name} ({target:#x})")
+        first, insn = insns[max(0, n - 1)], insns[n]
+        then = signature(code[reader], first.address - reader, md, capstone,
+                         min_bytes=insn.address - first.address + insn.size + 3, max_bytes=32)
+        for site in sites:
+            fn = _containing(code, site)
+            if fn is None:
+                continue
+            body = list(md.disasm(code[fn], fn))
+            k = next(i for i, x in enumerate(body) if x.address == site)
+            lead = body[max(0, k - 6)]
+            pattern = signature(code[fn], lead.address - fn, md, capstone,
+                                min_bytes=site - lead.address + 5, max_bytes=MAX_BYTES)
+            if _matches(code, pattern) == [lead.address]:
+                sigs[name] = {"kind": "via_call", "pattern": " ".join(pattern), "call_at": site - lead.address,
+                              "then": " ".join(then), "then_disp_at": insn.address - first.address + insn.disp_offset,
+                              "then_insn_end": insn.address - first.address + insn.size,
+                              "made_from": hex(lead.address)}
+                break
+        else:
+            sys.exit(f"no distinctive call leading to {name}")
     return sigs
 
 
