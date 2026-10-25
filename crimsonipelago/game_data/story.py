@@ -77,34 +77,51 @@ def attach_rewards(nodes: dict[int, Node], missions: Table, drops: Table) -> Non
         node.rewards = found
 
 
-def chapters(nodes: dict[int, Node], plan: list[tuple[str, list[int]]] | None = None) -> list[dict]:
-    """Per chapter: its quests, their missions (in key order unless a plan gives the order) and objectives."""
+def chapters(nodes: dict[int, Node], plan: list | None = None) -> list[dict]:
+    """Per chapter: its quests, their missions and objectives. `plan` is either (name, [quest keys]) pairs, or the
+    chapters of crimson-candidates' main_story.json (then missions follow the story's order and carry their
+    display names)."""
     by_quest: dict[int, list[Node]] = {}
     for n in nodes.values():
         if n.children:
             by_quest.setdefault(n.quest, []).append(n)
     out = []
-    for name, quests in plan or KNOWN_CHAPTERS:
+    for entry in plan or KNOWN_CHAPTERS:
+        if isinstance(entry, dict):
+            name = f"{entry.get('chapter')}: {entry.get('title', '')}".rstrip(": ")
+            quests = [(int(q["quest_key"]), q.get("display"),
+                       [(int(m["mission_key"]), m.get("display")) for m in q["missions"]] if q.get("missions") else None)
+                      for q in entry.get("quests", [])]
+        else:
+            name, keys = entry
+            quests = [(q, None, None) for q in keys]
         chapter = {"chapter": name, "quests": []}
-        for q in quests:
+        for q, q_display, listed in quests:
+            if listed is None:
+                listed = [(m.key, None) for m in sorted(by_quest.get(q, []), key=lambda n: n.key)]
             missions = []
-            for m in sorted(by_quest.get(q, []), key=lambda n: n.key):
+            for key, m_display in listed:
+                m = nodes.get(key)
+                if m is None:
+                    missions.append({"mission_key": key, "display": m_display, "missing": True, "objectives": []})
+                    continue
                 objs = [nodes[c] for c in m.children if c in nodes]
-                missions.append({"mission_key": m.key, "internal": m.internal, "rewards": m.rewards,
+                missions.append({"mission_key": m.key, "internal": m.internal, "display": m_display,
+                                 "rewards": m.rewards,
                                  "objectives": [{"key": o.key, "internal": o.internal, "rewards": o.rewards}
                                                 for o in objs]})
-            chapter["quests"].append({"quest_key": q, "missions": missions})
+            chapter["quests"].append({"quest_key": q, "display": q_display, "missions": missions})
         out.append(chapter)
     return out
 
 
 def summary(story: list[dict]) -> list[str]:
-    lines = [f"{'chapter':<12} {'quests':>6} {'missions':>8} {'objectives':>10} {'rewarded':>8} {'rewards':>8}"]
+    lines = [f"{'chapter':<40} {'quests':>6} {'missions':>8} {'objectives':>10} {'rewarded':>8} {'missing':>7}"]
     for ch in story:
         missions = [m for q in ch["quests"] for m in q["missions"]]
         objs = [o for m in missions for o in m["objectives"]]
+        missing = sum(1 for m in missions if m.get("missing"))
         rewarded = sum(1 for o in objs if o["rewards"])
-        rewards = sum(len(o["rewards"]) for o in objs) + sum(len(m["rewards"]) for m in missions)
-        lines.append(f"{ch['chapter']:<12} {len(ch['quests']):>6} {len(missions):>8} {len(objs):>10} {rewarded:>8} "
-                     f"{rewards:>8}")
+        lines.append(f"{ch['chapter'][:40]:<40} {len(ch['quests']):>6} {len(missions):>8} {len(objs):>10} "
+                     f"{rewarded:>8} {missing:>7}")
     return lines

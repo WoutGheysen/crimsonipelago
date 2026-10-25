@@ -28,24 +28,52 @@ are laid out (`crimsonipelago/game_data/story.py`):
 Records are found by key, and keys are shared between tables (1001051 is both a mission and a drop set). So a
 value is only taken as a reward inside a reward entry, never because it happens to match a key.
 
-## The story so far (game 2.03.02)
+## The whole story (game 2.03.02)
 
-Chapters with quest keys known before the full quest database (`docs/research/progression-draft.md`):
+From `story --plan main_story.json` (the quest database's 14 chapters, 39 quests, 168 missions, in story order):
 
 | Chapter | Quests | Missions | Objectives (candidate checks) | With a reward |
 |---|---|---|---|---|
-| Prologue | 2 | 4 | 15 | 7 |
+| Prologue: Dead of Night | 2 | 4 | 15 | 7 |
 | 1 The First Encounter | 2 | 9 | 25 | 13 |
-| 2 Golden Greed | 3 | 18 | 51 | 20 |
-| 3 Howling Hill | 3 | 18 | 35 | 16 |
-| 4 The Price of Knowledge | 3 | 15 | 36 | 10 |
+| 2 Golden Greed | 3 | 16 | 48 | 20 |
+| 3 Howling Hill | 3 | 17 | 34 | 15 |
+| 4 The Price of Knowledge | 3 | 13 | 33 | 10 |
 | 5 Guest Unbidden | 2 | 10 | 23 | 8 |
-| Epilogue | 1 | 8 | 15 | 4 |
+| 6 Cracks in the Shield | 4 | 15 | 29 (+1 mission not in the tables) | 7 |
+| 7 Homecoming | 4 | 19 | 46 (+1) | 15 |
+| 8 Blood Coronation | 3 | 15 | 42 | 13 |
+| 9 The Sage of the Desert | 6 | 19 | 48 (+1) | 19 |
+| 10 Counterattack | 2 | 9 | 19 | 6 |
+| 11 Truth and Reality | 2 | 8 | 15 | 9 |
+| 12 The Abyss | 2 | 6 | 13 | 4 |
+| Epilogue: Journey's End | 1 | 8 | 15 | 4 |
+| **Total** | **39** | **168** | **405** | **152** |
 
-Chapters 6–12 need their quest keys: `crimson-candidates` writes them (`main_story.json`, from the save
-editor's quest database), and `story --plan` then covers every chapter.
+- Three missions the quest database lists aren't in the tables extracted on 22 Oct (*Return Home*, *Broken Claws*,
+  *Lust for Power*). A fresh `crimson-data extract` should have them.
+- The mission records of chapters 2–4 name a few more missions as belonging to their quests than the database
+  lists (18 against 16 in chapter 2). Probably optional ones; the playthrough of each slice decides.
 
-## What the story hands out (prologue to chapter 5)
+## Movement abilities: where the game hands them out
+
+| When | From the story | From the skill tree (Abyss Artifacts) |
+|---|---|---|
+| Prologue | Summon Mount (*New Journey*), Blinding Flash | |
+| Chapter 1 | Axiom Force (*Polar Opposites*), Force Palm, **Flight** (*Woman in White*) | |
+| Chapter 2 | **Double Jump** (*Reunion*) | |
+| Chapter 9 | Back Hang, Aerial Maneuver (*Mark of the Scar*), Focused Force Palm (*An Unknown Voice*) | |
+| Chapter 11 | Call Dragon (*Whispers in the Wind*) | |
+| any time | | Vault, Double Vault, Aerial Roll, Swift Flight, Aerial Swing, Aerial Maneuver (rope), Force Current, Ranged and Aerial Force Palm |
+
+For the ruleset:
+
+- **Chapters 2 to 9 add no movement from the story.** Abyss Artifacts and the skill tree carry that stretch, so
+  artifacts are the main "useful" item, and a later option can put skill-tree abilities in the pool directly.
+- Story abilities that later chapters expect (Flight at the jump, Focused Force Palm for magic walls) are the gates.
+  Each slice's playthrough finds which objectives need which.
+
+## What the story hands out, by chapter (prologue to chapter 5)
 
 The story's own rewards are the natural item pool: they're what a player of that chapter would have had.
 
@@ -66,11 +94,11 @@ Not item candidates: menu unlocks (`MainMenuView_*`), character entries (`Knowle
 | Category | Count in the data | Detection | Notes |
 |---|---|---|---|
 | Story objectives | 200 through chapter 5 | mission state (live: Phase 2) | the backbone; one slice per chapter or two |
-| Abyss ruins | 100 per region × 5 (codes Her, Dem, Del, Kwe, CD: Hernand, Demeniss, Delesyia, ?, Crimson Desert) | challenge mission state | an option per slice: none, some, all |
+| Abyss ruins | 100 per region × 5 (codes Her, Dem, Del, Kwe, CD: Hernand, Demeniss, Delesyia, the region with Beighen and Snowhaven, the Crimson Desert) | challenge mission state | an option per slice: none, some, all |
 | Abyss island ruins | 47 | challenge mission state | goes with Flight |
 | Standstone adventures and puzzles | 60 + about 40 | challenge mission state | |
 | Abyss challenges | 39 | challenge mission state | two are in the first slice already |
-| Regional quests | 35 (12 in Hernand) | quest state | per region |
+| Regional quests | 35 (12 in Hernand; the four Witches have 4–5 sanctums each) | quest state | per region |
 | Map nodes | 1,111 | knowledge | far too many; towns and landmarks only |
 
 All of these are missions in `missioninfo` (`Challenge_*`), so the same detection the slice uses works for them.
@@ -100,8 +128,21 @@ has one gate: the jump after *Speak with the woman in white* needs Flight.
 Each slice is played once before the next (the Phase 1 rule), and its logic is set from that playthrough:
 which objectives need an ability, which are missable.
 
+## Item categories in the data (`crimson-candidates`)
+
+| Category | Count | Role |
+|---|---|---|
+| Abyss Artifacts (75001) | stack of 10 | useful: the skill-tree currency |
+| Sealed Abyss Artifacts | 150 | each opened by a puzzle: checks rather than items |
+| Breath, Spirit, Vitality of the Abyss | 3 (stack 5) | useful: permanent stamina, spirit, health |
+| Abyss unique gear | 13 | Phase 3 (gear) |
+| Supply contracts | 50 | useful: unlock a camp vendor per region |
+| Keys | 27 | story and dungeon keys: not randomized at first (softlock risk) |
+| Treasure map pieces | 17 | useful, in sets of 3–4 |
+| Recipes and blueprints | 257 | filler or useful |
+| Entry permits | 2 | Hernand Entry Permit: to find out what it gates |
+
 ## Needed from the game side
 
-- `research/candidates/main_story.json` and the ability and item lists from `crimson-candidates` (chapters 6–12,
-  display names, stack sizes).
+- A fresh `crimson-data extract` of `missioninfo` and `dropsetinfo` (the three missing missions).
 - One live test per new ability (`plugin give-knowledge --key K`), as for Flight.
