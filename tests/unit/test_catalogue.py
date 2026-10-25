@@ -156,3 +156,54 @@ def test_detection_shape_is_checked():
     problems = _broken(m)
     assert any("integer mission_key" in p for p in problems)
     assert any("non-empty list of integer states" in p for p in problems)
+
+
+def test_every_goal_of_the_shipped_catalogue_has_its_seed_fingerprint_recorded(real_catalogue):
+    """Seeds generated now must stay playable after later updates: run tools/record_fingerprints after changes."""
+    for goal in real_catalogue.goals:
+        result = real_catalogue.compare_seed(real_catalogue.scope_fingerprint(goal), goal)
+        assert result is not None, f"{goal}: run python -m crimsonipelago.tools.record_fingerprints"
+        assert result.playable and not result.changed
+
+
+def _edited(real_catalogue, edit):
+    raw = {k: copy.deepcopy(v) for k, v in real_catalogue.raw.items() if not k.startswith("_")}
+    edit(raw)
+    cat = cat_mod.build(raw)
+    cat.seed_fingerprints = real_catalogue.seed_fingerprints
+    return cat
+
+
+def test_a_running_seed_survives_confirming_naming_relaxing_and_adding(real_catalogue):
+    goal = "journeys_end"
+    seed = real_catalogue.scope_fingerprint(goal)
+
+    def edit(raw):
+        loc = next(loc for loc in raw["locations"]["locations"] if not loc["verified"])
+        loc.update(verified=True, name=loc["name"] + " (readable)", requires=None, evidence="a playthrough log")
+        jump = next(i for i in raw["items"]["items"] if i["name"] == "Double Jump")
+        jump.update(verified=True, capability="supported", evidence="live test")
+        added = dict(loc, ap_id=10_000_000_000 + 999_999_999, name="A mission found later")
+        raw["locations"]["locations"].append(added)
+    changed = _edited(real_catalogue, edit)
+    assert changed.scope_fingerprint(goal) != seed
+    result = changed.compare_seed(seed, goal)
+    assert result.playable and result.changed == [] and result.missing == []
+
+
+def test_a_fixed_detection_is_a_change_and_a_removed_check_breaks_the_seed(real_catalogue):
+    goal = "journeys_end"
+    seed = real_catalogue.scope_fingerprint(goal)
+    target = next(loc for loc in real_catalogue.raw["locations"]["locations"] if not loc["verified"])["ap_id"]
+
+    def fix(raw):
+        loc = next(loc for loc in raw["locations"]["locations"] if loc["ap_id"] == target)
+        loc["detection"] = {**loc["detection"], "states": [4, 5]}
+    result = _edited(real_catalogue, fix).compare_seed(seed, goal)
+    assert result.playable and result.changed == [f"location {target}"]
+
+    def remove(raw):
+        raw["locations"]["locations"] = [loc for loc in raw["locations"]["locations"] if loc["ap_id"] != target]
+    result = _edited(real_catalogue, remove).compare_seed(seed, goal)
+    assert not result.playable and result.missing == [f"location {target}"]
+    assert real_catalogue.compare_seed("0000000000000000", goal) is None

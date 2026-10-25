@@ -51,11 +51,12 @@ closed. Nothing is lost or doubled.
 
 **"… kept for later, cannot be delivered yet"**
 That item has no verified delivery procedure in this release. It stays in the ledger as
-`UNSUPPORTED` and is delivered automatically by a later release that supports it. So far only Flight
-is delivered; the rest of the catalogue is still placeholder.
+`UNSUPPORTED` and is delivered automatically by a later release that supports it. Flight, Abyss Artifacts and
+Copper are verified; Double Jump and the Abyss stat items are delivered in seeds with draft chapters.
 
 **"Crimson Desert is running; rewards are applied once you quit to desktop"**
-Save writes only happen while the game is closed. Pending rewards are applied when you quit.
+The game plugin isn't connected, so items wait for a save write while the game is closed. With the plugin
+(`plugin.md`), items arrive while you play.
 
 **"cannot tell whether Crimson Desert is running; refusing to write"**
 The client could not list processes, so it treats the situation as unsafe. Close the game and make
@@ -76,6 +77,18 @@ crimsonipelago resolve <id> retry             # it is not; try again
 ```
 
 Every write is preceded by a backup in `<data dir>/backups/`.
+
+## Stuck: the game needs an item you don't have
+
+The logic should never ask for an ability before the seed can give it, but the draft chapters' logic is a guess
+until it's been played. If you're stuck (a glide without Flight, a ledge without Double Jump):
+
+1. **Where is it?** In the server's window (the one that hosts the seed), type
+   `/hint Wout Double Jump`. It names the check that holds it. If that check is behind the spot you're stuck at,
+   it's a logic mistake: note where you are.
+2. **Get it anyway:** in the same window, `/send Wout Double Jump`. The client delivers it like any other item.
+   This doesn't spoil the seed: the check that held it still counts when you reach it.
+3. Send the `live-*.jsonl` log of that day, and say where it happened: that's the fix for the logic.
 
 ## Where things are
 

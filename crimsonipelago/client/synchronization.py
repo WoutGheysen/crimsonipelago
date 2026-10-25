@@ -229,7 +229,29 @@ class SyncController:
         """The seed's catalogue is this client's, for what the seed covers (its goal's slices). Seeds from before
         slices sent the hash of the whole catalogue: that still matches an unchanged catalogue."""
         seed = slot_data.get("catalogue_fingerprint")
-        return seed in (self._client_fingerprint(slot_data.get("goal")), self.catalogue.fingerprint)
+        if seed in (self._client_fingerprint(slot_data.get("goal")), self.catalogue.fingerprint):
+            return True
+        return self._same_play(slot_data)
+
+    def _same_play(self, slot_data: dict) -> bool:
+        """The catalogue changed since the seed was made (a newer client): still fine when every check and item the
+        seed was made with exists here (data/seed_fingerprints.json records what each catalogue's seeds hold).
+        Confirmed drafts, names and logic don't matter to a running seed; changed detections are fixes."""
+        compare = getattr(self.catalogue, "compare_seed", None)
+        goal = slot_data.get("goal") or self.catalogue.default_goal
+        if compare is None:
+            return False
+        result = compare(str(slot_data.get("catalogue_fingerprint")), goal)
+        if result is None:
+            return False
+        if not result.playable:
+            self.bus.emit(ev.ERROR, "This client no longer has some of the seed's checks or items: "
+                                    + ", ".join(result.missing[:5]) + (" …" if len(result.missing) > 5 else ""))
+            return False
+        if result.changed:
+            self.bus.emit(ev.CONNECTION, f"This seed was made with an earlier catalogue; {len(result.changed)} of its "
+                                         "checks or items are detected or delivered the updated way")
+        return True
 
     async def _on_Connected(self, cmd: dict) -> None:
         seed = (self.room_info or {}).get("seed_name")
