@@ -157,6 +157,610 @@
       "evidence": "docs/research/drafts.md (stackable Misc item: delivered like Copper and Abyss Artifacts, live and in the save; not yet tested itself) Permanent health upgrade.",
       "game_versions": [],
       "slice": 2
+    },
+    {
+      "ap_id": 1201,
+      "name": "Vault",
+      "classification": "useful",
+      "category": "ability",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 40018
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (skill-tree ability: knowledge key from the save editor's knowledge list; draft until a seed delivers it and it works)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 1202,
+      "name": "Double Vault",
+      "classification": "useful",
+      "category": "ability",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1002744
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (skill-tree ability: knowledge key from the save editor's knowledge list; draft until a seed delivers it and it works)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 1203,
+      "name": "Aerial Roll",
+      "classification": "useful",
+      "category": "ability",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 40082
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (skill-tree ability: knowledge key from the save editor's knowledge list; draft until a seed delivers it and it works)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 1204,
+      "name": "Swift Flight",
+      "classification": "useful",
+      "category": "ability",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1002349
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (skill-tree ability: knowledge key from the save editor's knowledge list; draft until a seed delivers it and it works)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 1205,
+      "name": "Aerial Swing",
+      "classification": "useful",
+      "category": "ability",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1003513
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (skill-tree ability: knowledge key from the save editor's knowledge list; draft until a seed delivers it and it works)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 1206,
+      "name": "Force Current",
+      "classification": "useful",
+      "category": "ability",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1003090
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (skill-tree ability: knowledge key from the save editor's knowledge list; draft until a seed delivers it and it works)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 1207,
+      "name": "Ranged Force Palm",
+      "classification": "useful",
+      "category": "ability",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1001748
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (skill-tree ability: knowledge key from the save editor's knowledge list; draft until a seed delivers it and it works)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 1208,
+      "name": "Aerial Force Palm",
+      "classification": "useful",
+      "category": "ability",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1001117
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (skill-tree ability: knowledge key from the save editor's knowledge list; draft until a seed delivers it and it works)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 2201,
+      "name": "2 Freya's Lesser Elixirs",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1000028,
+        "count": 2,
+        "max_stack": 10
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 2202,
+      "name": "2 Apollonia's Lesser Elixirs",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1000030,
+        "count": 2,
+        "max_stack": 10
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 2203,
+      "name": "2 Meliara's Lesser Elixirs",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1000034,
+        "count": 2,
+        "max_stack": 10
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 2204,
+      "name": "2 Haiden's Lesser Elixirs",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1000085,
+        "count": 2,
+        "max_stack": 10
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 2205,
+      "name": "2 Astrid's Lesser Elixirs",
+      "classification": "useful",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1000112,
+        "count": 2,
+        "max_stack": 10
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3201,
+      "name": "Light Copper Pouch",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 103,
+        "count": 1,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3202,
+      "name": "Modest Copper Pouch",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 101,
+        "count": 1,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3203,
+      "name": "Full Copper Pouch",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 102,
+        "count": 1,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3204,
+      "name": "Modest Silver Pouch",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1000629,
+        "count": 1,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3205,
+      "name": "Full Silver Pouch",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 104,
+        "count": 1,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3301,
+      "name": "3 Grilled Meat",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1000644,
+        "count": 3,
+        "max_stack": 20
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3302,
+      "name": "3 Grilled Fish",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1000645,
+        "count": 3,
+        "max_stack": 20
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3303,
+      "name": "2 Hearty Grilled Meat",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1001160,
+        "count": 2,
+        "max_stack": 20
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3304,
+      "name": "2 Meat Stew",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1002062,
+        "count": 2,
+        "max_stack": 20
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3305,
+      "name": "2 Harvest Soup",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1002060,
+        "count": 2,
+        "max_stack": 20
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3401,
+      "name": "20 Arrows",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 50001,
+        "count": 20,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3402,
+      "name": "10 Fire Arrows",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1001316,
+        "count": 10,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3403,
+      "name": "10 Poison Arrows",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 50003,
+        "count": 10,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3404,
+      "name": "5 Explosive Arrows",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 1001321,
+        "count": 5,
+        "max_stack": 100
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3501,
+      "name": "5 Iron Ore",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 720001,
+        "count": 5,
+        "max_stack": 50
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3502,
+      "name": "5 Copper Ore",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 720004,
+        "count": 5,
+        "max_stack": 50
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3503,
+      "name": "3 Silver Ore",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 720002,
+        "count": 3,
+        "max_stack": 50
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
+    },
+    {
+      "ap_id": 3504,
+      "name": "2 Gold Ore",
+      "classification": "filler",
+      "category": "resource",
+      "game_ref": {
+        "kind": "inventory_item",
+        "item_key": 720003,
+        "count": 2,
+        "max_stack": 50
+      },
+      "quantity": 1,
+      "repeatable": true,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "game_versions": [],
+      "slice": 2
     }
   ],
   "item_pool": {
@@ -172,14 +776,40 @@
     }
   },
   "filler_weights": {
-    "100 Copper": 3,
-    "Crow Feather": 1
+    "100 Copper": 4,
+    "Crow Feather": 1,
+    "Light Copper Pouch": 3,
+    "Modest Copper Pouch": 3,
+    "Full Copper Pouch": 2,
+    "Modest Silver Pouch": 1,
+    "Full Silver Pouch": 1,
+    "3 Grilled Meat": 3,
+    "3 Grilled Fish": 3,
+    "2 Hearty Grilled Meat": 2,
+    "2 Meat Stew": 2,
+    "2 Harvest Soup": 1,
+    "20 Arrows": 3,
+    "10 Fire Arrows": 1,
+    "10 Poison Arrows": 1,
+    "5 Explosive Arrows": 1,
+    "5 Iron Ore": 2,
+    "5 Copper Ore": 2,
+    "3 Silver Ore": 1,
+    "2 Gold Ore": 1
   },
   "trap_weights": {},
   "slice_pool": {
-    "_comment": "Added to the item pool for seeds whose goal reaches the slice: about one Abyss Artifact per 8 checks (the skill tree carries chapters 2 to 9, docs/research/ruleset-draft.md), and the three permanent stat upgrades every third chapter. First guess, for the balance pass.",
+    "_comment": "Added to the item pool for seeds whose goal reaches the slice: about one Abyss Artifact per 8 checks (the skill tree carries chapters 2 to 9, docs/research/ruleset-draft.md), and the three permanent stat upgrades every third chapter. First guess, for the balance pass. Balance pass (25 Oct): the skill tree's traversal and Force Palm abilities in slice 2 (useful, never logic), and a set of the five lesser elixirs in slices 4, 7 and 10.",
     "2": {
-      "Abyss Artifact": 6
+      "Abyss Artifact": 6,
+      "Vault": 1,
+      "Double Vault": 1,
+      "Aerial Roll": 1,
+      "Swift Flight": 1,
+      "Aerial Swing": 1,
+      "Force Current": 1,
+      "Ranged Force Palm": 1,
+      "Aerial Force Palm": 1
     },
     "3": {
       "Abyss Artifact": 4,
@@ -188,7 +818,12 @@
       "Vitality of the Abyss": 1
     },
     "4": {
-      "Abyss Artifact": 4
+      "Abyss Artifact": 4,
+      "2 Freya's Lesser Elixirs": 1,
+      "2 Apollonia's Lesser Elixirs": 1,
+      "2 Meliara's Lesser Elixirs": 1,
+      "2 Haiden's Lesser Elixirs": 1,
+      "2 Astrid's Lesser Elixirs": 1
     },
     "5": {
       "Abyss Artifact": 3
@@ -200,7 +835,12 @@
       "Vitality of the Abyss": 1
     },
     "7": {
-      "Abyss Artifact": 6
+      "Abyss Artifact": 6,
+      "2 Freya's Lesser Elixirs": 1,
+      "2 Apollonia's Lesser Elixirs": 1,
+      "2 Meliara's Lesser Elixirs": 1,
+      "2 Haiden's Lesser Elixirs": 1,
+      "2 Astrid's Lesser Elixirs": 1
     },
     "8": {
       "Abyss Artifact": 5
@@ -212,7 +852,12 @@
       "Vitality of the Abyss": 1
     },
     "10": {
-      "Abyss Artifact": 2
+      "Abyss Artifact": 2,
+      "2 Freya's Lesser Elixirs": 1,
+      "2 Apollonia's Lesser Elixirs": 1,
+      "2 Meliara's Lesser Elixirs": 1,
+      "2 Haiden's Lesser Elixirs": 1,
+      "2 Astrid's Lesser Elixirs": 1
     },
     "11": {
       "Abyss Artifact": 2
@@ -226,5 +871,6 @@
     "13": {
       "Abyss Artifact": 2
     }
-  }
+  },
+  "_filler_comment": "Filler is drawn by weight from the items a seed may hold: seeds without draft slices only have the verified ones (100 Copper, Crow Feather)."
 }
