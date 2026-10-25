@@ -50,6 +50,7 @@ class LiveDelivery(Protocol):
 
 
 LIVE_KNOWLEDGE_TRIES = 3     # knowledge refused live this often waits for the save instead
+LIVE_COMBINE_MAX = 9999      # the most of one item given live in one go (copies waiting together are combined)
 
 
 def _given_at(rec: ReceivedItem) -> float:
@@ -178,6 +179,27 @@ class DeliveryEngine:
         kind = (item.game_ref or {}).get("kind") if item is not None else None
         return kind == "knowledge" and rec.attempts >= LIVE_KNOWLEDGE_TRIES
 
+    def _live_units(self, candidates: list[ReceivedItem]) -> list[tuple[list[ReceivedItem], dict, int]]:
+        """What to give, in order: copies of the same item waiting together go in as one delivery (the game takes
+        8 deliveries between two of its own transactions, however big each is: live log of 25 Oct), up to a stack."""
+        units: list[tuple[list[ReceivedItem], dict, int]] = []
+        open_units: dict[int, int] = {}                     # item key -> index of its unit still taking more
+        for rec in candidates:
+            ref = self.catalogue.item_by_id(rec.item_id).game_ref
+            if ref["kind"] != "inventory_item":
+                units.append(([rec], ref, 1))
+                continue
+            key, count = int(ref["item_key"]), int(ref.get("count", 1))
+            limit = min(int(ref.get("max_stack") or LIVE_COMBINE_MAX), LIVE_COMBINE_MAX)
+            at = open_units.get(key)
+            if at is not None and units[at][2] + count <= limit:
+                recs, first, total = units[at]
+                units[at] = (recs + [rec], first, total + count)
+                continue
+            open_units[key] = len(units)
+            units.append(([rec], ref, count))
+        return units
+
     def _deliver_live(self, session_id: int, pending: list[ReceivedItem]) -> tuple[list[ReceivedItem], str | None]:
         """Give what can be given in the running game. Returns what's left, and why live delivery is waiting."""
         candidates = [r for r in pending if self._live_kind(r) and not self._given_up_live(r)]
@@ -188,28 +210,29 @@ class DeliveryEngine:
         left = [r for r in pending if r not in candidates]
         given: list[ReceivedItem] = []
         waiting = None
-        for n, rec in enumerate(candidates):
-            ref = self.catalogue.item_by_id(rec.item_id).game_ref
+        units = self._live_units(candidates)
+        for n, (recs, ref, total) in enumerate(units):
             if ref["kind"] == "knowledge":
                 result = self.live.give_knowledge(int(ref["knowledge_key"]))
             else:
-                result = self.live.give(int(ref["item_key"]), int(ref.get("count", 1)))
+                result = self.live.give(int(ref["item_key"]), total)
+            indices = [r.idx for r in recs]
             if result.given:
-                self.ledger.set_item_state(session_id, [rec.idx], DeliveryState.IN_GAME, expect=(DeliveryState.PENDING,))
-                given.append(rec)
+                self.ledger.set_item_state(session_id, indices, DeliveryState.IN_GAME, expect=(DeliveryState.PENDING,))
+                given.extend(recs)
             elif result.state in ("refused", "unknown item"):
-                again = ref["kind"] == "knowledge" and result.state == "refused" and rec.attempts + 1 < LIVE_KNOWLEDGE_TRIES
-                self.bus.emit(ev.REWARD_PENDING, f"{self._name(rec.item_id)}: {result.message}; " +
+                again = ref["kind"] == "knowledge" and result.state == "refused" and recs[0].attempts + 1 < LIVE_KNOWLEDGE_TRIES
+                self.bus.emit(ev.REWARD_PENDING, f"{self._name(recs[0].item_id)}: {result.message}; " +
                               ("trying again in a moment" if again else "it goes into the save once you quit to desktop"),
-                              index=rec.idx)
-                self.ledger.set_item_state(session_id, [rec.idx], DeliveryState.PENDING, bump_attempts=True,
+                              index=recs[0].idx)
+                self.ledger.set_item_state(session_id, indices, DeliveryState.PENDING, bump_attempts=True,
                                            error=f"not given in the game: {result.message}; " +
                                                  ("trying again in a moment" if again else
                                                   "it will be added to the save once you quit to desktop"))
-                left.append(rec)
+                left.extend(recs)
             else:
                 waiting = result.message
-                left.extend(candidates[n:])
+                left.extend(r for unit in units[n:] for r in unit[0])
                 break
         if given:
             names = ", ".join(self._name(r.item_id) for r in given)
