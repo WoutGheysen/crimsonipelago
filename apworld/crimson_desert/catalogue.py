@@ -28,7 +28,9 @@ CATALOGUE_FILES = ("items", "locations", "regions", "progression", "compatibilit
 CLASSIFICATIONS = {"progression", "useful", "filler", "trap"}
 CAPABILITIES = {"supported", "restricted", "detection_only", "unsupported"}
 DELIVERABLE_CAPABILITIES = {"supported", "restricted"}
-LOCATION_CATEGORIES = {"quest", "boss", "discovery", "treasure", "ability", "exploration"}
+LOCATION_CATEGORIES = {"quest", "boss", "discovery", "treasure", "ability", "exploration", "regional", "abyss_ruins"}
+# on unless a player's options say otherwise (the later, optional categories are off by default)
+DEFAULT_CATEGORIES = frozenset({"quest", "boss", "discovery", "treasure", "ability", "exploration"})
 DETECTION_KINDS = {"placeholder", "quest_state", "mission_state", "knowledge"}
 GAME_REF_KINDS = {"inventory_item", "knowledge", "quest_state", "nothing"}  # nothing: filler with no in-game effect
 CATALOGUE_STATUSES = {"placeholder", "partial", "verified"}
@@ -58,11 +60,19 @@ class ItemDef:
     verified: bool
     evidence: str | None
     game_versions: tuple[str, ...]
+    slice: int = 1                  # the first slice whose seeds can hold it
 
     @property
     def deliverable(self) -> bool:
         """True when the adapter is allowed to try to grant this item."""
         return self.verified and self.capability in DELIVERABLE_CAPABILITIES and self.game_ref is not None
+
+    @property
+    def draft_deliverable(self) -> bool:
+        """An unverified item of a kind the client delivers (knowledge, inventory items): playable in a seed with
+        include_draft_slices, where the playthrough confirms it."""
+        return self.deliverable or (self.game_ref is not None
+                                    and self.game_ref.get("kind") in ("knowledge", "inventory_item", "nothing"))
 
 
 @dataclass(frozen=True)
@@ -78,11 +88,17 @@ class LocationDef:
     verified: bool
     evidence: str | None
     caveats: str | None
+    no_progression: bool = False    # only ever holds filler (unsure when it's reachable, or missable)
 
     @property
     def detectable(self) -> bool:
         """True when the real adapter can detect this check from save data."""
         return self.verified and self.detection.get("kind") != "placeholder"
+
+    @property
+    def draft_detectable(self) -> bool:
+        """Detectable once drafts are allowed: any real detection method, verified or not."""
+        return self.detection.get("kind") != "placeholder"
 
 
 @dataclass(frozen=True)
@@ -100,6 +116,7 @@ class GoalDef:
     requires: Rule
     detection: Mapping[str, Any]
     verified: bool
+    slice: int = 1                  # seeds with this goal cover slices 1..slice
 
 
 @dataclass(frozen=True)
@@ -117,11 +134,13 @@ class Catalogue:
     locations: dict[str, LocationDef]
     regions: list[str]
     origin: str
+    region_slices: dict[str, int]
     connections: list[Connection]
     events: dict[str, EventDef]
     goals: dict[str, GoalDef]
     default_goal: str
     item_pools: dict[str, dict[str, int]]
+    slice_pools: dict[int, dict[str, int]]
     filler_weights: dict[str, int]
     trap_weights: dict[str, int]
     compatibility: dict[str, Any]
@@ -161,7 +180,62 @@ class Catalogue:
         canonical = json.dumps(self.raw, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
 
-    def pool_item_eligible(self, item: ItemDef) -> bool:
+    # ------------------------------------------------------------------ slices
+    # The world grows a slice at a time (a chapter or two). A seed covers the slices up to its goal's: the regions
+    # of those slices, their checks, and the items that belong to them. Later slices can sit in the catalogue as
+    # drafts (unverified) without touching earlier seeds.
+    def goal_slice(self, goal_key: str) -> int:
+        return self.goals[goal_key].slice
+
+    def regions_in_scope(self, goal_key: str) -> list[str]:
+        top = self.goal_slice(goal_key)
+        return [r for r in self.regions if self.region_slices.get(r, 1) <= top]
+
+    def locations_in_scope(self, goal_key: str) -> list[LocationDef]:
+        regions = set(self.regions_in_scope(goal_key))
+        return [loc for loc in self.locations.values() if loc.region in regions]
+
+    def connections_in_scope(self, goal_key: str) -> list[Connection]:
+        regions = set(self.regions_in_scope(goal_key))
+        return [c for c in self.connections if c.source in regions and c.target in regions]
+
+    def events_in_scope(self, goal_key: str) -> list[EventDef]:
+        regions = set(self.regions_in_scope(goal_key))
+        return [e for e in self.events.values() if e.region in regions]
+
+    def items_in_scope(self, goal_key: str) -> list[ItemDef]:
+        top = self.goal_slice(goal_key)
+        return [i for i in self.items.values() if i.slice <= top]
+
+    def scope_fingerprint(self, goal_key: str) -> str:
+        """Hash of what a seed with this goal is made of: its regions, connections, checks, items, pools and goal.
+        A later slice added as a draft doesn't change it, so earlier seeds keep working with a newer client."""
+        top = self.goal_slice(goal_key)
+        regions = set(self.regions_in_scope(goal_key))
+        items = {i.name for i in self.items_in_scope(goal_key)}
+        raw = self.raw
+        scope = {
+            "schema": raw["items"].get("schema_version"),
+            "regions": [r for r in raw["regions"].get("regions", []) if r["name"] in regions],
+            "origin": raw["regions"].get("origin"),
+            "connections": [c for c in raw["regions"].get("connections", []) if c["from"] in regions
+                            and c["to"] in regions],
+            "locations": [loc for loc in raw["locations"].get("locations", []) if loc["region"] in regions],
+            "items": [i for i in raw["items"].get("items", []) if i["name"] in items],
+            "item_pool": {mode: {n: c for n, c in pool.items() if n in items}
+                          for mode, pool in raw["items"].get("item_pool", {}).items()},
+            "slice_pool": {k: v for k, v in raw["items"].get("slice_pool", {}).items()
+                           if not k.startswith("_") and int(k) <= top},
+            "filler_weights": raw["items"].get("filler_weights", {}),
+            "trap_weights": raw["items"].get("trap_weights", {}),
+            "events": [e for e in raw["progression"].get("events", []) if e["region"] in regions],
+            "goal": {goal_key: raw["progression"].get("goals", {}).get(goal_key)},
+            "slice": top,
+        }
+        canonical = json.dumps(scope, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
+
+    def pool_item_eligible(self, item: ItemDef, drafts: bool = False) -> bool:
         """Whether an item may be placed in the randomized pool.
 
         Unsupported or detection-only rewards must never be randomized
@@ -171,7 +245,7 @@ class Catalogue:
         """
         if self.is_placeholder:
             return True
-        return item.deliverable
+        return item.draft_deliverable if drafts else item.deliverable
 
 
 # --------------------------------------------------------------------------- loading
@@ -233,6 +307,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
             verified=bool(entry.get("verified", False)),
             evidence=entry.get("evidence"),
             game_versions=tuple(entry.get("game_versions", [])),
+            slice=int(entry.get("slice", 1)),
         )
         items.setdefault(item.name, item)  # duplicates are reported by validation
 
@@ -250,6 +325,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
             verified=bool(entry.get("verified", False)),
             evidence=entry.get("evidence"),
             caveats=entry.get("caveats"),
+            no_progression=bool(entry.get("no_progression", False)),
         )
         locations.setdefault(loc.name, loc)
 
@@ -257,6 +333,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
         e["name"]: EventDef(name=e["name"], region=e["region"], requires=e.get("requires"))
         for e in prog_doc.get("events", [])
     }
+    region_slices = {r["name"]: int(r.get("slice", 1)) for r in regions_doc.get("regions", [])}
     goals = {
         key: GoalDef(
             key=key,
@@ -265,6 +342,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
             requires=g.get("requires"),
             detection=g.get("detection") or {"kind": "placeholder"},
             verified=bool(g.get("verified", False)),
+            slice=int(g.get("slice", region_slices.get(g["region"], 1))),
         )
         for key, g in prog_doc.get("goals", {}).items()
     }
@@ -278,6 +356,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
         locations=locations,
         regions=[r["name"] for r in regions_doc.get("regions", [])],
         origin=regions_doc.get("origin", ""),
+        region_slices=region_slices,
         connections=[
             Connection(source=c["from"], target=c["to"], requires=c.get("requires"))
             for c in regions_doc.get("connections", [])
@@ -286,6 +365,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
         goals=goals,
         default_goal=prog_doc.get("default_goal", next(iter(goals), "")),
         item_pools={k: dict(v) for k, v in items_doc.get("item_pool", {}).items()},
+        slice_pools={int(k): dict(v) for k, v in items_doc.get("slice_pool", {}).items() if not k.startswith("_")},
         filler_weights=dict(items_doc.get("filler_weights", {})),
         trap_weights=dict(items_doc.get("trap_weights", {})),
         compatibility=raw["compatibility"],
@@ -494,6 +574,24 @@ def validate_catalogue(cat: Catalogue) -> list[str]:
     if cat.default_goal not in cat.goals:
         problems.append(f"default_goal {cat.default_goal!r} is not a defined goal")
 
+    # --- slices: a seed's goal covers its slice and everything before it
+    if cat.region_slices.get(cat.origin, 1) != 1:
+        problems.append(f"origin region {cat.origin!r} must be in slice 1")
+    for conn in cat.connections:
+        if cat.region_slices.get(conn.target, 1) < cat.region_slices.get(conn.source, 1):
+            problems.append(f"connection {conn.source!r}->{conn.target!r} leads back into an earlier slice")
+    for goal in cat.goals.values():
+        if goal.slice < cat.region_slices.get(goal.region, 1):
+            problems.append(f"goal {goal.key!r}: slice {goal.slice} doesn't include its region {goal.region!r}")
+        if goal.verified:
+            unverified = [loc.name for loc in cat.locations_in_scope(goal.key) if not loc.verified]
+            if unverified:
+                problems.append(f"goal {goal.key!r} is verified but its seeds would hold unverified checks: "
+                                f"{unverified[:3]}{' ...' if len(unverified) > 3 else ''}")
+    for item in cat.items.values():
+        if item.slice < 1:
+            problems.append(f"item {item.name!r}: slice must be >= 1")
+
     # --- pools
     for pool_name, pool in cat.item_pools.items():
         for name, count in pool.items():
@@ -505,6 +603,14 @@ def validate_catalogue(cat: Catalogue) -> list[str]:
                 problems.append(f"item_pool {pool_name!r}: {name!r} is not repeatable but appears {count} times")
         if sum(pool.values()) > len(cat.locations):
             problems.append(f"item_pool {pool_name!r} has more items than there are locations")
+    for slice_no, pool in cat.slice_pools.items():
+        for name, count in pool.items():
+            if name not in cat.items:
+                problems.append(f"slice_pool {slice_no}: unknown item {name!r}")
+            elif count < 1:
+                problems.append(f"slice_pool {slice_no}: count for {name!r} must be >= 1")
+            elif cat.items[name].slice > slice_no:
+                problems.append(f"slice_pool {slice_no}: {name!r} belongs to slice {cat.items[name].slice}")
     for weights_name, weights in (("filler_weights", cat.filler_weights), ("trap_weights", cat.trap_weights)):
         for name, weight in weights.items():
             if name not in cat.items:

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from BaseClasses import Location
+from BaseClasses import Location, LocationProgressType
 
 from .catalogue import LocationDef
 from .items import GAME, create_event_item
@@ -21,15 +21,18 @@ class CrimsonDesertLocation(Location):
 
 def enabled_locations(world: CrimsonDesertWorld) -> list[LocationDef]:
     categories = world.options.included_check_categories.value
-    return [loc for loc in world.catalogue.locations.values() if loc.category in categories]
+    return [loc for loc in world.catalogue.locations_in_scope(world.goal_key) if loc.category in categories]
 
 
 def create_all_locations(world: CrimsonDesertWorld) -> None:
     for loc_def in world.enabled_location_defs:
         region = world.get_region(loc_def.region)
-        region.locations.append(CrimsonDesertLocation(world.player, loc_def.name, loc_def.ap_id, region))
+        location = CrimsonDesertLocation(world.player, loc_def.name, loc_def.ap_id, region)
+        if loc_def.no_progression or loc_def.missable:
+            location.progress_type = LocationProgressType.EXCLUDED   # filler only: never progression or useful
+        region.locations.append(location)
 
-    for event in world.catalogue.events.values():
+    for event in world.catalogue.events_in_scope(world.goal_key):
         region = world.get_region(event.region)
         location = CrimsonDesertLocation(world.player, event.name, None, region)
         location.place_locked_item(create_event_item(world, event.name))

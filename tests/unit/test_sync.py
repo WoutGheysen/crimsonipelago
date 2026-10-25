@@ -121,6 +121,18 @@ async def test_catalogue_mismatch_stops_sync(tmp_path, sim, ledger, catalogue, b
         await srv.stop()
 
 
+async def test_a_seed_with_the_fingerprint_of_its_goals_slices_is_accepted(tmp_path, sim, ledger, catalogue, bus):
+    goal = catalogue.default_goal
+    srv = await FakeAPServer(slot_data={"catalogue_fingerprint": catalogue.scope_fingerprint(goal), "goal": goal,
+                                        "world_version": "0.1.0", "included_check_categories": []}).start()
+    try:
+        c = make_controller(tmp_path, srv, sim, ledger, catalogue, bus)
+        await run_until(c, lambda: c.session is not None)
+        assert not (c.paused and "different Crimson Desert APWorld" in c.paused)
+    finally:
+        await srv.stop()
+
+
 async def test_wrong_slot_name_is_fatal_with_clear_message(tmp_path, server, sim, ledger, catalogue, bus):
     c = make_controller(tmp_path, server, sim, ledger, catalogue, bus, slot="Nobody")
     await asyncio.wait_for(c.run(), 5)

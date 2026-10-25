@@ -17,7 +17,200 @@
           5
         ]
       },
-      "verified": true
+      "verified": true,
+      "slice": 1
+    },
+    "chapter_2": {
+      "display": "Cheers Echoing From the Edge (end of chapter 2)",
+      "region": "The End of Greed",
+      "slice": 2,
+      "requires": {
+        "location": "Cheers Echoing From the Edge: step 3"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000193,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_3": {
+      "display": "Greymanes Reunited (end of Chapter 3)",
+      "region": "Pioneering",
+      "slice": 3,
+      "requires": {
+        "location": "Greymanes Reunited: step 1"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001206,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_4": {
+      "display": "Cast Shadow (end of Chapter 4)",
+      "region": "Forbidden Knowledge",
+      "slice": 4,
+      "requires": {
+        "location": "Cast Shadow: step 2"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000269,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_5": {
+      "display": "Toward the Nest (end of Chapter 5)",
+      "region": "Black and White",
+      "slice": 5,
+      "requires": {
+        "location": "Toward the Nest: step 6"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000248,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_6": {
+      "display": "News of Victory (end of Chapter 6)",
+      "region": "The Unyielding Shields",
+      "slice": 6,
+      "requires": {
+        "location": "News of Victory: step 3"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001398,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_7": {
+      "display": "Time to Face Justice (end of Chapter 7)",
+      "region": "Twisted Fate",
+      "slice": 7,
+      "requires": {
+        "location": "Time to Face Justice: step 5"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000176,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_8": {
+      "display": "A Fleeting Dream (end of Chapter 8)",
+      "region": "Traitor",
+      "slice": 8,
+      "requires": {
+        "location": "A Fleeting Dream: step 2"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000287,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_9": {
+      "display": "New Perspectives (end of Chapter 9)",
+      "region": "Enlightenment",
+      "slice": 9,
+      "requires": {
+        "location": "New Perspectives: step 5"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000252,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_10": {
+      "display": "Lingering Shadow (end of Chapter 10)",
+      "region": "Greater Firepower",
+      "slice": 10,
+      "requires": {
+        "location": "Lingering Shadow: step 2"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000233,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_11": {
+      "display": "Flying Fortress Orbian (end of Chapter 11)",
+      "region": "Foreboding Shadow",
+      "slice": 11,
+      "requires": {
+        "location": "Flying Fortress Orbian: step 2"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000114,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "chapter_12": {
+      "display": "Blinding Darkness (end of Chapter 12)",
+      "region": "The Void",
+      "slice": 12,
+      "requires": {
+        "location": "Blinding Darkness: step 2"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000108,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
+    },
+    "journeys_end": {
+      "display": "New Horizons (end of epilogue)",
+      "region": "Journey's End",
+      "slice": 13,
+      "requires": {
+        "location": "New Horizons: step 2"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000329,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
     }
   },
   "default_goal": "first_slice"

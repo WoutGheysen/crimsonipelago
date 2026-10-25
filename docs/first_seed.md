@@ -42,10 +42,11 @@ That last command writes `dist\crimson_desert.apworld`.
 
 ```powershell
 crimson-mod status
-crimson-mod install flight-grant-removed     # only if status says nothing is installed
+crimson-mod install story-grants-removed     # only if status says nothing is installed
+                                             # (flight-grant-removed, installed before, is fine for first_slice)
 ```
 
-Without it, the story still hands you Flight at the woman in white, and the client warns you about that.
+Without it, the story still hands you Flight at the woman in white (and Double Jump at the end of *Reunion*, chapter 2), and the client warns you about that.
 
 ## 6. Start the client (PowerShell, in your `crimsonipelago` folder)
 

@@ -44,13 +44,15 @@ def create_event_item(world: CrimsonDesertWorld, name: str) -> CrimsonDesertItem
 
 
 def required_progression_names(world: CrimsonDesertWorld) -> set[str]:
-    """Every item that any active rule depends on."""
-    cat = world.catalogue
-    rules = [c.requires for c in cat.connections]
-    rules += [loc.requires for loc in cat.locations.values()]
-    rules += [e.requires for e in cat.events.values()]
-    rules.append(cat.goals[world.goal_key].requires)
-    return {name for rule in rules for kind, name in rule_references(rule) if kind == "item"}
+    """Every item that any active rule depends on (the rules of the slices this seed covers)."""
+    return {name for rule in _scope_rules(world) for kind, name in rule_references(rule) if kind == "item"}
+
+
+def _scope_rules(world: CrimsonDesertWorld) -> list:
+    cat, goal = world.catalogue, world.goal_key
+    return ([c.requires for c in cat.connections_in_scope(goal)]
+            + [loc.requires for loc in cat.locations_in_scope(goal)]
+            + [e.requires for e in cat.events_in_scope(goal)] + [cat.goals[goal].requires])
 
 
 def _all_rules(cat):
@@ -69,7 +71,6 @@ def logic_item_names(cat) -> frozenset[str]:
 
 def required_counts(world: CrimsonDesertWorld) -> dict[str, int]:
     """Highest copy count any single rule asks for, per item."""
-    cat = world.catalogue
     counts: dict[str, int] = {}
 
     def walk(rule) -> None:
@@ -83,8 +84,7 @@ def required_counts(world: CrimsonDesertWorld) -> dict[str, int]:
         if "item" in rule:
             counts[rule["item"]] = max(counts.get(rule["item"], 0), int(rule.get("count", 1)))
 
-    for rule in ([c.requires for c in cat.connections] + [loc.requires for loc in cat.locations.values()]
-                 + [e.requires for e in cat.events.values()] + [cat.goals[world.goal_key].requires]):
+    for rule in _scope_rules(world):
         walk(rule)
     return counts
 
@@ -100,15 +100,22 @@ def plan_item_pool(world: CrimsonDesertWorld, location_count: int) -> tuple[list
     if wanted is None:
         raise OptionError(f"Crimson Desert: catalogue has no item pool for mode {mode!r}")
 
+    in_scope = {i.name for i in cat.items_in_scope(world.goal_key)}
+    drafts = getattr(world, "drafts", False)
+    wanted = dict(wanted)
+    for slice_no, extra in sorted(cat.slice_pools.items()):
+        if slice_no <= cat.goal_slice(world.goal_key):
+            for name, count in extra.items():
+                wanted[name] = wanted.get(name, 0) + count
     pool: list[str] = []
     for name, count in wanted.items():
-        if cat.pool_item_eligible(cat.items[name]):
+        if name in in_scope and cat.pool_item_eligible(cat.items[name], drafts):
             pool.extend([name] * count)
 
     precollected: list[str] = []
     for name in sorted(required_progression_names(world) - set(pool)):
         item = cat.items[name]
-        if item.starting_safe and cat.pool_item_eligible(item):
+        if item.starting_safe and cat.pool_item_eligible(item, drafts):
             precollected.append(name)
         else:
             raise OptionError(

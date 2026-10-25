@@ -76,7 +76,9 @@ class SyncController:
                  bus: ev.EventBus | None = None, live=None):
         self.config, self.adapter, self.ledger, self.catalogue = config, adapter, ledger, catalogue
         self.bus = bus or ev.EventBus()
-        self.tracker = CheckTracker(ledger, adapter, catalogue, self.bus)
+        from ..game_adapter.runtime.live import JsonlLog
+
+        self.tracker = CheckTracker(ledger, adapter, catalogue, self.bus, log=JsonlLog(Path(config.data_dir) / "logs"))
         self.engine = DeliveryEngine(ledger, adapter, catalogue, self.bus, live=live)
         self.names = DataPackageCache(Path(config.data_dir) / "datapackage")
         self.connection: APConnection | None = None
@@ -216,6 +218,19 @@ class SyncController:
         if FATAL_REFUSALS & set(errors) and self.connection:
             self.connection.fail(message)
 
+    def _client_fingerprint(self, goal: str | None = None) -> str:
+        goal = goal or self.slot_data.get("goal") or self.catalogue.default_goal
+        scope = getattr(self.catalogue, "scope_fingerprint", None)
+        if scope is not None and goal in self.catalogue.goals:
+            return scope(goal)
+        return self.catalogue.fingerprint
+
+    def _same_catalogue(self, slot_data: dict) -> bool:
+        """The seed's catalogue is this client's, for what the seed covers (its goal's slices). Seeds from before
+        slices sent the hash of the whole catalogue: that still matches an unchanged catalogue."""
+        seed = slot_data.get("catalogue_fingerprint")
+        return seed in (self._client_fingerprint(slot_data.get("goal")), self.catalogue.fingerprint)
+
     async def _on_Connected(self, cmd: dict) -> None:
         seed = (self.room_info or {}).get("seed_name")
         self.team, self.slot = int(cmd["team"]), int(cmd["slot"])
@@ -229,10 +244,10 @@ class SyncController:
             problem = "The server did not report a seed name; refusing to sync without a session identity."
         elif game != protocol.GAME:
             problem = f"Slot {self.config.slot_name!r} is a {game} slot, not Crimson Desert."
-        elif self.slot_data.get("catalogue_fingerprint") != self.catalogue.fingerprint:
+        elif not self._same_catalogue(self.slot_data):
             problem = (
                 "This seed was generated with a different Crimson Desert APWorld than this client was built with "
-                f"(seed catalogue {self.slot_data.get('catalogue_fingerprint')}, client {self.catalogue.fingerprint}). "
+                f"(seed catalogue {self.slot_data.get('catalogue_fingerprint')}, client {self._client_fingerprint()}). "
                 "Install the client release that matches the APWorld used for generation."
             )
         if problem:
@@ -248,9 +263,18 @@ class SyncController:
             self.bus.emit(ev.CONNECTION, f"Switched from seed {self.session.seed_name} to {seed}")
         self.session = session
         self.goal_key = self.slot_data.get("goal", self.catalogue.default_goal)
+        self.adapter.include_drafts = bool(self.slot_data.get("include_draft_slices"))
+        if self.adapter.include_drafts:
+            self.bus.emit(ev.CONNECTION, "This seed includes draft chapters: checks there are confirmed as you play "
+                                         "(logged in logs/live-*.jsonl)")
         categories = set(self.slot_data.get("included_check_categories", []))
-        self.enabled_location_ids = {loc.ap_id for loc in self.catalogue.locations.values()
-                                     if not categories or loc.category in categories}
+        in_scope = getattr(self.catalogue, "locations_in_scope", None)
+        candidates = (in_scope(self.goal_key) if in_scope is not None and self.goal_key in self.catalogue.goals
+                      else list(self.catalogue.locations.values()))
+        enabled = {loc.ap_id for loc in candidates if not categories or loc.category in categories}
+        # the server knows exactly which checks this seed has: the goal's slices, minus disabled categories
+        seed_has = set(cmd.get("missing_locations") or []) | set(cmd.get("checked_locations") or [])
+        self.enabled_location_ids = enabled & seed_has if seed_has else enabled
         self.authenticated = True
         self.identity_error = None
         self.status.seed_name = seed

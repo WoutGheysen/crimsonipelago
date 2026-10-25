@@ -1,20 +1,268 @@
 {
   "schema_version": 1,
   "catalogue_status": "partial",
-  "_comment": "First slice. The story is linear and nothing in it needs an item: without Flight, the jump after the woman in white kills Kliff and he respawns below (docs/research/first-slice.md).",
+  "_comment": "First slice. The story is linear and nothing in it needs an item: without Flight, the jump after the woman in white kills Kliff and he respawns below (docs/research/first-slice.md). Slice 2 (draft): the glide after the woman in white needs Flight; everything after Reunion needs Double Jump (the story would teach it there, so nothing later is assumed to work without it: docs/research/slice-2.md).",
   "origin": "Prologue",
   "regions": [
     {
       "name": "Prologue",
-      "description": "Ambush and Unknown Space: from the first cutscene to the road to Hernand."
+      "description": "Ambush and Unknown Space: from the first cutscene to the road to Hernand.",
+      "slice": 1
     },
     {
       "name": "Hernand",
-      "description": "Trials of Kindness."
+      "description": "Trials of Kindness.",
+      "slice": 1
     },
     {
       "name": "Traces",
-      "description": "Mystical Key, Polar Opposites, Abyss without Balance, Woman in White."
+      "description": "Mystical Key, Polar Opposites, Abyss without Balance, Woman in White.",
+      "slice": 1
+    },
+    {
+      "name": "After the Jump",
+      "slice": 2,
+      "description": "Woman in White after the glide: back to Hernand."
+    },
+    {
+      "name": "Unexpected Gift",
+      "slice": 2,
+      "description": "Chapter 2: Where the Light Leads, Memory Fragment, Reunion (where the story would teach Double Jump)."
+    },
+    {
+      "name": "Hernand in Chaos",
+      "slice": 2,
+      "description": "Chapter 2: For Honor to Secrets Hidden in the Dark."
+    },
+    {
+      "name": "The End of Greed",
+      "slice": 2,
+      "description": "Chapter 2: The Dark Veil to Cheers Echoing From the Edge."
+    },
+    {
+      "name": "Homestead",
+      "slice": 3,
+      "description": "Chapter 3: Howling Hill: Homestead (draft)."
+    },
+    {
+      "name": "The Face Behind the Mask",
+      "slice": 3,
+      "description": "Chapter 3: Howling Hill: The Face Behind the Mask (draft)."
+    },
+    {
+      "name": "Pioneering",
+      "slice": 3,
+      "description": "Chapter 3: Howling Hill: Pioneering (draft)."
+    },
+    {
+      "name": "Mysterious Pot",
+      "slice": 4,
+      "description": "Chapter 4: The Price of Knowledge: Mysterious Pot (draft)."
+    },
+    {
+      "name": "Daily Life",
+      "slice": 4,
+      "description": "Chapter 4: The Price of Knowledge: Daily Life (draft)."
+    },
+    {
+      "name": "Forbidden Knowledge",
+      "slice": 4,
+      "description": "Chapter 4: The Price of Knowledge: Forbidden Knowledge (draft)."
+    },
+    {
+      "name": "Uninvited Guest",
+      "slice": 5,
+      "description": "Chapter 5: Guest Unbidden: Uninvited Guest (draft)."
+    },
+    {
+      "name": "Black and White",
+      "slice": 5,
+      "description": "Chapter 5: Guest Unbidden: Black and White (draft)."
+    },
+    {
+      "name": "Blazing Beacon",
+      "slice": 6,
+      "description": "Chapter 6: Cracks in the Shield: Blazing Beacon (draft)."
+    },
+    {
+      "name": "Below the Banners",
+      "slice": 6,
+      "description": "Chapter 6: Cracks in the Shield: Below the Banners (draft)."
+    },
+    {
+      "name": "Turning Tides",
+      "slice": 6,
+      "description": "Chapter 6: Cracks in the Shield: Turning Tides (draft)."
+    },
+    {
+      "name": "The Unyielding Shields",
+      "slice": 6,
+      "description": "Chapter 6: Cracks in the Shield: The Unyielding Shields (draft)."
+    },
+    {
+      "name": "Dawn Mist",
+      "slice": 7,
+      "description": "Chapter 7: Homecoming: Dawn Mist (draft)."
+    },
+    {
+      "name": "Dawn",
+      "slice": 7,
+      "description": "Chapter 7: Homecoming: Dawn (draft)."
+    },
+    {
+      "name": "Decisive Battle",
+      "slice": 7,
+      "description": "Chapter 7: Homecoming: Decisive Battle (draft)."
+    },
+    {
+      "name": "Twisted Fate",
+      "slice": 7,
+      "description": "Chapter 7: Homecoming: Twisted Fate (draft)."
+    },
+    {
+      "name": "Ashen Steps",
+      "slice": 8,
+      "description": "Chapter 8: Blood Coronation: Ashen Steps (draft)."
+    },
+    {
+      "name": "To Demeniss",
+      "slice": 8,
+      "description": "Chapter 8: Blood Coronation: To Demeniss (draft)."
+    },
+    {
+      "name": "Traitor",
+      "slice": 8,
+      "description": "Chapter 8: Blood Coronation: Traitor (draft)."
+    },
+    {
+      "name": "The Calling",
+      "slice": 9,
+      "description": "Chapter 9: The Sage of the Desert: The Calling (draft)."
+    },
+    {
+      "name": "Shattered Ties",
+      "slice": 9,
+      "description": "Chapter 9: The Sage of the Desert: Shattered Ties (draft)."
+    },
+    {
+      "name": "Thinning Blade",
+      "slice": 9,
+      "description": "Chapter 9: The Sage of the Desert: Thinning Blade (draft)."
+    },
+    {
+      "name": "Six Statues and the Beast",
+      "slice": 9,
+      "description": "Chapter 9: The Sage of the Desert: Six Statues and the Beast (draft)."
+    },
+    {
+      "name": "Veiled Witch",
+      "slice": 9,
+      "description": "Chapter 9: The Sage of the Desert: Veiled Witch (draft)."
+    },
+    {
+      "name": "Enlightenment",
+      "slice": 9,
+      "description": "Chapter 9: The Sage of the Desert: Enlightenment (draft)."
+    },
+    {
+      "name": "Secret Weapon",
+      "slice": 10,
+      "description": "Chapter 10: Counterattack: Secret Weapon (draft)."
+    },
+    {
+      "name": "Greater Firepower",
+      "slice": 10,
+      "description": "Chapter 10: Counterattack: Greater Firepower (draft)."
+    },
+    {
+      "name": "Brave New World",
+      "slice": 11,
+      "description": "Chapter 11: Truth and Reality: Brave New World (draft)."
+    },
+    {
+      "name": "Foreboding Shadow",
+      "slice": 11,
+      "description": "Chapter 11: Truth and Reality: Foreboding Shadow (draft)."
+    },
+    {
+      "name": "The Final Battle",
+      "slice": 12,
+      "description": "Chapter 12: The Abyss: The Final Battle (draft)."
+    },
+    {
+      "name": "The Void",
+      "slice": 12,
+      "description": "Chapter 12: The Abyss: The Void (draft)."
+    },
+    {
+      "name": "Journey's End",
+      "slice": 13,
+      "description": "Epilogue: Journey's End: Journey's End (draft)."
+    },
+    {
+      "name": "Regional quests: Calphade",
+      "slice": 6,
+      "description": "Optional (regional quests), from chapter 6 (draft)."
+    },
+    {
+      "name": "Regional quests: the Crimson Desert",
+      "slice": 9,
+      "description": "Optional (regional quests), from chapter 9 (draft)."
+    },
+    {
+      "name": "Regional quests: Delesyia",
+      "slice": 10,
+      "description": "Optional (regional quests), from chapter 10 (draft)."
+    },
+    {
+      "name": "Regional quests: Demeniss",
+      "slice": 8,
+      "description": "Optional (regional quests), from chapter 8 (draft)."
+    },
+    {
+      "name": "Regional quests: Hernand",
+      "slice": 2,
+      "description": "Optional (regional quests), from chapter 2 (draft)."
+    },
+    {
+      "name": "Regional quests: Pailune and Beighen",
+      "slice": 7,
+      "description": "Optional (regional quests), from chapter 7 (draft)."
+    },
+    {
+      "name": "Regional quests: the Wayward Woods",
+      "slice": 9,
+      "description": "Optional (regional quests), from chapter 9 (draft)."
+    },
+    {
+      "name": "Abyss ruins: the Abyss islands",
+      "slice": 2,
+      "description": "Optional (abyss ruins), from chapter 2 (draft)."
+    },
+    {
+      "name": "Abyss ruins: the Crimson Desert",
+      "slice": 9,
+      "description": "Optional (abyss ruins), from chapter 9 (draft)."
+    },
+    {
+      "name": "Abyss ruins: Delesyia",
+      "slice": 10,
+      "description": "Optional (abyss ruins), from chapter 10 (draft)."
+    },
+    {
+      "name": "Abyss ruins: Demeniss",
+      "slice": 8,
+      "description": "Optional (abyss ruins), from chapter 8 (draft)."
+    },
+    {
+      "name": "Abyss ruins: Hernand",
+      "slice": 2,
+      "description": "Optional (abyss ruins), from chapter 2 (draft)."
+    },
+    {
+      "name": "Abyss ruins: Pailune and Beighen",
+      "slice": 7,
+      "description": "Optional (abyss ruins), from chapter 7 (draft)."
     }
   ],
   "connections": [
@@ -26,6 +274,257 @@
     {
       "from": "Hernand",
       "to": "Traces",
+      "requires": null
+    },
+    {
+      "from": "Traces",
+      "to": "After the Jump",
+      "requires": {
+        "item": "Flight"
+      }
+    },
+    {
+      "from": "After the Jump",
+      "to": "Unexpected Gift",
+      "requires": null
+    },
+    {
+      "from": "Unexpected Gift",
+      "to": "Hernand in Chaos",
+      "requires": {
+        "item": "Double Jump"
+      }
+    },
+    {
+      "from": "Hernand in Chaos",
+      "to": "The End of Greed",
+      "requires": null
+    },
+    {
+      "from": "The End of Greed",
+      "to": "Homestead",
+      "requires": null
+    },
+    {
+      "from": "Homestead",
+      "to": "The Face Behind the Mask",
+      "requires": null
+    },
+    {
+      "from": "The Face Behind the Mask",
+      "to": "Pioneering",
+      "requires": null
+    },
+    {
+      "from": "Pioneering",
+      "to": "Mysterious Pot",
+      "requires": null
+    },
+    {
+      "from": "Mysterious Pot",
+      "to": "Daily Life",
+      "requires": null
+    },
+    {
+      "from": "Daily Life",
+      "to": "Forbidden Knowledge",
+      "requires": null
+    },
+    {
+      "from": "Forbidden Knowledge",
+      "to": "Uninvited Guest",
+      "requires": null
+    },
+    {
+      "from": "Uninvited Guest",
+      "to": "Black and White",
+      "requires": null
+    },
+    {
+      "from": "Black and White",
+      "to": "Blazing Beacon",
+      "requires": null
+    },
+    {
+      "from": "Blazing Beacon",
+      "to": "Below the Banners",
+      "requires": null
+    },
+    {
+      "from": "Below the Banners",
+      "to": "Turning Tides",
+      "requires": null
+    },
+    {
+      "from": "Turning Tides",
+      "to": "The Unyielding Shields",
+      "requires": null
+    },
+    {
+      "from": "The Unyielding Shields",
+      "to": "Dawn Mist",
+      "requires": null
+    },
+    {
+      "from": "Dawn Mist",
+      "to": "Dawn",
+      "requires": null
+    },
+    {
+      "from": "Dawn",
+      "to": "Decisive Battle",
+      "requires": null
+    },
+    {
+      "from": "Decisive Battle",
+      "to": "Twisted Fate",
+      "requires": null
+    },
+    {
+      "from": "Twisted Fate",
+      "to": "Ashen Steps",
+      "requires": null
+    },
+    {
+      "from": "Ashen Steps",
+      "to": "To Demeniss",
+      "requires": null
+    },
+    {
+      "from": "To Demeniss",
+      "to": "Traitor",
+      "requires": null
+    },
+    {
+      "from": "Traitor",
+      "to": "The Calling",
+      "requires": null
+    },
+    {
+      "from": "The Calling",
+      "to": "Shattered Ties",
+      "requires": null
+    },
+    {
+      "from": "Shattered Ties",
+      "to": "Thinning Blade",
+      "requires": null
+    },
+    {
+      "from": "Thinning Blade",
+      "to": "Six Statues and the Beast",
+      "requires": null
+    },
+    {
+      "from": "Six Statues and the Beast",
+      "to": "Veiled Witch",
+      "requires": null
+    },
+    {
+      "from": "Veiled Witch",
+      "to": "Enlightenment",
+      "requires": null
+    },
+    {
+      "from": "Enlightenment",
+      "to": "Secret Weapon",
+      "requires": null
+    },
+    {
+      "from": "Secret Weapon",
+      "to": "Greater Firepower",
+      "requires": null
+    },
+    {
+      "from": "Greater Firepower",
+      "to": "Brave New World",
+      "requires": null
+    },
+    {
+      "from": "Brave New World",
+      "to": "Foreboding Shadow",
+      "requires": null
+    },
+    {
+      "from": "Foreboding Shadow",
+      "to": "The Final Battle",
+      "requires": null
+    },
+    {
+      "from": "The Final Battle",
+      "to": "The Void",
+      "requires": null
+    },
+    {
+      "from": "The Void",
+      "to": "Journey's End",
+      "requires": null
+    },
+    {
+      "from": "Blazing Beacon",
+      "to": "Regional quests: Calphade",
+      "requires": null
+    },
+    {
+      "from": "The Calling",
+      "to": "Regional quests: the Crimson Desert",
+      "requires": null
+    },
+    {
+      "from": "Secret Weapon",
+      "to": "Regional quests: Delesyia",
+      "requires": null
+    },
+    {
+      "from": "Ashen Steps",
+      "to": "Regional quests: Demeniss",
+      "requires": null
+    },
+    {
+      "from": "After the Jump",
+      "to": "Regional quests: Hernand",
+      "requires": null
+    },
+    {
+      "from": "Dawn Mist",
+      "to": "Regional quests: Pailune and Beighen",
+      "requires": null
+    },
+    {
+      "from": "The Calling",
+      "to": "Regional quests: the Wayward Woods",
+      "requires": null
+    },
+    {
+      "from": "After the Jump",
+      "to": "Abyss ruins: the Abyss islands",
+      "requires": {
+        "item": "Flight"
+      }
+    },
+    {
+      "from": "The Calling",
+      "to": "Abyss ruins: the Crimson Desert",
+      "requires": null
+    },
+    {
+      "from": "Secret Weapon",
+      "to": "Abyss ruins: Delesyia",
+      "requires": null
+    },
+    {
+      "from": "Ashen Steps",
+      "to": "Abyss ruins: Demeniss",
+      "requires": null
+    },
+    {
+      "from": "After the Jump",
+      "to": "Abyss ruins: Hernand",
+      "requires": null
+    },
+    {
+      "from": "Dawn Mist",
+      "to": "Abyss ruins: Pailune and Beighen",
       "requires": null
     }
   ]

@@ -40,8 +40,10 @@ from .version_detection import detect_version
 
 BlobTransform = Callable[[bytes, list[DeliveryEntry]], bytes]
 
-# Items the story would hand out anyway unless a game-data override stops it (see crimson-mod).
-REQUIRED_OVERRIDES = {"Flight": "flight-grant-removed"}
+# Items the story would hand out anyway unless a game-data override stops it (see crimson-mod): the overrides that
+# do, best first. Only one override can be installed, so later ones include what earlier ones do.
+REQUIRED_OVERRIDES = {"Flight": ("story-grants-removed", "flight-grant-removed"),
+                      "Double Jump": ("story-grants-removed",)}
 
 
 class CrimsonDesertSaveAdapter(GameAdapter):
@@ -156,14 +158,15 @@ class CrimsonDesertSaveAdapter(GameAdapter):
             return set()
         done = set()
         for loc in catalogue.locations.values():
-            if loc.detectable and self._detected(dict(loc.detection), state):
+            if (loc.detectable or (self.include_drafts and loc.draft_detectable)) \
+                    and self._detected(dict(loc.detection), state):
                 done.add(loc.ap_id)
         return done
 
     def is_goal_complete(self, catalogue: Catalogue, goal_key: str) -> bool:
         goal = catalogue.goals.get(goal_key)
         state = self._deep_state()
-        if goal is None or state is None or not goal.verified:
+        if goal is None or state is None or not (goal.verified or self.include_drafts):
             return False
         return self._detected(dict(goal.detection), state)
 
@@ -182,7 +185,7 @@ class CrimsonDesertSaveAdapter(GameAdapter):
 
     # ------------------------------------------------------------------ writing
     def can_grant_item(self, item: ItemDef) -> Result:
-        if not item.deliverable:
+        if not (item.deliverable or (self.include_drafts and item.draft_deliverable)):
             return Result.unsupported(f"{item.name!r} has no verified delivery procedure (capability: {item.capability})")
         kind = (item.game_ref or {}).get("kind")
         if kind not in self.transforms:
@@ -327,8 +330,9 @@ class CrimsonDesertSaveAdapter(GameAdapter):
                     "read and items can't be delivered. Restart with --editor-dir pointing at your CrimsonSaveEditor "
                     "folder (the one with save_parser.py)."]
 
-        needed = {patch for name, patch in REQUIRED_OVERRIDES.items()
-                  if name in self.catalogue.items and self.catalogue.items[name].deliverable}
+        needed = {name: patches for name, patches in REQUIRED_OVERRIDES.items()
+                  if name in self.catalogue.items and (self.catalogue.items[name].deliverable or
+                                                       (self.include_drafts and self.catalogue.items[name].draft_deliverable))}
         if not needed:
             return []
         try:
@@ -337,9 +341,16 @@ class CrimsonDesertSaveAdapter(GameAdapter):
             return ["The Crimson Desert game folder was not found (set CRIMSON_DESERT_DIR), so the client cannot "
                     "check that the Crimsonipelago game-data override is installed."]
         installed = {ov.patch for ov in overlay.installed(game_dir)}
-        return [f"The game-data override {patch!r} is not installed, so the story still hands out what it "
-                f"withholds (Flight at the woman in white). With the game closed, run: crimson-mod install {patch}"
-                for patch in sorted(needed - installed)]
+        missing = sorted(name for name, patches in needed.items() if not installed & set(patches))
+        if not missing:
+            return []
+        # the one override that covers every item that needs one
+        best = next((p for p in REQUIRED_OVERRIDES[missing[0]] if all(p in needed[n] for n in needed)),
+                    REQUIRED_OVERRIDES[missing[0]][0])
+        steps = (f"crimson-mod uninstall, then crimson-mod install {best}" if installed
+                 else f"crimson-mod install {best}")
+        return [f"The story still hands out {', '.join(missing)}: the game-data override {best!r} isn't installed. "
+                f"With the game closed, run: {steps}"]
 
     # ------------------------------------------------------------------ transformations
     def _give_items(self, blob: bytes, entries: list[DeliveryEntry]) -> bytes:

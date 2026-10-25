@@ -3,8 +3,9 @@
 # The full template with every common option is available from the Archipelago
 # Launcher: "Generate Template Options".
 #
-# NOTE: Crimsonipelago is pre-alpha. This world covers the first slice of the game
-# (prologue and chapter 1: 42 checks) with Flight as the one real unlock.
+# NOTE: Crimsonipelago is pre-alpha. The first slice (prologue and chapter 1: 42 checks, Flight) is verified.
+# The rest of the story, up to the epilogue (409 checks, Double Jump), is in as drafts: playable with
+# include_draft_slices, and confirmed as people play it (docs/research/drafts.md).
 
 name: Player{number}          # your slot name, max 16 characters
 description: Crimson Desert (Crimsonipelago)
@@ -17,14 +18,23 @@ Crimson Desert:
   progression_balancing: 50   # 0-99, higher = progression found earlier
   accessibility: full         # full: every location reachable; minimal: only what the goal needs
 
-  # Victory condition. Only goals with reliable in-game detection are offered.
+  # Victory condition: the end of a chapter.
+  #   first_slice: speak with the woman in white (prologue + chapter 1). Verified.
+  #   chapter_2 ... chapter_12, journeys_end (the whole game): drafts, need include_draft_slices: true
   goal: first_slice
+
+  # Experimental: allow the draft chapters (every goal after first_slice). Their checks come from the game's
+  # data and are read from your save like the others; the client logs each one it sees so it can be verified.
+  include_draft_slices: false
 
   # conservative: fewer unlocks shuffled, safe ones given at the start (gentler seed)
   # expanded: every supported unlock goes into the multiworld
   item_pool_mode: expanded
 
   # Which kinds of activities count as checks. Removing categories shortens the seed.
+  # Two more, off by default (drafts, filler only; need include_draft_slices):
+  #   regional: the regional quests of each region the seed reaches (200 checks over the whole game)
+  #   abyss_ruins: every Abyss ruin of those regions (547 over the whole game)
   included_check_categories:
     - quest
     - boss
