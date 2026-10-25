@@ -155,7 +155,14 @@ def create_all_items(world: CrimsonDesertWorld) -> None:
 
 
 def random_filler_name(world: CrimsonDesertWorld) -> str:
-    weights = {n: w for n, w in world.catalogue.filler_weights.items() if w > 0}
+    """Filler by weight, from the items this seed may hold (its slices; drafts only with include_draft_slices)."""
+    cat, drafts = world.catalogue, getattr(world, "drafts", False)
+    goal = getattr(world, "goal_key", None)
+    top = cat.goal_slice(goal) if goal in cat.goals else max(cat.region_slices.values(), default=1)
+    weights = {n: w for n, w in cat.filler_weights.items()
+               if w > 0 and n in cat.items and cat.items[n].slice <= top and cat.pool_item_eligible(cat.items[n], drafts)}
+    if not weights:
+        weights = {n: w for n, w in cat.filler_weights.items() if w > 0}
     names = sorted(weights)
     return world.random.choices(names, weights=[weights[n] for n in names])[0]
 
