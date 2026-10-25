@@ -199,9 +199,7 @@ def cmd_story(args) -> int:
     plan = None
     if args.plan:
         doc = json.loads(Path(args.plan).read_text(encoding="utf-8"))
-        chapters = doc.get("main_story", doc)
-        plan = [(f"{c.get('chapter')}: {c.get('title', '')}".rstrip(": "), [int(q["quest_key"]) for q in c["quests"]])
-                for c in chapters]
+        plan = doc.get("main_story", doc)
     tree = story.chapters(nodes, plan)
     print("\n".join(story.summary(tree)))
     if args.json:

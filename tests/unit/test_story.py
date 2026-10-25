@@ -60,7 +60,7 @@ def test_story_reads_missions_objectives_and_their_rewards():
     witch = tree[0]["quests"][0]["missions"][0]
     assert [o["key"] for o in witch["objectives"]] == [4294964344, 4294964343]
     lines = story.summary(tree)
-    assert lines[1].split() == ["Chapter", "1", "1", "1", "2", "1", "2"]
+    assert lines[1].split() == ["Chapter", "1", "1", "1", "2", "1", "0"]
 
 
 def test_story_command_takes_the_chapter_plan_from_crimson_candidates(tmp_path, capsys):
@@ -80,3 +80,19 @@ def test_story_command_takes_the_chapter_plan_from_crimson_candidates(tmp_path, 
     tree = json.loads(out.read_text())
     assert tree[0]["chapter"] == "Chapter 1: The First Encounter" and len(tree[0]["quests"][0]["missions"]) == 1
     assert "Chapter 1: The First Encounter" in capsys.readouterr().out
+
+
+def test_a_plan_with_missions_follows_their_order_and_names_and_reports_missing_ones():
+    missions, drops = _game()
+    nodes = story.parse(missions)
+    story.attach_rewards(nodes, missions, drops)
+    plan = [{"chapter": "Chapter 1", "title": "The First Encounter", "quests": [
+        {"quest_key": 1000509, "display": "Traces",
+         "missions": [{"mission_key": 1000999, "display": "Not in the tables"},
+                      {"mission_key": 1000166, "display": "Woman in White"}]}]}]
+    tree = story.chapters(nodes, plan)
+    quest = tree[0]["quests"][0]
+    assert quest["display"] == "Traces" and [m["display"] for m in quest["missions"]] == ["Not in the tables",
+                                                                                         "Woman in White"]
+    assert quest["missions"][0]["missing"] and len(quest["missions"][1]["objectives"]) == 2
+    assert story.summary(tree)[1].split()[-1] == "1"
