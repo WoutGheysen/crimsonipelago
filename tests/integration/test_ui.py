@@ -47,9 +47,10 @@ def test_window_connects_plays_and_disconnects(multiworld, tmp_path, real_catalo
         assert window.fields["profile"].text() == "sim/slot1"
         assert not window.server_edit.isEnabled()
 
-        for loc in catalogue.locations.values():
+        in_seed = catalogue.locations_in_scope(catalogue.default_goal)     # the seed's slices only
+        for loc in in_seed:
             sim.complete_location(loc.name)
-        total = len(catalogue.locations)
+        total = len(in_seed)
         pump_until(app, lambda: window.fields["checks"].text().startswith(f"{total} confirmed"))
 
         def feed():

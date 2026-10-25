@@ -262,8 +262,13 @@ class SyncController:
         self.session = session
         self.goal_key = self.slot_data.get("goal", self.catalogue.default_goal)
         categories = set(self.slot_data.get("included_check_categories", []))
-        self.enabled_location_ids = {loc.ap_id for loc in self.catalogue.locations.values()
-                                     if not categories or loc.category in categories}
+        in_scope = getattr(self.catalogue, "locations_in_scope", None)
+        candidates = (in_scope(self.goal_key) if in_scope is not None and self.goal_key in self.catalogue.goals
+                      else list(self.catalogue.locations.values()))
+        enabled = {loc.ap_id for loc in candidates if not categories or loc.category in categories}
+        # the server knows exactly which checks this seed has: the goal's slices, minus disabled categories
+        seed_has = set(cmd.get("missing_locations") or []) | set(cmd.get("checked_locations") or [])
+        self.enabled_location_ids = enabled & seed_has if seed_has else enabled
         self.authenticated = True
         self.identity_error = None
         self.status.seed_name = seed
