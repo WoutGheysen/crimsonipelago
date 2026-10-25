@@ -186,6 +186,30 @@ def cmd_dump(args) -> int:
     return 0
 
 
+def cmd_story(args) -> int:
+    """The story tree (chapters -> quests -> missions -> objectives) with each objective's vanilla rewards."""
+    import json
+
+    from ..game_data import story
+
+    tables = _tables(args.dir)
+    missions, drops = _table(tables, "missioninfo"), _table(tables, "dropsetinfo")
+    nodes = story.parse(missions)
+    story.attach_rewards(nodes, missions, drops)
+    plan = None
+    if args.plan:
+        doc = json.loads(Path(args.plan).read_text(encoding="utf-8"))
+        chapters = doc.get("main_story", doc)
+        plan = [(f"{c.get('chapter')}: {c.get('title', '')}".rstrip(": "), [int(q["quest_key"]) for q in c["quests"]])
+                for c in chapters]
+    tree = story.chapters(nodes, plan)
+    print("\n".join(story.summary(tree)))
+    if args.json:
+        Path(args.json).write_text(json.dumps(tree, indent=1), encoding="utf-8")
+        print(f"Saved: {args.json}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="crimson-data", description="Explore Crimson Desert game data (read-only)",
                                 formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
@@ -228,6 +252,12 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument("--hex", action="store_true")
     d.add_argument("--min-key", type=int, default=1000, help="ignore smaller values when listing references")
     d.set_defaults(func=cmd_dump)
+
+    st = sub.add_parser("story", help="the story's chapters, missions and objectives with their rewards")
+    st.add_argument("dir", help="folder with missioninfo and dropsetinfo")
+    st.add_argument("--plan", help="main_story.json from crimson-candidates (every chapter, in order)")
+    st.add_argument("--json", help="also save the whole tree here")
+    st.set_defaults(func=cmd_story)
     return p
 
 
