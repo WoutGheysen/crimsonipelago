@@ -52,7 +52,7 @@ def make_state_rule(world: CrimsonDesertWorld, rule: Rule) -> StateRule:
 def set_all_rules(world: CrimsonDesertWorld) -> None:
     cat = world.catalogue
 
-    for conn in cat.connections:
+    for conn in cat.connections_in_scope(world.goal_key):
         entrance = world.get_entrance(connection_name(conn.source, conn.target))
         entrance.access_rule = make_state_rule(world, conn.requires)
         # entrance rules that look at other locations need indirect conditions
@@ -63,7 +63,7 @@ def set_all_rules(world: CrimsonDesertWorld) -> None:
     for loc_def in world.enabled_location_defs:
         world.get_location(loc_def.name).access_rule = make_state_rule(world, loc_def.requires)
 
-    for event in cat.events.values():
+    for event in cat.events_in_scope(world.goal_key):
         world.get_location(event.name).access_rule = make_state_rule(world, event.requires)
 
     goal = cat.goals[world.goal_key]

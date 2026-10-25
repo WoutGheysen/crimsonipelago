@@ -105,10 +105,39 @@ def test_shipped_catalogue_is_the_real_first_slice(real_catalogue):
     cat = real_catalogue
     assert cat_mod.validate_catalogue(cat) == []
     assert cat.status == "partial" and not cat.is_placeholder
-    assert all(loc.detectable for loc in cat.locations.values())
-    assert all(i.deliverable for i in cat.items.values())
-    assert cat.goals[cat.default_goal].verified
+    assert cat.default_goal == "first_slice" and cat.goals["first_slice"].verified
+    first = cat.locations_in_scope("first_slice")
+    assert len(first) == 42 and all(loc.detectable for loc in first)
+    assert all(i.deliverable for i in cat.items_in_scope("first_slice"))
     assert cat.items["Flight"].game_ref == {"kind": "knowledge", "knowledge_key": 40002}
+
+
+def test_shipped_slice_2_is_a_draft_that_first_slice_seeds_never_see(real_catalogue):
+    cat = real_catalogue
+    goal = cat.goals["chapter_2"]
+    assert goal.slice == 2 and not goal.verified
+    draft = [loc for loc in cat.locations_in_scope("chapter_2") if loc not in cat.locations_in_scope("first_slice")]
+    assert len(draft) == 50 and not any(loc.verified for loc in draft)
+    assert "Double Jump" not in {i.name for i in cat.items_in_scope("first_slice")}
+    assert {r for r in cat.regions_in_scope("chapter_2")} - set(cat.regions_in_scope("first_slice")) == {
+        "After the Jump", "Unexpected Gift", "Hernand in Chaos", "The End of Greed"}
+    # a draft slice doesn't change what a first-slice seed is made of
+    raw = copy.deepcopy(cat.raw)
+    raw["locations"]["locations"] = [loc for loc in raw["locations"]["locations"]
+                                     if loc["name"] in {x.name for x in cat.locations_in_scope("first_slice")}]
+    raw["items"]["items"] = [i for i in raw["items"]["items"] if i["name"] != "Double Jump"]
+    for pool in raw["items"]["item_pool"].values():
+        pool.pop("Double Jump", None)
+    trimmed = cat_mod.build({k: v for k, v in raw.items() if not k.startswith("_")})
+    assert trimmed.scope_fingerprint("first_slice") == cat.scope_fingerprint("first_slice")
+    assert cat.scope_fingerprint("chapter_2") != cat.scope_fingerprint("first_slice")
+
+
+def test_a_verified_goal_cannot_cover_unverified_checks(real_catalogue):
+    raw = copy.deepcopy({k: v for k, v in real_catalogue.raw.items() if not k.startswith("_")})
+    raw["progression"]["goals"]["chapter_2"]["verified"] = True
+    problems = cat_mod.validate_catalogue(cat_mod.build(raw))
+    assert any("chapter_2" in p and "unverified checks" in p for p in problems)
 
 
 def test_shipped_location_ids_are_derived_from_game_keys(real_catalogue):

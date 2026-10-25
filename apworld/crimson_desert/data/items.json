@@ -79,16 +79,36 @@
       "game_versions": [
         "25477059"
       ]
+    },
+    {
+      "ap_id": 1111,
+      "name": "Double Jump",
+      "classification": "progression",
+      "category": "traversal",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1001116
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (story reward of Reunion; needs a live test and the story-grants-removed override)",
+      "game_versions": [],
+      "slice": 2
     }
   ],
   "item_pool": {
     "conservative": {
       "Flight": 1,
-      "Abyss Artifact": 3
+      "Abyss Artifact": 3,
+      "Double Jump": 1
     },
     "expanded": {
       "Flight": 1,
-      "Abyss Artifact": 3
+      "Abyss Artifact": 3,
+      "Double Jump": 1
     }
   },
   "filler_weights": {

@@ -17,7 +17,24 @@
           5
         ]
       },
-      "verified": true
+      "verified": true,
+      "slice": 1
+    },
+    "chapter_2": {
+      "display": "Cheers Echoing From the Edge (end of chapter 2)",
+      "region": "The End of Greed",
+      "slice": 2,
+      "requires": {
+        "location": "Cheers Echoing From the Edge: step 3"
+      },
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000193,
+        "states": [
+          5
+        ]
+      },
+      "verified": false
     }
   },
   "default_goal": "first_slice"

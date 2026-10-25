@@ -21,7 +21,7 @@ class CrimsonDesertLocation(Location):
 
 def enabled_locations(world: CrimsonDesertWorld) -> list[LocationDef]:
     categories = world.options.included_check_categories.value
-    return [loc for loc in world.catalogue.locations.values() if loc.category in categories]
+    return [loc for loc in world.catalogue.locations_in_scope(world.goal_key) if loc.category in categories]
 
 
 def create_all_locations(world: CrimsonDesertWorld) -> None:
@@ -29,7 +29,7 @@ def create_all_locations(world: CrimsonDesertWorld) -> None:
         region = world.get_region(loc_def.region)
         region.locations.append(CrimsonDesertLocation(world.player, loc_def.name, loc_def.ap_id, region))
 
-    for event in world.catalogue.events.values():
+    for event in world.catalogue.events_in_scope(world.goal_key):
         region = world.get_region(event.region)
         location = CrimsonDesertLocation(world.player, event.name, None, region)
         location.place_locked_item(create_event_item(world, event.name))

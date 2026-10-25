@@ -1,0 +1,23 @@
+{
+  "name": "story-grants-removed",
+  "description": "The story no longer teaches Flight (\"Speak with the woman in white\") or Double Jump (the end of \"Reunion\", chapter 2). Their reward drop sets teach harmless codex entries instead (the Hedgehog, and Alfred of Hernand), so both can only come from Archipelago. Includes everything flight-grant-removed does.",
+  "game_build": "25477059",
+  "patches": [
+    {
+      "table": "dropsetinfo",
+      "record": 1014512,
+      "name": "Knowledge(Knowledge_CrowWing, 1)",
+      "u32": [[40002, 1006]],
+      "text": [["Knowledge_CrowWing", "Knowledge_Hedgehog"]],
+      "expect": {"u32": 2, "text": 2}
+    },
+    {
+      "table": "dropsetinfo",
+      "record": 1016274,
+      "name": "Knowledge(Knowledge_DoubleJump, 1)",
+      "u32": [[1001116, 1001105]],
+      "text": [["Knowledge_DoubleJump", "Knowledge_Her_Alfred"]],
+      "expect": {"u32": 2, "text": 2}
+    }
+  ]
+}

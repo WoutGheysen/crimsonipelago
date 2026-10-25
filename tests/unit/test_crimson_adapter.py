@@ -93,7 +93,8 @@ def test_warns_when_the_flight_override_is_missing(setup, tmp_path, monkeypatch)
     (game / "meta" / "0.papgt").write_bytes(b"")
     monkeypatch.setenv("CRIMSON_DESERT_DIR", str(game))
     warnings = adapter.setup_warnings()
-    assert len(warnings) == 1 and "crimson-mod install flight-grant-removed" in warnings[0]
+    assert len(warnings) == 1 and "crimson-mod install story-grants-removed" in warnings[0]
+    assert "Flight" in warnings[0]
     group = game / "0036"
     group.mkdir()
     (group / "crimsonipelago_overlay.json").write_text('{"patch": "flight-grant-removed"}')

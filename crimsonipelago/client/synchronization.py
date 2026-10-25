@@ -216,6 +216,19 @@ class SyncController:
         if FATAL_REFUSALS & set(errors) and self.connection:
             self.connection.fail(message)
 
+    def _client_fingerprint(self, goal: str | None = None) -> str:
+        goal = goal or self.slot_data.get("goal") or self.catalogue.default_goal
+        scope = getattr(self.catalogue, "scope_fingerprint", None)
+        if scope is not None and goal in self.catalogue.goals:
+            return scope(goal)
+        return self.catalogue.fingerprint
+
+    def _same_catalogue(self, slot_data: dict) -> bool:
+        """The seed's catalogue is this client's, for what the seed covers (its goal's slices). Seeds from before
+        slices sent the hash of the whole catalogue: that still matches an unchanged catalogue."""
+        seed = slot_data.get("catalogue_fingerprint")
+        return seed in (self._client_fingerprint(slot_data.get("goal")), self.catalogue.fingerprint)
+
     async def _on_Connected(self, cmd: dict) -> None:
         seed = (self.room_info or {}).get("seed_name")
         self.team, self.slot = int(cmd["team"]), int(cmd["slot"])
@@ -229,10 +242,10 @@ class SyncController:
             problem = "The server did not report a seed name; refusing to sync without a session identity."
         elif game != protocol.GAME:
             problem = f"Slot {self.config.slot_name!r} is a {game} slot, not Crimson Desert."
-        elif self.slot_data.get("catalogue_fingerprint") != self.catalogue.fingerprint:
+        elif not self._same_catalogue(self.slot_data):
             problem = (
                 "This seed was generated with a different Crimson Desert APWorld than this client was built with "
-                f"(seed catalogue {self.slot_data.get('catalogue_fingerprint')}, client {self.catalogue.fingerprint}). "
+                f"(seed catalogue {self.slot_data.get('catalogue_fingerprint')}, client {self._client_fingerprint()}). "
                 "Install the client release that matches the APWorld used for generation."
             )
         if problem:

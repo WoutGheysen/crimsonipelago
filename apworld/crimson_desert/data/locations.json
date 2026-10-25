@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "catalogue_status": "partial",
-  "_comment": "First slice: prologue and chapter 1 objectives (docs/research/first-slice.md). Location ids are 10,000,000,000 x kind + the game's key (kind 1 = mission/objective). Released ids are never reused (compatibility.json).",
+  "_comment": "First slice: prologue and chapter 1 objectives (docs/research/first-slice.md). Location ids are 10,000,000,000 x kind + the game's key (kind 1 = mission/objective). Released ids are never reused (compatibility.json). Slice 2 (chapter 2, regions After the Jump to The End of Greed) is a draft: unverified until a playthrough shows each completing.",
   "locations": [
     {
       "ap_id": 14294964434,
@@ -841,6 +841,1006 @@
       "repeatable_risk": false,
       "verified": true,
       "evidence": "docs/research/first-slice.md (seen completing in the save series of 2026-10-21/22)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001051,
+      "name": "Woman in White: Return to Hernand",
+      "region": "After the Jump",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001051,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000166
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002206,
+      "name": "Woman in White: Chapter Transition",
+      "region": "After the Jump",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002206,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000166
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964263,
+      "name": "Where the Light Leads: step 1",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964263,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000510
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964262,
+      "name": "Where the Light Leads: step 2",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964262,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000510
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964261,
+      "name": "Where the Light Leads: step 3",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964261,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000510
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964260,
+      "name": "Where the Light Leads: step 4",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964260,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000510
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001706,
+      "name": "Memory Fragment: step 1",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001706,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001705
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001736,
+      "name": "Memory Fragment: step 2",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001736,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1001705
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964259,
+      "name": "Reunion: step 1",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964259,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000507
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964258,
+      "name": "Reunion: step 2",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964258,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000507
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964257,
+      "name": "Reunion: step 3",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964257,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000507
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001059,
+      "name": "Reunion: step 4",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001059,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000507
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001060,
+      "name": "Reunion: step 5",
+      "region": "Unexpected Gift",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001060,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000507
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964256,
+      "name": "For Honor: step 1",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964256,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000177
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964255,
+      "name": "For Honor: step 2",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964255,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000177
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964254,
+      "name": "Awestruck: step 1",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964254,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000178
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964253,
+      "name": "Shadow Casted Over the River: step 1",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964253,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000529
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964252,
+      "name": "Shadow Casted Over the River: step 2",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964252,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000529
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964251,
+      "name": "Where Misery Gathers: step 1",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964251,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000517
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964250,
+      "name": "Where Misery Gathers: step 2",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964250,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000517
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964249,
+      "name": "Where Misery Gathers: step 3",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964249,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000517
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964248,
+      "name": "Where Misery Gathers: step 4",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964248,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000517
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964247,
+      "name": "Where Misery Gathers: step 5",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964247,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000517
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964246,
+      "name": "Trial After Trial: step 1",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964246,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000179
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964245,
+      "name": "Trial After Trial: step 2",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964245,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000179
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964244,
+      "name": "Trial After Trial: step 3",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964244,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000179
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964243,
+      "name": "Trial After Trial: step 4",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964243,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000179
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964242,
+      "name": "The Man Trapped in the Mire: step 1",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964242,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000180
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964241,
+      "name": "The Man Trapped in the Mire: step 2",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964241,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000180
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964240,
+      "name": "The Man Trapped in the Mire: step 3",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964240,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000180
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964239,
+      "name": "The Man Trapped in the Mire: step 4",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964239,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000180
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964238,
+      "name": "Missing Companion: step 1",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964238,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000181
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964237,
+      "name": "Missing Companion: step 2",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964237,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000181
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964236,
+      "name": "Missing Companion: step 3",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964236,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000181
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964235,
+      "name": "Missing Companion: step 4",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964235,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000181
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964234,
+      "name": "Missing Companion: step 5",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964234,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000181
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964233,
+      "name": "Missing Companion: step 6",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964233,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000181
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964232,
+      "name": "Secrets Hidden in the Dark: step 1",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964232,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000183
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964231,
+      "name": "Secrets Hidden in the Dark: step 2",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964231,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000183
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964230,
+      "name": "Secrets Hidden in the Dark: step 3",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964230,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000183
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964229,
+      "name": "Secrets Hidden in the Dark: step 4",
+      "region": "Hernand in Chaos",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964229,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000183
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964228,
+      "name": "The Dark Veil: step 1",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964228,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000185
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964227,
+      "name": "The Flames of Greed: step 1",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964227,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000187
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964226,
+      "name": "The Flames of Greed: step 2",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964226,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000187
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964225,
+      "name": "Kidnapped Healer: step 1",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964225,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000190
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964224,
+      "name": "Rebellion or Revolution: step 1",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964224,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000191
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964223,
+      "name": "Rebellion or Revolution: step 2",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964223,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000191
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964222,
+      "name": "Cheers Echoing From the Edge: step 1",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964222,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000193
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 14294964221,
+      "name": "Cheers Echoing From the Edge: step 2",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 4294964221,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000193
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001004288,
+      "name": "Cheers Echoing From the Edge: step 3",
+      "region": "The End of Greed",
+      "category": "quest",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1004288,
+        "states": [
+          5
+        ],
+        "parent_mission_key": 1000193
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "evidence": "docs/research/slice-2.md (draft from the game data: missioninfo via crimson-data story; not yet seen in a save)",
       "caveats": null
     }
   ]

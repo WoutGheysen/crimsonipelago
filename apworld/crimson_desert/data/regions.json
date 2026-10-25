@@ -1,20 +1,43 @@
 {
   "schema_version": 1,
   "catalogue_status": "partial",
-  "_comment": "First slice. The story is linear and nothing in it needs an item: without Flight, the jump after the woman in white kills Kliff and he respawns below (docs/research/first-slice.md).",
+  "_comment": "First slice. The story is linear and nothing in it needs an item: without Flight, the jump after the woman in white kills Kliff and he respawns below (docs/research/first-slice.md). Slice 2 (draft): the glide after the woman in white needs Flight; everything after Reunion needs Double Jump (the story would teach it there, so nothing later is assumed to work without it: docs/research/slice-2.md).",
   "origin": "Prologue",
   "regions": [
     {
       "name": "Prologue",
-      "description": "Ambush and Unknown Space: from the first cutscene to the road to Hernand."
+      "description": "Ambush and Unknown Space: from the first cutscene to the road to Hernand.",
+      "slice": 1
     },
     {
       "name": "Hernand",
-      "description": "Trials of Kindness."
+      "description": "Trials of Kindness.",
+      "slice": 1
     },
     {
       "name": "Traces",
-      "description": "Mystical Key, Polar Opposites, Abyss without Balance, Woman in White."
+      "description": "Mystical Key, Polar Opposites, Abyss without Balance, Woman in White.",
+      "slice": 1
+    },
+    {
+      "name": "After the Jump",
+      "slice": 2,
+      "description": "Woman in White after the glide: back to Hernand."
+    },
+    {
+      "name": "Unexpected Gift",
+      "slice": 2,
+      "description": "Chapter 2: Where the Light Leads, Memory Fragment, Reunion (where the story would teach Double Jump)."
+    },
+    {
+      "name": "Hernand in Chaos",
+      "slice": 2,
+      "description": "Chapter 2: For Honor to Secrets Hidden in the Dark."
+    },
+    {
+      "name": "The End of Greed",
+      "slice": 2,
+      "description": "Chapter 2: The Dark Veil to Cheers Echoing From the Edge."
     }
   ],
   "connections": [
@@ -26,6 +49,30 @@
     {
       "from": "Hernand",
       "to": "Traces",
+      "requires": null
+    },
+    {
+      "from": "Traces",
+      "to": "After the Jump",
+      "requires": {
+        "item": "Flight"
+      }
+    },
+    {
+      "from": "After the Jump",
+      "to": "Unexpected Gift",
+      "requires": null
+    },
+    {
+      "from": "Unexpected Gift",
+      "to": "Hernand in Chaos",
+      "requires": {
+        "item": "Double Jump"
+      }
+    },
+    {
+      "from": "Hernand in Chaos",
+      "to": "The End of Greed",
       "requires": null
     }
   ]
