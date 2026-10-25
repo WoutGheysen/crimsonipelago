@@ -757,7 +757,7 @@ def test_live_channel_stays_off_for_an_old_plugin_or_unknown_build(tmp_path):
     game.hello = {**HELLO, "plugin_version": "0.8.0-r3", "pe_timestamp": 5}
     live = LiveChannel(game.port, on_event=events.append, targets_file=targets)
     try:
-        assert not live.ready() and "doesn't know this game build" in live.unsupported
+        assert not live.ready() and "doesn't know this game version" in live.unsupported
     finally:
         live.close()
         game.close()
@@ -1054,3 +1054,102 @@ def test_live_channel_gives_up_on_an_item_turned_down_again_and_again(tmp_path):
     finally:
         live.close()
         game.close()
+
+
+def test_live_channel_finds_an_unknown_game_version_by_signature_once(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import LiveChannel
+    from tests.unit.test_signatures import _image
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5", "pe_timestamp": 1800000000}   # a game update
+    marks = {0x277E080: b"PROBE-function-start-0123456789", 0x2781780: b"GIVE-function-start-0123456789",
+             0x2774B20: b"RUNNER-function-start-012345678"}
+    reads_table = 0x2779000
+    code = {rva: data for rva, data in marks.items()}
+    code[reads_table] = b"ITEMS:" + bytes.fromhex("488b1d") + struct.pack("<i", 0x6D69AA8 - (reads_table + 13))
+    image = _image({}, sections=((".text", 0x2770000, 0x20000, 0x60000020),))
+    text = bytearray(b"\xcc" * 0x20000)
+    for rva, data in code.items():
+        text[rva - 0x2770000:rva - 0x2770000 + len(data)] = data
+    game.overlay.update({0x140000000: image[0x140000000], 0x140000000 + 0x2770000: bytes(text)})
+    doc = json.loads(targets.read_text())
+    doc["builds"] = {}
+    doc["signatures"] = {name: {"kind": "function", "pattern": data.hex(" ")} for name, data in
+                         (("probe", marks[0x277E080]), ("give", marks[0x2781780]), ("runner", marks[0x2774B20]))}
+    doc["signatures"]["item_table"] = {"kind": "global", "pattern": b"ITEMS:".hex(" ") + " 48 8b 1d ?? ?? ?? ??",
+                                       "disp_at": 9, "insn_end": 13}
+    doc["signature_defaults"] = {"reason": "0x0b", "knowledge_live": False}
+    targets.write_text(json.dumps(doc))
+
+    def the_game_commits(msg):
+        game.put(int(msg["args"].split(",")[1], 16), 0, 4)
+        return "done"
+
+    game.on_job = the_game_commits
+    events = []
+    found_file = tmp_path / "found-targets.json"
+    live = LiveChannel(game.port, on_event=events.append, targets_file=targets, sleep=lambda s: None,
+                       found_file=found_file)
+    try:
+        assert live.give(1, 100).given
+        assert int(game.job_msg["fn"], 16) == 0x140000000 + 0x2781780
+        assert any("new to Crimsonipelago" in e for e in events) and any("Found them all" in e for e in events)
+    finally:
+        live.close()
+    reads = len([m for m in game.received if m["cmd"] == "read"])
+    live = LiveChannel(game.port, on_event=events.append, targets_file=targets, sleep=lambda s: None,
+                       found_file=found_file)
+    try:
+        assert live.ready() and live.r3["item_table"] == 0x6D69AA8 and live.r3["found_by"] == "signatures"
+        assert len([m for m in game.received if m["cmd"] == "read"]) == reads        # no second search
+    finally:
+        live.close()
+        game.close()
+
+
+def test_live_channel_stays_off_when_a_signature_is_missing(tmp_path):
+    from crimsonipelago.game_adapter.runtime.live import LiveChannel
+    from tests.unit.test_signatures import _image
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5", "pe_timestamp": 1800000000}
+    image = _image({})
+    game.overlay.update({0x140000000: image[0x140000000], 0x140000000 + 0x1000: image[0x140000000 + 0x1000]})
+    doc = json.loads(targets.read_text())
+    doc["builds"] = {}
+    doc["signatures"] = {"give": {"kind": "function", "pattern": "de ad be ef ?? 01 02 03"}}
+    targets.write_text(json.dumps(doc))
+    live = LiveChannel(game.port, targets_file=targets, found_file=tmp_path / "found.json")
+    try:
+        assert not live.ready() and "give not found" in live.unsupported and "quit to desktop" in live.unsupported
+        assert not (tmp_path / "found.json").exists()
+    finally:
+        live.close()
+        game.close()
+
+
+def test_find_functions_compares_what_it_finds_with_the_known_build(tmp_path):
+    from crimsonipelago.game_adapter.runtime.signatures import find_functions
+    from tests.unit.test_signatures import _image
+
+    game, targets = _r4_game(tmp_path)
+    game.hello = {**HELLO, "plugin_version": "0.8.1-r5"}
+    give = b"GIVE-function-start-0123456789"
+    image = _image({}, sections=((".text", 0x2780000, 0x4000, 0x60000020),))
+    text = bytearray(b"\xcc" * 0x4000)
+    text[0x1780:0x1780 + len(give)] = give
+    game.overlay.update({0x140000000: image[0x140000000], 0x140000000 + 0x2780000: bytes(text)})
+    doc = json.loads(targets.read_text())
+    doc["signatures"] = {"give": {"kind": "function", "pattern": give.hex(" ")},
+                         "runner": {"kind": "function", "pattern": "de ad be ef 00 11 22 33"}}
+    targets.write_text(json.dumps(doc))
+    said = []
+    try:
+        with ResearchBridge(port=game.port) as bridge:
+            path = find_functions(bridge, tmp_path, say=said.append, targets_file=targets)
+        report = json.loads(path.read_text())
+    finally:
+        game.close()
+    rows = {r["name"]: r for r in report["targets"]}
+    assert rows["give"]["verdict"] == "found, where expected" and rows["give"]["found"] == "0x2781780"
+    assert rows["runner"]["verdict"] == "not found" and report["outcome"] == "not all found"
