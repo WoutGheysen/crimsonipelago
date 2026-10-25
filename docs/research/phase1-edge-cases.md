@@ -115,3 +115,15 @@ Changes:
 - Refusals show in the client window. Repeated waits are logged once. Each of the game's own adds is logged
   (`"seen"`), so the next log shows whether the wait was enough.
 - Still open: what the game counts. `plugin error-sites --code 0x40128a9b` finds where the game produces that code.
+
+## With the retry in (live log, 01:41–01:53, 25 Oct)
+
+- Every run was **exactly 8** deliveries, then `0x40128a9b`. The next 8 went in right after the game's next add
+  of its own (`seen`), which came 15–40 s later while playing, and 7 minutes later once while idle. The earlier
+  "11" was probably a run that one of the game's own adds reset partway through.
+- Items arriving one at a time between runs went straight in.
+- The load at 01:45:11 was noticed (new owner, clock back from 459.0M to 441.4M), and the 8 items given since the
+  last save were given again within 3 s.
+- So the limit counts deliveries, not items. Copies of the same item waiting together (a backlog is mostly
+  "100 Copper") now go in as **one** delivery, up to the item's stack size (`max_stack`) and at most 9,999.
+  22 × 100 Copper is one delivery instead of three runs.

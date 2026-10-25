@@ -295,3 +295,36 @@ def test_a_refusal_is_shown(setup, ledger, sim, catalogue):
     engine.validate(sid)
     engine.deliver_pending(sid)
     assert any("3 Ore: the game refused it (code 0x7)" in e.message and "quit to desktop" in e.message for e in events)
+
+
+def test_copies_of_an_item_waiting_together_go_in_as_one_delivery(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "100 Copper", "3 Ore", "100 Copper", "100 Copper", "3 Ore")
+    engine.validate(sid)
+    report = engine.deliver_pending(sid)
+    assert live.calls == [(1, 300), (721506, 6)] and report.delivered == 5
+    assert states(ledger, sid) == [DeliveryState.IN_GAME] * 5
+    assert any("Delivered in the game: 100 Copper, 100 Copper, 100 Copper, 3 Ore, 3 Ore" in e.message for e in events)
+
+
+def test_a_combined_delivery_stays_within_a_stack(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    catalogue.items["3 Ore"].game_ref["max_stack"] = 7
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "3 Ore", "3 Ore", "3 Ore")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    assert live.calls == [(721506, 6), (721506, 3)]
+
+
+def test_a_combined_delivery_waits_or_is_refused_as_a_whole(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    live.results = [LiveResult("not now", "the game turned it down for now"), LiveResult("given")]
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "100 Copper", "100 Copper")
+    engine.validate(sid)
+    report = engine.deliver_pending(sid)
+    assert report.pending == 2 and states(ledger, sid) == [DeliveryState.PENDING] * 2
+    engine.deliver_pending(sid)
+    assert live.calls == [(1, 200), (1, 200)] and states(ledger, sid) == [DeliveryState.IN_GAME] * 2
