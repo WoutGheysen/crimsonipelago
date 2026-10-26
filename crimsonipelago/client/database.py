@@ -419,6 +419,13 @@ class Ledger:
                     (session_id, loc, ts),
                 )
 
+    def check_states(self, session_id: int) -> dict[int, str]:
+        """Per check: confirmed (the server has it), sent, or found (seen in the save, not sent yet)."""
+        rows = self._all("SELECT location_id, detected_at, sent_at, confirmed_at FROM checks WHERE session_id=?",
+                         (session_id,))
+        return {r["location_id"]: ("confirmed" if r["confirmed_at"] else "sent" if r["sent_at"] else "found")
+                for r in rows if r["confirmed_at"] or r["sent_at"] or r["detected_at"]}
+
     def check_counts(self, session_id: int) -> dict[str, int]:
         row = self._one(
             "SELECT COUNT(detected_at) AS detected, COUNT(sent_at) AS sent, COUNT(confirmed_at) AS confirmed "

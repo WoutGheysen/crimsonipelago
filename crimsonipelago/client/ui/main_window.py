@@ -9,13 +9,14 @@ network, the save file or the ledger.
 from __future__ import annotations
 
 import asyncio
+import os
 import threading
 from pathlib import Path
 from typing import Any
 
 from crimson_desert.catalogue import Catalogue
-from PySide6.QtCore import QObject, Qt, Signal
-from PySide6.QtGui import QColor, QFont, QIcon, QPainter, QPixmap
+from PySide6.QtCore import QObject, Qt, QTimer, QUrl, Signal
+from PySide6.QtGui import QColor, QDesktopServices, QFont, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -34,11 +35,15 @@ from PySide6.QtWidgets import (
     QPushButton,
     QSizePolicy,
     QSpinBox,
+    QTabWidget,
+    QTreeWidget,
+    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
 
 from ... import __version__
+from .. import actions
 from .. import events as ev
 from ..database import BatchState, Ledger
 from ..synchronization import ClientConfig, StatusSnapshot, SyncController
@@ -61,6 +66,32 @@ FEED_STYLE: dict[str, tuple[str, str]] = {  # kind -> (tag, colour)
     ev.CHAT: ("ROOM", "#78909c"),
     ev.ERROR: ("ERROR", "#c62828"),
 }
+
+PLUGIN_LABELS = {  # StatusSnapshot.plugin -> (text, colour); anything else is a problem, shown as is
+    "off": ("Live delivery off", "#9e9e9e"),
+    "waiting": ("Game not running", "#78909c"),
+    "connected": ("Game plugin connected", "#2e7d32"),
+}
+
+CHECK_MARKS = {"confirmed": ("✔", "#2e7d32"), "sent": ("↑", "#558b2f"), "found": ("•", "#ef6c00")}
+
+
+def chapter_label(slice_no: int) -> str:
+    if slice_no <= 1:
+        return "Prologue and chapter 1"
+    if slice_no >= 13:
+        return "Epilogue and the whole map"
+    return f"Chapter {slice_no}"
+
+
+def find_game_dir(chosen: str | None) -> Path | None:
+    from ...tools.game_data_cli import find_game_dir as find
+
+    try:
+        return find(chosen or None)
+    except SystemExit:
+        return None
+
 
 CONNECTION_LABELS = {
     "disconnected": ("Not connected", "#9e9e9e"),
@@ -107,8 +138,8 @@ class Bridge(QObject):
 class ControllerThread:
     """Owns the asyncio loop the SyncController runs on."""
 
-    def __init__(self, controller: SyncController, ledger: Ledger):
-        self.controller, self.ledger = controller, ledger
+    def __init__(self, controller: SyncController, ledger: Ledger, live=None):
+        self.controller, self.ledger, self.live = controller, ledger, live
         self.loop = asyncio.new_event_loop()
         self.thread = threading.Thread(target=self._run, name="crimsonipelago-sync", daemon=True)
         self.finished = threading.Event()
@@ -125,6 +156,8 @@ class ControllerThread:
         finally:
             self.loop.run_until_complete(self.loop.shutdown_asyncgens())
             self.loop.close()
+            if self.live is not None:
+                self.live.close()
             self.ledger.close()
             self.finished.set()
 
@@ -161,6 +194,7 @@ class MainWindow(QMainWindow):
             "editor_dir": opts.get("editor_dir") or self.settings.get("editor_dir"),
             "steam_manifest": opts.get("steam_manifest") or self.settings.get("steam_manifest"),
             "sim_file": opts.get("sim_file") or self.settings.get("sim_file"),
+            "game_dir": opts.get("game_dir") or self.settings.get("game_dir"),
         }
         self.worker: ControllerThread | None = None
         self.bridge = Bridge()
@@ -184,13 +218,21 @@ class MainWindow(QMainWindow):
         top.addWidget(self._game_box(), 4)
         layout.addLayout(top)
         layout.addWidget(self._banner())
+        layout.addWidget(self._override_bar())
         layout.addWidget(self._recovery_bar())
         layout.addWidget(self._status_box())
-        layout.addWidget(self._feed_box(), 1)
+        self.tabs = QTabWidget()
+        self.tabs.addTab(self._feed_box(), "Activity")
+        self.tabs.addTab(self._checks_box(), "Checks")
+        self.tabs.currentChanged.connect(lambda i: i == 1 and self.refresh_checks())
+        layout.addWidget(self.tabs, 1)
+        layout.addLayout(self._tools_row())
 
         self._apply_status(StatusSnapshot(server=self.server_edit.text(), slot_name=self.slot_edit.text(),
                                           catalogue_status=catalogue.status))
         self._sync_adapter_fields()
+        self.refresh_plugin()
+        self._checks_timer = QTimer(self, singleShot=True, interval=1500, timeout=self.refresh_checks)
 
     # ------------------------------------------------------------------ layout
     def _header(self) -> QWidget:
@@ -208,10 +250,14 @@ class MainWindow(QMainWindow):
         self.conn_pill = QLabel()
         self.conn_pill.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.conn_pill.setMinimumWidth(150)
+        self.plugin_pill = QLabel()
+        self.plugin_pill.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.plugin_pill.setMinimumWidth(170)
         h.addWidget(title)
         h.addSpacing(8)
         h.addWidget(sub)
         h.addStretch(1)
+        h.addWidget(self.plugin_pill)
         h.addWidget(self.conn_pill)
         return w
 
@@ -268,29 +314,48 @@ class MainWindow(QMainWindow):
         box = QGroupBox("Crimson Desert")
         form = QFormLayout(box)
         self.adapter_combo = QComboBox()
-        self.adapter_combo.addItem("Save files (real game)", "save")
+        self.adapter_combo.addItem("Your game", "save")
         self.adapter_combo.addItem("Simulated game (testing)", "sim")
         self.adapter_combo.setCurrentIndex(max(0, self.adapter_combo.findData(self.adapter_kind)))
         self.adapter_combo.currentIndexChanged.connect(self._sync_adapter_fields)
+        self.game_edit = QLineEdit(self.adapter_options.get("game_dir") or "")
+        found = find_game_dir(None)
+        self.game_edit.setPlaceholderText(f"found: {found}" if found else "the Crimson Desert folder (with bin64)")
+        self.game_edit.editingFinished.connect(self.refresh_plugin)
         self.save_edit = QLineEdit(self.adapter_options.get("save_path") or "")
-        self.save_edit.setPlaceholderText("automatic: newest save.save")
+        self.save_edit.setPlaceholderText("automatic: your newest save")
         self.editor_edit = QLineEdit(self.adapter_options.get("editor_dir") or "")
-        self.editor_edit.setPlaceholderText("CrimsonSaveEditor folder (enables check detection)")
+        bundled = actions.default_editor_dir()
+        self.editor_edit.setPlaceholderText("built in" if bundled else "CrimsonSaveEditor folder (needed to read checks)")
         self.sim_edit = QLineEdit(self.adapter_options.get("sim_file") or "")
         self.sim_edit.setPlaceholderText(str(self.data_dir / "simulated_game.json"))
-        form.addRow("Game source", self.adapter_combo)
+        self.game_row = self._path_row(self.game_edit, True, "Choose the Crimson Desert folder")
         self.save_row = self._path_row(self.save_edit, False, "Choose save.save", "Crimson Desert save (*.save)")
         self.editor_row = self._path_row(self.editor_edit, True, "Choose your CrimsonSaveEditor folder")
         self.sim_row = self._path_row(self.sim_edit, False, "Choose simulated game file", "JSON (*.json)")
+        plugin = QWidget()
+        ph = QHBoxLayout(plugin)
+        ph.setContentsMargins(0, 0, 0, 0)
+        self.plugin_label = QLabel()
+        self.plugin_label.setWordWrap(True)
+        self.plugin_btn = QPushButton("Install plugin")
+        self.plugin_btn.clicked.connect(self.install_plugin_clicked)
+        ph.addWidget(self.plugin_label, 1)
+        ph.addWidget(self.plugin_btn)
+        self.plugin_row = plugin
+        form.addRow("Game folder", self.game_row)
+        form.addRow("Game plugin", self.plugin_row)
         form.addRow("Save file", self.save_row)
         form.addRow("Save editor", self.editor_row)
+        form.addRow("Game source", self.adapter_combo)
         form.addRow("Sim file", self.sim_row)
         self.game_form = form
         return box
 
     def _sync_adapter_fields(self) -> None:
         sim = self.adapter_combo.currentData() == "sim"
-        for row, visible in ((self.save_row, not sim), (self.editor_row, not sim), (self.sim_row, sim)):
+        for row, visible in ((self.save_row, not sim), (self.editor_row, not sim), (self.sim_row, sim),
+                             (self.game_row, not sim), (self.plugin_row, not sim)):
             row.setVisible(visible)
             label = self.game_form.labelForField(row)
             if label:
@@ -322,6 +387,48 @@ class MainWindow(QMainWindow):
         h.addWidget(self.recovery_retry)
         self.recovery.hide()
         return self.recovery
+
+    def _override_bar(self) -> QFrame:
+        self.override = QFrame(objectName="banner")
+        self.override.setStyleSheet("QFrame#banner { background: #fff3e0; color: #e65100; }")
+        h = QHBoxLayout(self.override)
+        h.setContentsMargins(10, 6, 10, 6)
+        self.override_label = QLabel()
+        self.override_label.setWordWrap(True)
+        self.override_btn = QPushButton("Fix it", objectName="primary")
+        self.override_btn.clicked.connect(self.override_clicked)
+        h.addWidget(self.override_label, 1)
+        h.addWidget(self.override_btn)
+        self.override.hide()
+        return self.override
+
+    def _checks_box(self) -> QWidget:
+        w = QWidget()
+        v = QVBoxLayout(w)
+        v.setContentsMargins(0, 6, 0, 0)
+        self.checks_summary = QLabel("Connect to a seed to see its checks.")
+        self.checks_tree = QTreeWidget()
+        self.checks_tree.setHeaderHidden(True)
+        self.checks_tree.setUniformRowHeights(True)
+        v.addWidget(self.checks_summary)
+        v.addWidget(self.checks_tree, 1)
+        return w
+
+    def _tools_row(self) -> QHBoxLayout:
+        h = QHBoxLayout()
+        self.rebind_btn = QPushButton("Move seed to my newest save…")
+        self.rebind_btn.setToolTip("When you saved over the playthrough this seed was on, or started a new one")
+        self.rebind_btn.clicked.connect(self.rebind_clicked)
+        self.logs_btn = QPushButton("Send logs…")
+        self.logs_btn.setToolTip("Zip today's play logs for a bug report (no password, no saves)")
+        self.logs_btn.clicked.connect(self.logs_clicked)
+        folder = QPushButton("Open data folder")
+        folder.clicked.connect(lambda: self._open_folder(self.data_dir))
+        h.addWidget(self.rebind_btn)
+        h.addStretch(1)
+        h.addWidget(folder)
+        h.addWidget(self.logs_btn)
+        return h
 
     def _status_box(self) -> QGroupBox:
         box = QGroupBox("Status")
@@ -367,7 +474,16 @@ class MainWindow(QMainWindow):
             "save_path": self.save_edit.text().strip() or None,
             "editor_dir": self.editor_edit.text().strip() or None,
             "sim_file": self.sim_edit.text().strip() or None,
+            "game_dir": self.game_edit.text().strip() or None,
         }
+
+    def _game_dir(self) -> Path | None:
+        return find_game_dir(self.game_edit.text().strip() or None)
+
+    def _editor_dir(self, settings: dict[str, Any]) -> str | None:
+        chosen = settings.get("editor_dir")
+        bundled = actions.default_editor_dir()
+        return chosen or (str(bundled) if bundled else None)
 
     def connect_clicked(self) -> None:
         from ..main import save_settings
@@ -376,10 +492,12 @@ class MainWindow(QMainWindow):
         if not settings["server"] or not settings["slot_name"]:
             QMessageBox.warning(self, "Missing details", "Enter the server address and your player name.")
             return
+        if settings.get("game_dir"):
+            os.environ["CRIMSON_DESERT_DIR"] = settings["game_dir"]   # the override and plugin checks look here
         try:
             adapter = self._build_adapter(settings["adapter"], self.catalogue, self.data_dir,
                                           sim_file=settings["sim_file"], save_path=settings["save_path"],
-                                          editor_dir=settings["editor_dir"],
+                                          editor_dir=self._editor_dir(settings),
                                           steam_manifest=settings.get("steam_manifest"))
         except Exception as exc:
             QMessageBox.critical(self, "Game setup problem", str(exc))
@@ -396,8 +514,15 @@ class MainWindow(QMainWindow):
         bus.subscribe(self.bridge.event.emit)  # Qt queues this onto the UI thread
         config = ClientConfig(server=settings["server"], port=settings["port"], slot_name=settings["slot_name"],
                               password=self.password_edit.text(), data_dir=self.data_dir)
-        controller = SyncController(config, adapter, ledger, self.catalogue, bus)
-        self.worker = ControllerThread(controller, ledger)
+        live = None
+        if settings["adapter"] == "save":
+            from ...game_adapter.runtime.live import JsonlLog, LiveChannel
+
+            # items arrive while you play; every delivery goes in logs/live-YYYYMMDD.jsonl
+            live = LiveChannel(on_event=lambda message: bus.emit(ev.CONNECTION, message),
+                               log=JsonlLog(self.data_dir / "logs"), found_file=self.data_dir / "found-targets.json")
+        controller = SyncController(config, adapter, ledger, self.catalogue, bus, live=live)
+        self.worker = ControllerThread(controller, ledger, live)
         self.worker.start()
         self._set_running(True)
 
@@ -411,8 +536,175 @@ class MainWindow(QMainWindow):
         self.connect_btn.setEnabled(not running)
         self.disconnect_btn.setEnabled(running)
         for w in (self.server_edit, self.port_spin, self.slot_edit, self.password_edit, self.adapter_combo,
-                  self.save_row, self.editor_row, self.sim_row):
+                  self.save_row, self.editor_row, self.sim_row, self.game_row, self.rebind_btn):
             w.setEnabled(not running)
+        self.refresh_plugin()
+
+    # the game plugin ---------------------------------------------------------
+    def refresh_plugin(self) -> None:
+        state = actions.plugin_state(self._game_dir())
+        self.plugin_state = state
+        if state.game_dir is None:
+            text = "Game folder not found: choose it above."
+        elif state.ready:
+            text = "Installed. Items arrive while you play."
+        elif state.plugin == "outdated":
+            text = "An older version is installed."
+        else:
+            text = "Not installed: items only arrive when you quit to desktop."
+        if not state.bundled and not state.ready:
+            text += " (This build doesn't carry the plugin: see docs/plugin.md.)"
+        self.plugin_label.setText(text)
+        self.plugin_label.setToolTip("\n".join(state.notes))
+        self.plugin_btn.setText("Update plugin" if state.plugin == "outdated" else "Install plugin")
+        self.plugin_btn.setVisible(state.can_install)
+        self.plugin_btn.setEnabled(state.can_install and self.worker is None)
+
+    def install_plugin_clicked(self) -> None:
+        from ...game_adapter.process_check import game_running
+
+        try:
+            done = actions.install_plugin(self.plugin_state, game_running=lambda: bool(game_running()))
+        except Exception as exc:
+            QMessageBox.warning(self, "Game plugin", str(exc))
+            return
+        self.add_feed(ev.Event(ev.CONNECTION, "Game plugin: " + "; ".join(done)))
+        self.refresh_plugin()
+
+    # the game-data override ----------------------------------------------------
+    def override_clicked(self) -> None:
+        worker = self.worker
+        advice = getattr(worker.controller, "override_advice", None) if worker else None
+        if advice is None:
+            return
+        what = (f"install the game-data override {advice.best!r}" if advice.best else "remove the game-data override")
+        if QMessageBox.question(self, "Game-data override",
+                                f"Close Crimson Desert first. Then {what}?\n\n{advice.message()}") \
+                != QMessageBox.StandardButton.Yes:
+            return
+        from ...game_adapter.overrides import switch
+
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        try:
+            done = switch(advice)
+        except Exception as exc:
+            QApplication.restoreOverrideCursor()
+            QMessageBox.warning(self, "Game-data override", str(exc))
+            return
+        QApplication.restoreOverrideCursor()
+        self.add_feed(ev.Event(ev.CONNECTION, "Game-data override: " + "; ".join(done)))
+        try:
+            worker.call(worker.controller.recheck_override())
+        except Exception as exc:
+            self.add_feed(ev.Event(ev.ERROR, f"Couldn't check the override again: {exc}"))
+
+    # moving the seed to another playthrough -------------------------------------
+    def rebind_clicked(self) -> None:
+        if self.worker is not None:
+            return
+        settings = self._collect_settings()
+        try:
+            adapter = self._build_adapter(settings["adapter"], self.catalogue, self.data_dir,
+                                          sim_file=settings["sim_file"], save_path=settings["save_path"],
+                                          editor_dir=self._editor_dir(settings),
+                                          steam_manifest=settings.get("steam_manifest"))
+        except Exception as exc:
+            QMessageBox.critical(self, "Game setup problem", str(exc))
+            return
+        ledger = Ledger(self.data_dir / "ledger.sqlite3")
+        try:
+            plan = actions.rebind_plan(ledger, adapter, self.catalogue)
+            title = "Move seed to my newest save"
+            if plan.problem:
+                QMessageBox.information(self, title, plan.problem)
+                return
+            if plan.nothing_to_do:
+                QMessageBox.information(self, title, f"Seed {plan.seed} is already on the playthrough of your "
+                                                     "newest save. Nothing to do.")
+                return
+            if QMessageBox.question(
+                    self, title,
+                    f"Seed {plan.seed} is on playthrough {plan.from_profile}. Your newest save is from playthrough "
+                    f"{plan.to_profile}.\n\nMove the seed there? Checks already sent stay sent.") \
+                    != QMessageBox.StandardButton.Yes:
+                return
+            give_again = False
+            if plan.to_give:
+                give_again = QMessageBox.question(
+                    self, title,
+                    f"The seed already gave you {len(plan.to_give)} item(s).\n\nGive them again? Yes if this "
+                    "playthrough doesn't have them (a new or different playthrough). No if it's the one they went "
+                    "into (you're moving back).") == QMessageBox.StandardButton.Yes
+            given = actions.apply_rebind(ledger, plan, give_again=give_again)
+            QMessageBox.information(self, title, f"Done: the seed continues on this playthrough. {given} item(s) "
+                                                 "will be given again. Press Connect.")
+        finally:
+            ledger.close()
+
+    # logs ----------------------------------------------------------------------
+    def logs_clicked(self) -> None:
+        f = self.fields
+        summary = "\n".join(f"{k}: {v.text()}" for k, v in f.items())
+        try:
+            path = actions.bundle_logs(self.data_dir, game_dir=self._game_dir(), summary=summary)
+        except OSError as exc:
+            QMessageBox.warning(self, "Send logs", f"Couldn't make the zip: {exc}")
+            return
+        box = QMessageBox(self)
+        box.setWindowTitle("Send logs")
+        box.setText(f"Made {path.name}.\n\nAttach it to your message or GitHub issue. It has the play logs and "
+                    "the client's settings, never your password or your saves.")
+        open_btn = box.addButton("Open folder", QMessageBox.ButtonRole.AcceptRole)
+        box.addButton(QMessageBox.StandardButton.Close)
+        box.exec()
+        if box.clickedButton() is open_btn:
+            self._open_folder(path.parent)
+
+    def _open_folder(self, folder: Path) -> None:
+        Path(folder).mkdir(parents=True, exist_ok=True)
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(folder)))
+
+    # the checks list -------------------------------------------------------------
+    def refresh_checks(self) -> None:
+        worker = self.worker
+        if worker is None or worker.finished.is_set():
+            return
+        try:
+            overview = worker.call(worker.controller.check_overview(), timeout=5)
+        except Exception:
+            return
+        self.show_checks(overview)
+
+    def show_checks(self, overview: dict) -> None:
+        self.checks_tree.clear()
+        enabled, states = overview.get("enabled", []), overview.get("states", {})
+        if not enabled:
+            self.checks_summary.setText("Connect to a seed to see its checks.")
+            return
+        by_chapter: dict[int, list] = {}
+        order = {loc.ap_id: i for i, loc in enumerate(self.catalogue.locations.values())}   # story order
+        for loc_id in enabled:
+            loc = self.catalogue.location_by_id(loc_id)
+            if loc is None:
+                continue
+            by_chapter.setdefault(self.catalogue.region_slices.get(loc.region, 1), []).append(loc)
+        done = sum(1 for loc_id in enabled if states.get(loc_id) in ("confirmed", "sent"))
+        self.checks_summary.setText(f"{done} of {len(enabled)} checks done. ✔ sent and confirmed · ↑ sent · "
+                                    "• done in your save, sending soon")
+        expanded = False
+        for chapter in sorted(by_chapter):
+            locs = by_chapter[chapter]
+            n = sum(1 for loc in locs if states.get(loc.ap_id) in ("confirmed", "sent"))
+            top = QTreeWidgetItem([f"{chapter_label(chapter)}: {n}/{len(locs)}"])
+            for loc in sorted(locs, key=lambda x: order.get(x.ap_id, x.ap_id)):
+                mark, colour = CHECK_MARKS.get(states.get(loc.ap_id, ""), ("  ", "#757575"))
+                child = QTreeWidgetItem([f"{mark}  {loc.name}" + ("" if loc.verified else "  (draft)")])
+                child.setForeground(0, QColor(colour))
+                top.addChild(child)
+            self.checks_tree.addTopLevelItem(top)
+            if n < len(locs) and not expanded:          # the chapter you're in
+                top.setExpanded(True)
+                expanded = True
 
     def resolve_recovery(self, decision: str) -> None:
         if not (self.worker and self.recovery_batches):
@@ -453,6 +745,8 @@ class MainWindow(QMainWindow):
         self.add_feed(event)
         if event.kind == ev.RECOVERY_REQUIRED:
             self._refresh_recovery()
+        if event.kind in (ev.CHECK_SENT, ev.CHECK_DETECTED, ev.CONNECTION) and self.tabs.currentIndex() == 1:
+            self._checks_timer.start()
         if self.worker and self.worker.finished.is_set():
             self.worker = None
             self._set_running(False)
@@ -474,6 +768,19 @@ class MainWindow(QMainWindow):
         self.conn_pill.setStyleSheet(f"background: {colour}; color: white; border-radius: 10px; padding: 4px 12px;"
                                      " font-weight: 600;")
         self.conn_pill.setToolTip(s.connection_detail or "")
+        ptext, pcolour = PLUGIN_LABELS.get(s.plugin, ("Game plugin: problem", "#ef6c00"))
+        self.plugin_pill.setText(ptext)
+        self.plugin_pill.setToolTip("" if s.plugin in PLUGIN_LABELS else s.plugin)
+        self.plugin_pill.setStyleSheet(f"background: {pcolour}; color: white; border-radius: 10px; "
+                                       "padding: 4px 12px; font-weight: 600;")
+        self.plugin_pill.setVisible(self.worker is not None and s.plugin != "off")
+        if s.override_problem:
+            self.override_label.setText(f"<b>Game-data override.</b> {s.override_problem}")
+            self.override_btn.setText(s.override_action or "Fix it")
+            self.override_btn.setVisible(bool(s.override_action))
+            self.override.show()
+        else:
+            self.override.hide()
 
         f = self.fields
         f["seed"].setText(s.seed_name or "—")

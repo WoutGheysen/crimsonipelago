@@ -15,6 +15,10 @@ on:
 permissions:
   contents: write
 
+env:
+  NATTKH_REF: 96e7f78fcb00d6cb5615171a7f359f0c2de5b114   # the save editor commit reviewed in NOTICE.md
+  ASI_LOADER_TAG: v10.0.1
+
 jobs:
   build:
     name: Windows client + APWorld
@@ -31,6 +35,57 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[ui]" pyinstaller
 
+      - name: Build the game plugin (crimsonipelago.asi)
+        shell: pwsh
+        run: |
+          cmake -S plugin -B build/plugin -A x64
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          cmake --build build/plugin --config Release --target crimsonipelago
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - name: Fetch the save editor's decoder (pinned, MPL-2.0, unmodified)
+        shell: bash
+        run: |
+          git init -q "$RUNNER_TEMP/nattkh"
+          cd "$RUNNER_TEMP/nattkh"
+          git remote add origin https://github.com/NattKh/CRIMSON-DESERT-SAVE-EDITOR-AND-GAME-MODS
+          git sparse-checkout set CrimsonSaveEditor
+          git fetch -q --depth 1 --filter=blob:none origin "$NATTKH_REF"
+          git checkout -q FETCH_HEAD
+
+      - name: Fetch Ultimate ASI Loader (x64, MIT)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e +o pipefail
+          repo=ThirteenAG/Ultimate-ASI-Loader
+          asset=""; used=""
+          for tag in "$ASI_LOADER_TAG" x64-latest; do
+            names=$(gh release view "$tag" -R "$repo" --json assets --jq '.assets[].name' 2>gh-error.txt)
+            if [ -z "$names" ]; then echo "::warning::$tag: no assets listed ($(tr '\n' ' ' < gh-error.txt))"; continue; fi
+            echo "$tag assets: $(echo $names | tr '\n' ' ')"
+            # tagged releases: Ultimate-ASI-Loader-NoPDB_x64.zip (dinput8.dll); the rolling one: version-x64.zip
+            asset=$(printf '%s\n' $names | grep -iE '^Ultimate-ASI-Loader-NoPDB_x64[.]zip$' | head -1)
+            [ -n "$asset" ] || asset=$(printf '%s\n' $names | grep -iE '^version[-_]?x64.*[.]zip$' | head -1)
+            [ -n "$asset" ] || asset=$(printf '%s\n' $names | grep -iE '^dinput8[-_]?x64.*[.]zip$' | head -1)
+            if [ -n "$asset" ]; then used="$tag"; break; fi
+          done
+          if [ -z "$asset" ]; then echo "::error::no x64 ASI loader zip found"; exit 1; fi
+          gh release download "$used" -R "$repo" -p "$asset" -O loader.zip || { echo "::error::download of $used/$asset failed"; exit 1; }
+          gh api "repos/$repo/license" --jq .content | base64 -d > loader-license.txt
+          [ -s loader-license.txt ] || { echo "::error::couldn't fetch the loader's license"; exit 1; }
+          echo "::notice::bundling Ultimate ASI Loader $used/$asset"
+          echo "ASI_LOADER_USED=$used/$asset" >> "$GITHUB_ENV"
+
+      - name: Gather bundled files
+        shell: bash
+        run: |
+          python packaging/fetch_bundled.py \
+            --editor "$RUNNER_TEMP/nattkh/CrimsonSaveEditor" --editor-license "$RUNNER_TEMP/nattkh/LICENSE.txt" \
+            --editor-commit "$NATTKH_REF" --plugin build/plugin/Release/crimsonipelago.asi \
+            --loader-zip loader.zip --loader-license loader-license.txt --loader-version "$ASI_LOADER_USED"
+
       - name: Build CrimsonipelagoClient.exe
         run: pyinstaller --noconfirm --clean packaging/crimsonipelago.spec
 
@@ -44,6 +99,7 @@ jobs:
           ./dist/CrimsonipelagoClient.exe --data-dir smoke sim init
           ./dist/CrimsonipelagoClient.exe --data-dir smoke sim complete "Unfamiliar Lands: Head to the cabin"
           ./dist/CrimsonipelagoClient.exe --data-dir smoke sim show
+          ./dist/CrimsonipelagoClient.exe --data-dir smoke bundled
 
       - name: Assemble release folder
         shell: bash
@@ -51,7 +107,8 @@ jobs:
           mkdir -p release
           cp dist/CrimsonipelagoClient.exe dist/crimson_desert.apworld release/
           cp examples/player.yaml "release/Crimson Desert.yaml"
-          cp README.md LICENSE NOTICE.md docs/setup.md docs/troubleshooting.md release/
+          cp README.md LICENSE NOTICE.md docs/setup.md docs/troubleshooting.md docs/hosting.md release/
+          cp build/bundled/SOURCES.txt release/BUNDLED-SOURCES.txt
 
       - uses: actions/upload-artifact@v4
         with:

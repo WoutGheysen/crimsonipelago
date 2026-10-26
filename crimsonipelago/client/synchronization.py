@@ -69,6 +69,11 @@ class StatusSnapshot:
     checks_confirmed: int = 0
     goal_detected: bool = False
     goal_reported: bool = False
+    plugin: str = "off"           # off (no live delivery) / waiting (game not running) / connected / a problem
+    override_problem: str | None = None   # the installed game-data override doesn't fit this seed
+    override_action: str | None = None    # what fixing it does ("Install story-abilities-removed")
+    story_items: tuple[str, ...] = ()     # abilities this seed hands out instead of the story
+    slice: int = 1
 
 
 class SyncController:
@@ -103,6 +108,7 @@ class SyncController:
                                      catalogue_status=catalogue.status)
         self._last_resend = 0.0
         self._override_checked: int | None = None          # the session whose override was checked
+        self.override_advice = None                         # overrides.OverrideAdvice for this seed
         if not config.client_uuid:
             config.client_uuid = self._load_uuid()
 
@@ -254,16 +260,37 @@ class SyncController:
                                          "checks or items are detected or delivered the updated way")
         return True
 
-    async def _check_override(self) -> None:
-        """Once per seed: is the game-data override that matches this seed's story items installed?"""
-        check = getattr(self.adapter, "override_warnings", None)
-        if check is None or self.session is None or self._override_checked == self.session.id:
+    async def _check_override(self, *, again: bool = False) -> None:
+        """Once per seed (or when asked again): is the game-data override that matches this seed installed?"""
+        if self.session is None or (self._override_checked == self.session.id and not again):
             return
+        from ..game_adapter.overrides import story_items_of
         self._override_checked = self.session.id
-        from ..game_adapter.crimson_adapter import story_items_of
         slice_no = int(self.slot_data.get("slice") or 1)
-        for warning in await self._adapter(check, story_items_of(self.slot_data, slice_no), slice_no):
-            self.bus.emit(ev.ERROR, warning)
+        items = story_items_of(self.slot_data, slice_no)
+        self.status.story_items, self.status.slice = tuple(items), slice_no
+        advise = getattr(self.adapter, "override_advice", None)
+        if advise is None:
+            return
+        advice = await self._adapter(advise, items, slice_no)
+        self.override_advice = advice
+        message = advice.message()
+        self.status.override_problem = message
+        self.status.override_action = advice.action if message and not advice.no_game_dir else None
+        if message and not again:
+            self.bus.emit(ev.ERROR, message)
+        self._emit_status()
+
+    async def check_overview(self) -> dict:
+        """The seed's checks and how far each is (for the window's checks list)."""
+        if not self.session:
+            return {}
+        states = await asyncio.to_thread(self.ledger.check_states, self.session.id)
+        return {"enabled": sorted(self.enabled_location_ids or ()), "states": states,
+                "goal": self.goal_key, "seed": self.session.seed_name}
+
+    async def recheck_override(self) -> None:
+        await self._check_override(again=True)
 
     async def _on_Connected(self, cmd: dict) -> None:
         seed = (self.room_info or {}).get("seed_name")
@@ -480,6 +507,13 @@ class SyncController:
     def _refresh_status(self) -> None:
         s = self.status
         s.paused = self.paused
+        live = self.engine.live
+        if live is None:
+            s.plugin = "off"
+        elif getattr(live, "connected", False):
+            s.plugin = "connected" if live.unsupported is None else live.unsupported
+        else:
+            s.plugin = "waiting"
         if self.session:
             counts = self.ledger.state_counts(self.session.id)
             s.pending_deliveries = sum(counts.get(st.value, 0) for st in
