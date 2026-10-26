@@ -47,3 +47,16 @@ def test_draft_items_join_the_pool_only_with_drafts(real_catalogue):
     raw["items"]["slice_pool"]["2"]["Nonexistent"] = 1
     problems = cat_mod.validate_catalogue(cat_mod.build(raw))
     assert any("slice_pool 2: unknown item 'Nonexistent'" in p for p in problems)
+
+
+def test_challenge_categories_are_optional_filler_detected_by_their_own_completion(real_catalogue):
+    from crimson_desert.catalogue import DEFAULT_CATEGORIES
+    counts = {"abyss_challenges": 38, "standstone": 97, "sealed_artifacts": 141, "spires": 8}
+    for category, count in counts.items():
+        checks = [loc for loc in real_catalogue.locations.values() if loc.category == category]
+        assert len(checks) == count and category not in DEFAULT_CATEGORIES
+        assert all(loc.no_progression and not loc.verified for loc in checks)
+        assert all(loc.ap_id == 10_000_000_000 + loc.detection["mission_key"] for loc in checks)
+        assert all("parent_mission_key" not in loc.detection for loc in checks)
+    late = {real_catalogue.region_slices[r] for r in ("Standstone ruins", "Sealed Abyss Artifacts", "Abyss spires")}
+    assert late == {13} and real_catalogue.region_slices["Abyss challenges"] == 2

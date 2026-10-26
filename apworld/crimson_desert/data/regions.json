@@ -263,6 +263,26 @@
       "name": "Abyss ruins: Pailune and Beighen",
       "slice": 7,
       "description": "Optional (abyss ruins), from chapter 7 (draft)."
+    },
+    {
+      "name": "Abyss challenges",
+      "slice": 2,
+      "description": "Optional (abyss_challenges), draft: the game's challenge missions."
+    },
+    {
+      "name": "Standstone ruins",
+      "slice": 13,
+      "description": "Optional (standstone), draft: the game's challenge missions."
+    },
+    {
+      "name": "Sealed Abyss Artifacts",
+      "slice": 13,
+      "description": "Optional (sealed_artifacts), draft: the game's challenge missions."
+    },
+    {
+      "name": "Abyss spires",
+      "slice": 13,
+      "description": "Optional (spires), draft: the game's challenge missions."
     }
   ],
   "connections": [
@@ -538,6 +558,28 @@
     {
       "from": "Dawn Mist",
       "to": "Abyss ruins: Pailune and Beighen",
+      "requires": null
+    },
+    {
+      "from": "Traces",
+      "to": "Abyss challenges",
+      "requires": {
+        "item": "Flight"
+      }
+    },
+    {
+      "from": "Prologue",
+      "to": "Standstone ruins",
+      "requires": null
+    },
+    {
+      "from": "Prologue",
+      "to": "Sealed Abyss Artifacts",
+      "requires": null
+    },
+    {
+      "from": "Prologue",
+      "to": "Abyss spires",
       "requires": null
     }
   ]

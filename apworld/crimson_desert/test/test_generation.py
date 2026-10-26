@@ -151,6 +151,31 @@ class TestOptionalCategories(CrimsonDesertTestBase):
         self.assertFalse(any(loc.item.advancement or loc.item.useful for loc in extras if loc.item))
 
 
+class TestChallengeCategories(CrimsonDesertTestBase):
+    options = {"goal": "journeys_end", "include_draft_slices": True,
+               "included_check_categories": ["quest", "boss", "exploration", "abyss_challenges", "standstone",
+                                             "sealed_artifacts", "spires"]}
+
+    def test_challenges_hold_only_filler(self) -> None:
+        from BaseClasses import LocationProgressType
+
+        prefixes = ("Abyss: ", "Standstone: ", "Sealed Artifact: ", "Spire: ")
+        extras = [loc for loc in self.multiworld.get_locations(self.player) if loc.name.startswith(prefixes)]
+        self.assertEqual(len(extras), 38 + 97 + 141 + 8)
+        self.assertTrue(all(loc.progress_type == LocationProgressType.EXCLUDED for loc in extras))
+        self.assertFalse(any(loc.item.advancement or loc.item.useful for loc in extras if loc.item))
+
+
+class TestChapterTwoGetsOnlyTheAbyssChallenges(CrimsonDesertTestBase):
+    options = {"goal": "chapter_2", "include_draft_slices": True,
+               "included_check_categories": ["quest", "abyss_challenges", "standstone", "sealed_artifacts"]}
+
+    def test_whole_game_challenges_wait_for_whole_game_seeds(self) -> None:
+        names = {loc.name for loc in self.multiworld.get_locations(self.player)}
+        self.assertEqual(len([n for n in names if n.startswith("Abyss: ")]), 38)
+        self.assertFalse(any(n.startswith(("Standstone: ", "Sealed Artifact: ")) for n in names))
+
+
 class TestOptionalCategoriesAreOffByDefault(CrimsonDesertTestBase):
     options = {"goal": "chapter_2", "include_draft_slices": True}
 
