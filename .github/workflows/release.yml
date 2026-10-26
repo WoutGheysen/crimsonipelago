@@ -15,6 +15,10 @@ on:
 permissions:
   contents: write
 
+env:
+  NATTKH_REF: 96e7f78fcb00d6cb5615171a7f359f0c2de5b114   # the save editor commit reviewed in NOTICE.md
+  ASI_LOADER_TAG: v10.0.1
+
 jobs:
   build:
     name: Windows client + APWorld
@@ -31,6 +35,41 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[ui]" pyinstaller
 
+      - name: Build the game plugin (crimsonipelago.asi)
+        shell: pwsh
+        run: |
+          cmake -S plugin -B build/plugin -A x64
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          cmake --build build/plugin --config Release --target crimsonipelago
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - name: Fetch the save editor's decoder (pinned, MPL-2.0, unmodified)
+        shell: bash
+        run: |
+          git init -q "$RUNNER_TEMP/nattkh"
+          cd "$RUNNER_TEMP/nattkh"
+          git remote add origin https://github.com/NattKh/CRIMSON-DESERT-SAVE-EDITOR-AND-GAME-MODS
+          git sparse-checkout set CrimsonSaveEditor
+          git fetch -q --depth 1 --filter=blob:none origin "$NATTKH_REF"
+          git checkout -q FETCH_HEAD
+
+      - name: Fetch Ultimate ASI Loader (x64, MIT)
+        shell: bash
+        run: |
+          base=https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/download
+          curl -fsSL -o loader.zip "$base/$ASI_LOADER_TAG/version-x64.zip" \
+            || curl -fsSL -o loader.zip "$base/$ASI_LOADER_TAG/dinput8-x64.zip"
+          curl -fsSL -o loader-license.txt \
+            "https://raw.githubusercontent.com/ThirteenAG/Ultimate-ASI-Loader/$ASI_LOADER_TAG/license"
+
+      - name: Gather bundled files
+        shell: bash
+        run: |
+          python packaging/fetch_bundled.py \
+            --editor "$RUNNER_TEMP/nattkh/CrimsonSaveEditor" --editor-license "$RUNNER_TEMP/nattkh/LICENSE.txt" \
+            --editor-commit "$NATTKH_REF" --plugin build/plugin/Release/crimsonipelago.asi \
+            --loader-zip loader.zip --loader-license loader-license.txt --loader-version "$ASI_LOADER_TAG"
+
       - name: Build CrimsonipelagoClient.exe
         run: pyinstaller --noconfirm --clean packaging/crimsonipelago.spec
 
@@ -44,6 +83,7 @@ jobs:
           ./dist/CrimsonipelagoClient.exe --data-dir smoke sim init
           ./dist/CrimsonipelagoClient.exe --data-dir smoke sim complete "Unfamiliar Lands: Head to the cabin"
           ./dist/CrimsonipelagoClient.exe --data-dir smoke sim show
+          ./dist/CrimsonipelagoClient.exe --data-dir smoke bundled
 
       - name: Assemble release folder
         shell: bash
@@ -51,7 +91,8 @@ jobs:
           mkdir -p release
           cp dist/CrimsonipelagoClient.exe dist/crimson_desert.apworld release/
           cp examples/player.yaml "release/Crimson Desert.yaml"
-          cp README.md LICENSE NOTICE.md docs/setup.md docs/troubleshooting.md release/
+          cp README.md LICENSE NOTICE.md docs/setup.md docs/troubleshooting.md docs/hosting.md release/
+          cp build/bundled/SOURCES.txt release/BUNDLED-SOURCES.txt
 
       - uses: actions/upload-artifact@v4
         with:

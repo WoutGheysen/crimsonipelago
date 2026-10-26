@@ -55,6 +55,14 @@ def save_settings(data_dir: Path, settings: dict) -> None:
     settings_path(data_dir).write_text(json.dumps(safe, indent=2), encoding="utf-8")
 
 
+def _bundled_editor() -> str | None:
+    """The save editor decoder a release carries, when none was chosen."""
+    from .actions import default_editor_dir
+
+    found = default_editor_dir()
+    return str(found) if found else None
+
+
 def build_adapter(kind: str, catalogue: Catalogue, data_dir: Path, *, sim_file: str | None = None,
                   save_path: str | None = None, editor_dir: str | None = None,
                   steam_manifest: str | None = None) -> GameAdapter:
@@ -91,6 +99,9 @@ def build_parser() -> argparse.ArgumentParser:
     c.add_argument("--no-live", action="store_true",
                    help="don't give items in the running game; only edit the save once you quit to desktop")
     _add_adapter_args(c)
+
+    sub.add_parser("logs", help="zip today's play logs for a bug report (no password, no saves)")
+    sub.add_parser("bundled", help="show which third-party files this build carries (save editor, plugin, loader)")
 
     u = sub.add_parser("ui", help="open the desktop UI")
     _add_adapter_args(u)
@@ -191,9 +202,10 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
         print("error: --server and --slot are required the first time", file=sys.stderr)
         return 2
     password = args.password if args.password is not None else os.environ.get("CRIMSONIPELAGO_PASSWORD", "")
-    editor_dir = args.editor_dir or settings.get("editor_dir")
+    chosen_editor = args.editor_dir or settings.get("editor_dir")
     save_settings(data_dir, {**settings, "server": server, "slot_name": slot,
-                             **({"editor_dir": editor_dir} if editor_dir else {})})
+                             **({"editor_dir": chosen_editor} if chosen_editor else {})})
+    editor_dir = chosen_editor or _bundled_editor()     # the release's own copy (a temp folder: never saved)
     if args.adapter == "save" and not editor_dir:
         print("warning: no --editor-dir given, so checks cannot be read from your save", file=sys.stderr)
     adapter = build_adapter(args.adapter, catalogue, data_dir, sim_file=args.sim_file, save_path=args.save_path,
@@ -362,7 +374,7 @@ def load_item_list(editor_dir: Path) -> list[dict]:
 
 
 def cmd_items(args, data_dir: Path) -> int:
-    editor_dir = args.editor_dir or load_settings(data_dir).get("editor_dir")
+    editor_dir = args.editor_dir or load_settings(data_dir).get("editor_dir") or _bundled_editor()
     if not editor_dir or not (Path(editor_dir) / "item_names.json").is_file():
         print("error: no CrimsonSaveEditor folder with item_names.json; pass --editor-dir", file=sys.stderr)
         return 1
@@ -440,53 +452,56 @@ def cmd_status(data_dir: Path) -> int:
 
 def cmd_rebind(args, data_dir: Path, catalogue: Catalogue, ask=input) -> int:
     """Tie the seed to the playthrough of the newest save instead (the player saved over theirs)."""
-    from .database import DeliveryState
+    from .actions import apply_rebind, rebind_plan
 
-    editor_dir = args.editor_dir or load_settings(data_dir).get("editor_dir")
+    editor_dir = args.editor_dir or load_settings(data_dir).get("editor_dir") or _bundled_editor()
     adapter = build_adapter(args.adapter, catalogue, data_dir, sim_file=args.sim_file, save_path=args.save_path,
                             editor_dir=editor_dir, steam_manifest=args.steam_manifest)
     ledger = Ledger(data_dir / "ledger.sqlite3")
     try:
-        session = ledger.latest_session()
-        if session is None:
-            print("No seed yet: connect to one first.", file=sys.stderr)
-            return 2
-        profile = adapter.get_current_profile()
-        if profile is None:
-            problem = getattr(adapter, "identity_problem", None)
-            print(f"Can't tell which playthrough your newest save is from: {problem or 'no save found'}",
-                  file=sys.stderr)
-            return 1
-        if profile == session.profile_id:
-            print(f"Seed {session.seed_name} is already on this playthrough ({profile}). Nothing to do.")
+        plan = rebind_plan(ledger, adapter, catalogue)
+        if plan.problem:
+            print(plan.problem, file=sys.stderr)
+            return 2 if plan.session_id is None else 1
+        if plan.nothing_to_do:
+            print(f"Seed {plan.seed} is already on this playthrough ({plan.to_profile}). Nothing to do.")
             return 0
-        other = [s for s in ledger.sessions_for_profile(profile) if s.id != session.id]
-        if other:
-            print(f"That playthrough ({profile}) belongs to seed {other[0].seed_name}. Load a save of another "
-                  "playthrough first.", file=sys.stderr)
-            return 1
-        had = ledger.items(session.id, (DeliveryState.COMPLETE, DeliveryState.IN_GAME))
-        to_give = [r.idx for r in had if (item := catalogue.item_by_id(r.item_id)) is not None
-                   and adapter.needs_write(item)]
+
         def yes(prompt: str) -> bool:
             return ask(prompt).strip().lower().startswith(("y", "j"))
 
-        print(f"Seed {session.seed_name} is on playthrough {session.profile_id}.")
-        print(f"Your newest save is from playthrough {profile}. Moving the seed there; checks already sent stay sent.")
+        print(f"Seed {plan.seed} is on playthrough {plan.from_profile}.")
+        print(f"Your newest save is from playthrough {plan.to_profile}. Moving the seed there; checks already sent "
+              "stay sent.")
         if not args.yes and not yes("Go ahead? (y/n) "):
             print("Nothing changed.")
             return 1
         give_again = args.give_again
-        if give_again == "ask" and to_give:
-            print(f"The seed already gave you {len(to_give)} item(s). If this playthrough doesn't have them (a new or "
-                  "different playthrough), answer y. If it's the one they went into (you're moving back), answer n.")
+        if give_again == "ask" and plan.to_give:
+            print(f"The seed already gave you {len(plan.to_give)} item(s). If this playthrough doesn't have them (a new "
+                  "or different playthrough), answer y. If it's the one they went into (you're moving back), answer n.")
             give_again = "yes" if yes("Give them again? (y/n) ") else "no"
-        ledger.rebind_profile(session.id, profile, to_give if give_again == "yes" else [])
-        print(f"{len(to_give) if give_again == 'yes' else 0} item(s) will be given again.")
-        print(f"Done. Start the client again (connect): it continues seed {session.seed_name} on this playthrough.")
+        given = apply_rebind(ledger, plan, give_again=give_again == "yes")
+        print(f"{given} item(s) will be given again.")
+        print(f"Done. Start the client again (connect): it continues seed {plan.seed} on this playthrough.")
         return 0
     finally:
         ledger.close()
+
+
+def cmd_bundled() -> int:
+    from .actions import LOADER_FILE, PLUGIN_FILE, bundled_root, default_editor_dir
+
+    root = bundled_root()
+    parts = {"save editor decoder": default_editor_dir(),
+             "game plugin": root / "plugin" / PLUGIN_FILE if root else None,
+             "ASI loader": root / "plugin" / LOADER_FILE if root else None}
+    missing = 0
+    for label, path in parts.items():
+        ok = path is not None and path.exists()
+        missing += not ok
+        print(f"{label:<20} {path if ok else 'not in this build'}")
+    return 1 if missing else 0
 
 
 def cmd_resolve(args, data_dir: Path, catalogue: Catalogue) -> int:
@@ -531,6 +546,17 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_resolve(args, data_dir, catalogue)
     if args.command == "rebind":
         return cmd_rebind(args, data_dir, catalogue)
+    if args.command == "logs":
+        from ..tools.game_data_cli import find_game_dir
+        from .actions import bundle_logs
+        try:
+            game_dir = find_game_dir(None)
+        except SystemExit:
+            game_dir = None
+        print(bundle_logs(Path(data_dir), game_dir=game_dir))
+        return 0
+    if args.command == "bundled":
+        return cmd_bundled()
     if args.command in (None, "ui"):
         try:
             from .ui.main_window import run_ui

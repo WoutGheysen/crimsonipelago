@@ -12,10 +12,16 @@
   the save container and serializer layout. The format facts they rely on (header offsets, the
   ChaCha20 / HMAC-SHA256 / LZ4 scheme and its key-derivation constants, the schema and TOC layout)
   were learned from that project's source and documentation, and are credited to it here.
-- `crimsonipelago/game_adapter/nattkh_backend.py` optionally imports the editor's own decoder
-  (`save_parser`, `save_crypto`, `models`) from a checkout **the user provides** (`--editor-dir`).
-  That code is used unmodified and stays under the MPL-2.0. It is not redistributed in this
-  repository or in Crimsonipelago releases.
+- `crimsonipelago/game_adapter/nattkh_backend.py` imports the editor's own decoder (`save_parser`,
+  `save_crypto`, `models`) from a folder: the user's own checkout (`--editor-dir`), or the copy the
+  Windows release carries. That code is used unmodified and stays under the MPL-2.0.
+- **The Windows release carries** those three modules and four of the editor's name tables
+  (`quest_names.json`, `mission_names.json`, `knowledge_keys_all.json`, `item_names.json`),
+  unmodified, from the commit above. They ship as source (`.py`, `.json`), together with the editor's
+  `LICENSE.txt` and a `SOURCE.txt` that links the upstream source, inside the executable's bundled files
+  (`bundled/CrimsonSaveEditor`). Nothing from the editor is in this repository; `packaging/fetch_bundled.py`
+  gathers the files at build time. The MPL-2.0 is file-level: these files stay MPL-2.0, and
+  Crimsonipelago's own code stays MIT.
 
 - `crimsonipelago/tools/candidates.py` (`crimson-candidates`) reads the editor's game-data tables
   from the user's checkout and writes candidate lists to a local, git-ignored folder. Those lists are
@@ -23,6 +29,15 @@
 
 If MPL-2.0 files are ever vendored into this repository, they must keep their license headers and
 remain under the MPL-2.0 (file-level copyleft). The rest of the project can stay MIT.
+
+## Ultimate ASI Loader (ThirteenAG)
+
+- Source: https://github.com/ThirteenAG/Ultimate-ASI-Loader
+- License: MIT
+
+The Windows release carries the x64 loader, unmodified, as `bundled/plugin/version.dll` (the name the game loads),
+with its license (`ASI-LOADER-LICENSE.txt`). The client's **Install plugin** button copies it into the game's
+`bin64` folder, only if no `version.dll` is there yet.
 
 ## Archipelago
 
