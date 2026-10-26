@@ -20,7 +20,8 @@
       "evidence": "docs/research/flight-gating.md (test D: added to both knowledge lists, glides after load, save and restart)",
       "game_versions": [
         "25477059"
-      ]
+      ],
+      "story_grant": true
     },
     {
       "ap_id": 3101,
@@ -96,7 +97,8 @@
       "verified": false,
       "evidence": "docs/research/slice-2.md (story reward of Reunion; needs a live test and the story-grants-removed override)",
       "game_versions": [],
-      "slice": 2
+      "slice": 2,
+      "story_grant": true
     },
     {
       "ap_id": 2102,
@@ -761,18 +763,102 @@
       "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
       "game_versions": [],
       "slice": 2
+    },
+    {
+      "ap_id": 1112,
+      "name": "Focused Force Palm",
+      "classification": "progression",
+      "category": "traversal",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1001756
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/story-abilities.md (story reward of An Unknown Voice, chapter 9: needs the story-abilities-removed override and a seed that delivers it)",
+      "game_versions": [],
+      "slice": 9,
+      "story_grant": true
+    },
+    {
+      "ap_id": 1113,
+      "name": "Back Hang",
+      "classification": "progression",
+      "category": "traversal",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1003571
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/story-abilities.md (story reward of Mark of the Scar, chapter 9: needs the story-abilities-removed override and a seed that delivers it)",
+      "game_versions": [],
+      "slice": 9,
+      "story_grant": true
+    },
+    {
+      "ap_id": 1114,
+      "name": "Aerial Maneuver",
+      "classification": "progression",
+      "category": "traversal",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1003512
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/story-abilities.md (story reward of Mark of the Scar, chapter 9: needs the story-abilities-removed override and a seed that delivers it)",
+      "game_versions": [],
+      "slice": 9,
+      "story_grant": true
+    },
+    {
+      "ap_id": 1115,
+      "name": "Call Dragon",
+      "classification": "progression",
+      "category": "traversal",
+      "game_ref": {
+        "kind": "knowledge",
+        "knowledge_key": 1000175
+      },
+      "quantity": 1,
+      "repeatable": false,
+      "starting_safe": true,
+      "capability": "unsupported",
+      "verified": false,
+      "evidence": "docs/research/story-abilities.md (story reward of Whispers in the Wind, chapter 11: needs the story-abilities-removed override and a seed that delivers it)",
+      "game_versions": [],
+      "slice": 11,
+      "story_grant": true
     }
   ],
   "item_pool": {
     "conservative": {
       "Flight": 1,
       "Abyss Artifact": 3,
-      "Double Jump": 1
+      "Double Jump": 1,
+      "Focused Force Palm": 1,
+      "Back Hang": 1,
+      "Aerial Maneuver": 1,
+      "Call Dragon": 1
     },
     "expanded": {
       "Flight": 1,
       "Abyss Artifact": 3,
-      "Double Jump": 1
+      "Double Jump": 1,
+      "Focused Force Palm": 1,
+      "Back Hang": 1,
+      "Aerial Maneuver": 1,
+      "Call Dragon": 1
     }
   },
   "filler_weights": {

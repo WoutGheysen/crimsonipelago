@@ -6056,7 +6056,9 @@
         ],
         "parent_mission_key": 1002627
       },
-      "requires": null,
+      "requires": {
+        "item": "Focused Force Palm"
+      },
       "missable": false,
       "repeatable_risk": false,
       "verified": false,
@@ -6116,7 +6118,16 @@
         ],
         "parent_mission_key": 1002821
       },
-      "requires": null,
+      "requires": {
+        "all": [
+          {
+            "item": "Back Hang"
+          },
+          {
+            "item": "Aerial Maneuver"
+          }
+        ]
+      },
       "missable": false,
       "repeatable_risk": false,
       "verified": false,
@@ -7596,7 +7607,9 @@
         ],
         "parent_mission_key": 1000114
       },
-      "requires": null,
+      "requires": {
+        "item": "Call Dragon"
+      },
       "missable": false,
       "repeatable_risk": false,
       "verified": false,
@@ -7616,7 +7629,9 @@
         ],
         "parent_mission_key": 1000114
       },
-      "requires": null,
+      "requires": {
+        "item": "Call Dragon"
+      },
       "missable": false,
       "repeatable_risk": false,
       "verified": false,

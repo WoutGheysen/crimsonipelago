@@ -1,0 +1,133 @@
+{
+  "name": "story-abilities-removed",
+  "description": "The story no longer teaches the abilities Archipelago hands out: Flight (\"Speak with the woman in white\"), Double Jump (\"Reunion\"), Focused Force Palm (\"An Unknown Voice\"), Back Hang and Aerial Maneuver (\"Mark of the Scar\") and Call Dragon (\"Whispers in the Wind\"). Their reward drop sets teach harmless codex entries instead (the Hedgehog, Alfred's poster, the Sheep, the Sockeye Salmon, the Pig and the Desert Fox). Includes everything story-grants-removed does: only for seeds that hold all six.",
+  "game_build": "25477059",
+  "patches": [
+    {
+      "table": "dropsetinfo",
+      "record": 1014512,
+      "name": "Knowledge(Knowledge_CrowWing, 1)",
+      "u32": [
+        [
+          40002,
+          1006
+        ]
+      ],
+      "text": [
+        [
+          "Knowledge_CrowWing",
+          "Knowledge_Hedgehog"
+        ]
+      ],
+      "expect": {
+        "u32": 2,
+        "text": 2
+      }
+    },
+    {
+      "table": "dropsetinfo",
+      "record": 1016274,
+      "name": "Knowledge(Knowledge_DoubleJump, 1)",
+      "u32": [
+        [
+          1001116,
+          1001105
+        ]
+      ],
+      "text": [
+        [
+          "Knowledge_DoubleJump",
+          "Knowledge_Her_Alfred"
+        ]
+      ],
+      "expect": {
+        "u32": 2,
+        "text": 2
+      }
+    },
+    {
+      "table": "dropsetinfo",
+      "record": 1014747,
+      "name": "Knowledge(Knowledge_JiJeongTa_Deep, 1)",
+      "u32": [
+        [
+          1001756,
+          1009
+        ]
+      ],
+      "text": [
+        [
+          "Knowledge_JiJeongTa_Deep",
+          "Knowledge_Domestic_Sheep"
+        ]
+      ],
+      "expect": {
+        "u32": 2,
+        "text": 2
+      }
+    },
+    {
+      "table": "dropsetinfo",
+      "record": 1014748,
+      "name": "Knowledge(Knowledge_CharacterClimb, 1)",
+      "u32": [
+        [
+          1003571,
+          2017
+        ]
+      ],
+      "text": [
+        [
+          "Knowledge_CharacterClimb",
+          "Knowledge_Sockeye_Salmon"
+        ]
+      ],
+      "expect": {
+        "u32": 2,
+        "text": 2
+      }
+    },
+    {
+      "table": "dropsetinfo",
+      "record": 1014749,
+      "name": "Knowledge(Knowledge_Rope_AirPull, 1)",
+      "u32": [
+        [
+          1003512,
+          1070
+        ]
+      ],
+      "text": [
+        [
+          "Knowledge_Rope_AirPull",
+          "Knowledge_Domestic_Pig"
+        ]
+      ],
+      "expect": {
+        "u32": 2,
+        "text": 2
+      }
+    },
+    {
+      "table": "dropsetinfo",
+      "record": 1014833,
+      "name": "Knowledge(Knowledge_CallDragon, 1)",
+      "u32": [
+        [
+          1000175,
+          1131
+        ]
+      ],
+      "text": [
+        [
+          "Knowledge_CallDragon",
+          "Knowledge_Desert_Fox"
+        ]
+      ],
+      "expect": {
+        "u32": 2,
+        "text": 2
+      }
+    }
+  ]
+}

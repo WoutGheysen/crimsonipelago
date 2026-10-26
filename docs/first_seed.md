@@ -40,13 +40,23 @@ That last command writes `dist\crimson_desert.apworld`.
 
 ## 5. Install the game-data override (game closed)
 
+Each override takes a set of abilities out of the story, so that only Archipelago hands them out. Install the one
+that matches your seed. **The client names it when it connects**, and warns if the installed one doesn't match.
+
+| Override | Takes out of the story | For seeds |
+|---|---|---|
+| `flight-grant-removed` | Flight | first_slice |
+| `story-grants-removed` | Flight, Double Jump | goals chapter_2 to chapter_8, and any seed with draft chapters made before 26 Oct |
+| `story-abilities-removed` | Flight, Double Jump, Focused Force Palm, Back Hang, Aerial Maneuver, Call Dragon | goals chapter_9 and later, made from 26 Oct |
+
 ```powershell
 crimson-mod status
-crimson-mod install story-grants-removed     # only if status says nothing is installed
-                                             # (flight-grant-removed, installed before, is fine for first_slice)
+crimson-mod uninstall                        # only one can be installed: remove the old one first
+crimson-mod install story-abilities-removed  # or the one the client names
 ```
 
-Without it, the story still hands you Flight at the woman in white (and Double Jump at the end of *Reunion*, chapter 2), and the client warns you about that.
+The override has to match. With too small an override, the story still hands you an ability the seed is meant to
+give. With too big an override, the story takes away an ability your seed never gives out, so you'd never get it.
 
 ## 6. Start the client (PowerShell, in your `crimsonipelago` folder)
 

@@ -39,9 +39,13 @@ seeds. Start a new game for the new seed.
 Your most recent save is from another playthrough. Load a save of this seed's playthrough and let the
 game save once (or make a manual save).
 
-**"The game-data override 'flight-grant-removed' is not installed …"**
-Without it the story gives you Flight at the woman in white, so the Flight item from the multiworld
-changes nothing. With the game closed: `crimson-mod install flight-grant-removed`.
+**"The story still hands out … the game-data override … isn't installed"**
+The story would teach you an ability your seed is meant to give, so that item changes nothing. With the game
+closed, run the commands the message gives (`docs/first_seed.md`, step 5).
+
+**"The installed game-data override takes … out of the story, but this seed doesn't hand it out"**
+The override is for a bigger seed than this one: with it, you'd never get those abilities. With the game closed,
+run the commands the message gives. This one matters: don't play on with it.
 
 **"The loaded save is missing Flight; it will be given again"**
 You loaded a save from before Flight was delivered. The client adds it again the next time the game is
