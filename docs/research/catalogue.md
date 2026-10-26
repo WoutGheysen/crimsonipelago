@@ -50,8 +50,9 @@ From `story --plan main_story.json` (the quest database's 14 chapters, 39 quests
 | Epilogue: Journey's End | 1 | 8 | 15 | 4 |
 | **Total** | **39** | **168** | **405** | **152** |
 
-- Three missions the quest database lists aren't in the tables extracted on 22 Oct (*Return Home*, *Broken Claws*,
-  *Lust for Power*). A fresh `crimson-data extract` should have them.
+- Three missions the quest database lists aren't in `missioninfo` (*Return Home*, *Broken Claws*, *Lust for
+  Power*), not even in a fresh extract on 26 Oct, which is byte-identical to 22 Oct. They're boss **stages**
+  (`CompleteStage(...)` in `conditioninfo`), and the catalogue has them as filler-only draft checks (`drafts.md`).
 - The mission records of chapters 2–4 name a few more missions as belonging to their quests than the database
   lists (18 against 16 in chapter 2). Probably optional ones; the playthrough of each slice decides.
 
