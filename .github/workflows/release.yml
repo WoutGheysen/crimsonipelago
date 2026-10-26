@@ -64,8 +64,10 @@ jobs:
           for tag in "$ASI_LOADER_TAG" x64-latest; do
             names=$(gh release view "$tag" -R "$repo" --json assets --jq '.assets[].name' 2>gh-error.txt)
             if [ -z "$names" ]; then echo "::warning::$tag: no assets listed ($(tr '\n' ' ' < gh-error.txt))"; continue; fi
-            echo "::warning::$tag assets: $(echo $names | tr '\n' ' ')"
-            asset=$(printf '%s\n' $names | grep -iE '^version[-_]?x64.*[.]zip$' | head -1)
+            echo "$tag assets: $(echo $names | tr '\n' ' ')"
+            # tagged releases: Ultimate-ASI-Loader-NoPDB_x64.zip (dinput8.dll); the rolling one: version-x64.zip
+            asset=$(printf '%s\n' $names | grep -iE '^Ultimate-ASI-Loader-NoPDB_x64[.]zip$' | head -1)
+            [ -n "$asset" ] || asset=$(printf '%s\n' $names | grep -iE '^version[-_]?x64.*[.]zip$' | head -1)
             [ -n "$asset" ] || asset=$(printf '%s\n' $names | grep -iE '^dinput8[-_]?x64.*[.]zip$' | head -1)
             if [ -n "$asset" ]; then used="$tag"; break; fi
           done
