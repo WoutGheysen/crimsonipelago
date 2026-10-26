@@ -885,7 +885,7 @@
     },
     {
       "ap_id": 14294964263,
-      "name": "Where the Light Leads: step 1",
+      "name": "Where the Light Leads: Go to Lioncrest Watchtower",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -905,7 +905,7 @@
     },
     {
       "ap_id": 14294964262,
-      "name": "Where the Light Leads: step 2",
+      "name": "Where the Light Leads: Defeat the bandits occupying Lioncrest Watchtower",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -925,7 +925,7 @@
     },
     {
       "ap_id": 14294964261,
-      "name": "Where the Light Leads: step 3",
+      "name": "Where the Light Leads: Liberate Lioncrest Watchtower Effect",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -945,7 +945,7 @@
     },
     {
       "ap_id": 14294964260,
-      "name": "Where the Light Leads: step 4",
+      "name": "Where the Light Leads: Ascend Lioncrest Watchtower",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -965,7 +965,7 @@
     },
     {
       "ap_id": 10001001706,
-      "name": "Memory Fragment: step 1",
+      "name": "Memory Fragment: Check the suspicious helm among the treasure",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -985,7 +985,7 @@
     },
     {
       "ap_id": 10001001736,
-      "name": "Memory Fragment: step 2",
+      "name": "Memory Fragment: Read the memory contained in the helm",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -1005,7 +1005,7 @@
     },
     {
       "ap_id": 14294964259,
-      "name": "Reunion: step 1",
+      "name": "Reunion: Speak with the child",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -1025,7 +1025,7 @@
     },
     {
       "ap_id": 14294964258,
-      "name": "Reunion: step 2",
+      "name": "Reunion: Learn Nature's Grasp through observation",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -1045,7 +1045,7 @@
     },
     {
       "ap_id": 14294964257,
-      "name": "Reunion: step 3",
+      "name": "Reunion: Learn Focus through observation",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -1065,7 +1065,7 @@
     },
     {
       "ap_id": 10001001059,
-      "name": "Reunion: step 4",
+      "name": "Reunion: Unravel the secret of the ancient ruins",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -1085,7 +1085,7 @@
     },
     {
       "ap_id": 10001001060,
-      "name": "Reunion: step 5",
+      "name": "Reunion: Approach the child",
       "region": "Unexpected Gift",
       "category": "quest",
       "detection": {
@@ -1105,7 +1105,7 @@
     },
     {
       "ap_id": 14294964256,
-      "name": "For Honor: step 1",
+      "name": "For Honor: Go to Hernand Square",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1125,7 +1125,7 @@
     },
     {
       "ap_id": 14294964255,
-      "name": "For Honor: step 2",
+      "name": "For Honor: Duel Matthias",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1145,7 +1145,7 @@
     },
     {
       "ap_id": 14294964254,
-      "name": "Awestruck: step 1",
+      "name": "Awestruck: Speak with the man who seems to have something to say",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1165,7 +1165,7 @@
     },
     {
       "ap_id": 14294964253,
-      "name": "Shadow Casted Over the River: step 1",
+      "name": "Shadow Casted Over the River: Defeat the enemies around Springtide Mill",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1185,7 +1185,7 @@
     },
     {
       "ap_id": 14294964252,
-      "name": "Shadow Casted Over the River: step 2",
+      "name": "Shadow Casted Over the River: Springtide Mill Liberation Loading",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1205,7 +1205,7 @@
     },
     {
       "ap_id": 14294964251,
-      "name": "Where Misery Gathers: step 1",
+      "name": "Where Misery Gathers: Go to the notice board",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1225,7 +1225,7 @@
     },
     {
       "ap_id": 14294964250,
-      "name": "Where Misery Gathers: step 2",
+      "name": "Where Misery Gathers: Check the \"Missing Cows\" poster",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1245,7 +1245,7 @@
     },
     {
       "ap_id": 14294964249,
-      "name": "Where Misery Gathers: step 3",
+      "name": "Where Misery Gathers: Check the \"Horn Thief\" poster",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1265,7 +1265,7 @@
     },
     {
       "ap_id": 14294964248,
-      "name": "Where Misery Gathers: step 4",
+      "name": "Where Misery Gathers: Check the \"Missing Wooly\" poster",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1285,7 +1285,7 @@
     },
     {
       "ap_id": 14294964247,
-      "name": "Where Misery Gathers: step 5",
+      "name": "Where Misery Gathers: Check the \"Strange Noises from the Cave\" poster",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1305,7 +1305,7 @@
     },
     {
       "ap_id": 14294964246,
-      "name": "Trial After Trial: step 1",
+      "name": "Trial After Trial: Speak with the despairing man",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1325,7 +1325,7 @@
     },
     {
       "ap_id": 14294964245,
-      "name": "Trial After Trial: step 2",
+      "name": "Trial After Trial: Speak with the witnesses",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1345,7 +1345,7 @@
     },
     {
       "ap_id": 14294964244,
-      "name": "Trial After Trial: step 3",
+      "name": "Trial After Trial: Read the memory on the cows' whereabouts",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1365,7 +1365,7 @@
     },
     {
       "ap_id": 14294964243,
-      "name": "Trial After Trial: step 4",
+      "name": "Trial After Trial: Return to Bremer",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1385,7 +1385,7 @@
     },
     {
       "ap_id": 14294964242,
-      "name": "The Man Trapped in the Mire: step 1",
+      "name": "The Man Trapped in the Mire: Speak with the enraged man",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1405,7 +1405,7 @@
     },
     {
       "ap_id": 14294964241,
-      "name": "The Man Trapped in the Mire: step 2",
+      "name": "The Man Trapped in the Mire: Read the memory on the mysterious horn thief",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1425,7 +1425,7 @@
     },
     {
       "ap_id": 14294964240,
-      "name": "The Man Trapped in the Mire: step 3",
+      "name": "The Man Trapped in the Mire: Find the stolen item",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1445,7 +1445,7 @@
     },
     {
       "ap_id": 14294964239,
-      "name": "The Man Trapped in the Mire: step 4",
+      "name": "The Man Trapped in the Mire: Return to Ibano",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1465,7 +1465,7 @@
     },
     {
       "ap_id": 14294964238,
-      "name": "Missing Companion: step 1",
+      "name": "Missing Companion: Speak with the crying child",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1485,7 +1485,7 @@
     },
     {
       "ap_id": 14294964237,
-      "name": "Missing Companion: step 2",
+      "name": "Missing Companion: Get information on the missing sheep from the men",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1505,7 +1505,7 @@
     },
     {
       "ap_id": 14294964236,
-      "name": "Missing Companion: step 3",
+      "name": "Missing Companion: Gather information on the missing sheep from the children",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1525,7 +1525,7 @@
     },
     {
       "ap_id": 14294964235,
-      "name": "Missing Companion: step 4",
+      "name": "Missing Companion: Find Wooly, the sheep",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1545,7 +1545,7 @@
     },
     {
       "ap_id": 14294964234,
-      "name": "Missing Companion: step 5",
+      "name": "Missing Companion: Return to Willian",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1565,7 +1565,7 @@
     },
     {
       "ap_id": 14294964233,
-      "name": "Missing Companion: step 6",
+      "name": "Missing Companion: Follow Willian",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1585,7 +1585,7 @@
     },
     {
       "ap_id": 14294964232,
-      "name": "Secrets Hidden in the Dark: step 1",
+      "name": "Secrets Hidden in the Dark: Find the Greymane",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1605,7 +1605,7 @@
     },
     {
       "ap_id": 14294964231,
-      "name": "Secrets Hidden in the Dark: step 2",
+      "name": "Secrets Hidden in the Dark: Investigate the suspicious cave",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1625,7 +1625,7 @@
     },
     {
       "ap_id": 14294964230,
-      "name": "Secrets Hidden in the Dark: step 3",
+      "name": "Secrets Hidden in the Dark: Go outside the cave",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1645,7 +1645,7 @@
     },
     {
       "ap_id": 14294964229,
-      "name": "Secrets Hidden in the Dark: step 4",
+      "name": "Secrets Hidden in the Dark: Go to the guards",
       "region": "Hernand in Chaos",
       "category": "quest",
       "detection": {
@@ -1665,7 +1665,7 @@
     },
     {
       "ap_id": 14294964228,
-      "name": "The Dark Veil: step 1",
+      "name": "The Dark Veil: Investigate the Goldleaf Merchant Guild",
       "region": "The End of Greed",
       "category": "quest",
       "detection": {
@@ -1685,7 +1685,7 @@
     },
     {
       "ap_id": 14294964227,
-      "name": "The Flames of Greed: step 1",
+      "name": "The Flames of Greed: Speak with the nun asking for help",
       "region": "The End of Greed",
       "category": "quest",
       "detection": {
@@ -1705,7 +1705,7 @@
     },
     {
       "ap_id": 14294964226,
-      "name": "The Flames of Greed: step 2",
+      "name": "The Flames of Greed: Go to the healer's house",
       "region": "The End of Greed",
       "category": "quest",
       "detection": {
@@ -1725,7 +1725,7 @@
     },
     {
       "ap_id": 14294964225,
-      "name": "Kidnapped Healer: step 1",
+      "name": "Kidnapped Healer: Rescue the kidnapped healer",
       "region": "The End of Greed",
       "category": "quest",
       "detection": {
@@ -1745,7 +1745,7 @@
     },
     {
       "ap_id": 14294964224,
-      "name": "Rebellion or Revolution: step 1",
+      "name": "Rebellion or Revolution: Go to Shakatu",
       "region": "The End of Greed",
       "category": "quest",
       "detection": {
@@ -1765,7 +1765,7 @@
     },
     {
       "ap_id": 14294964223,
-      "name": "Rebellion or Revolution: step 2",
+      "name": "Rebellion or Revolution: Speak with Shakatu",
       "region": "The End of Greed",
       "category": "quest",
       "detection": {
@@ -1785,7 +1785,7 @@
     },
     {
       "ap_id": 14294964222,
-      "name": "Cheers Echoing From the Edge: step 1",
+      "name": "Cheers Echoing From the Edge: Defeat Hornsplitter",
       "region": "The End of Greed",
       "category": "quest",
       "detection": {
@@ -1805,7 +1805,7 @@
     },
     {
       "ap_id": 14294964221,
-      "name": "Cheers Echoing From the Edge: step 2",
+      "name": "Cheers Echoing From the Edge: Shakatu's Reward",
       "region": "The End of Greed",
       "category": "quest",
       "detection": {
@@ -1845,7 +1845,7 @@
     },
     {
       "ap_id": 14294964463,
-      "name": "Old Friend: step 1",
+      "name": "Old Friend: Investigate the back alleys of Hernand",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -1865,7 +1865,7 @@
     },
     {
       "ap_id": 14294964462,
-      "name": "First Step to Rebuilding: step 1",
+      "name": "First Step to Rebuilding: Speak with Marquis Serkis",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -1885,7 +1885,7 @@
     },
     {
       "ap_id": 14294964461,
-      "name": "First Step to Rebuilding: step 2",
+      "name": "First Step to Rebuilding: Follow the soldier",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -1905,7 +1905,7 @@
     },
     {
       "ap_id": 14294964460,
-      "name": "First Step to Rebuilding: step 3",
+      "name": "First Step to Rebuilding: Speak with Marshal Middler",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -1925,7 +1925,7 @@
     },
     {
       "ap_id": 14294964459,
-      "name": "A Fresh Start: step 1",
+      "name": "A Fresh Start: Move the sacks",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -1945,7 +1945,7 @@
     },
     {
       "ap_id": 14294964458,
-      "name": "A Fresh Start: step 2",
+      "name": "A Fresh Start: Drive in the stakes",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -1965,7 +1965,7 @@
     },
     {
       "ap_id": 14294964457,
-      "name": "A Fresh Start: step 3",
+      "name": "A Fresh Start: Push the wagon",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -1985,7 +1985,7 @@
     },
     {
       "ap_id": 14294964456,
-      "name": "A Fresh Start: step 4",
+      "name": "A Fresh Start: Raise the banner",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2005,7 +2005,7 @@
     },
     {
       "ap_id": 14294964455,
-      "name": "A Fresh Start: step 5",
+      "name": "A Fresh Start: Camp Completion Visual Effect",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2025,7 +2025,7 @@
     },
     {
       "ap_id": 14294964454,
-      "name": "Reward for Their Sweat: step 1",
+      "name": "Reward for Their Sweat: Check the cooking recipe",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2045,7 +2045,7 @@
     },
     {
       "ap_id": 14294964453,
-      "name": "Reward for Their Sweat: step 2",
+      "name": "Reward for Their Sweat: Make clear soup",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2065,7 +2065,7 @@
     },
     {
       "ap_id": 14294964452,
-      "name": "Reward for Their Sweat: step 3",
+      "name": "Reward for Their Sweat: Serve a feast",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2085,7 +2085,7 @@
     },
     {
       "ap_id": 14294964451,
-      "name": "Return of the Comrade: step 1",
+      "name": "Return of the Comrade: Escort Marius to camp",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2105,7 +2105,7 @@
     },
     {
       "ap_id": 14294964450,
-      "name": "Familiar Curses: step 1",
+      "name": "Familiar Curses: Investigate the House of Healing",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2125,7 +2125,7 @@
     },
     {
       "ap_id": 14294964449,
-      "name": "Familiar Curses: step 2",
+      "name": "Familiar Curses: Gather information to enter the House of Healing",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2145,7 +2145,7 @@
     },
     {
       "ap_id": 14294964448,
-      "name": "Familiar Curses: step 3",
+      "name": "Familiar Curses: Make a deal with the House of Healing's staff",
       "region": "Homestead",
       "category": "quest",
       "detection": {
@@ -2165,7 +2165,7 @@
     },
     {
       "ap_id": 14294964311,
-      "name": "Return: step 1",
+      "name": "Return: Speak with Marius",
       "region": "The Face Behind the Mask",
       "category": "quest",
       "detection": {
@@ -2185,7 +2185,7 @@
     },
     {
       "ap_id": 14294964310,
-      "name": "Traces in the Manor: step 1",
+      "name": "Traces in the Manor: Go to Glenbright Manor",
       "region": "The Face Behind the Mask",
       "category": "quest",
       "detection": {
@@ -2205,7 +2205,7 @@
     },
     {
       "ap_id": 14294964309,
-      "name": "Traces in the Manor: step 2",
+      "name": "Traces in the Manor: Investigate Glenbright Manor",
       "region": "The Face Behind the Mask",
       "category": "quest",
       "detection": {
@@ -2225,7 +2225,7 @@
     },
     {
       "ap_id": 14294964308,
-      "name": "Nonhuman: step 1",
+      "name": "Nonhuman: Track the Devil of the Reed Field",
       "region": "The Face Behind the Mask",
       "category": "quest",
       "detection": {
@@ -2245,7 +2245,7 @@
     },
     {
       "ap_id": 14294964307,
-      "name": "Nonhuman: step 2",
+      "name": "Nonhuman: Find Andrew and Naira",
       "region": "The Face Behind the Mask",
       "category": "quest",
       "detection": {
@@ -2265,7 +2265,7 @@
     },
     {
       "ap_id": 14294964306,
-      "name": "Seed of Unease: step 1",
+      "name": "Seed of Unease: Track the Devil of the Reed Field",
       "region": "The Face Behind the Mask",
       "category": "quest",
       "detection": {
@@ -2285,7 +2285,7 @@
     },
     {
       "ap_id": 14294964305,
-      "name": "Seed of Unease: step 2",
+      "name": "Seed of Unease: Examine the altar",
       "region": "The Face Behind the Mask",
       "category": "quest",
       "detection": {
@@ -2305,7 +2305,7 @@
     },
     {
       "ap_id": 14294964303,
-      "name": "Dance with the Devil: step 1",
+      "name": "Dance with the Devil: Defeat the Devil of the Reed Field",
       "region": "The Face Behind the Mask",
       "category": "quest",
       "detection": {
@@ -2325,7 +2325,7 @@
     },
     {
       "ap_id": 14294964302,
-      "name": "Hope After the Draught: step 1",
+      "name": "Hope After the Draught: Check on Andrew's condition",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2345,7 +2345,7 @@
     },
     {
       "ap_id": 14294964301,
-      "name": "Scattered Comrades: step 1",
+      "name": "Scattered Comrades: Speak with Marius",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2365,7 +2365,7 @@
     },
     {
       "ap_id": 14294964300,
-      "name": "Rumors from the Sawmill: step 1",
+      "name": "Rumors from the Sawmill: Look into the rumor",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2385,7 +2385,7 @@
     },
     {
       "ap_id": 14294964299,
-      "name": "A Gentle Touch: step 1",
+      "name": "A Gentle Touch: Return to Howling Hill",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2405,7 +2405,7 @@
     },
     {
       "ap_id": 14294964298,
-      "name": "A Gentle Touch: step 2",
+      "name": "A Gentle Touch: Examine the dragon totem at the shrine",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2425,7 +2425,7 @@
     },
     {
       "ap_id": 14294964297,
-      "name": "A Gentle Touch: step 3",
+      "name": "A Gentle Touch: Check the letter from the dragon totem",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2445,7 +2445,7 @@
     },
     {
       "ap_id": 14294964296,
-      "name": "A Gentle Touch: step 4",
+      "name": "A Gentle Touch: Read the letter",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2465,7 +2465,7 @@
     },
     {
       "ap_id": 14294964295,
-      "name": "Bustling Hill: step 1",
+      "name": "Bustling Hill: Dispatch the Howling Hill expansion mission",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2485,7 +2485,7 @@
     },
     {
       "ap_id": 14294964294,
-      "name": "Bustling Hill: step 2",
+      "name": "Bustling Hill: Expand Howling Hill",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2505,7 +2505,7 @@
     },
     {
       "ap_id": 14294964293,
-      "name": "Greymanes Reunited: step 1",
+      "name": "Greymanes Reunited: Return to the comrades gathered at the camp",
       "region": "Pioneering",
       "category": "quest",
       "detection": {
@@ -2525,7 +2525,7 @@
     },
     {
       "ap_id": 14294964418,
-      "name": "Kilnden Workshop: step 1",
+      "name": "Kilnden Workshop: Check the cause of the explosion",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2545,7 +2545,7 @@
     },
     {
       "ap_id": 14294964417,
-      "name": "Kiln Repair at the Kilnden Workshop: step 1",
+      "name": "Kiln Repair at the Kilnden Workshop: Activate the ancient generator",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2565,7 +2565,7 @@
     },
     {
       "ap_id": 14294964416,
-      "name": "Kiln Repair at the Kilnden Workshop: step 2",
+      "name": "Kiln Repair at the Kilnden Workshop: Fix the disconnected kiln",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2585,7 +2585,7 @@
     },
     {
       "ap_id": 14294964415,
-      "name": "Kiln Repair at the Kilnden Workshop: step 3",
+      "name": "Kiln Repair at the Kilnden Workshop: Fix the dismantled kiln",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2605,7 +2605,7 @@
     },
     {
       "ap_id": 14294964414,
-      "name": "Kiln Repair at the Kilnden Workshop: step 4",
+      "name": "Kiln Repair at the Kilnden Workshop: Put fuel into the kiln",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2625,7 +2625,7 @@
     },
     {
       "ap_id": 14294964413,
-      "name": "Kiln Repair at the Kilnden Workshop: step 5",
+      "name": "Kiln Repair at the Kilnden Workshop: Kuku Pot Repair Complete",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2645,7 +2645,7 @@
     },
     {
       "ap_id": 10001002817,
-      "name": "Kiln Repair at the Kilnden Workshop: step 6",
+      "name": "Kiln Repair at the Kilnden Workshop: Speak with Grimnir",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2665,7 +2665,7 @@
     },
     {
       "ap_id": 14294964410,
-      "name": "The Mysterious Pot: step 1",
+      "name": "The Mysterious Pot: Speak with Grimnir",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2685,7 +2685,7 @@
     },
     {
       "ap_id": 14294964409,
-      "name": "The Mysterious Pot: step 2",
+      "name": "The Mysterious Pot: Obtain the mysterious pot",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2705,7 +2705,7 @@
     },
     {
       "ap_id": 14294964408,
-      "name": "The Pot's Use: step 1",
+      "name": "The Pot's Use: Learn how to use the iron pot",
       "region": "Mysterious Pot",
       "category": "quest",
       "detection": {
@@ -2725,7 +2725,7 @@
     },
     {
       "ap_id": 14294964407,
-      "name": "Disturbance at the Arena: step 1",
+      "name": "Disturbance at the Arena: Return to Howling Hill",
       "region": "Daily Life",
       "category": "quest",
       "detection": {
@@ -2745,7 +2745,7 @@
     },
     {
       "ap_id": 14294964406,
-      "name": "Disturbance at the Arena: step 2",
+      "name": "Disturbance at the Arena: Win three times at the arena",
       "region": "Daily Life",
       "category": "quest",
       "detection": {
@@ -2765,7 +2765,7 @@
     },
     {
       "ap_id": 14294964405,
-      "name": "Disturbance at the Arena: step 3",
+      "name": "Disturbance at the Arena: Speak with the Arena's Overseer",
       "region": "Daily Life",
       "category": "quest",
       "detection": {
@@ -2785,7 +2785,7 @@
     },
     {
       "ap_id": 14294964404,
-      "name": "Skilled in Archery: step 1",
+      "name": "Skilled in Archery: Speak with Naira",
       "region": "Daily Life",
       "category": "quest",
       "detection": {
@@ -2805,7 +2805,7 @@
     },
     {
       "ap_id": 14294964403,
-      "name": "Skilled in Archery: step 2",
+      "name": "Skilled in Archery: Win at the archery contest",
       "region": "Daily Life",
       "category": "quest",
       "detection": {
@@ -2825,7 +2825,7 @@
     },
     {
       "ap_id": 14294964402,
-      "name": "Skilled in Archery: step 3",
+      "name": "Skilled in Archery: Speak with Duane",
       "region": "Daily Life",
       "category": "quest",
       "detection": {
@@ -2845,7 +2845,7 @@
     },
     {
       "ap_id": 14294964220,
-      "name": "The Words of Alustin: step 1",
+      "name": "The Words of Alustin: Head to Hernand",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -2865,7 +2865,7 @@
     },
     {
       "ap_id": 14294964219,
-      "name": "The Words of Alustin: step 2",
+      "name": "The Words of Alustin: Read Alustin's letter",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -2905,7 +2905,7 @@
     },
     {
       "ap_id": 14294964218,
-      "name": "Scholastone: step 1",
+      "name": "Scholastone: Visit the fence",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -2925,7 +2925,7 @@
     },
     {
       "ap_id": 14294964217,
-      "name": "Scholastone: step 2",
+      "name": "Scholastone: Head to Scholastone",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -2945,7 +2945,7 @@
     },
     {
       "ap_id": 14294964216,
-      "name": "Scholastone: step 3",
+      "name": "Scholastone: Find out Scholastone Institute's location",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -2965,7 +2965,7 @@
     },
     {
       "ap_id": 14294964215,
-      "name": "Scholastone: step 4",
+      "name": "Scholastone: Find the path to Scholastone Institute",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -2985,7 +2985,7 @@
     },
     {
       "ap_id": 14294964214,
-      "name": "On the Right Path: step 1",
+      "name": "On the Right Path: Meet the dean of the Scholastone Institute",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3005,7 +3005,7 @@
     },
     {
       "ap_id": 14294964213,
-      "name": "Gate to the Otherworld: step 1",
+      "name": "Gate to the Otherworld: Help with Octavius's experiment",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3025,7 +3025,7 @@
     },
     {
       "ap_id": 10001001745,
-      "name": "Gate to the Otherworld: step 2",
+      "name": "Gate to the Otherworld: Obtain the artifact",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3045,7 +3045,7 @@
     },
     {
       "ap_id": 14294964212,
-      "name": "Spire of the Stars: step 1",
+      "name": "Spire of the Stars: Go to the Spire of the Stars",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3065,7 +3065,7 @@
     },
     {
       "ap_id": 14294964211,
-      "name": "Spire of the Stars: step 2",
+      "name": "Spire of the Stars: Go to the top of the Spire of the Stars",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3085,7 +3085,7 @@
     },
     {
       "ap_id": 14294964210,
-      "name": "Spire of the Stars: step 3",
+      "name": "Spire of the Stars: Move to the Abyss",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3105,7 +3105,7 @@
     },
     {
       "ap_id": 14294964209,
-      "name": "Obsession and Madness: step 1",
+      "name": "Obsession and Madness: Investigate the Abyss",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3125,7 +3125,7 @@
     },
     {
       "ap_id": 14294964208,
-      "name": "Obsession and Madness: step 2",
+      "name": "Obsession and Madness: Find the one responsible for the rift",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3145,7 +3145,7 @@
     },
     {
       "ap_id": 14294964207,
-      "name": "Cast Shadow: step 1",
+      "name": "Cast Shadow: Speak with Grundir",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3165,7 +3165,7 @@
     },
     {
       "ap_id": 14294964206,
-      "name": "Cast Shadow: step 2",
+      "name": "Cast Shadow: Return to Howling Hill",
       "region": "Forbidden Knowledge",
       "category": "quest",
       "detection": {
@@ -3185,7 +3185,7 @@
     },
     {
       "ap_id": 14294964439,
-      "name": "Double-sided Invitation: step 1",
+      "name": "Double-sided Invitation: Speak with Marius",
       "region": "Uninvited Guest",
       "category": "quest",
       "detection": {
@@ -3205,7 +3205,7 @@
     },
     {
       "ap_id": 14294964438,
-      "name": "Unwelcomed Guests: step 1",
+      "name": "Unwelcomed Guests: Head to Hernand",
       "region": "Uninvited Guest",
       "category": "quest",
       "detection": {
@@ -3225,7 +3225,7 @@
     },
     {
       "ap_id": 14294964437,
-      "name": "Unwelcomed Guests: step 2",
+      "name": "Unwelcomed Guests: Check the commotion in front of the castle gate",
       "region": "Uninvited Guest",
       "category": "quest",
       "detection": {
@@ -3245,7 +3245,7 @@
     },
     {
       "ap_id": 14294964436,
-      "name": "Demenissian Delegation: step 1",
+      "name": "Demenissian Delegation: Attend the banquet",
       "region": "Uninvited Guest",
       "category": "quest",
       "detection": {
@@ -3265,7 +3265,7 @@
     },
     {
       "ap_id": 14294964435,
-      "name": "Exposed Plot: step 1",
+      "name": "Exposed Plot: Speak with Damiane",
       "region": "Uninvited Guest",
       "category": "quest",
       "detection": {
@@ -3285,7 +3285,7 @@
     },
     {
       "ap_id": 10001001575,
-      "name": "The Missing Seal: step 1",
+      "name": "The Missing Seal: Read the unsealed letter",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3305,7 +3305,7 @@
     },
     {
       "ap_id": 10001001576,
-      "name": "The Missing Seal: step 2",
+      "name": "The Missing Seal: Go meet the witch",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3345,7 +3345,7 @@
     },
     {
       "ap_id": 14294964512,
-      "name": "Crowcaller: step 1",
+      "name": "Crowcaller: Head to Hernand",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3365,7 +3365,7 @@
     },
     {
       "ap_id": 14294964511,
-      "name": "Crowcaller: step 2",
+      "name": "Crowcaller: Speak with the soldiers",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3385,7 +3385,7 @@
     },
     {
       "ap_id": 14294964510,
-      "name": "Crowcaller: step 3",
+      "name": "Crowcaller: Track the invader",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3405,7 +3405,7 @@
     },
     {
       "ap_id": 10001001578,
-      "name": "Crowcaller: step 4",
+      "name": "Crowcaller: Move to the Axiom Archive",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3425,7 +3425,7 @@
     },
     {
       "ap_id": 14294964509,
-      "name": "The Crow's Warning: step 1",
+      "name": "The Crow's Warning: Gather clues on the \"Crow\" in Hernand",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3445,7 +3445,7 @@
     },
     {
       "ap_id": 14294964508,
-      "name": "Bloodwind: step 1",
+      "name": "Bloodwind: Chase after the feathered man",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3465,7 +3465,7 @@
     },
     {
       "ap_id": 14294964507,
-      "name": "Secret at the Church: step 1",
+      "name": "Secret at the Church: Gather information at the orphanage",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3485,7 +3485,7 @@
     },
     {
       "ap_id": 14294964506,
-      "name": "Secret at the Church: step 2",
+      "name": "Secret at the Church: Obtain the church's relic",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3505,7 +3505,7 @@
     },
     {
       "ap_id": 14294964505,
-      "name": "Secret at the Church: step 3",
+      "name": "Secret at the Church: Activate the Pillar of Radiance",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3525,7 +3525,7 @@
     },
     {
       "ap_id": 14294964504,
-      "name": "Toward the Nest: step 1",
+      "name": "Toward the Nest: Go to the Spire of Soaring",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3545,7 +3545,7 @@
     },
     {
       "ap_id": 14294964503,
-      "name": "Toward the Nest: step 2",
+      "name": "Toward the Nest: Activate the Spire of Soaring",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3565,7 +3565,7 @@
     },
     {
       "ap_id": 14294964502,
-      "name": "Toward the Nest: step 3",
+      "name": "Toward the Nest: Activate the Skybridge",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3585,7 +3585,7 @@
     },
     {
       "ap_id": 14294964501,
-      "name": "Toward the Nest: step 4",
+      "name": "Toward the Nest: Move to the final battleground",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3605,7 +3605,7 @@
     },
     {
       "ap_id": 14294964500,
-      "name": "Toward the Nest: step 5",
+      "name": "Toward the Nest: Defeat Crowcaller",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3625,7 +3625,7 @@
     },
     {
       "ap_id": 14294964499,
-      "name": "Toward the Nest: step 6",
+      "name": "Toward the Nest: Chapter Transition",
       "region": "Black and White",
       "category": "quest",
       "detection": {
@@ -3645,7 +3645,7 @@
     },
     {
       "ap_id": 14294964292,
-      "name": "News: step 1",
+      "name": "News: Return to Howling Hill",
       "region": "Blazing Beacon",
       "category": "quest",
       "detection": {
@@ -3665,7 +3665,7 @@
     },
     {
       "ap_id": 14294964291,
-      "name": "News: step 2",
+      "name": "News: Meet Marquis Serkis",
       "region": "Blazing Beacon",
       "category": "quest",
       "detection": {
@@ -3685,7 +3685,7 @@
     },
     {
       "ap_id": 14294964290,
-      "name": "To the Battlefield: step 1",
+      "name": "To the Battlefield: Meet and follow the guide at the beacon",
       "region": "Blazing Beacon",
       "category": "quest",
       "detection": {
@@ -3705,7 +3705,7 @@
     },
     {
       "ap_id": 14294964289,
-      "name": "To the Battlefield: step 2",
+      "name": "To the Battlefield: Investigate the scene of the attack",
       "region": "Blazing Beacon",
       "category": "quest",
       "detection": {
@@ -3725,7 +3725,7 @@
     },
     {
       "ap_id": 14294964288,
-      "name": "To the Battlefield: step 3",
+      "name": "To the Battlefield: Move to the Calphade gate",
       "region": "Blazing Beacon",
       "category": "quest",
       "detection": {
@@ -3745,7 +3745,7 @@
     },
     {
       "ap_id": 14294964287,
-      "name": "To the Battlefield: step 4",
+      "name": "To the Battlefield: Speak with Marshal Middler",
       "region": "Blazing Beacon",
       "category": "quest",
       "detection": {
@@ -3765,7 +3765,7 @@
     },
     {
       "ap_id": 14294964286,
-      "name": "The Counterattack: step 1",
+      "name": "The Counterattack: Go to the battlefield",
       "region": "Blazing Beacon",
       "category": "quest",
       "detection": {
@@ -3785,7 +3785,7 @@
     },
     {
       "ap_id": 14294964285,
-      "name": "The Counterattack: step 2",
+      "name": "The Counterattack: Raise the Calphadean banner pike",
       "region": "Blazing Beacon",
       "category": "quest",
       "detection": {
@@ -3805,7 +3805,7 @@
     },
     {
       "ap_id": 14294964281,
-      "name": "Cradle of Defense: step 1",
+      "name": "Cradle of Defense: Raise the banner pike at the siege armory",
       "region": "Below the Banners",
       "category": "quest",
       "detection": {
@@ -3825,7 +3825,7 @@
     },
     {
       "ap_id": 14294964280,
-      "name": "Cradle of Defense: step 2",
+      "name": "Cradle of Defense: Raise the banner pike at the gunpowder mill",
       "region": "Below the Banners",
       "category": "quest",
       "detection": {
@@ -3845,7 +3845,7 @@
     },
     {
       "ap_id": 14294964279,
-      "name": "Cradle of Defense: step 3",
+      "name": "Cradle of Defense: Raise the banner pike at Thalwynd",
       "region": "Below the Banners",
       "category": "quest",
       "detection": {
@@ -3865,7 +3865,7 @@
     },
     {
       "ap_id": 14294964278,
-      "name": "Hand of Deliverance: step 1",
+      "name": "Hand of Deliverance: Speak with the soldier at the southern guard post",
       "region": "Below the Banners",
       "category": "quest",
       "detection": {
@@ -3885,7 +3885,7 @@
     },
     {
       "ap_id": 14294964277,
-      "name": "Hand of Deliverance: step 2",
+      "name": "Hand of Deliverance: Find the soldier in need of help",
       "region": "Below the Banners",
       "category": "quest",
       "detection": {
@@ -3905,7 +3905,7 @@
     },
     {
       "ap_id": 14294964276,
-      "name": "Hand of Deliverance: step 3",
+      "name": "Hand of Deliverance: Rescue the injured soldier",
       "region": "Below the Banners",
       "category": "quest",
       "detection": {
@@ -3925,7 +3925,7 @@
     },
     {
       "ap_id": 14294964275,
-      "name": "Fire on the Frontlines: step 1",
+      "name": "Fire on the Frontlines: Destroy the enemy's supply wagons",
       "region": "Below the Banners",
       "category": "quest",
       "detection": {
@@ -3945,7 +3945,7 @@
     },
     {
       "ap_id": 10001001197,
-      "name": "Fire Support: step 1",
+      "name": "Fire Support: Speak with the soldier at the gunsite",
       "region": "Turning Tides",
       "category": "quest",
       "detection": {
@@ -3965,7 +3965,7 @@
     },
     {
       "ap_id": 10001003188,
-      "name": "Fire Support: step 2",
+      "name": "Fire Support: Destroy the Black Bears' watchtowers",
       "region": "Turning Tides",
       "category": "quest",
       "detection": {
@@ -3985,7 +3985,7 @@
     },
     {
       "ap_id": 14294964274,
-      "name": "In Ashes (Chapter 6): step 1",
+      "name": "In Ashes (Chapter 6): Speak with the soldier of the base in the outskirts",
       "region": "Turning Tides",
       "category": "quest",
       "detection": {
@@ -4005,7 +4005,7 @@
     },
     {
       "ap_id": 14294964273,
-      "name": "In Ashes (Chapter 6): step 2",
+      "name": "In Ashes (Chapter 6): Infiltrate the Black Bears' base",
       "region": "Turning Tides",
       "category": "quest",
       "detection": {
@@ -4025,7 +4025,7 @@
     },
     {
       "ap_id": 14294964272,
-      "name": "In Ashes (Chapter 6): step 3",
+      "name": "In Ashes (Chapter 6): Rescue the captives",
       "region": "Turning Tides",
       "category": "quest",
       "detection": {
@@ -4045,7 +4045,7 @@
     },
     {
       "ap_id": 14294964271,
-      "name": "Hidden Fangs: step 1",
+      "name": "Hidden Fangs: Destroy the Black Bears' battle weapons",
       "region": "Turning Tides",
       "category": "quest",
       "detection": {
@@ -4065,7 +4065,7 @@
     },
     {
       "ap_id": 14294964282,
-      "name": "Reclamation: step 1",
+      "name": "Reclamation: Defeat the enemies surrounding the outer bailey",
       "region": "Turning Tides",
       "category": "quest",
       "detection": {
@@ -4085,7 +4085,7 @@
     },
     {
       "ap_id": 14294964270,
-      "name": "A Thousand Troops: step 1",
+      "name": "A Thousand Troops: Advance to Calphade Castle",
       "region": "The Unyielding Shields",
       "category": "quest",
       "detection": {
@@ -4105,7 +4105,7 @@
     },
     {
       "ap_id": 14294964269,
-      "name": "A Thousand Troops: step 2",
+      "name": "A Thousand Troops: Support Stefan Lanford",
       "region": "The Unyielding Shields",
       "category": "quest",
       "detection": {
@@ -4125,7 +4125,7 @@
     },
     {
       "ap_id": 14294964268,
-      "name": "Traitor: step 1",
+      "name": "Traitor: Defeat Cassius Morten",
       "region": "The Unyielding Shields",
       "category": "quest",
       "detection": {
@@ -4145,7 +4145,7 @@
     },
     {
       "ap_id": 14294964267,
-      "name": "All Quiet on the Front: step 1",
+      "name": "All Quiet on the Front: Tell the news to Marquis Lanford",
       "region": "The Unyielding Shields",
       "category": "quest",
       "detection": {
@@ -4165,7 +4165,7 @@
     },
     {
       "ap_id": 14294964266,
-      "name": "News of Victory: step 1",
+      "name": "News of Victory: Follow the soldier",
       "region": "The Unyielding Shields",
       "category": "quest",
       "detection": {
@@ -4185,7 +4185,7 @@
     },
     {
       "ap_id": 14294964265,
-      "name": "News of Victory: step 2",
+      "name": "News of Victory: Light the beacon",
       "region": "The Unyielding Shields",
       "category": "quest",
       "detection": {
@@ -4205,7 +4205,7 @@
     },
     {
       "ap_id": 14294964264,
-      "name": "News of Victory: step 3",
+      "name": "News of Victory: Calphade Ending",
       "region": "The Unyielding Shields",
       "category": "quest",
       "detection": {
@@ -4225,7 +4225,7 @@
     },
     {
       "ap_id": 14294964399,
-      "name": "Ashes of Treachery: step 1",
+      "name": "Ashes of Treachery: Move with your comrades",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4245,7 +4245,7 @@
     },
     {
       "ap_id": 14294964398,
-      "name": "Ashes of Treachery: step 2",
+      "name": "Ashes of Treachery: Check the information at the shrine",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4265,7 +4265,7 @@
     },
     {
       "ap_id": 14294964397,
-      "name": "Ashes of Treachery: step 3",
+      "name": "Ashes of Treachery: Read the letter",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4285,7 +4285,7 @@
     },
     {
       "ap_id": 14294964396,
-      "name": "Ashes of Treachery: step 4",
+      "name": "Ashes of Treachery: Go to Beighen",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4305,7 +4305,7 @@
     },
     {
       "ap_id": 10001001817,
-      "name": "Trust Lost: step 1",
+      "name": "Trust Lost: Speak with the comrades who've arrived first",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4325,7 +4325,7 @@
     },
     {
       "ap_id": 10001001818,
-      "name": "Trust Lost: step 2",
+      "name": "Trust Lost: Meet Naira and Andrew",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4345,7 +4345,7 @@
     },
     {
       "ap_id": 10001001694,
-      "name": "Bared Fang: step 1",
+      "name": "Bared Fang: Find a way to make contact with the secret organization",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4365,7 +4365,7 @@
     },
     {
       "ap_id": 10001001695,
-      "name": "Bared Fang: step 2",
+      "name": "Bared Fang: Find a clue about the underground storage",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4385,7 +4385,7 @@
     },
     {
       "ap_id": 10001001696,
-      "name": "Bared Fang: step 3",
+      "name": "Bared Fang: Find a clue about the mysterious faction",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4405,7 +4405,7 @@
     },
     {
       "ap_id": 10001001697,
-      "name": "Bared Fang: step 4",
+      "name": "Bared Fang: Find a clue about the leader of the Blue Fangs",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4425,7 +4425,7 @@
     },
     {
       "ap_id": 14294964391,
-      "name": "Rekindled Hope: step 1",
+      "name": "Rekindled Hope: Speak with Torstein",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4445,7 +4445,7 @@
     },
     {
       "ap_id": 14294964390,
-      "name": "Rekindled Hope: step 2",
+      "name": "Rekindled Hope: Follow the soldier",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4465,7 +4465,7 @@
     },
     {
       "ap_id": 14294964389,
-      "name": "Rekindled Hope: step 3",
+      "name": "Rekindled Hope: Defeat the commander guarding the beacon",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4485,7 +4485,7 @@
     },
     {
       "ap_id": 10001001699,
-      "name": "Rekindled Hope: step 4",
+      "name": "Rekindled Hope: Light the beacon",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4505,7 +4505,7 @@
     },
     {
       "ap_id": 14294964388,
-      "name": "Podium of Resolve: step 1",
+      "name": "Podium of Resolve: Speak with Torstein",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4525,7 +4525,7 @@
     },
     {
       "ap_id": 14294964387,
-      "name": "Podium of Resolve: step 2",
+      "name": "Podium of Resolve: Obtain Jian's Sword",
       "region": "Dawn Mist",
       "category": "quest",
       "detection": {
@@ -4545,7 +4545,7 @@
     },
     {
       "ap_id": 14294964385,
-      "name": "Shadows Over Pailune: step 1",
+      "name": "Shadows Over Pailune: Move with Torstein",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4565,7 +4565,7 @@
     },
     {
       "ap_id": 14294964384,
-      "name": "Shadows Over Pailune: step 2",
+      "name": "Shadows Over Pailune: Secure the Pailune safe house",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4585,7 +4585,7 @@
     },
     {
       "ap_id": 14294964383,
-      "name": "Driving out the Shadows: step 1",
+      "name": "Driving out the Shadows: Search for Shane's whereabouts",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4605,7 +4605,7 @@
     },
     {
       "ap_id": 14294964382,
-      "name": "Driving out the Shadows: step 2",
+      "name": "Driving out the Shadows: Find the hidden explosive",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4625,7 +4625,7 @@
     },
     {
       "ap_id": 14294964381,
-      "name": "Driving out the Shadows: step 3",
+      "name": "Driving out the Shadows: Install the explosive",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4645,7 +4645,7 @@
     },
     {
       "ap_id": 14294964380,
-      "name": "Lurking Wolves: step 1",
+      "name": "Lurking Wolves: Wait for the right moment",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4665,7 +4665,7 @@
     },
     {
       "ap_id": 14294964379,
-      "name": "Lurking Wolves: step 2",
+      "name": "Lurking Wolves: Send a signal to the comrades",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4685,7 +4685,7 @@
     },
     {
       "ap_id": 14294964378,
-      "name": "Reclamation (Chapter 7): step 1",
+      "name": "Reclamation (Chapter 7): Seize Pailune",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4705,7 +4705,7 @@
     },
     {
       "ap_id": 14294964376,
-      "name": "Lonely Jackals: step 1",
+      "name": "Lonely Jackals: Enter the fortress",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4725,7 +4725,7 @@
     },
     {
       "ap_id": 14294964375,
-      "name": "Lonely Jackals: step 2",
+      "name": "Lonely Jackals: Defeat Ludvig",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4745,7 +4745,7 @@
     },
     {
       "ap_id": 14294964374,
-      "name": "Resolution: step 1",
+      "name": "Resolution: Join your comrades",
       "region": "Dawn",
       "category": "quest",
       "detection": {
@@ -4765,7 +4765,7 @@
     },
     {
       "ap_id": 14294964342,
-      "name": "The Counterattack (Chapter 7): step 1",
+      "name": "The Counterattack (Chapter 7): Join your comrades",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4785,7 +4785,7 @@
     },
     {
       "ap_id": 14294964341,
-      "name": "The Counterattack (Chapter 7): step 2",
+      "name": "The Counterattack (Chapter 7): Wait for the right moment",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4805,7 +4805,7 @@
     },
     {
       "ap_id": 14294964340,
-      "name": "Unleashed Fury: step 1",
+      "name": "Unleashed Fury: Join your comrades",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4825,7 +4825,7 @@
     },
     {
       "ap_id": 14294964339,
-      "name": "The Final Bridge: step 1",
+      "name": "The Final Bridge: Regroup with Andrew",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4845,7 +4845,7 @@
     },
     {
       "ap_id": 14294964338,
-      "name": "The Final Bridge: step 2",
+      "name": "The Final Bridge: Regroup with Naira",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4865,7 +4865,7 @@
     },
     {
       "ap_id": 14294964337,
-      "name": "The Final Bridge: step 3",
+      "name": "The Final Bridge: Regroup with Duane",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4885,7 +4885,7 @@
     },
     {
       "ap_id": 14294964336,
-      "name": "The Final Bridge: step 4",
+      "name": "The Final Bridge: Regroup with Oongka",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4905,7 +4905,7 @@
     },
     {
       "ap_id": 14294964335,
-      "name": "The Final Bridge: step 5",
+      "name": "The Final Bridge: Regroup with Yann",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4925,7 +4925,7 @@
     },
     {
       "ap_id": 14294964334,
-      "name": "The Final Bridge: step 6",
+      "name": "The Final Bridge: Regroup with Shane",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4965,7 +4965,7 @@
     },
     {
       "ap_id": 14294964332,
-      "name": "Battle at Silver Wolf Mountain: step 1",
+      "name": "Battle at Silver Wolf Mountain: Find Myurdin's whereabouts",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -4985,7 +4985,7 @@
     },
     {
       "ap_id": 14294964331,
-      "name": "Battle at Silver Wolf Mountain: step 2",
+      "name": "Battle at Silver Wolf Mountain: Defeat Myurdin",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -5005,7 +5005,7 @@
     },
     {
       "ap_id": 14294964330,
-      "name": "Incomplete Victory: step 1",
+      "name": "Incomplete Victory: Speak with Oongka",
       "region": "Decisive Battle",
       "category": "quest",
       "detection": {
@@ -5025,7 +5025,7 @@
     },
     {
       "ap_id": 14294964518,
-      "name": "Ludvig's Whereabouts: step 1",
+      "name": "Ludvig's Whereabouts: Meet Duane and Shane",
       "region": "Twisted Fate",
       "category": "quest",
       "detection": {
@@ -5045,7 +5045,7 @@
     },
     {
       "ap_id": 14294964517,
-      "name": "Time to Face Justice: step 1",
+      "name": "Time to Face Justice: Investigate the location where the Jackals were last seen",
       "region": "Twisted Fate",
       "category": "quest",
       "detection": {
@@ -5065,7 +5065,7 @@
     },
     {
       "ap_id": 14294964516,
-      "name": "Time to Face Justice: step 2",
+      "name": "Time to Face Justice: Track Ludvig",
       "region": "Twisted Fate",
       "category": "quest",
       "detection": {
@@ -5085,7 +5085,7 @@
     },
     {
       "ap_id": 14294964515,
-      "name": "Time to Face Justice: step 3",
+      "name": "Time to Face Justice: Punish the wounded Jackal",
       "region": "Twisted Fate",
       "category": "quest",
       "detection": {
@@ -5105,7 +5105,7 @@
     },
     {
       "ap_id": 14294964514,
-      "name": "Time to Face Justice: step 4",
+      "name": "Time to Face Justice: Return to your comrades",
       "region": "Twisted Fate",
       "category": "quest",
       "detection": {
@@ -5125,7 +5125,7 @@
     },
     {
       "ap_id": 14294964513,
-      "name": "Time to Face Justice: step 5",
+      "name": "Time to Face Justice: Chapter Transition",
       "region": "Twisted Fate",
       "category": "quest",
       "detection": {
@@ -5145,7 +5145,7 @@
     },
     {
       "ap_id": 14294964553,
-      "name": "Healing Pailune: step 1",
+      "name": "Healing Pailune: Meet Torstein",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5185,7 +5185,7 @@
     },
     {
       "ap_id": 14294964552,
-      "name": "A Bond: step 1",
+      "name": "A Bond: Read the letter",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5205,7 +5205,7 @@
     },
     {
       "ap_id": 14294964551,
-      "name": "A Bond: step 2",
+      "name": "A Bond: Head to the altar in the misty forest",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5225,7 +5225,7 @@
     },
     {
       "ap_id": 14294965670,
-      "name": "Ritual Preparations: step 1",
+      "name": "Ritual Preparations: Read the memories of the shipwreck",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5245,7 +5245,7 @@
     },
     {
       "ap_id": 10001000972,
-      "name": "Ritual Preparations: step 2",
+      "name": "Ritual Preparations: Retrieve the item Maegu requested",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5265,7 +5265,7 @@
     },
     {
       "ap_id": 14294965669,
-      "name": "Where the Wind Guides You: step 1",
+      "name": "Where the Wind Guides You: Return to the altar",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5285,7 +5285,7 @@
     },
     {
       "ap_id": 14294965668,
-      "name": "Where the Wind Guides You: step 2",
+      "name": "Where the Wind Guides You: Find the fortress on the hill",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5305,7 +5305,7 @@
     },
     {
       "ap_id": 14294965667,
-      "name": "Where the Wind Guides You: step 3",
+      "name": "Where the Wind Guides You: Find Woosa",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5325,7 +5325,7 @@
     },
     {
       "ap_id": 14294965666,
-      "name": "Where the Wind Guides You: step 4",
+      "name": "Where the Wind Guides You: Obtain the artifact",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5345,7 +5345,7 @@
     },
     {
       "ap_id": 14294965665,
-      "name": "Where the Wind Guides You: step 5",
+      "name": "Where the Wind Guides You: Move with Woosa",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5365,7 +5365,7 @@
     },
     {
       "ap_id": 10001002612,
-      "name": "Where the Wind Guides You: step 6",
+      "name": "Where the Wind Guides You: Take Woosa to Maegu",
       "region": "Ashen Steps",
       "category": "quest",
       "detection": {
@@ -5385,7 +5385,7 @@
     },
     {
       "ap_id": 14294964549,
-      "name": "Chasing a Shadow: step 1",
+      "name": "Chasing a Shadow: Return to Howling Hill",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5405,7 +5405,7 @@
     },
     {
       "ap_id": 14294964548,
-      "name": "Chasing a Shadow: step 2",
+      "name": "Chasing a Shadow: Examine the dragon totem at the shrine",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5425,7 +5425,7 @@
     },
     {
       "ap_id": 14294964547,
-      "name": "Chasing a Shadow: step 3",
+      "name": "Chasing a Shadow: Check the letter from the dragon totem",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5445,7 +5445,7 @@
     },
     {
       "ap_id": 14294964546,
-      "name": "Chasing a Shadow: step 4",
+      "name": "Chasing a Shadow: Read the letter",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5465,7 +5465,7 @@
     },
     {
       "ap_id": 14294964544,
-      "name": "Blazing Fire: step 1",
+      "name": "Blazing Fire: Go to Rustleleaf Farm",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5485,7 +5485,7 @@
     },
     {
       "ap_id": 10001001131,
-      "name": "Blazing Fire: step 2",
+      "name": "Blazing Fire: Infiltrate Azerian Manor",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5505,7 +5505,7 @@
     },
     {
       "ap_id": 14294964543,
-      "name": "Whispering Shadows: step 1",
+      "name": "Whispering Shadows: Infiltrate Sungrove Manor",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5525,7 +5525,7 @@
     },
     {
       "ap_id": 10001000879,
-      "name": "Whispering Shadows: step 2",
+      "name": "Whispering Shadows: Read the memory on Beatrice Azerian's whereabouts",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5545,7 +5545,7 @@
     },
     {
       "ap_id": 10001002640,
-      "name": "Whispering Shadows: step 3",
+      "name": "Whispering Shadows: Read the memory on Bastier's co-conspirators",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5565,7 +5565,7 @@
     },
     {
       "ap_id": 10001000519,
-      "name": "Bloodied Invitation: step 1",
+      "name": "Bloodied Invitation: Infiltrate Windmere Manor",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5585,7 +5585,7 @@
     },
     {
       "ap_id": 10001002641,
-      "name": "Bloodied Invitation: step 2",
+      "name": "Bloodied Invitation: Assassinate Count Byron",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5605,7 +5605,7 @@
     },
     {
       "ap_id": 14294964540,
-      "name": "Resolve Amidst a Storm: step 1",
+      "name": "Resolve Amidst a Storm: Speak with Countess Azerian",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5625,7 +5625,7 @@
     },
     {
       "ap_id": 14294965647,
-      "name": "Preparations for Advance: step 1",
+      "name": "Preparations for Advance: Speak with the person in charge at the barracks",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5645,7 +5645,7 @@
     },
     {
       "ap_id": 14294965646,
-      "name": "Rebel Suppression: step 1",
+      "name": "Rebel Suppression: Destroy the siege tower",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5665,7 +5665,7 @@
     },
     {
       "ap_id": 10001002645,
-      "name": "Rebel Suppression: step 2",
+      "name": "Rebel Suppression: Defeat the rebels",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5745,7 +5745,7 @@
     },
     {
       "ap_id": 14294965640,
-      "name": "The Cursed Knight: step 1",
+      "name": "The Cursed Knight: Defeat the Cursed Knight",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5765,7 +5765,7 @@
     },
     {
       "ap_id": 14294965639,
-      "name": "The Cursed Knight: step 2",
+      "name": "The Cursed Knight: Obtain the artifact",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5785,7 +5785,7 @@
     },
     {
       "ap_id": 14294965638,
-      "name": "The Cursed Knight: step 3",
+      "name": "The Cursed Knight: Thornbriar Fortress Liberation Loading",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5805,7 +5805,7 @@
     },
     {
       "ap_id": 14294964538,
-      "name": "The Blood Coronation: step 1",
+      "name": "The Blood Coronation: Go to the old office",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5825,7 +5825,7 @@
     },
     {
       "ap_id": 14294964537,
-      "name": "The Blood Coronation: step 2",
+      "name": "The Blood Coronation: Read the memory on the blood coronation",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5845,7 +5845,7 @@
     },
     {
       "ap_id": 10001001698,
-      "name": "The Blood Coronation: step 3",
+      "name": "The Blood Coronation: Get help",
       "region": "To Demeniss",
       "category": "quest",
       "detection": {
@@ -5865,7 +5865,7 @@
     },
     {
       "ap_id": 14294964536,
-      "name": "Clue: step 1",
+      "name": "Clue: Speak with Naira",
       "region": "Traitor",
       "category": "quest",
       "detection": {
@@ -5885,7 +5885,7 @@
     },
     {
       "ap_id": 14294964535,
-      "name": "Clue: step 2",
+      "name": "Clue: Infiltrate the Demeniss court",
       "region": "Traitor",
       "category": "quest",
       "detection": {
@@ -5905,7 +5905,7 @@
     },
     {
       "ap_id": 10001002802,
-      "name": "Clue: step 3",
+      "name": "Clue: Find the underground prison",
       "region": "Traitor",
       "category": "quest",
       "detection": {
@@ -5925,7 +5925,7 @@
     },
     {
       "ap_id": 10001002803,
-      "name": "Clue: step 4",
+      "name": "Clue: Find Beatrice Azerian",
       "region": "Traitor",
       "category": "quest",
       "detection": {
@@ -5945,7 +5945,7 @@
     },
     {
       "ap_id": 14294964534,
-      "name": "A Fleeting Dream: step 1",
+      "name": "A Fleeting Dream: Defeat Bastier",
       "region": "Traitor",
       "category": "quest",
       "detection": {
@@ -5965,7 +5965,7 @@
     },
     {
       "ap_id": 10001001616,
-      "name": "A Fleeting Dream: step 2",
+      "name": "A Fleeting Dream: Chapter Transition",
       "region": "Traitor",
       "category": "quest",
       "detection": {
@@ -5985,7 +5985,7 @@
     },
     {
       "ap_id": 14294964492,
-      "name": "An Unknown Voice: step 1",
+      "name": "An Unknown Voice: Get up",
       "region": "The Calling",
       "category": "quest",
       "detection": {
@@ -6005,7 +6005,7 @@
     },
     {
       "ap_id": 14294964491,
-      "name": "An Unknown Voice: step 2",
+      "name": "An Unknown Voice: Speak with the witch",
       "region": "The Calling",
       "category": "quest",
       "detection": {
@@ -6025,7 +6025,7 @@
     },
     {
       "ap_id": 14294964490,
-      "name": "An Unknown Voice: step 3",
+      "name": "An Unknown Voice: Find the trials",
       "region": "The Calling",
       "category": "quest",
       "detection": {
@@ -6045,7 +6045,7 @@
     },
     {
       "ap_id": 10001002835,
-      "name": "Cloister of Enlightenment: step 1",
+      "name": "Cloister of Enlightenment: Purify the golden statues",
       "region": "The Calling",
       "category": "quest",
       "detection": {
@@ -6065,7 +6065,7 @@
     },
     {
       "ap_id": 14294964485,
-      "name": "Mark of the Scar: step 1",
+      "name": "Mark of the Scar: Examine the stone tablet",
       "region": "Shattered Ties",
       "category": "quest",
       "detection": {
@@ -6085,7 +6085,7 @@
     },
     {
       "ap_id": 14294964484,
-      "name": "Mark of the Scar: step 2",
+      "name": "Mark of the Scar: Face the guardian deity of Urdavah",
       "region": "Shattered Ties",
       "category": "quest",
       "detection": {
@@ -6105,7 +6105,7 @@
     },
     {
       "ap_id": 10001002836,
-      "name": "Shackles of Fate: step 1",
+      "name": "Shackles of Fate: Remove the spear from the dragon",
       "region": "Shattered Ties",
       "category": "quest",
       "detection": {
@@ -6125,7 +6125,7 @@
     },
     {
       "ap_id": 14294964482,
-      "name": "Crossing Point: step 1",
+      "name": "Crossing Point: Examine the stone tablet",
       "region": "Thinning Blade",
       "category": "quest",
       "detection": {
@@ -6145,7 +6145,7 @@
     },
     {
       "ap_id": 14294964481,
-      "name": "Crossing Point: step 2",
+      "name": "Crossing Point: Go to the Spire of the Sun",
       "region": "Thinning Blade",
       "category": "quest",
       "detection": {
@@ -6165,7 +6165,7 @@
     },
     {
       "ap_id": 10001002837,
-      "name": "Unwavering Steps: step 1",
+      "name": "Unwavering Steps: Go to the Nest of Valor",
       "region": "Thinning Blade",
       "category": "quest",
       "detection": {
@@ -6185,7 +6185,7 @@
     },
     {
       "ap_id": 10001002838,
-      "name": "Unwavering Steps: step 2",
+      "name": "Unwavering Steps: Achieve enlightenment",
       "region": "Thinning Blade",
       "category": "quest",
       "detection": {
@@ -6205,7 +6205,7 @@
     },
     {
       "ap_id": 14294964489,
-      "name": "Morning Fog: step 1",
+      "name": "Morning Fog: Examine the stone tablet",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6225,7 +6225,7 @@
     },
     {
       "ap_id": 14294964488,
-      "name": "Morning Fog: step 2",
+      "name": "Morning Fog: Reveal the secret of the stone tablet",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6245,7 +6245,7 @@
     },
     {
       "ap_id": 14294965663,
-      "name": "Jijeong Temple in Chaos: step 1",
+      "name": "Jijeong Temple in Chaos: Talk to the chief monk",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6265,7 +6265,7 @@
     },
     {
       "ap_id": 14294965662,
-      "name": "Jijeong Temple in Chaos: step 2",
+      "name": "Jijeong Temple in Chaos: Repair the first pensive statue",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6285,7 +6285,7 @@
     },
     {
       "ap_id": 14294965661,
-      "name": "Jijeong Temple in Chaos: step 3",
+      "name": "Jijeong Temple in Chaos: The First Peak",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6305,7 +6305,7 @@
     },
     {
       "ap_id": 14294965660,
-      "name": "Jijeong Temple in Chaos: step 4",
+      "name": "Jijeong Temple in Chaos: Repair the second pensive statue",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6325,7 +6325,7 @@
     },
     {
       "ap_id": 14294965659,
-      "name": "Jijeong Temple in Chaos: step 5",
+      "name": "Jijeong Temple in Chaos: The Second Peak",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6345,7 +6345,7 @@
     },
     {
       "ap_id": 14294965658,
-      "name": "Jijeong Temple in Chaos: step 6",
+      "name": "Jijeong Temple in Chaos: Repair the third pensive statue",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6365,7 +6365,7 @@
     },
     {
       "ap_id": 14294965657,
-      "name": "Jijeong Temple in Chaos: step 7",
+      "name": "Jijeong Temple in Chaos: The Third Peak",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6385,7 +6385,7 @@
     },
     {
       "ap_id": 14294965655,
-      "name": "Path to Enlightenment: step 1",
+      "name": "Path to Enlightenment: Tell the monk the pensive statues have been restored",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6405,7 +6405,7 @@
     },
     {
       "ap_id": 14294965654,
-      "name": "Path of the Disciple: step 1",
+      "name": "Path of the Disciple: Train at the first Jijeong Temple training ground",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6425,7 +6425,7 @@
     },
     {
       "ap_id": 14294965653,
-      "name": "Path of the Disciple: step 2",
+      "name": "Path of the Disciple: Train at the second Jijeong Temple training ground",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6445,7 +6445,7 @@
     },
     {
       "ap_id": 10001000421,
-      "name": "Path of the Disciple: step 3",
+      "name": "Path of the Disciple: Train at the third Jijeong Temple training ground",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6465,7 +6465,7 @@
     },
     {
       "ap_id": 14294965652,
-      "name": "True Strength: step 1",
+      "name": "True Strength: Show T'rukan the meaning of true strength",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6485,7 +6485,7 @@
     },
     {
       "ap_id": 14294965651,
-      "name": "True Strength: step 2",
+      "name": "True Strength: Obtain the artifact",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6505,7 +6505,7 @@
     },
     {
       "ap_id": 10001002839,
-      "name": "Face the Inner Self: step 1",
+      "name": "Face the Inner Self: Go to the pagoda atop the peak",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6525,7 +6525,7 @@
     },
     {
       "ap_id": 10001002840,
-      "name": "Face the Inner Self: step 2",
+      "name": "Face the Inner Self: Go through the Jijeong Temple Pagoda to enter the Abyss",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6545,7 +6545,7 @@
     },
     {
       "ap_id": 10001002841,
-      "name": "Face the Inner Self: step 3",
+      "name": "Face the Inner Self: Achieve enlightenment",
       "region": "Six Statues and the Beast",
       "category": "quest",
       "detection": {
@@ -6565,7 +6565,7 @@
     },
     {
       "ap_id": 14294964478,
-      "name": "Fragments of Darkness: step 1",
+      "name": "Fragments of Darkness: Examine the stone tablet",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6585,7 +6585,7 @@
     },
     {
       "ap_id": 14294964477,
-      "name": "Fragments of Darkness: step 2",
+      "name": "Fragments of Darkness: Learn about the sanctum",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6605,7 +6605,7 @@
     },
     {
       "ap_id": 14294964476,
-      "name": "Fragments of Darkness: step 3",
+      "name": "Fragments of Darkness: Restore the power at the Sanctum of Mortification",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6625,7 +6625,7 @@
     },
     {
       "ap_id": 14294964475,
-      "name": "Fragments of Darkness: step 4",
+      "name": "Fragments of Darkness: White Crow Visual Effect",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6645,7 +6645,7 @@
     },
     {
       "ap_id": 14294965679,
-      "name": "Pursuit Beyond the Veil: step 1",
+      "name": "Pursuit Beyond the Veil: Destroy the totem at Clay Urn Necropolis",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6665,7 +6665,7 @@
     },
     {
       "ap_id": 14294965678,
-      "name": "Pursuit Beyond the Veil: step 2",
+      "name": "Pursuit Beyond the Veil: Destroy the totem at the Forgotten Tomb",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6685,7 +6685,7 @@
     },
     {
       "ap_id": 14294965677,
-      "name": "Pursuit Beyond the Veil: step 3",
+      "name": "Pursuit Beyond the Veil: Destroy the totem at Brimstone Springs",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6705,7 +6705,7 @@
     },
     {
       "ap_id": 14294965676,
-      "name": "Pursuit Beyond the Veil: step 4",
+      "name": "Pursuit Beyond the Veil: Destroy the totem at Hollow Haven",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6725,7 +6725,7 @@
     },
     {
       "ap_id": 14294965675,
-      "name": "Pursuit Beyond the Veil: step 5",
+      "name": "Pursuit Beyond the Veil: Hexe Marie Appearance Loading",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6745,7 +6745,7 @@
     },
     {
       "ap_id": 14294965672,
-      "name": "Black Witch: step 1",
+      "name": "Black Witch: Defeat the Black Witch",
       "region": "Veiled Witch",
       "category": "quest",
       "detection": {
@@ -6765,7 +6765,7 @@
     },
     {
       "ap_id": 14294964473,
-      "name": "The Cloister of Enlightenment: step 1",
+      "name": "The Cloister of Enlightenment: Demonstrate strength",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6785,7 +6785,7 @@
     },
     {
       "ap_id": 14294964472,
-      "name": "The Cloister of Enlightenment: step 2",
+      "name": "The Cloister of Enlightenment: Demonstrate spirit",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6805,7 +6805,7 @@
     },
     {
       "ap_id": 14294964471,
-      "name": "The Cloister of Enlightenment: step 3",
+      "name": "The Cloister of Enlightenment: Demonstrate vitality",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6825,7 +6825,7 @@
     },
     {
       "ap_id": 14294964470,
-      "name": "The Sage of the Desert: step 1",
+      "name": "The Sage of the Desert: Meet the owner of the voice",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6845,7 +6845,7 @@
     },
     {
       "ap_id": 14294964469,
-      "name": "New Perspectives: step 1",
+      "name": "New Perspectives: Head to the Spire of the Sun",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6865,7 +6865,7 @@
     },
     {
       "ap_id": 14294964468,
-      "name": "New Perspectives: step 2",
+      "name": "New Perspectives: Find a way to the Abyss",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6885,7 +6885,7 @@
     },
     {
       "ap_id": 14294964467,
-      "name": "New Perspectives: step 3",
+      "name": "New Perspectives: Enter the Abyss Gate",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6905,7 +6905,7 @@
     },
     {
       "ap_id": 14294964466,
-      "name": "New Perspectives: step 4",
+      "name": "New Perspectives: Activate the skybridge",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6925,7 +6925,7 @@
     },
     {
       "ap_id": 10001002203,
-      "name": "New Perspectives: step 5",
+      "name": "New Perspectives: Speak with Master Du",
       "region": "Enlightenment",
       "category": "quest",
       "detection": {
@@ -6945,7 +6945,7 @@
     },
     {
       "ap_id": 14294964329,
-      "name": "Untouchable: step 1",
+      "name": "Untouchable: Rally at the Outpost",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -6985,7 +6985,7 @@
     },
     {
       "ap_id": 14294964328,
-      "name": "The Gate of War: step 1",
+      "name": "The Gate of War: Go to the Gate of Peace",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7005,7 +7005,7 @@
     },
     {
       "ap_id": 14294964327,
-      "name": "The Gate of War: step 2",
+      "name": "The Gate of War: Activate the device on the upper level",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7025,7 +7025,7 @@
     },
     {
       "ap_id": 14294964326,
-      "name": "The Gate of War: step 3",
+      "name": "The Gate of War: Speak with the Orc Captain",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7045,7 +7045,7 @@
     },
     {
       "ap_id": 14294964324,
-      "name": "Master of the Ironworks: step 1",
+      "name": "Master of the Ironworks: Find Valgash",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7065,7 +7065,7 @@
     },
     {
       "ap_id": 14294964323,
-      "name": "Hidden Ace: step 1",
+      "name": "Hidden Ace: Find Valgash's secret weapon",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7085,7 +7085,7 @@
     },
     {
       "ap_id": 14294964322,
-      "name": "Hidden Ace: step 2",
+      "name": "Hidden Ace: Learn how to operate the A.T.A.G",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7105,7 +7105,7 @@
     },
     {
       "ap_id": 14294964321,
-      "name": "Hidden Ace: step 3",
+      "name": "Hidden Ace: Speak with the artisan",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7125,7 +7125,7 @@
     },
     {
       "ap_id": 14294964320,
-      "name": "Hidden Ace: step 4",
+      "name": "Hidden Ace: Operate the A.T.A.G",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7145,7 +7145,7 @@
     },
     {
       "ap_id": 14294964325,
-      "name": "Clockwork Insect Clash: step 1",
+      "name": "Clockwork Insect Clash: Eliminate the machines occupying Gorthak",
       "region": "Secret Weapon",
       "category": "quest",
       "detection": {
@@ -7165,7 +7165,7 @@
     },
     {
       "ap_id": 14294964319,
-      "name": "Beating Heart: step 1",
+      "name": "Beating Heart: Activate the power plant",
       "region": "Greater Firepower",
       "category": "quest",
       "detection": {
@@ -7185,7 +7185,7 @@
     },
     {
       "ap_id": 14294964318,
-      "name": "Beating Heart: step 2",
+      "name": "Beating Heart: Speak with Valgash",
       "region": "Greater Firepower",
       "category": "quest",
       "detection": {
@@ -7205,7 +7205,7 @@
     },
     {
       "ap_id": 14294964317,
-      "name": "Invaders from the East: step 1",
+      "name": "Invaders from the East: Fend off the swarm of clockwork insects",
       "region": "Greater Firepower",
       "category": "quest",
       "detection": {
@@ -7225,7 +7225,7 @@
     },
     {
       "ap_id": 14294964316,
-      "name": "Invaders from the East: step 2",
+      "name": "Invaders from the East: Shoot down the sky galleon",
       "region": "Greater Firepower",
       "category": "quest",
       "detection": {
@@ -7245,7 +7245,7 @@
     },
     {
       "ap_id": 14294964315,
-      "name": "Invaders from the East: step 3",
+      "name": "Invaders from the East: Drop Sky Galleon",
       "region": "Greater Firepower",
       "category": "quest",
       "detection": {
@@ -7265,7 +7265,7 @@
     },
     {
       "ap_id": 14294964314,
-      "name": "Frozen Hearted Predator: step 1",
+      "name": "Frozen Hearted Predator: Find the object that fell from the sky",
       "region": "Greater Firepower",
       "category": "quest",
       "detection": {
@@ -7285,7 +7285,7 @@
     },
     {
       "ap_id": 14294964313,
-      "name": "Lingering Shadow: step 1",
+      "name": "Lingering Shadow: Speak with Valgash",
       "region": "Greater Firepower",
       "category": "quest",
       "detection": {
@@ -7305,7 +7305,7 @@
     },
     {
       "ap_id": 14294964312,
-      "name": "Lingering Shadow: step 2",
+      "name": "Lingering Shadow: Chapter Transition",
       "region": "Greater Firepower",
       "category": "quest",
       "detection": {
@@ -7325,7 +7325,7 @@
     },
     {
       "ap_id": 14294964373,
-      "name": "The City of Steel: step 1",
+      "name": "The City of Steel: Visit Delesyia Castle",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7345,7 +7345,7 @@
     },
     {
       "ap_id": 10001001838,
-      "name": "Crossroads: step 1",
+      "name": "Crossroads: Watch the memory in Delesyia Castle",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7365,7 +7365,7 @@
     },
     {
       "ap_id": 14294964371,
-      "name": "Strange Manor: step 1",
+      "name": "Strange Manor: Head to the manor with the golden statue",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7385,7 +7385,7 @@
     },
     {
       "ap_id": 14294964370,
-      "name": "Strange Manor: step 2",
+      "name": "Strange Manor: Read the memory inside the strange manor",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7405,7 +7405,7 @@
     },
     {
       "ap_id": 14294964369,
-      "name": "Strange Manor: step 3",
+      "name": "Strange Manor: Search for the transporter in the manor",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7425,7 +7425,7 @@
     },
     {
       "ap_id": 14294964368,
-      "name": "Fortress Keys: step 1",
+      "name": "Fortress Keys: Retrieve the key from the Aeronautical Research Base",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7445,7 +7445,7 @@
     },
     {
       "ap_id": 14294964367,
-      "name": "Fortress Keys: step 2",
+      "name": "Fortress Keys: Retrieve the key from Marni's Laboratorium",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7465,7 +7465,7 @@
     },
     {
       "ap_id": 14294964366,
-      "name": "Fortress Keys: step 3",
+      "name": "Fortress Keys: Retrieve the key from Valvegard Garrison",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7485,7 +7485,7 @@
     },
     {
       "ap_id": 14294964363,
-      "name": "Truth and Lies: step 1",
+      "name": "Truth and Lies: Head to the location disclosed by the man",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7505,7 +7505,7 @@
     },
     {
       "ap_id": 10001000636,
-      "name": "Truth and Lies: step 2",
+      "name": "Truth and Lies: Investigate your surroundings",
       "region": "Brave New World",
       "category": "quest",
       "detection": {
@@ -7525,7 +7525,7 @@
     },
     {
       "ap_id": 14294964362,
-      "name": "Master of a Forgotten Land: step 1",
+      "name": "Master of a Forgotten Land: Retrieve Golden Star's power core",
       "region": "Foreboding Shadow",
       "category": "quest",
       "detection": {
@@ -7545,7 +7545,7 @@
     },
     {
       "ap_id": 14294964361,
-      "name": "Master of a Forgotten Land: step 2",
+      "name": "Master of a Forgotten Land: Approach Golden Star's fragment",
       "region": "Foreboding Shadow",
       "category": "quest",
       "detection": {
@@ -7565,7 +7565,7 @@
     },
     {
       "ap_id": 14294964360,
-      "name": "Whispers in the Wind: step 1",
+      "name": "Whispers in the Wind: Go to the Nest of Valor",
       "region": "Foreboding Shadow",
       "category": "quest",
       "detection": {
@@ -7585,7 +7585,7 @@
     },
     {
       "ap_id": 14294964359,
-      "name": "Flying Fortress Orbian: step 1",
+      "name": "Flying Fortress Orbian: Destroy the Flying Fortress Orbian",
       "region": "Foreboding Shadow",
       "category": "quest",
       "detection": {
@@ -7605,7 +7605,7 @@
     },
     {
       "ap_id": 14294964358,
-      "name": "Flying Fortress Orbian: step 2",
+      "name": "Flying Fortress Orbian: Chapter Transition",
       "region": "Foreboding Shadow",
       "category": "quest",
       "detection": {
@@ -7625,7 +7625,7 @@
     },
     {
       "ap_id": 14294964533,
-      "name": "Precise Execution: step 1",
+      "name": "Precise Execution: Return to Fort Musket's outpost",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7645,7 +7645,7 @@
     },
     {
       "ap_id": 14294964532,
-      "name": "Deferred Advance: step 1",
+      "name": "Deferred Advance: Neutralize the camp behind Fort Musket",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7665,7 +7665,7 @@
     },
     {
       "ap_id": 14294964531,
-      "name": "Deferred Advance: step 2",
+      "name": "Deferred Advance: Destroy the leftmost ultimate weapon",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7685,7 +7685,7 @@
     },
     {
       "ap_id": 14294964530,
-      "name": "Deferred Advance: step 3",
+      "name": "Deferred Advance: Destroy the central ultimate weapon",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7705,7 +7705,7 @@
     },
     {
       "ap_id": 14294964529,
-      "name": "Deferred Advance: step 4",
+      "name": "Deferred Advance: Destroy the rightmost ultimate weapon",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7725,7 +7725,7 @@
     },
     {
       "ap_id": 14294964526,
-      "name": "Departure of the Brave: step 1",
+      "name": "Departure of the Brave: Return to the outpost",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7745,7 +7745,7 @@
     },
     {
       "ap_id": 14294964525,
-      "name": "Departure of the Brave: step 2",
+      "name": "Departure of the Brave: Participate in the departure ceremony",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7765,7 +7765,7 @@
     },
     {
       "ap_id": 10001002314,
-      "name": "Departure of the Brave: step 3",
+      "name": "Departure of the Brave: Wait for the signal",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7785,7 +7785,7 @@
     },
     {
       "ap_id": 14294964523,
-      "name": "Forbidden Gate: step 1",
+      "name": "Forbidden Gate: Pursue Caliburn",
       "region": "The Final Battle",
       "category": "quest",
       "detection": {
@@ -7805,7 +7805,7 @@
     },
     {
       "ap_id": 14294964522,
-      "name": "A Shadow in the Void: step 1",
+      "name": "A Shadow in the Void: Head to the Abyss",
       "region": "The Void",
       "category": "quest",
       "detection": {
@@ -7825,7 +7825,7 @@
     },
     {
       "ap_id": 14294964521,
-      "name": "A Shadow in the Void: step 2",
+      "name": "A Shadow in the Void: Pursue Caliburn",
       "region": "The Void",
       "category": "quest",
       "detection": {
@@ -7845,7 +7845,7 @@
     },
     {
       "ap_id": 14294964520,
-      "name": "Blinding Darkness: step 1",
+      "name": "Blinding Darkness: Defeat Umbra",
       "region": "The Void",
       "category": "quest",
       "detection": {
@@ -7865,7 +7865,7 @@
     },
     {
       "ap_id": 10001001840,
-      "name": "Blinding Darkness: step 2",
+      "name": "Blinding Darkness: Umbra Ending Effect",
       "region": "The Void",
       "category": "quest",
       "detection": {
@@ -7885,7 +7885,7 @@
     },
     {
       "ap_id": 14294964498,
-      "name": "A New Beginning: step 1",
+      "name": "A New Beginning: Back to Normal",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -7905,7 +7905,7 @@
     },
     {
       "ap_id": 14294964497,
-      "name": "Peace in Hernand: step 1",
+      "name": "Peace in Hernand: Visit Hernand",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -7925,7 +7925,7 @@
     },
     {
       "ap_id": 10001000840,
-      "name": "Peace in Hernand: step 2",
+      "name": "Peace in Hernand: Speak with Marshal Middler",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -7945,7 +7945,7 @@
     },
     {
       "ap_id": 14294964496,
-      "name": "The Unyielding Shields: step 1",
+      "name": "The Unyielding Shields: Visit Calphade",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -7965,7 +7965,7 @@
     },
     {
       "ap_id": 10001000845,
-      "name": "The Unyielding Shields: step 2",
+      "name": "The Unyielding Shields: Speak with Stefan Lanford",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -7985,7 +7985,7 @@
     },
     {
       "ap_id": 14294964495,
-      "name": "The Heart of Pywel: step 1",
+      "name": "The Heart of Pywel: Visit Demeniss",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8005,7 +8005,7 @@
     },
     {
       "ap_id": 10001000858,
-      "name": "The Heart of Pywel: step 2",
+      "name": "The Heart of Pywel: Speak with Countess Azerian",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8025,7 +8025,7 @@
     },
     {
       "ap_id": 14294964493,
-      "name": "The Enduring Flame: step 1",
+      "name": "The Enduring Flame: Visit Gorthak Ironworks",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8045,7 +8045,7 @@
     },
     {
       "ap_id": 10001000863,
-      "name": "The Enduring Flame: step 2",
+      "name": "The Enduring Flame: Speak with Valgash",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8065,7 +8065,7 @@
     },
     {
       "ap_id": 10001001691,
-      "name": "Evolving City: step 1",
+      "name": "Evolving City: Visit Delesyia",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8085,7 +8085,7 @@
     },
     {
       "ap_id": 10001000865,
-      "name": "Evolving City: step 2",
+      "name": "Evolving City: Read the memory about the secrets of the helmet",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8105,7 +8105,7 @@
     },
     {
       "ap_id": 14294964494,
-      "name": "The Desert's Edge: step 1",
+      "name": "The Desert's Edge: Visit Fort Musket",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8125,7 +8125,7 @@
     },
     {
       "ap_id": 10001000859,
-      "name": "The Desert's Edge: step 2",
+      "name": "The Desert's Edge: Speak with Duke Wells",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8145,7 +8145,7 @@
     },
     {
       "ap_id": 10001000971,
-      "name": "New Horizons: step 1",
+      "name": "New Horizons: Visit Varnia",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8165,7 +8165,7 @@
     },
     {
       "ap_id": 10001000980,
-      "name": "New Horizons: step 2",
+      "name": "New Horizons: Look around Varnia",
       "region": "Journey's End",
       "category": "quest",
       "detection": {
@@ -8206,7 +8206,7 @@
     },
     {
       "ap_id": 14294965042,
-      "name": "Ambition in the Ruins: Search for Leads (step 1)",
+      "name": "Ambition in the Ruins: Talk to Robert, the overseer",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8227,7 +8227,7 @@
     },
     {
       "ap_id": 14294965041,
-      "name": "Ambition in the Ruins: Search for Leads (step 2)",
+      "name": "Ambition in the Ruins: Talk to Adeline, the Nun",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8248,7 +8248,7 @@
     },
     {
       "ap_id": 14294965040,
-      "name": "Ambition in the Ruins: Search for Leads (step 3)",
+      "name": "Ambition in the Ruins: Talk to Malluk, the military supply officer",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8269,7 +8269,7 @@
     },
     {
       "ap_id": 14294965039,
-      "name": "Ambition in the Ruins: Search for Leads (step 4)",
+      "name": "Ambition in the Ruins: Talk to Helmut the blacksmith",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8290,7 +8290,7 @@
     },
     {
       "ap_id": 14294965038,
-      "name": "Ambition in the Ruins: Search for Leads (step 5)",
+      "name": "Ambition in the Ruins: Talk to Caspar, the merchant",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8311,7 +8311,7 @@
     },
     {
       "ap_id": 14294965037,
-      "name": "Ambition in the Ruins: Search for Leads (step 6)",
+      "name": "Ambition in the Ruins: Talk to Ella, the workers' representative",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8332,7 +8332,7 @@
     },
     {
       "ap_id": 14294965036,
-      "name": "Ambition in the Ruins: Use the information to deduce and reveal the culprit (step 1)",
+      "name": "Ambition in the Ruins: Deduce the culprit with the clues",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8353,7 +8353,7 @@
     },
     {
       "ap_id": 14294965035,
-      "name": "Ambition in the Ruins: Use the information to deduce and reveal the culprit (step 2)",
+      "name": "Ambition in the Ruins: Raid the scene and capture the culprit",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8395,7 +8395,7 @@
     },
     {
       "ap_id": 14294966500,
-      "name": "White Blizzard: Cursed Mountain (step 1)",
+      "name": "White Blizzard: Meet the wounded soldiers",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8416,7 +8416,7 @@
     },
     {
       "ap_id": 14294966499,
-      "name": "White Blizzard: Cursed Mountain (step 2)",
+      "name": "White Blizzard: Investigate Hoenmark Ruins",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8437,7 +8437,7 @@
     },
     {
       "ap_id": 14294966498,
-      "name": "White Blizzard: Cursed Mountain (step 3)",
+      "name": "White Blizzard: Deliver the news of victory",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8458,7 +8458,7 @@
     },
     {
       "ap_id": 14294966497,
-      "name": "White Blizzard: Wraith in the Frost (step 1)",
+      "name": "White Blizzard: Slay Beloth, the Darksworn",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8479,7 +8479,7 @@
     },
     {
       "ap_id": 14294966496,
-      "name": "White Blizzard: Wraith in the Frost (step 2)",
+      "name": "White Blizzard: Obtain the artifact",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8500,7 +8500,7 @@
     },
     {
       "ap_id": 14294966495,
-      "name": "White Blizzard: Wraith in the Frost (step 3)",
+      "name": "White Blizzard: Hoenmark Ruins Liberation Loading",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -8542,7 +8542,7 @@
     },
     {
       "ap_id": 14294966420,
-      "name": "Emperor of the Bonepit: The Bonepit (step 1)",
+      "name": "Emperor of the Bonepit: Talk to the Greymane informant",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8563,7 +8563,7 @@
     },
     {
       "ap_id": 14294966419,
-      "name": "Emperor of the Bonepit: The Bonepit (step 2)",
+      "name": "Emperor of the Bonepit: Participate in the arena match",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8584,7 +8584,7 @@
     },
     {
       "ap_id": 14294966417,
-      "name": "Emperor of the Bonepit: Duel with the Emperor (step 1)",
+      "name": "Emperor of the Bonepit: Defeat Muskan",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8605,7 +8605,7 @@
     },
     {
       "ap_id": 14294966416,
-      "name": "Emperor of the Bonepit: Duel with the Emperor (step 2)",
+      "name": "Emperor of the Bonepit: Obtain the artifact",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8626,7 +8626,7 @@
     },
     {
       "ap_id": 14294966295,
-      "name": "War Song of the Dusk: The Dusksongs (step 1)",
+      "name": "War Song of the Dusk: Defeat the enemies around Burhum",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8647,7 +8647,7 @@
     },
     {
       "ap_id": 14294966294,
-      "name": "War Song of the Dusk: The Dusksongs (step 2)",
+      "name": "War Song of the Dusk: Burhum Liberation Loading",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8668,7 +8668,7 @@
     },
     {
       "ap_id": 10001002098,
-      "name": "War Song of the Dusk: Conditions for Enlightenment (step 1)",
+      "name": "War Song of the Dusk: Defeat the enemies around the Well of Reflection",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8689,7 +8689,7 @@
     },
     {
       "ap_id": 10001002099,
-      "name": "War Song of the Dusk: Conditions for Enlightenment (step 2)",
+      "name": "War Song of the Dusk: Defeat the enemies around the Well of Anguish",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8710,7 +8710,7 @@
     },
     {
       "ap_id": 10001002100,
-      "name": "War Song of the Dusk: Conditions for Enlightenment (step 3)",
+      "name": "War Song of the Dusk: Defeat the enemies around the Well of Patience",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8731,7 +8731,7 @@
     },
     {
       "ap_id": 10001001877,
-      "name": "Dying Well: A Town Drowned in Sorrow (step 1)",
+      "name": "Dying Well: Talk to the chief",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8752,7 +8752,7 @@
     },
     {
       "ap_id": 10001001878,
-      "name": "Dying Well: A Town Drowned in Sorrow (step 2)",
+      "name": "Dying Well: Liberate the Well of Enlightenment",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8773,7 +8773,7 @@
     },
     {
       "ap_id": 10001001879,
-      "name": "Dying Well: A Town Drowned in Sorrow (step 3)",
+      "name": "Dying Well: Clean the solar power panel",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8815,7 +8815,7 @@
     },
     {
       "ap_id": 10001002056,
-      "name": "Raiders in Muiquun: The Shackles on the Sand (step 1)",
+      "name": "Raiders in Muiquun: Check the expedition request",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8836,7 +8836,7 @@
     },
     {
       "ap_id": 10001002057,
-      "name": "Raiders in Muiquun: The Shackles on the Sand (step 2)",
+      "name": "Raiders in Muiquun: Read the expedition request",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8857,7 +8857,7 @@
     },
     {
       "ap_id": 14294966462,
-      "name": "Raiders in Muiquun: The Mistcloaked Owls (step 1)",
+      "name": "Raiders in Muiquun: Defeat the Mistcloaked Owls",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8878,7 +8878,7 @@
     },
     {
       "ap_id": 14294966461,
-      "name": "Raiders in Muiquun: The Mistcloaked Owls (step 2)",
+      "name": "Raiders in Muiquun: Muiquun Liberation Loading",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8899,7 +8899,7 @@
     },
     {
       "ap_id": 10001002189,
-      "name": "Raiders in Muiquun: A Heavy Fog (step 1)",
+      "name": "Raiders in Muiquun: Defeat enemies around the desert ruins",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8920,7 +8920,7 @@
     },
     {
       "ap_id": 10001002190,
-      "name": "Raiders in Muiquun: A Heavy Fog (step 2)",
+      "name": "Raiders in Muiquun: Defeat the enemies around the guard post",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8941,7 +8941,7 @@
     },
     {
       "ap_id": 10001002191,
-      "name": "Raiders in Muiquun: A Heavy Fog (step 3)",
+      "name": "Raiders in Muiquun: Defeat enemies around the watchtower zone",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -8983,7 +8983,7 @@
     },
     {
       "ap_id": 14294966278,
-      "name": "Town of Outlaws: Name on the Bounty Notice (step 1)",
+      "name": "Town of Outlaws: Acquire information on the outlaw",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9004,7 +9004,7 @@
     },
     {
       "ap_id": 14294966277,
-      "name": "Town of Outlaws: Name on the Bounty Notice (step 2)",
+      "name": "Town of Outlaws: Apprehend the outlaw",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9025,7 +9025,7 @@
     },
     {
       "ap_id": 14294966276,
-      "name": "Town of Outlaws: Name on the Bounty Notice (step 3)",
+      "name": "Town of Outlaws: Turn Nabilla in to the Tommaso guards",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9046,7 +9046,7 @@
     },
     {
       "ap_id": 14294964565,
-      "name": "The Witch of Strength: The Witch of Strength (step 1)",
+      "name": "The Witch of Strength: Give coin to the child",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9067,7 +9067,7 @@
     },
     {
       "ap_id": 14294964564,
-      "name": "The Witch of Strength: The Witch of Strength (step 2)",
+      "name": "The Witch of Strength: Find Areciel the Witch",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9088,7 +9088,7 @@
     },
     {
       "ap_id": 14294964563,
-      "name": "The Witch of Strength: The Witch of Strength (step 3)",
+      "name": "The Witch of Strength: Meet Areciel the Witch",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9109,7 +9109,7 @@
     },
     {
       "ap_id": 14294964562,
-      "name": "The Witch of Strength: The Witch of Strength (step 4)",
+      "name": "The Witch of Strength: Cleanse the sanctum",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9130,7 +9130,7 @@
     },
     {
       "ap_id": 14294964561,
-      "name": "The Witch of Strength: The Witch of Strength (step 5)",
+      "name": "The Witch of Strength: Talk to Areciel the Witch",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9151,7 +9151,7 @@
     },
     {
       "ap_id": 14294964560,
-      "name": "The Witch of Strength: Sanctum of Expiation (step 1)",
+      "name": "The Witch of Strength: Liberate the Sanctum of Expiation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9172,7 +9172,7 @@
     },
     {
       "ap_id": 14294964559,
-      "name": "The Witch of Strength: Sanctum of Expiation (step 2)",
+      "name": "The Witch of Strength: Cleanse the Sanctum of Expiation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9193,7 +9193,7 @@
     },
     {
       "ap_id": 10001001985,
-      "name": "The Witch of Strength: Sanctum of Expiation (step 3)",
+      "name": "The Witch of Strength: Talk to the witch at the Sanctum of Expiation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9214,7 +9214,7 @@
     },
     {
       "ap_id": 14294964558,
-      "name": "The Witch of Strength: Sanctum of Renunciation (step 1)",
+      "name": "The Witch of Strength: Liberate the Sanctum of Renunciation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9235,7 +9235,7 @@
     },
     {
       "ap_id": 14294964557,
-      "name": "The Witch of Strength: Sanctum of Renunciation (step 2)",
+      "name": "The Witch of Strength: Cleanse the Sanctum of Renunciation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9256,7 +9256,7 @@
     },
     {
       "ap_id": 10001001986,
-      "name": "The Witch of Strength: Sanctum of Renunciation (step 3)",
+      "name": "The Witch of Strength: Talk to the witch at the Sanctum of Renunciation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9277,7 +9277,7 @@
     },
     {
       "ap_id": 14294964556,
-      "name": "The Witch of Strength: Sanctum of Revelation (step 1)",
+      "name": "The Witch of Strength: Liberate the Sanctum of Revelation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9298,7 +9298,7 @@
     },
     {
       "ap_id": 14294964555,
-      "name": "The Witch of Strength: Sanctum of Revelation (step 2)",
+      "name": "The Witch of Strength: Cleanse the Sanctum of Revelation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9319,7 +9319,7 @@
     },
     {
       "ap_id": 10001001987,
-      "name": "The Witch of Strength: Sanctum of Revelation (step 3)",
+      "name": "The Witch of Strength: Talk to the witch at the Sanctum of Revelation",
       "region": "Regional quests: the Crimson Desert",
       "category": "regional",
       "detection": {
@@ -9340,7 +9340,7 @@
     },
     {
       "ap_id": 10001002126,
-      "name": "Flight: Wings of Iron (step 1)",
+      "name": "Flight: Decipher the records analyzed by The Witches",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9361,7 +9361,7 @@
     },
     {
       "ap_id": 10001002127,
-      "name": "Flight: Wings of Iron (step 2)",
+      "name": "Flight: Return to the Nest of Valor",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9382,7 +9382,7 @@
     },
     {
       "ap_id": 10001002128,
-      "name": "Flight: Wings of Iron (step 3)",
+      "name": "Flight: Abyssal Dragon Armor",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9424,7 +9424,7 @@
     },
     {
       "ap_id": 14294966056,
-      "name": "Broken Silence: Question the people related to the theft (step 1)",
+      "name": "Broken Silence: Talk to Renata, the appraiser",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9445,7 +9445,7 @@
     },
     {
       "ap_id": 14294966055,
-      "name": "Broken Silence: Question the people related to the theft (step 2)",
+      "name": "Broken Silence: Talk to Osvald, the warehouse manager",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9466,7 +9466,7 @@
     },
     {
       "ap_id": 14294966054,
-      "name": "Broken Silence: Question the people related to the theft (step 3)",
+      "name": "Broken Silence: Talk to Durvan, the quartermaster",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9487,7 +9487,7 @@
     },
     {
       "ap_id": 14294966053,
-      "name": "Broken Silence: Question the people related to the theft (step 4)",
+      "name": "Broken Silence: Talk to Tarbo, the packer",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9508,7 +9508,7 @@
     },
     {
       "ap_id": 14294966052,
-      "name": "Broken Silence: Question the people related to the theft (step 5)",
+      "name": "Broken Silence: Talk to Sairin, the merchant",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9529,7 +9529,7 @@
     },
     {
       "ap_id": 14294966051,
-      "name": "Broken Silence: Question the people related to the theft (step 6)",
+      "name": "Broken Silence: Talk to Grano the Freesword",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9550,7 +9550,7 @@
     },
     {
       "ap_id": 14294966050,
-      "name": "Broken Silence: Information obtained through investigation (step 1)",
+      "name": "Broken Silence: Deduce the clue",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9571,7 +9571,7 @@
     },
     {
       "ap_id": 14294966049,
-      "name": "Broken Silence: Information obtained through investigation (step 2)",
+      "name": "Broken Silence: Bring in the culprit",
       "region": "Regional quests: Delesyia",
       "category": "regional",
       "detection": {
@@ -9613,7 +9613,7 @@
     },
     {
       "ap_id": 14294965758,
-      "name": "Suspicious Farm: Marks on the Farm (step 1)",
+      "name": "Suspicious Farm: Steal the wagon",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9634,7 +9634,7 @@
     },
     {
       "ap_id": 14294965757,
-      "name": "Suspicious Farm: Marks on the Farm (step 2)",
+      "name": "Suspicious Farm: Sell the wagon",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9655,7 +9655,7 @@
     },
     {
       "ap_id": 14294964577,
-      "name": "The Witch of Humility: The Witch of Humility (step 1)",
+      "name": "The Witch of Humility: Help the person hanging on the bridge",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9676,7 +9676,7 @@
     },
     {
       "ap_id": 14294964576,
-      "name": "The Witch of Humility: The Witch of Humility (step 2)",
+      "name": "The Witch of Humility: Meet Lyselia the Witch",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9697,7 +9697,7 @@
     },
     {
       "ap_id": 14294964575,
-      "name": "The Witch of Humility: The Witch of Humility (step 3)",
+      "name": "The Witch of Humility: Cleanse the sanctum",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9718,7 +9718,7 @@
     },
     {
       "ap_id": 14294964574,
-      "name": "The Witch of Humility: The Witch of Humility (step 4)",
+      "name": "The Witch of Humility: Talk to Lyselia the Witch",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9739,7 +9739,7 @@
     },
     {
       "ap_id": 14294964573,
-      "name": "The Witch of Humility: Sanctum of Devotion (step 1)",
+      "name": "The Witch of Humility: Liberate the Sanctum of Devotion",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9760,7 +9760,7 @@
     },
     {
       "ap_id": 14294964572,
-      "name": "The Witch of Humility: Sanctum of Devotion (step 2)",
+      "name": "The Witch of Humility: Cleanse the Sanctum of Devotion",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9781,7 +9781,7 @@
     },
     {
       "ap_id": 10001001981,
-      "name": "The Witch of Humility: Sanctum of Devotion (step 3)",
+      "name": "The Witch of Humility: Talk to the witch at the Sanctum of Devotion",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9802,7 +9802,7 @@
     },
     {
       "ap_id": 14294964571,
-      "name": "The Witch of Humility: Sanctum of Veneration (step 1)",
+      "name": "The Witch of Humility: Liberate the Sanctum of Veneration",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9823,7 +9823,7 @@
     },
     {
       "ap_id": 14294964570,
-      "name": "The Witch of Humility: Sanctum of Veneration (step 2)",
+      "name": "The Witch of Humility: Cleanse the Sanctum of Veneration",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9844,7 +9844,7 @@
     },
     {
       "ap_id": 10001001982,
-      "name": "The Witch of Humility: Sanctum of Veneration (step 3)",
+      "name": "The Witch of Humility: Talk to the witch at the Sanctum of Veneration",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9865,7 +9865,7 @@
     },
     {
       "ap_id": 14294964569,
-      "name": "The Witch of Humility: Sanctum of Oblation (step 1)",
+      "name": "The Witch of Humility: Liberate the Sanctum of Oblation",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9886,7 +9886,7 @@
     },
     {
       "ap_id": 14294964568,
-      "name": "The Witch of Humility: Sanctum of Oblation (step 2)",
+      "name": "The Witch of Humility: Cleanse the Sanctum of Oblation",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9907,7 +9907,7 @@
     },
     {
       "ap_id": 10001001983,
-      "name": "The Witch of Humility: Sanctum of Oblation (step 3)",
+      "name": "The Witch of Humility: Talk to the witch at the Sanctum of Oblation",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9928,7 +9928,7 @@
     },
     {
       "ap_id": 14294964567,
-      "name": "The Witch of Humility: Sanctum of Faith (step 1)",
+      "name": "The Witch of Humility: Liberate the Sanctum of Faith",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9949,7 +9949,7 @@
     },
     {
       "ap_id": 14294964566,
-      "name": "The Witch of Humility: Sanctum of Faith (step 2)",
+      "name": "The Witch of Humility: Cleanse the Sanctum of Faith",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9970,7 +9970,7 @@
     },
     {
       "ap_id": 10001001984,
-      "name": "The Witch of Humility: Sanctum of Faith (step 3)",
+      "name": "The Witch of Humility: Talk to the witch at the Sanctum of Faith",
       "region": "Regional quests: Demeniss",
       "category": "regional",
       "detection": {
@@ -9991,7 +9991,7 @@
     },
     {
       "ap_id": 14294965057,
-      "name": "Seed of Truth: Truth in the Shadows (step 1)",
+      "name": "Seed of Truth: Guardian Deity Altar",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10012,7 +10012,7 @@
     },
     {
       "ap_id": 14294965056,
-      "name": "Seed of Truth: Truth in the Shadows (step 2)",
+      "name": "Seed of Truth: Check out the commotion in the arena",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10033,7 +10033,7 @@
     },
     {
       "ap_id": 14294965055,
-      "name": "Seed of Truth: Truth in the Shadows (step 3)",
+      "name": "Seed of Truth: Read the bounty notice",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10054,7 +10054,7 @@
     },
     {
       "ap_id": 14294965054,
-      "name": "Seed of Truth: Truth in the Shadows (step 4)",
+      "name": "Seed of Truth: Catch the outlaw wanted by the Goldleaf Merchant Guild",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10075,7 +10075,7 @@
     },
     {
       "ap_id": 10001002101,
-      "name": "Seed of Truth: Trust Uncovered (step 1)",
+      "name": "Seed of Truth: Inform that the outlaw was handed in",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10096,7 +10096,7 @@
     },
     {
       "ap_id": 10001002102,
-      "name": "Seed of Truth: Trust Uncovered (step 2)",
+      "name": "Seed of Truth: Find the woman from the desperate memory",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10138,7 +10138,7 @@
     },
     {
       "ap_id": 10001001848,
-      "name": "Extinguishing the Last Flames: Nogle, the Trade Manager (step 1)",
+      "name": "Extinguishing the Last Flames: Talk to Nogle",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10159,7 +10159,7 @@
     },
     {
       "ap_id": 10001001849,
-      "name": "Extinguishing the Last Flames: Nogle, the Trade Manager (step 2)",
+      "name": "Extinguishing the Last Flames: Examine the tavern ledger",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10180,7 +10180,7 @@
     },
     {
       "ap_id": 10001001850,
-      "name": "Extinguishing the Last Flames: Nogle, the Trade Manager (step 3)",
+      "name": "Extinguishing the Last Flames: Examine the broken barrel",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10201,7 +10201,7 @@
     },
     {
       "ap_id": 10001001851,
-      "name": "Extinguishing the Last Flames: Nogle, the Trade Manager (step 4)",
+      "name": "Extinguishing the Last Flames: Examine the Tax Notice",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10222,7 +10222,7 @@
     },
     {
       "ap_id": 10001001853,
-      "name": "Extinguishing the Last Flames: Skrav, the Trade Manager (step 1)",
+      "name": "Extinguishing the Last Flames: Talk to Skrav",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10243,7 +10243,7 @@
     },
     {
       "ap_id": 10001001854,
-      "name": "Extinguishing the Last Flames: Skrav, the Trade Manager (step 2)",
+      "name": "Extinguishing the Last Flames: Examine the stacked trade goods",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10264,7 +10264,7 @@
     },
     {
       "ap_id": 10001001855,
-      "name": "Extinguishing the Last Flames: Skrav, the Trade Manager (step 3)",
+      "name": "Extinguishing the Last Flames: Examine Trade Schedule Log",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10285,7 +10285,7 @@
     },
     {
       "ap_id": 10001001856,
-      "name": "Extinguishing the Last Flames: Skrav, the Trade Manager (step 4)",
+      "name": "Extinguishing the Last Flames: Examine the dropped lantern",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10306,7 +10306,7 @@
     },
     {
       "ap_id": 10001001858,
-      "name": "Extinguishing the Last Flames: Kathan, the Goldleaf Private Soldier (step 1)",
+      "name": "Extinguishing the Last Flames: Talk to Kathan",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10327,7 +10327,7 @@
     },
     {
       "ap_id": 10001001859,
-      "name": "Extinguishing the Last Flames: Kathan, the Goldleaf Private Soldier (step 2)",
+      "name": "Extinguishing the Last Flames: Examine the damaged wagon",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10348,7 +10348,7 @@
     },
     {
       "ap_id": 10001001860,
-      "name": "Extinguishing the Last Flames: Kathan, the Goldleaf Private Soldier (step 3)",
+      "name": "Extinguishing the Last Flames: Examine the guard's letter",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10369,7 +10369,7 @@
     },
     {
       "ap_id": 10001001861,
-      "name": "Extinguishing the Last Flames: Kathan, the Goldleaf Private Soldier (step 4)",
+      "name": "Extinguishing the Last Flames: Examine the guard's report",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10390,7 +10390,7 @@
     },
     {
       "ap_id": 10001001864,
-      "name": "Extinguishing the Last Flames: Blique, the Horse Manager (step 1)",
+      "name": "Extinguishing the Last Flames: Talk to Blique",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10411,7 +10411,7 @@
     },
     {
       "ap_id": 10001001865,
-      "name": "Extinguishing the Last Flames: Blique, the Horse Manager (step 2)",
+      "name": "Extinguishing the Last Flames: Examine the feed purchase receipt",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10432,7 +10432,7 @@
     },
     {
       "ap_id": 10001001866,
-      "name": "Extinguishing the Last Flames: Blique, the Horse Manager (step 3)",
+      "name": "Extinguishing the Last Flames: Examine the old saddle",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10453,7 +10453,7 @@
     },
     {
       "ap_id": 10001001867,
-      "name": "Extinguishing the Last Flames: Blique, the Horse Manager (step 4)",
+      "name": "Extinguishing the Last Flames: Examine the horse hire ledger",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10474,7 +10474,7 @@
     },
     {
       "ap_id": 10001001869,
-      "name": "Extinguishing the Last Flames: Grimzle, the Ledger Manager (step 1)",
+      "name": "Extinguishing the Last Flames: Talk to Grimzle",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10495,7 +10495,7 @@
     },
     {
       "ap_id": 10001001870,
-      "name": "Extinguishing the Last Flames: Grimzle, the Ledger Manager (step 2)",
+      "name": "Extinguishing the Last Flames: Examine the merchant delivery seal",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10516,7 +10516,7 @@
     },
     {
       "ap_id": 10001001871,
-      "name": "Extinguishing the Last Flames: Grimzle, the Ledger Manager (step 3)",
+      "name": "Extinguishing the Last Flames: Examine the proof of stay",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10537,7 +10537,7 @@
     },
     {
       "ap_id": 10001001872,
-      "name": "Extinguishing the Last Flames: Grimzle, the Ledger Manager (step 4)",
+      "name": "Extinguishing the Last Flames: Examine empty ledger cover",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10558,7 +10558,7 @@
     },
     {
       "ap_id": 14294965045,
-      "name": "Extinguishing the Last Flames: Close Threat (step 1)",
+      "name": "Extinguishing the Last Flames: Talk to Shakatu",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10579,7 +10579,7 @@
     },
     {
       "ap_id": 14294965044,
-      "name": "Extinguishing the Last Flames: Close Threat (step 2)",
+      "name": "Extinguishing the Last Flames: Hunt down the traitor",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10600,7 +10600,7 @@
     },
     {
       "ap_id": 14294965323,
-      "name": "Legendary Wolf: Silence from Afar (step 1)",
+      "name": "Legendary Wolf: Speak with the woman",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10621,7 +10621,7 @@
     },
     {
       "ap_id": 14294965322,
-      "name": "Legendary Wolf: Silence from Afar (step 2)",
+      "name": "Legendary Wolf: Go to the North Gate",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10642,7 +10642,7 @@
     },
     {
       "ap_id": 14294965321,
-      "name": "Legendary Wolf: Silence from Afar (step 3)",
+      "name": "Legendary Wolf: Speak with the soldier",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10663,7 +10663,7 @@
     },
     {
       "ap_id": 14294965320,
-      "name": "Legendary Wolf: Howls from the North Gate (step 1)",
+      "name": "Legendary Wolf: Enter the forest of wolves",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10684,7 +10684,7 @@
     },
     {
       "ap_id": 14294965319,
-      "name": "Legendary Wolf: Howls from the North Gate (step 2)",
+      "name": "Legendary Wolf: Track the legendary wolf",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10726,7 +10726,7 @@
     },
     {
       "ap_id": 14294964973,
-      "name": "The Sleeping Heart: Destroyed Barrier Stone of the Lake (step 1)",
+      "name": "The Sleeping Heart: Talk to the villager of Kharonso",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10747,7 +10747,7 @@
     },
     {
       "ap_id": 14294964972,
-      "name": "The Sleeping Heart: Destroyed Barrier Stone of the Lake (step 2)",
+      "name": "The Sleeping Heart: Find the barrier stones in the caves",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10768,7 +10768,7 @@
     },
     {
       "ap_id": 14294964971,
-      "name": "The Sleeping Heart: Destroyed Barrier Stone of the Lake (step 3)",
+      "name": "The Sleeping Heart: Find the barrier stones in the well",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10789,7 +10789,7 @@
     },
     {
       "ap_id": 14294964970,
-      "name": "The Sleeping Heart: Destroyed Barrier Stone of the Lake (step 4)",
+      "name": "The Sleeping Heart: Find the barrier stones at the excavation site",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10810,7 +10810,7 @@
     },
     {
       "ap_id": 14294964969,
-      "name": "The Sleeping Heart: Destroyed Barrier Stone of the Lake (step 5)",
+      "name": "The Sleeping Heart: Find the barrier stones in the ruins",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10852,7 +10852,7 @@
     },
     {
       "ap_id": 14294964966,
-      "name": "The Sleeping Heart: Nightmare of Kharonso (step 1)",
+      "name": "The Sleeping Heart: Defeat the Runewalker",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10873,7 +10873,7 @@
     },
     {
       "ap_id": 14294964965,
-      "name": "The Sleeping Heart: Nightmare of Kharonso (step 2)",
+      "name": "The Sleeping Heart: Lake Kharonso Liberation Loading",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10894,7 +10894,7 @@
     },
     {
       "ap_id": 10001001798,
-      "name": "The Sleeping Heart: Nightmare of Kharonso (step 3)",
+      "name": "The Sleeping Heart: Obtain the artifact",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10915,7 +10915,7 @@
     },
     {
       "ap_id": 14294964871,
-      "name": "Where Land Meets Sky: The Village of Saint Senia (step 1)",
+      "name": "Where Land Meets Sky: Listen to the conversation in front of the Church of Hernand",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10936,7 +10936,7 @@
     },
     {
       "ap_id": 14294964870,
-      "name": "Where Land Meets Sky: The Village of Saint Senia (step 2)",
+      "name": "Where Land Meets Sky: Visit Senia",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10957,7 +10957,7 @@
     },
     {
       "ap_id": 14294964869,
-      "name": "Where Land Meets Sky: Town on the Cliff (step 1)",
+      "name": "Where Land Meets Sky: Defeat the enemies around Senia",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10978,7 +10978,7 @@
     },
     {
       "ap_id": 14294964868,
-      "name": "Where Land Meets Sky: Town on the Cliff (step 2)",
+      "name": "Where Land Meets Sky: Defeat the Captain of the Hellhounds",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -10999,7 +10999,7 @@
     },
     {
       "ap_id": 10001001152,
-      "name": "Where Land Meets Sky: Town on the Cliff (step 3)",
+      "name": "Where Land Meets Sky: Senia Liberation Loading",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11041,7 +11041,7 @@
     },
     {
       "ap_id": 14294964866,
-      "name": "Missing Relic: Reliquary of Saint Senia (step 1)",
+      "name": "Missing Relic: Retrieve the Reliquary of Saint Senia",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11062,7 +11062,7 @@
     },
     {
       "ap_id": 14294964865,
-      "name": "Missing Relic: Reliquary of Saint Senia (step 2)",
+      "name": "Missing Relic: Return the Reliquary of Saint Senia",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11104,7 +11104,7 @@
     },
     {
       "ap_id": 14294965545,
-      "name": "Drifton: A Dwarf's Concern (step 1)",
+      "name": "Drifton: Talk to the dwarf",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11125,7 +11125,7 @@
     },
     {
       "ap_id": 14294965544,
-      "name": "Drifton: A Dwarf's Concern (step 2)",
+      "name": "Drifton: Find the wagon carrying a cloudcart",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11146,7 +11146,7 @@
     },
     {
       "ap_id": 14294965543,
-      "name": "Drifton: A Dwarf's Concern (step 3)",
+      "name": "Drifton: Get on the wagon carrying a cloudcart",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11167,7 +11167,7 @@
     },
     {
       "ap_id": 10001000869,
-      "name": "Drifton: A Dwarf's Concern (step 4)",
+      "name": "Drifton: Return the wagon carrying a cloudcart",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11188,7 +11188,7 @@
     },
     {
       "ap_id": 14294965542,
-      "name": "Wagon in the Skies: Wagon in the Skies (step 1)",
+      "name": "Wagon in the Skies: Find the cloudcart craftsman",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11209,7 +11209,7 @@
     },
     {
       "ap_id": 14294965541,
-      "name": "Wagon in the Skies: Wagon in the Skies (step 2)",
+      "name": "Wagon in the Skies: Take in the vastness of the world on the cloudcart",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11230,7 +11230,7 @@
     },
     {
       "ap_id": 14294964601,
-      "name": "The Witch of Wisdom: The Witch of Wisdom (step 1)",
+      "name": "The Witch of Wisdom: Examine the house",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11251,7 +11251,7 @@
     },
     {
       "ap_id": 14294964600,
-      "name": "The Witch of Wisdom: The Witch of Wisdom (step 2)",
+      "name": "The Witch of Wisdom: Meet Elowen the Witch",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11272,7 +11272,7 @@
     },
     {
       "ap_id": 14294964599,
-      "name": "The Witch of Wisdom: The Witch of Wisdom (step 3)",
+      "name": "The Witch of Wisdom: Cleanse the sanctum",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11293,7 +11293,7 @@
     },
     {
       "ap_id": 14294964598,
-      "name": "The Witch of Wisdom: The Witch of Wisdom (step 4)",
+      "name": "The Witch of Wisdom: Talk to Elowen the Witch",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11314,7 +11314,7 @@
     },
     {
       "ap_id": 14294964597,
-      "name": "The Witch of Wisdom: Sanctum of Absolution (step 1)",
+      "name": "The Witch of Wisdom: Liberate the Sanctum of Absolution",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11335,7 +11335,7 @@
     },
     {
       "ap_id": 14294964596,
-      "name": "The Witch of Wisdom: Sanctum of Absolution (step 2)",
+      "name": "The Witch of Wisdom: Cleanse the Sanctum of Absolution",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11356,7 +11356,7 @@
     },
     {
       "ap_id": 10001001973,
-      "name": "The Witch of Wisdom: Sanctum of Absolution (step 3)",
+      "name": "The Witch of Wisdom: Talk to the witch at the Sanctum of Absolution",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11377,7 +11377,7 @@
     },
     {
       "ap_id": 14294964595,
-      "name": "The Witch of Wisdom: Sanctum of Temperance (step 1)",
+      "name": "The Witch of Wisdom: Liberate the Sanctum of Temperance",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11398,7 +11398,7 @@
     },
     {
       "ap_id": 14294964594,
-      "name": "The Witch of Wisdom: Sanctum of Temperance (step 2)",
+      "name": "The Witch of Wisdom: Cleanse the Sanctum of Temperance",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11419,7 +11419,7 @@
     },
     {
       "ap_id": 10001001974,
-      "name": "The Witch of Wisdom: Sanctum of Temperance (step 3)",
+      "name": "The Witch of Wisdom: Talk to the witch at the Sanctum of Temperance",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11440,7 +11440,7 @@
     },
     {
       "ap_id": 14294964593,
-      "name": "The Witch of Wisdom: Sanctum of Penitence (step 1)",
+      "name": "The Witch of Wisdom: Liberate the Sanctum of Penitence",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11461,7 +11461,7 @@
     },
     {
       "ap_id": 14294964592,
-      "name": "The Witch of Wisdom: Sanctum of Penitence (step 2)",
+      "name": "The Witch of Wisdom: Cleanse the Sanctum of Penitence",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11482,7 +11482,7 @@
     },
     {
       "ap_id": 10001001975,
-      "name": "The Witch of Wisdom: Sanctum of Penitence (step 3)",
+      "name": "The Witch of Wisdom: Talk to the witch at the Sanctum of Penitence",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11503,7 +11503,7 @@
     },
     {
       "ap_id": 14294964591,
-      "name": "The Witch of Wisdom: Sanctum of Benediction (step 1)",
+      "name": "The Witch of Wisdom: Liberate the Sanctum of Benediction",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11524,7 +11524,7 @@
     },
     {
       "ap_id": 14294964590,
-      "name": "The Witch of Wisdom: Sanctum of Benediction (step 2)",
+      "name": "The Witch of Wisdom: Cleanse the Sanctum of Benediction",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11545,7 +11545,7 @@
     },
     {
       "ap_id": 10001001976,
-      "name": "The Witch of Wisdom: Sanctum of Benediction (step 3)",
+      "name": "The Witch of Wisdom: Talk to the witch at the Sanctum of Benediction",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -11566,7 +11566,7 @@
     },
     {
       "ap_id": 14294964630,
-      "name": "Soul Shepherd: Deep-Rooted Sorrow (step 1)",
+      "name": "Soul Shepherd: Talk to the villager",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11587,7 +11587,7 @@
     },
     {
       "ap_id": 10001002068,
-      "name": "Soul Shepherd: Deep-Rooted Sorrow (step 2)",
+      "name": "Soul Shepherd: Find the kidnapped child",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11608,7 +11608,7 @@
     },
     {
       "ap_id": 10001002069,
-      "name": "Soul Shepherd: Deep-Rooted Sorrow (step 3)",
+      "name": "Soul Shepherd: Go to the child's parents",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11629,7 +11629,7 @@
     },
     {
       "ap_id": 14294964629,
-      "name": "Soul Shepherd: White Horn of Snowhaven Hearth (step 1)",
+      "name": "Soul Shepherd: Defeat White Horn",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11650,7 +11650,7 @@
     },
     {
       "ap_id": 14294964628,
-      "name": "Soul Shepherd: White Horn of Snowhaven Hearth (step 2)",
+      "name": "Soul Shepherd: Obtain the artifact",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11671,7 +11671,7 @@
     },
     {
       "ap_id": 14294964589,
-      "name": "The Witch of Kindness: The Witch of Kindness (step 1)",
+      "name": "The Witch of Kindness: Lend a hand to the person shivering in the cold",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11692,7 +11692,7 @@
     },
     {
       "ap_id": 14294964588,
-      "name": "The Witch of Kindness: The Witch of Kindness (step 2)",
+      "name": "The Witch of Kindness: Meet Bari the Witch",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11713,7 +11713,7 @@
     },
     {
       "ap_id": 14294964587,
-      "name": "The Witch of Kindness: The Witch of Kindness (step 3)",
+      "name": "The Witch of Kindness: Cleanse the sanctum",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11734,7 +11734,7 @@
     },
     {
       "ap_id": 14294964586,
-      "name": "The Witch of Kindness: The Witch of Kindness (step 4)",
+      "name": "The Witch of Kindness: Talk to Bari the Witch",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11755,7 +11755,7 @@
     },
     {
       "ap_id": 14294964585,
-      "name": "The Witch of Kindness: Sanctum of Exaltation (step 1)",
+      "name": "The Witch of Kindness: Liberate the Sanctum of Exaltation",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11776,7 +11776,7 @@
     },
     {
       "ap_id": 14294964584,
-      "name": "The Witch of Kindness: Sanctum of Exaltation (step 2)",
+      "name": "The Witch of Kindness: Cleanse the Sanctum of Exaltation",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11797,7 +11797,7 @@
     },
     {
       "ap_id": 10001001977,
-      "name": "The Witch of Kindness: Sanctum of Exaltation (step 3)",
+      "name": "The Witch of Kindness: Talk to the witch at the Sanctum of Exaltation",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11818,7 +11818,7 @@
     },
     {
       "ap_id": 14294964583,
-      "name": "The Witch of Kindness: Sanctum of Solace (step 1)",
+      "name": "The Witch of Kindness: Liberate the Sanctum of Solace",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11839,7 +11839,7 @@
     },
     {
       "ap_id": 14294964582,
-      "name": "The Witch of Kindness: Sanctum of Solace (step 2)",
+      "name": "The Witch of Kindness: Cleanse the Sanctum of Solace",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11860,7 +11860,7 @@
     },
     {
       "ap_id": 10001001978,
-      "name": "The Witch of Kindness: Sanctum of Solace (step 3)",
+      "name": "The Witch of Kindness: Talk to the witch at the Sanctum of Solace",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11881,7 +11881,7 @@
     },
     {
       "ap_id": 14294964581,
-      "name": "The Witch of Kindness: Sanctum of Deliverance (step 1)",
+      "name": "The Witch of Kindness: Liberate the Sanctum of Deliverance",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11902,7 +11902,7 @@
     },
     {
       "ap_id": 14294964580,
-      "name": "The Witch of Kindness: Sanctum of Deliverance (step 2)",
+      "name": "The Witch of Kindness: Cleanse the Sanctum of Deliverance",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11923,7 +11923,7 @@
     },
     {
       "ap_id": 10001001979,
-      "name": "The Witch of Kindness: Sanctum of Deliverance (step 3)",
+      "name": "The Witch of Kindness: Talk to the witch at the Sanctum of Deliverance",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11944,7 +11944,7 @@
     },
     {
       "ap_id": 14294964579,
-      "name": "The Witch of Kindness: Sanctum of Atonement (step 1)",
+      "name": "The Witch of Kindness: Liberate the Sanctum of Atonement",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11965,7 +11965,7 @@
     },
     {
       "ap_id": 14294964578,
-      "name": "The Witch of Kindness: Sanctum of Atonement (step 2)",
+      "name": "The Witch of Kindness: Cleanse the Sanctum of Atonement",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -11986,7 +11986,7 @@
     },
     {
       "ap_id": 10001001980,
-      "name": "The Witch of Kindness: Sanctum of Atonement (step 3)",
+      "name": "The Witch of Kindness: Talk to the witch at the Sanctum of Atonement",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12049,7 +12049,7 @@
     },
     {
       "ap_id": 14294965980,
-      "name": "Lake Stoneback Crab: The Queen's Lake (step 1)",
+      "name": "Lake Stoneback Crab: See what's at the center of the lake",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -12070,7 +12070,7 @@
     },
     {
       "ap_id": 14294965979,
-      "name": "Lake Stoneback Crab: The Queen's Lake (step 2)",
+      "name": "Lake Stoneback Crab: Stoneback Crab Wetlands Liberation Loading",
       "region": "Regional quests: Hernand",
       "category": "regional",
       "detection": {
@@ -12112,7 +12112,7 @@
     },
     {
       "ap_id": 14294964441,
-      "name": "Homeward: The Return Home (step 1)",
+      "name": "Homeward: Talk to Serkis",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12133,7 +12133,7 @@
     },
     {
       "ap_id": 14294964440,
-      "name": "Homeward: The Return Home (step 2)",
+      "name": "Homeward: Look around Howling Hill Camp",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12154,7 +12154,7 @@
     },
     {
       "ap_id": 10001001800,
-      "name": "Homeward: The Return Home (step 3)",
+      "name": "Homeward: Leave the Howling Hill Camp",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12175,7 +12175,7 @@
     },
     {
       "ap_id": 14294964447,
-      "name": "Hope from Ashes: Reconstructing Pailune (step 1)",
+      "name": "Hope from Ashes: Prepare to Rebuild Pailune",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12196,7 +12196,7 @@
     },
     {
       "ap_id": 14294964446,
-      "name": "Hope from Ashes: Reconstructing Pailune (step 2)",
+      "name": "Hope from Ashes: Construct Pailune Council",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12217,7 +12217,7 @@
     },
     {
       "ap_id": 14294964445,
-      "name": "Hope from Ashes: Reconstructing Pailune (step 3)",
+      "name": "Hope from Ashes: Construct Institute of Pailune",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12238,7 +12238,7 @@
     },
     {
       "ap_id": 14294964444,
-      "name": "Hope from Ashes: Reconstructing Pailune (step 4)",
+      "name": "Hope from Ashes: Construct Pailune Infirmary",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12259,7 +12259,7 @@
     },
     {
       "ap_id": 14294964443,
-      "name": "Hope from Ashes: Reconstructing Pailune (step 5)",
+      "name": "Hope from Ashes: Construct Pailune Barracks",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12280,7 +12280,7 @@
     },
     {
       "ap_id": 14294964442,
-      "name": "Hope from Ashes: Reconstructing Pailune (step 6)",
+      "name": "Hope from Ashes: Construct Pailune Trading Post",
       "region": "Regional quests: Pailune and Beighen",
       "category": "regional",
       "detection": {
@@ -12301,7 +12301,7 @@
     },
     {
       "ap_id": 14294964924,
-      "name": "For Whom the Bell Tolls: For Whom the Bell Tolls (step 1)",
+      "name": "For Whom the Bell Tolls: Light the beacon at Howling Hill",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -12322,7 +12322,7 @@
     },
     {
       "ap_id": 14294964923,
-      "name": "For Whom the Bell Tolls: For Whom the Bell Tolls (step 2)",
+      "name": "For Whom the Bell Tolls: Light the beacon at Steel Mountains",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {
@@ -12343,7 +12343,7 @@
     },
     {
       "ap_id": 14294964922,
-      "name": "For Whom the Bell Tolls: For Whom the Bell Tolls (step 3)",
+      "name": "For Whom the Bell Tolls: Light the beacon at the Argent Peaks",
       "region": "Regional quests: Calphade",
       "category": "regional",
       "detection": {

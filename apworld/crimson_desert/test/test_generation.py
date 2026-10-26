@@ -99,10 +99,10 @@ class TestWholeGameDraft(CrimsonDesertTestBase):
         self.assertFalse(self.can_reach_location("Woman in White: Return to Hernand"))
         self.collect_by_name(["Flight"])
         self.assertTrue(self.can_reach_location("Woman in White: Return to Hernand"))
-        self.assertTrue(self.can_reach_location("Reunion: step 5"))
-        self.assertFalse(self.can_reach_location("For Honor: step 1"))
+        self.assertTrue(self.can_reach_location("Reunion: Approach the child"))
+        self.assertFalse(self.can_reach_location("For Honor: Go to Hernand Square"))
         self.collect_by_name(["Double Jump"])
-        self.assertTrue(self.can_reach_location("For Honor: step 1"))
+        self.assertTrue(self.can_reach_location("For Honor: Go to Hernand Square"))
 
 
 class TestChapterTwoDraftIsSmaller(CrimsonDesertTestBase):
@@ -136,3 +136,28 @@ class TestOptionalCategoriesAreOffByDefault(CrimsonDesertTestBase):
         names = {loc.name for loc in self.multiworld.get_locations(self.player)}
         self.assertFalse(any(n.startswith("Abyss Ruin:") for n in names))
         self.assertEqual(len([n for n in names if n]), 93)          # 92 checks and the goal event
+
+
+def _item(name: str, player: int, progression: bool):
+    from BaseClasses import Item, ItemClassification
+    return Item(name, ItemClassification.progression if progression else ItemClassification.filler, None, player)
+
+
+class TestDraftChecksKeepOthersSafe(CrimsonDesertTestBase):
+    options = {"goal": "chapter_2", "include_draft_slices": True}
+
+    def test_draft_checks_refuse_other_players_progression_only(self) -> None:
+        draft = self.world.get_location("For Honor: Go to Hernand Square")
+        confirmed = self.world.get_location(GOAL_CHECK)
+        self.assertFalse(draft.item_rule(_item("Someone's Hookshot", self.player + 1, True)))
+        self.assertTrue(draft.item_rule(_item("Someone's Rupees", self.player + 1, False)))
+        self.assertTrue(draft.item_rule(_item("Double Jump", self.player, True)))
+        self.assertTrue(confirmed.item_rule(_item("Someone's Hookshot", self.player + 1, True)))
+
+
+class TestDraftChecksMayHoldAnythingWhenAsked(CrimsonDesertTestBase):
+    options = {"goal": "chapter_2", "include_draft_slices": True, "draft_checks_keep_others_safe": False}
+
+    def test_draft_checks_take_other_players_progression(self) -> None:
+        draft = self.world.get_location("For Honor: Go to Hernand Square")
+        self.assertTrue(draft.item_rule(_item("Someone's Hookshot", self.player + 1, True)))

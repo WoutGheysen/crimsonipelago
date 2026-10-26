@@ -29,7 +29,7 @@ Without `include_draft_slices`, a draft goal fails generation with a clear messa
 Every draft check the client sees completing goes into `crimsonipelago_data/logs/live-YYYYMMDD.jsonl`:
 
 ```json
-{"event": "draft_check", "name": "For Honor: step 1", "ap_id": 14294964256, "region": "Hernand in Chaos", ...}
+{"event": "draft_check", "name": "For Honor: Go to Hernand Square", "ap_id": 14294964256, "region": "Hernand in Chaos", ...}
 {"event": "draft_goal", "goal": "chapter_2", ...}
 ```
 
@@ -73,9 +73,9 @@ earlier than the guess can't hold anything another player waits for.
 
 ## What the drafts don't have yet
 
-- **Readable names:** checks are "Mission: step N". The quest log's lines come from the save editor's
-  `mission_names.json`: `python -m crimsonipelago.tools.draft_slices story.json --chapters 3-13 --names
-  mission_names.json` on a fresh catalogue (and the same for slice 2).
+- **Readable names** for 9 story checks: the save editor's `mission_names.json` has no text for them, so they're
+  still "Mission: step N". Every other draft check carries its quest log line
+  (`python -m crimsonipelago.tools.name_checks mission_names.json`, 26 Oct).
 - **Three missions** the 22 Oct tables don't have (*Return Home*, *Broken Claws*, *Lust for Power*): a fresh
   extract adds them. Chapter 9's goal is *New Perspectives* until then.
 - **Later abilities** (Back Hang, Aerial Maneuver, Focused Force Palm, Call Dragon) stay with the story: no override

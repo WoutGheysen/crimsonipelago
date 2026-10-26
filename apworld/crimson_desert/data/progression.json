@@ -41,7 +41,7 @@
       "region": "Pioneering",
       "slice": 3,
       "requires": {
-        "location": "Greymanes Reunited: step 1"
+        "location": "Greymanes Reunited: Return to the comrades gathered at the camp"
       },
       "detection": {
         "kind": "mission_state",
@@ -57,7 +57,7 @@
       "region": "Forbidden Knowledge",
       "slice": 4,
       "requires": {
-        "location": "Cast Shadow: step 2"
+        "location": "Cast Shadow: Return to Howling Hill"
       },
       "detection": {
         "kind": "mission_state",
@@ -73,7 +73,7 @@
       "region": "Black and White",
       "slice": 5,
       "requires": {
-        "location": "Toward the Nest: step 6"
+        "location": "Toward the Nest: Chapter Transition"
       },
       "detection": {
         "kind": "mission_state",
@@ -89,7 +89,7 @@
       "region": "The Unyielding Shields",
       "slice": 6,
       "requires": {
-        "location": "News of Victory: step 3"
+        "location": "News of Victory: Calphade Ending"
       },
       "detection": {
         "kind": "mission_state",
@@ -105,7 +105,7 @@
       "region": "Twisted Fate",
       "slice": 7,
       "requires": {
-        "location": "Time to Face Justice: step 5"
+        "location": "Time to Face Justice: Chapter Transition"
       },
       "detection": {
         "kind": "mission_state",
@@ -121,7 +121,7 @@
       "region": "Traitor",
       "slice": 8,
       "requires": {
-        "location": "A Fleeting Dream: step 2"
+        "location": "A Fleeting Dream: Chapter Transition"
       },
       "detection": {
         "kind": "mission_state",
@@ -137,7 +137,7 @@
       "region": "Enlightenment",
       "slice": 9,
       "requires": {
-        "location": "New Perspectives: step 5"
+        "location": "New Perspectives: Speak with Master Du"
       },
       "detection": {
         "kind": "mission_state",
@@ -153,7 +153,7 @@
       "region": "Greater Firepower",
       "slice": 10,
       "requires": {
-        "location": "Lingering Shadow: step 2"
+        "location": "Lingering Shadow: Chapter Transition"
       },
       "detection": {
         "kind": "mission_state",
@@ -169,7 +169,7 @@
       "region": "Foreboding Shadow",
       "slice": 11,
       "requires": {
-        "location": "Flying Fortress Orbian: step 2"
+        "location": "Flying Fortress Orbian: Chapter Transition"
       },
       "detection": {
         "kind": "mission_state",
@@ -185,7 +185,7 @@
       "region": "The Void",
       "slice": 12,
       "requires": {
-        "location": "Blinding Darkness: step 2"
+        "location": "Blinding Darkness: Umbra Ending Effect"
       },
       "detection": {
         "kind": "mission_state",
@@ -201,7 +201,7 @@
       "region": "Journey's End",
       "slice": 13,
       "requires": {
-        "location": "New Horizons: step 2"
+        "location": "New Horizons: Look around Varnia"
       },
       "detection": {
         "kind": "mission_state",
