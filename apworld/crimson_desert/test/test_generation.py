@@ -104,11 +104,33 @@ class TestWholeGameDraft(CrimsonDesertTestBase):
         self.collect_by_name(["Double Jump"])
         self.assertTrue(self.can_reach_location("For Honor: Go to Hernand Square"))
 
+    def test_the_later_story_abilities_gate_chapters_9_and_11(self) -> None:
+        names = [item.name for item in self.multiworld.itempool if item.player == self.player]
+        for ability in ("Focused Force Palm", "Back Hang", "Aerial Maneuver", "Call Dragon"):
+            self.assertEqual(names.count(ability), 1)
+        self.collect_by_name(["Flight", "Double Jump"])
+        self.assertTrue(self.can_reach_location("An Unknown Voice: Find the trials"))
+        self.assertFalse(self.can_reach_location("Cloister of Enlightenment: Purify the golden statues"))
+        self.collect_by_name(["Focused Force Palm"])
+        self.assertTrue(self.can_reach_location("Cloister of Enlightenment: Purify the golden statues"))
+        self.assertTrue(self.can_reach_location("Mark of the Scar: Face the guardian deity of Urdavah"))
+        self.collect_by_name(["Back Hang"])
+        self.assertFalse(self.can_reach_location("Shackles of Fate: Remove the spear from the dragon"))
+        self.collect_by_name(["Aerial Maneuver"])
+        self.assertTrue(self.can_reach_location("Shackles of Fate: Remove the spear from the dragon"))
+        self.assertTrue(self.can_reach_location("Whispers in the Wind: Go to the Nest of Valor"))
+        self.assertFalse(self.can_reach_location("Flying Fortress Orbian: Destroy the Flying Fortress Orbian"))
+        self.collect_by_name(["Call Dragon"])
+        self.assertTrue(self.can_reach_location("Flying Fortress Orbian: Destroy the Flying Fortress Orbian"))
+        self.assertEqual(self.world.fill_slot_data()["story_items"], sorted(
+            ["Flight", "Double Jump", "Focused Force Palm", "Back Hang", "Aerial Maneuver", "Call Dragon"]))
+
 
 class TestChapterTwoDraftIsSmaller(CrimsonDesertTestBase):
     options = {"goal": "chapter_2", "include_draft_slices": True}
 
     def test_only_slices_one_and_two(self) -> None:
+        self.assertEqual(self.world.fill_slot_data()["story_items"], ["Double Jump", "Flight"])
         checks = [loc for loc in self.multiworld.get_locations(self.player) if loc.address is not None]
         self.assertEqual(len(checks), 92)
         names = [item.name for item in self.multiworld.itempool if item.player == self.player]

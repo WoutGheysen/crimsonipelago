@@ -61,6 +61,7 @@ class ItemDef:
     evidence: str | None
     game_versions: tuple[str, ...]
     slice: int = 1                  # the first slice whose seeds can hold it
+    story_grant: bool = False       # the story teaches it too, unless a game-data override takes it out
 
     @property
     def deliverable(self) -> bool:
@@ -378,6 +379,7 @@ def build(raw: dict[str, dict[str, Any]]) -> Catalogue:
             evidence=entry.get("evidence"),
             game_versions=tuple(entry.get("game_versions", [])),
             slice=int(entry.get("slice", 1)),
+            story_grant=bool(entry.get("story_grant", False)),
         )
         items.setdefault(item.name, item)  # duplicates are reported by validation
 

@@ -102,6 +102,7 @@ class SyncController:
         self.status = StatusSnapshot(server=config.server, slot_name=config.slot_name,
                                      catalogue_status=catalogue.status)
         self._last_resend = 0.0
+        self._override_checked: int | None = None          # the session whose override was checked
         if not config.client_uuid:
             config.client_uuid = self._load_uuid()
 
@@ -253,6 +254,17 @@ class SyncController:
                                          "checks or items are detected or delivered the updated way")
         return True
 
+    async def _check_override(self) -> None:
+        """Once per seed: is the game-data override that matches this seed's story items installed?"""
+        check = getattr(self.adapter, "override_warnings", None)
+        if check is None or self.session is None or self._override_checked == self.session.id:
+            return
+        self._override_checked = self.session.id
+        from ..game_adapter.crimson_adapter import story_items_of
+        slice_no = int(self.slot_data.get("slice") or 1)
+        for warning in await self._adapter(check, story_items_of(self.slot_data, slice_no), slice_no):
+            self.bus.emit(ev.ERROR, warning)
+
     async def _on_Connected(self, cmd: dict) -> None:
         seed = (self.room_info or {}).get("seed_name")
         self.team, self.slot = int(cmd["team"]), int(cmd["slot"])
@@ -286,6 +298,7 @@ class SyncController:
         self.session = session
         self.goal_key = self.slot_data.get("goal", self.catalogue.default_goal)
         self.adapter.include_drafts = bool(self.slot_data.get("include_draft_slices"))
+        await self._check_override()
         if self.adapter.include_drafts:
             self.bus.emit(ev.CONNECTION, "This seed includes draft chapters: checks there are confirmed as you play "
                                          "(logged in logs/live-*.jsonl)")

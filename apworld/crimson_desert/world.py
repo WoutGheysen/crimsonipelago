@@ -114,5 +114,8 @@ class CrimsonDesertWorld(World):
             "item_pool_mode": self.options.item_pool_mode.current_key,
             "included_check_categories": sorted(self.options.included_check_categories.value),
             "include_draft_slices": self.drafts,
+            # abilities this seed hands out instead of the story: the client checks the matching override
+            "story_items": sorted({n for n in self.planned_pool[0] + self.planned_pool[1]
+                                   if self.catalogue.items[n].story_grant}),
             "death_link": False,
         }

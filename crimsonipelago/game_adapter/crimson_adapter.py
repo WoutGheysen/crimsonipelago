@@ -42,8 +42,35 @@ BlobTransform = Callable[[bytes, list[DeliveryEntry]], bytes]
 
 # Items the story would hand out anyway unless a game-data override stops it (see crimson-mod): the overrides that
 # do, best first. Only one override can be installed, so later ones include what earlier ones do.
-REQUIRED_OVERRIDES = {"Flight": ("story-grants-removed", "flight-grant-removed"),
-                      "Double Jump": ("story-grants-removed",)}
+# what each game-data override takes out of the story (so that only Archipelago hands it out); one at a time
+OVERRIDE_REMOVES: dict[str, frozenset[str]] = {
+    "flight-grant-removed": frozenset({"Flight"}),
+    "story-grants-removed": frozenset({"Flight", "Double Jump"}),
+    "story-abilities-removed": frozenset({"Flight", "Double Jump", "Focused Force Palm", "Back Hang",
+                                          "Aerial Maneuver", "Call Dragon"}),
+}
+# items a story override exists for -> the overrides that take it out of the story
+REQUIRED_OVERRIDES = {name: tuple(p for p, removes in OVERRIDE_REMOVES.items() if name in removes)
+                      for name in sorted(set().union(*OVERRIDE_REMOVES.values()))}
+LEGACY_STORY_ITEMS = ("Flight", "Double Jump")   # seeds from before slot data said (story_items)
+
+
+def story_items_of(slot_data: dict, slice_no: int) -> list[str]:
+    """The story abilities a seed hands out instead of the story (slot data story_items; older seeds: Flight, and
+    Double Jump when the seed has draft slices past the first)."""
+    if "story_items" in slot_data:
+        return list(slot_data["story_items"])
+    return ["Flight"] + (["Double Jump"] if slot_data.get("include_draft_slices") and slice_no >= 2 else [])
+
+
+def best_override(needed: frozenset[str]) -> str | None:
+    """The override that takes exactly these out of the story, else the smallest one that covers them."""
+    if not needed:
+        return None
+    covering = sorted((p for p, removes in OVERRIDE_REMOVES.items() if needed <= removes),
+                      key=lambda p: len(OVERRIDE_REMOVES[p]))
+    exact = [p for p in covering if OVERRIDE_REMOVES[p] == needed]
+    return (exact or covering or [None])[0]
 
 
 class CrimsonDesertSaveAdapter(GameAdapter):
@@ -322,34 +349,47 @@ class CrimsonDesertSaveAdapter(GameAdapter):
 
     def setup_warnings(self) -> list[str]:
         """Problems with the player's setup that make the randomizer misbehave without breaking anything."""
-        from ..game_data import overlay
-        from ..tools.game_data_cli import find_game_dir
-
         if self.backend is None:
             return [f"Save editor folder not usable ({self.backend_error or 'no --editor-dir given'}): checks can't be "
                     "read and items can't be delivered. Restart with --editor-dir pointing at your CrimsonSaveEditor "
                     "folder (the one with save_parser.py)."]
 
-        needed = {name: patches for name, patches in REQUIRED_OVERRIDES.items()
-                  if name in self.catalogue.items and (self.catalogue.items[name].deliverable or
-                                                       (self.include_drafts and self.catalogue.items[name].draft_deliverable))}
-        if not needed:
-            return []
+        return []                       # the game-data override is checked per seed, once connected
+
+
+    def override_warnings(self, story_items, slice_no: int = 99) -> list[str]:
+        """Is the game-data override that matches the seed installed? The story must not hand out what the seed
+        does (missing), and must still hand out what the seed doesn't (extra: you'd never get it)."""
+        from ..game_data import overlay
+        from ..tools.game_data_cli import find_game_dir
+
+        needed = frozenset(n for n in story_items if n in REQUIRED_OVERRIDES)
         try:
             game_dir = find_game_dir(None)
         except SystemExit:
+            if not needed:
+                return []
             return ["The Crimson Desert game folder was not found (set CRIMSON_DESERT_DIR), so the client cannot "
                     "check that the Crimsonipelago game-data override is installed."]
         installed = {ov.patch for ov in overlay.installed(game_dir)}
-        missing = sorted(name for name, patches in needed.items() if not installed & set(patches))
-        if not missing:
+        removed = frozenset().union(*(OVERRIDE_REMOVES.get(p, frozenset()) for p in installed))
+        missing = sorted(needed - removed)
+        # taking an ability out of the story after the seed's last chapter doesn't matter
+        extra = sorted(n for n in removed - needed
+                       if n in self.catalogue.items and self.catalogue.items[n].slice <= slice_no)
+        if not missing and not extra:
             return []
-        # the one override that covers every item that needs one
-        best = next((p for p in REQUIRED_OVERRIDES[missing[0]] if all(p in needed[n] for n in needed)),
-                    REQUIRED_OVERRIDES[missing[0]][0])
-        steps = (f"crimson-mod uninstall, then crimson-mod install {best}" if installed
-                 else f"crimson-mod install {best}")
-        return [f"The story still hands out {', '.join(missing)}: the game-data override {best!r} isn't installed. "
+        best = best_override(needed)
+        if best is None:
+            steps = "crimson-mod uninstall"
+        else:
+            steps = (f"crimson-mod uninstall, then crimson-mod install {best}" if installed
+                     else f"crimson-mod install {best}")
+        if missing:
+            return [f"The story still hands out {', '.join(missing)}: the game-data override {best!r} isn't installed. "
+                    f"With the game closed, run: {steps}"]
+        return [f"The installed game-data override takes {', '.join(extra)} out of the story, but this seed doesn't "
+                f"hand {'them' if len(extra) > 1 else 'it'} out: you'd never get {'them' if len(extra) > 1 else 'it'}. "
                 f"With the game closed, run: {steps}"]
 
     # ------------------------------------------------------------------ transformations

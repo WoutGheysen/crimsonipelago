@@ -403,12 +403,23 @@
     {
       "from": "The Calling",
       "to": "Shattered Ties",
-      "requires": null
+      "requires": {
+        "item": "Focused Force Palm"
+      }
     },
     {
       "from": "Shattered Ties",
       "to": "Thinning Blade",
-      "requires": null
+      "requires": {
+        "all": [
+          {
+            "item": "Back Hang"
+          },
+          {
+            "item": "Aerial Maneuver"
+          }
+        ]
+      }
     },
     {
       "from": "Thinning Blade",
@@ -448,7 +459,9 @@
     {
       "from": "Foreboding Shadow",
       "to": "The Final Battle",
-      "requires": null
+      "requires": {
+        "item": "Call Dragon"
+      }
     },
     {
       "from": "The Final Battle",

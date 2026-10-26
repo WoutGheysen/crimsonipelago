@@ -22,7 +22,8 @@ Without `include_draft_slices`, a draft goal fails generation with a clear messa
   one Abyss Artifact per 8 checks, the three permanent stat upgrades every third chapter, Copper and filler.
 - The client reports draft checks and the draft goal from the save, and delivers draft items (Double Jump, the stat
   upgrades) like the verified ones, live and in the save.
-- Install the `story-grants-removed` override, so the story doesn't hand out Flight and Double Jump itself.
+- Install the override the client names when it connects, so the story doesn't hand out the abilities the seed
+  does (`story-abilities-removed` for whole-game seeds from 26 Oct, `story-grants-removed` for earlier ones).
 
 ## Verifying as you play
 
@@ -78,8 +79,8 @@ earlier than the guess can't hold anything another player waits for.
   (`python -m crimsonipelago.tools.name_checks mission_names.json`, 26 Oct).
 - **Three missions** the 22 Oct tables don't have (*Return Home*, *Broken Claws*, *Lust for Power*): a fresh
   extract adds them. Chapter 9's goal is *New Perspectives* until then.
-- **Later abilities** (Back Hang, Aerial Maneuver, Focused Force Palm, Call Dragon) stay with the story: no override
-  for them yet, so no gates past Double Jump.
+- **Later abilities** (Focused Force Palm, Back Hang, Aerial Maneuver, Call Dragon) are items and gates since
+  26 Oct (`story-abilities.md`); seeds from before keep them with the story.
 - **Discoveries, treasure** (Abyss gates, Sealed Abyss Artifacts): not yet.
 
 ## Updating while a seed runs
