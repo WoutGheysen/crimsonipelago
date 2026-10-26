@@ -27,6 +27,10 @@ Crimson Desert:
   # data and are read from your save like the others; the client logs each one it sees so it can be verified.
   include_draft_slices: false
 
+  # In a multiworld: draft checks never hold another player's progression items (a draft check that doesn't fire
+  # would leave them waiting). Your own items can be anywhere. No effect when you play alone.
+  draft_checks_keep_others_safe: true
+
   # conservative: fewer unlocks shuffled, safe ones given at the start (gentler seed)
   # expanded: every supported unlock goes into the multiworld
   item_pool_mode: expanded

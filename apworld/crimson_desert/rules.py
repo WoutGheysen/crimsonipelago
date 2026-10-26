@@ -60,8 +60,14 @@ def set_all_rules(world: CrimsonDesertWorld) -> None:
             if kind == "location":
                 world.multiworld.register_indirect_condition(world.get_region(cat.locations[name].region), entrance)
 
+    keep_safe = world.drafts and bool(world.options.draft_checks_keep_others_safe.value)
+    player = world.player
     for loc_def in world.enabled_location_defs:
-        world.get_location(loc_def.name).access_rule = make_state_rule(world, loc_def.requires)
+        location = world.get_location(loc_def.name)
+        location.access_rule = make_state_rule(world, loc_def.requires)
+        if keep_safe and not loc_def.verified:
+            # an unconfirmed check may never fire: never make another player wait on it
+            location.item_rule = lambda item: item.player == player or not item.advancement
 
     for event in cat.events_in_scope(world.goal_key):
         world.get_location(event.name).access_rule = make_state_rule(world, event.requires)

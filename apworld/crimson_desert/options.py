@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from Options import Choice, OptionGroup, OptionSet, PerGameCommonOptions, Toggle
+from Options import Choice, DefaultOnToggle, OptionGroup, OptionSet, PerGameCommonOptions, Toggle
 
 from .catalogue import DEFAULT_CATEGORIES, LOCATION_CATEGORIES
 
@@ -51,6 +51,17 @@ class IncludeDraftSlices(Toggle):
     display_name = "Include Draft Slices"
 
 
+class DraftChecksKeepOthersSafe(DefaultOnToggle):
+    """In a multiworld: draft checks never hold another player's progression items.
+
+    A draft check that turns out not to fire would leave that player waiting (until the host sends the item). With
+    this on, draft checks hold your own items of any kind and other players' useful items and filler; their
+    progression goes to checks that have been confirmed in play. No effect when you play alone.
+    """
+
+    display_name = "Draft Checks Keep Others Safe"
+
+
 class ItemPoolMode(Choice):
     """How many progression unlocks are randomized.
 
@@ -83,11 +94,12 @@ class IncludedCheckCategories(OptionSet):
 class CrimsonDesertOptions(PerGameCommonOptions):
     goal: Goal
     include_draft_slices: IncludeDraftSlices
+    draft_checks_keep_others_safe: DraftChecksKeepOthersSafe
     item_pool_mode: ItemPoolMode
     included_check_categories: IncludedCheckCategories
 
 
 option_groups = [
     OptionGroup("Randomization", [ItemPoolMode, IncludedCheckCategories]),
-    OptionGroup("Experimental", [IncludeDraftSlices]),
+    OptionGroup("Experimental", [IncludeDraftSlices, DraftChecksKeepOthersSafe]),
 ]

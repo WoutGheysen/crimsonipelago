@@ -48,6 +48,8 @@ SCENARIOS: dict[str, tuple[tuple[str, ...], list[str]]] = {
                                   "'abyss_ruins']")]),
     "chapter-2-drafts-with-shorthike": (("shorthike",), [cd_player("CD1", goal="chapter_2", include_draft_slices="true"),
                                                          other("Hiker", "A Short Hike")]),
+    "whole-game-drafts-with-timespinner": (("timespinner",), [
+        cd_player("CD1", goal="journeys_end", include_draft_slices="true"), other("Lunais", "Timespinner")]),
     "with-checksfinder": (("checksfinder",), [cd_player("CD1"), other("CF", "ChecksFinder")]),
     "with-shorthike": (("shorthike",), [cd_player("CD1"), other("Hiker", "A Short Hike")]),
     "with-timespinner": (("timespinner",), [cd_player("CD1"), other("Lunais", "Timespinner")]),
