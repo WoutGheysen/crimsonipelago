@@ -58,21 +58,23 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set +e +o pipefail
           repo=ThirteenAG/Ultimate-ASI-Loader
-          pick() {   # the x64 loader zip of a release: version.dll preferred, dinput8.dll otherwise
-            gh release view "$1" -R "$repo" --json assets --jq '.assets[].name' > assets.txt || return 1
-            { echo "assets of $1:"; cat assets.txt; } >&2
-            grep -iE '^version[-_]?x64.*\.zip$' assets.txt | head -1 || true
-            grep -iE '^dinput8[-_]?x64.*\.zip$' assets.txt | head -1 || true
-          }
-          tag="$ASI_LOADER_TAG"
-          asset=$(pick "$tag" | grep -iE '\.zip$' | head -1)
-          if [ -z "$asset" ]; then tag=x64-latest; asset=$(pick "$tag" | grep -iE '\.zip$' | head -1); fi
-          [ -n "$asset" ] || { echo "::error::no x64 loader zip found"; exit 1; }
-          echo "using $asset from $tag"
-          gh release download "$tag" -R "$repo" -p "$asset" -O loader.zip
+          asset=""; used=""
+          for tag in "$ASI_LOADER_TAG" x64-latest; do
+            names=$(gh release view "$tag" -R "$repo" --json assets --jq '.assets[].name' 2>gh-error.txt)
+            if [ -z "$names" ]; then echo "::warning::$tag: no assets listed ($(tr '\n' ' ' < gh-error.txt))"; continue; fi
+            echo "::warning::$tag assets: $(echo $names | tr '\n' ' ')"
+            asset=$(printf '%s\n' $names | grep -iE '^version[-_]?x64.*[.]zip$' | head -1)
+            [ -n "$asset" ] || asset=$(printf '%s\n' $names | grep -iE '^dinput8[-_]?x64.*[.]zip$' | head -1)
+            if [ -n "$asset" ]; then used="$tag"; break; fi
+          done
+          if [ -z "$asset" ]; then echo "::error::no x64 ASI loader zip found"; exit 1; fi
+          gh release download "$used" -R "$repo" -p "$asset" -O loader.zip || { echo "::error::download of $used/$asset failed"; exit 1; }
           gh api "repos/$repo/license" --jq .content | base64 -d > loader-license.txt
-          echo "ASI_LOADER_USED=$tag/$asset" >> "$GITHUB_ENV"
+          [ -s loader-license.txt ] || { echo "::error::couldn't fetch the loader's license"; exit 1; }
+          echo "::notice::bundling Ultimate ASI Loader $used/$asset"
+          echo "ASI_LOADER_USED=$used/$asset" >> "$GITHUB_ENV"
 
       - name: Gather bundled files
         shell: bash
