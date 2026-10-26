@@ -44,8 +44,10 @@ and point the client at its `CrimsonSaveEditor` folder (`--editor-dir`, or the s
 2. Put every player's YAML in Archipelago's `Players` folder and run **Generate**.
 3. Host the result yourself (`MultiServer`) or upload it to archipelago.gg.
 
-Crimson Desert players must use the client release that matches the `.apworld` you generated
-with. A mismatch is detected and the client refuses to sync.
+The full guide for hosts is [hosting.md](hosting.md).
+
+Crimson Desert players need a client at least as new as the `.apworld` you generated with. A newer client keeps
+working with the seed. A client that doesn't know the seed's catalogue refuses to sync and says why.
 
 ## Command line
 
