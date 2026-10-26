@@ -55,12 +55,24 @@ jobs:
 
       - name: Fetch Ultimate ASI Loader (x64, MIT)
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          base=https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/download
-          curl -fsSL -o loader.zip "$base/$ASI_LOADER_TAG/version-x64.zip" \
-            || curl -fsSL -o loader.zip "$base/$ASI_LOADER_TAG/dinput8-x64.zip"
-          curl -fsSL -o loader-license.txt \
-            "https://raw.githubusercontent.com/ThirteenAG/Ultimate-ASI-Loader/$ASI_LOADER_TAG/license"
+          repo=ThirteenAG/Ultimate-ASI-Loader
+          pick() {   # the x64 loader zip of a release: version.dll preferred, dinput8.dll otherwise
+            gh release view "$1" -R "$repo" --json assets --jq '.assets[].name' > assets.txt || return 1
+            { echo "assets of $1:"; cat assets.txt; } >&2
+            grep -iE '^version[-_]?x64.*\.zip$' assets.txt | head -1 || true
+            grep -iE '^dinput8[-_]?x64.*\.zip$' assets.txt | head -1 || true
+          }
+          tag="$ASI_LOADER_TAG"
+          asset=$(pick "$tag" | grep -iE '\.zip$' | head -1)
+          if [ -z "$asset" ]; then tag=x64-latest; asset=$(pick "$tag" | grep -iE '\.zip$' | head -1); fi
+          [ -n "$asset" ] || { echo "::error::no x64 loader zip found"; exit 1; }
+          echo "using $asset from $tag"
+          gh release download "$tag" -R "$repo" -p "$asset" -O loader.zip
+          gh api "repos/$repo/license" --jq .content | base64 -d > loader-license.txt
+          echo "ASI_LOADER_USED=$tag/$asset" >> "$GITHUB_ENV"
 
       - name: Gather bundled files
         shell: bash
@@ -68,7 +80,7 @@ jobs:
           python packaging/fetch_bundled.py \
             --editor "$RUNNER_TEMP/nattkh/CrimsonSaveEditor" --editor-license "$RUNNER_TEMP/nattkh/LICENSE.txt" \
             --editor-commit "$NATTKH_REF" --plugin build/plugin/Release/crimsonipelago.asi \
-            --loader-zip loader.zip --loader-license loader-license.txt --loader-version "$ASI_LOADER_TAG"
+            --loader-zip loader.zip --loader-license loader-license.txt --loader-version "$ASI_LOADER_USED"
 
       - name: Build CrimsonipelagoClient.exe
         run: pyinstaller --noconfirm --clean packaging/crimsonipelago.spec
