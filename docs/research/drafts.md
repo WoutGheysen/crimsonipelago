@@ -92,8 +92,11 @@ is open. Like the regional quests and ruins, they're off by default and only eve
 - **Readable names** for 9 story checks: the save editor's `mission_names.json` has no text for them, so they're
   still "Mission: step N". Every other draft check carries its quest log line
   (`python -m crimsonipelago.tools.name_checks mission_names.json`, 26 Oct).
-- **Three missions** the 22 Oct tables don't have (*Return Home*, *Broken Claws*, *Lust for Power*): a fresh
-  extract adds them. Chapter 9's goal is *New Perspectives* until then.
+- **Three boss fights** the quest database lists as missions (*Return Home*, *Broken Claws*, *Lust for Power*)
+  aren't missions in the game's tables, not even in a fresh extract (26 Oct): they're **stages**
+  (`CompleteStage(Ludvig_Boss_OongkaIsBack)` in `conditioninfo`). They're in the catalogue as filler-only draft
+  checks ("Return Home: Defeat the boss"), detected like missions. If the save doesn't record stages that way, they
+  never fire and nobody waits on them; the logs tell. Chapter 9's goal stays *New Perspectives*.
 - **Later abilities** (Focused Force Palm, Back Hang, Aerial Maneuver, Call Dragon) are items and gates since
   26 Oct (`story-abilities.md`); seeds from before keep them with the story.
 - **Discoveries, treasure** (Abyss gates, Sealed Abyss Artifacts): not yet.

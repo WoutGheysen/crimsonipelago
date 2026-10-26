@@ -29564,6 +29564,66 @@
       "no_progression": true,
       "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
       "caveats": null
+    },
+    {
+      "ap_id": 10001000194,
+      "name": "Return Home: Defeat the boss",
+      "region": "The Unyielding Shields",
+      "category": "boss",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000194,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (boss stage, not a mission in missioninfo: CompleteStage() in conditioninfo; whether the save's mission states record it is what the playthrough shows, so it only holds filler)",
+      "caveats": "A boss stage rather than a mission: may never fire."
+    },
+    {
+      "ap_id": 10001000444,
+      "name": "Broken Claws: Defeat the boss",
+      "region": "Decisive Battle",
+      "category": "boss",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000444,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (boss stage, not a mission in missioninfo: CompleteStage() in conditioninfo; whether the save's mission states record it is what the playthrough shows, so it only holds filler)",
+      "caveats": "A boss stage rather than a mission: may never fire."
+    },
+    {
+      "ap_id": 10001001196,
+      "name": "Lust for Power: Defeat the boss",
+      "region": "Enlightenment",
+      "category": "boss",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001196,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (boss stage, not a mission in missioninfo: CompleteStage() in conditioninfo; whether the save's mission states record it is what the playthrough shows, so it only holds filler)",
+      "caveats": "A boss stage rather than a mission: may never fire."
     }
   ]
 }
