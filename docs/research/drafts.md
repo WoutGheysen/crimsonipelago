@@ -72,6 +72,21 @@ Pailune and Beighen 7, Demeniss 8, the Crimson Desert and the Wayward Woods 9, D
 checks **only ever hold filler** (`no_progression`, Archipelago's "excluded" locations): a check that opens later or
 earlier than the guess can't hold anything another player waits for.
 
+## Optional categories: the game's challenges
+
+Four more categories, from the game's challenge missions (`tools/draft_challenges.py`). Each check is one
+challenge, detected by the challenge's own completion, and named from the save editor's mission names.
+
+| Category | Checks | In seeds |
+|---|---|---|
+| `abyss_challenges` | 38 Abyss puzzles (*Root's End*, *Skyloop Bridge*…) | from chapter 2; needs Flight |
+| `standstone` | 60 Standstone adventures and 37 ruins puzzles | whole-game seeds |
+| `sealed_artifacts` | 141 trials that open a Sealed Abyss Artifact (*Sword of Trials I*…) | whole-game seeds |
+| `spires` | 8 spires into the Abyss | whole-game seeds |
+
+Where each one sits on the map isn't in the data, so the last three only join whole-game seeds, where the whole map
+is open. Like the regional quests and ruins, they're off by default and only ever hold filler.
+
 ## What the drafts don't have yet
 
 - **Readable names** for 9 story checks: the save editor's `mission_names.json` has no text for them, so they're

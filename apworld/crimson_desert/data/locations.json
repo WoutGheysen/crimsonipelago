@@ -23884,6 +23884,5686 @@
       "no_progression": true,
       "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because when the region opens is a guess)",
       "caveats": null
+    },
+    {
+      "ap_id": 10001000082,
+      "name": "Abyss: Dimensional Bonds",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000082,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000696,
+      "name": "Abyss: Vault of Vengeance",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000696,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000786,
+      "name": "Abyss: Crow's Nest",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000786,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000929,
+      "name": "Abyss: Root's End",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000929,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000084,
+      "name": "Abyss: Skyloop Bridge",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000084,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000930,
+      "name": "Abyss: Ether Rest",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000930,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000169,
+      "name": "Abyss: Ether Fragment",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000169,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000931,
+      "name": "Abyss: Sanctorum of Insight",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000931,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000932,
+      "name": "Abyss: Forgotten Altar",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000932,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000933,
+      "name": "Abyss: Sanctorum of Darkness",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000933,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000934,
+      "name": "Abyss: Twisted Thicketway",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000934,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000935,
+      "name": "Abyss: Nest of Valor",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000935,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000936,
+      "name": "Abyss: Ascetic's Rest",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000936,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000937,
+      "name": "Abyss: Tomb of Perdition",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000937,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000938,
+      "name": "Abyss: Ice Cradle",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000938,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000939,
+      "name": "Abyss: Origin of Thoughts",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000939,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000940,
+      "name": "Abyss: Roots of Truth",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000940,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000941,
+      "name": "Abyss: Altar of Solitude",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000941,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000942,
+      "name": "Abyss: Path of Trials",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000942,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000943,
+      "name": "Abyss: Disconnected Truth",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000943,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000944,
+      "name": "Abyss: Sanctum of Transcendence",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000944,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000945,
+      "name": "Abyss: Path of Serpents",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000945,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000946,
+      "name": "Abyss: Frostbitten Paradise",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000946,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000947,
+      "name": "Abyss: Riddle Square",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000947,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000948,
+      "name": "Abyss: Desert Fragment",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000948,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000949,
+      "name": "Abyss: Crescent Skybridge",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000949,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000950,
+      "name": "Abyss: Precipice of Truth",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000950,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000951,
+      "name": "Abyss: Chaos Forest",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000951,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000952,
+      "name": "Abyss: Throne of Truth",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000952,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000953,
+      "name": "Abyss: Tree of Slumber",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000953,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000954,
+      "name": "Abyss: Courtyard of Precision",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000954,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000955,
+      "name": "Abyss: Monolith Crown",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000955,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000956,
+      "name": "Abyss: Loop of Life",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000956,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000957,
+      "name": "Abyss: Passage of Malice",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000957,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000959,
+      "name": "Abyss: Dimensional Labyrinth",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000959,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000960,
+      "name": "Abyss: Secret Garden",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000960,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000961,
+      "name": "Abyss: Cradle of Truth",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000961,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001500,
+      "name": "Abyss: Crossroads of Uncertainty",
+      "region": "Abyss challenges",
+      "category": "abyss_challenges",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001500,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000094,
+      "name": "Standstone: Precipice of Silence",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000094,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000303,
+      "name": "Standstone: Giant Hand at Windy Hills",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000303,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000120,
+      "name": "Standstone: Breathless Lake",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000120,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000577,
+      "name": "Standstone: Peak's Green Bloom",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000577,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000145,
+      "name": "Standstone: Lava Under Snowy Plains",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000145,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000437,
+      "name": "Standstone: Blazing Sand",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000437,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000448,
+      "name": "Standstone: A Detailed Glance",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000448,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000450,
+      "name": "Standstone: Giant Hand of Everfrost",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000450,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000451,
+      "name": "Standstone: Trial of the Sandscale",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000451,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000465,
+      "name": "Standstone: The Southern End",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000465,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000656,
+      "name": "Standstone: The Desert's Oasis",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000656,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000657,
+      "name": "Standstone: Cliffside Marine Erosion Pillar",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000657,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000658,
+      "name": "Standstone: A Hill Guided by Light",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000658,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000288,
+      "name": "Standstone: Guide in the Darkness",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000288,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000871,
+      "name": "Standstone: Where Sky Meets Earth",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000871,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000872,
+      "name": "Standstone: Rock Worn Down by the Ocean Wind",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000872,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000873,
+      "name": "Standstone: An Unreachable End",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000873,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000874,
+      "name": "Standstone: Rock Atop the Altar",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000874,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000875,
+      "name": "Standstone: Subtle Gap",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000875,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000876,
+      "name": "Standstone: Haven Past the Snowfall",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000876,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000331,
+      "name": "Standstone: Windcrest",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000331,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002843,
+      "name": "Standstone: Hill of the Abandoned",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002843,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003204,
+      "name": "Standstone: Wrecked Dream",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003204,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003205,
+      "name": "Standstone: Hill of Serenity",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003205,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003206,
+      "name": "Standstone: The Stairway Falls",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003206,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003207,
+      "name": "Standstone: Strange Rift",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003207,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003208,
+      "name": "Standstone: Peak of Enlightenment",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003208,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003209,
+      "name": "Standstone: Sanctuary of Reflection",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003209,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003210,
+      "name": "Standstone: Thunderwater Falls",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003210,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003211,
+      "name": "Standstone: Edge of Learning",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003211,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003212,
+      "name": "Standstone: Threefold Fork",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003212,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003213,
+      "name": "Standstone: The Secret-Laden Cave",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003213,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003214,
+      "name": "Standstone: Peak of the Innovative Mind",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003214,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003215,
+      "name": "Standstone: Cape of Hope",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003215,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003216,
+      "name": "Standstone: Hunter's Overlook",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003216,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003217,
+      "name": "Standstone: Forgotten Cliff",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003217,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003218,
+      "name": "Standstone: Saltshade Hill",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003218,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003219,
+      "name": "Standstone: Everflowing Spring",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003219,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003220,
+      "name": "Standstone: Crimson Ridge",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003220,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003221,
+      "name": "Standstone: Hangman's Crest",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003221,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003222,
+      "name": "Standstone: Peak of Abundance",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003222,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003223,
+      "name": "Standstone: Arehaza Peak",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003223,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003224,
+      "name": "Standstone: Hill of Grief",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003224,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003225,
+      "name": "Standstone: Remnants of Ruin",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003225,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003226,
+      "name": "Standstone: The Desert's End",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003226,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003227,
+      "name": "Standstone: Howlsands Dunes",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003227,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003228,
+      "name": "Standstone: Mushroomcap Cliff",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003228,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003229,
+      "name": "Standstone: Ivory Marches Garden",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003229,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003230,
+      "name": "Standstone: Whitesand Cliff",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003230,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003231,
+      "name": "Standstone: Cliff of Ruination",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003231,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003232,
+      "name": "Standstone: The Wolf's Molar",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003232,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003233,
+      "name": "Standstone: The Sage's Rest",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003233,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003234,
+      "name": "Standstone: Where the Stars Linger",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003234,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003235,
+      "name": "Standstone: Hill of Longing",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003235,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003236,
+      "name": "Standstone: Silverwolf Lake",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003236,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003237,
+      "name": "Standstone: Ancestors' Rest",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003237,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003238,
+      "name": "Standstone: Peak of Grief",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003238,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003239,
+      "name": "Standstone: The Dragon's Gaze",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003239,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003240,
+      "name": "Standstone: Sandsea Waymark",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003240,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001003241,
+      "name": "Standstone: Watcher on the Cliff",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1003241,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000467,
+      "name": "Standstone: Steel Mountains Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000467,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000468,
+      "name": "Standstone: Trembling Woods Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000468,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000469,
+      "name": "Standstone: Deepfog Basin Everfrost Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000469,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000470,
+      "name": "Standstone: Duskwood Hill Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000470,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001894,
+      "name": "Standstone: Dragon's Stone Chamber Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001894,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001896,
+      "name": "Standstone: Hidden Chamber of Wisdom Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001896,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001897,
+      "name": "Standstone: Secret Chamber of the Golden Plains Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001897,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001898,
+      "name": "Standstone: The Screaming Vault Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001898,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002103,
+      "name": "Standstone: Memory-Laden Ruins Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002103,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001002104,
+      "name": "Standstone: Azure Moon Labyrinth Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1002104,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000471,
+      "name": "Standstone: Timberdale Cliff Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000471,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000472,
+      "name": "Standstone: Timberdale Gorge Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000472,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000473,
+      "name": "Standstone: Hunter's Cabin Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000473,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000474,
+      "name": "Standstone: Wiggling Hill Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000474,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000475,
+      "name": "Standstone: Blue Thicket Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000475,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000476,
+      "name": "Standstone: Black Wall Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000476,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001425,
+      "name": "Standstone: Meandering Hills Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001425,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001023,
+      "name": "Standstone: Drakesfall Gorge Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001023,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001024,
+      "name": "Standstone: Mount Benus Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001024,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000477,
+      "name": "Standstone: Duskwood Waterside Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000477,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000479,
+      "name": "Standstone: Beardtree Hills Rock Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000479,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000480,
+      "name": "Standstone: Precipice of Echoes Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000480,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000481,
+      "name": "Standstone: Deepfog Basin Dragon Head Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000481,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000482,
+      "name": "Standstone: Five-Finger Mountain Icy Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000482,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000483,
+      "name": "Standstone: Five-Finger Mountain Valley Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000483,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000484,
+      "name": "Standstone: Red River Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000484,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000485,
+      "name": "Standstone: Bamboo Forest Seonangdang Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000485,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000486,
+      "name": "Standstone: Kingshield Mountains Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000486,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000857,
+      "name": "Standstone: Halssius Conflux Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000857,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000487,
+      "name": "Standstone: Sunrise Plains Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000487,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000488,
+      "name": "Standstone: Golden Plains Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000488,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001022,
+      "name": "Standstone: The Grey Forest Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001022,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000489,
+      "name": "Standstone: Arboria Forest Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000489,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000490,
+      "name": "Standstone: Fuming Lands Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000490,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000491,
+      "name": "Standstone: Beardtree Hills Sunflower Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000491,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000492,
+      "name": "Standstone: Silver Wolf Mountain Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000492,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000034,
+      "name": "Standstone: Haunted Hill Ruins",
+      "region": "Standstone ruins",
+      "category": "standstone",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000034,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001043,
+      "name": "Sealed Artifact: Abyssal Star That Cleaves the Heavens",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001043,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001044,
+      "name": "Sealed Artifact: Well-Informed Greymane",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001044,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001045,
+      "name": "Sealed Artifact: Under the Ashen Banner Pike",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001045,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001046,
+      "name": "Sealed Artifact: Return of the Greymane",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001046,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001203,
+      "name": "Sealed Artifact: Spot the trickery in Duo",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001203,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001047,
+      "name": "Sealed Artifact: A Voyage Without Wind or Sails",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001047,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001048,
+      "name": "Sealed Artifact: Greymane's Vow",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001048,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000144,
+      "name": "Sealed Artifact: Duo Win Streak",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000144,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001202,
+      "name": "Sealed Artifact: 4-Player Duo Champion",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001202,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001032,
+      "name": "Sealed Artifact: Night of the Silent Banner Pike",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001032,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001033,
+      "name": "Sealed Artifact: The Herder's Lament",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001033,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001034,
+      "name": "Sealed Artifact: The Vanished Wagon",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001034,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001035,
+      "name": "Sealed Artifact: Back Alley Cleanup",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001035,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001040,
+      "name": "Sealed Artifact: The Dark Pilgrim Who Stole the Ember",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001040,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001036,
+      "name": "Sealed Artifact: The Hand That Brushes Past All",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001036,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001037,
+      "name": "Sealed Artifact: Worth Its Weight",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001037,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001038,
+      "name": "Sealed Artifact: Hands Quicker than Eyes",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001038,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001039,
+      "name": "Sealed Artifact: Trespassing",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001039,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001041,
+      "name": "Sealed Artifact: The Crow's Crown and the Last Chivalry",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001041,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000886,
+      "name": "Sealed Artifact: Feather of the Earth",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000886,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000887,
+      "name": "Sealed Artifact: Wild Showdown",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000887,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000888,
+      "name": "Sealed Artifact: Hunter's Discipline",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000888,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000889,
+      "name": "Sealed Artifact: Mystical Ecosystem",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000889,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000894,
+      "name": "Sealed Artifact: Pine Broom",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000894,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000890,
+      "name": "Sealed Artifact: A Will Harder than Rock",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000890,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000891,
+      "name": "Sealed Artifact: Small Predator",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000891,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000892,
+      "name": "Sealed Artifact: Apex of the food chain",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000892,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000893,
+      "name": "Sealed Artifact: Song of the Moon-Swallowing Sword",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000893,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000895,
+      "name": "Sealed Artifact: The End of Myth",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000895,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000138,
+      "name": "Sealed Artifact: When Animals Die",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000138,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000907,
+      "name": "Sealed Artifact: Between Herbs and Poisons",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000907,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000908,
+      "name": "Sealed Artifact: Crystals in the Veins",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000908,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000909,
+      "name": "Sealed Artifact: Animal Meat",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000909,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000910,
+      "name": "Sealed Artifact: Tiny Citizens of Grasslands",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000910,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000915,
+      "name": "Sealed Artifact: Pets",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000915,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000911,
+      "name": "Sealed Artifact: Acquire Timber",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000911,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000912,
+      "name": "Sealed Artifact: The Underwater Ecosystem",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000912,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000913,
+      "name": "Sealed Artifact: Provisions",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000913,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000914,
+      "name": "Sealed Artifact: Equipment",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000914,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000916,
+      "name": "Sealed Artifact: The Fruit of Patience",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000916,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001399,
+      "name": "Sealed Artifact: Bounty of Meadows",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001399,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001400,
+      "name": "Sealed Artifact: Caves Exploration Log",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001400,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000605,
+      "name": "Sealed Artifact: Steel Grip Against the Chest",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000605,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000606,
+      "name": "Sealed Artifact: Stepping on Clouds",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000606,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000607,
+      "name": "Sealed Artifact: Sliding down the Slope",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000607,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000608,
+      "name": "Sealed Artifact: Rainbow Across the Sky",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000608,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000613,
+      "name": "Sealed Artifact: Through the Current",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000613,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000609,
+      "name": "Sealed Artifact: Keeping Balance on the Wind",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000609,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000610,
+      "name": "Sealed Artifact: Clash of a Protector",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000610,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000611,
+      "name": "Sealed Artifact: Tornado of Steel",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000611,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000612,
+      "name": "Sealed Artifact: Like a Butterfly, Like a Storm",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000612,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000143,
+      "name": "Sealed Artifact: On a Storm of Beasts",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000143,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000602,
+      "name": "Sealed Artifact: Bow Aimed at Fate I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000602,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000603,
+      "name": "Sealed Artifact: Bow Aimed at Fate II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000603,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000604,
+      "name": "Sealed Artifact: Bow Aimed at Fate III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000604,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000677,
+      "name": "Sealed Artifact: Bow Aimed at Fate IV",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000677,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000689,
+      "name": "Sealed Artifact: Bow Aimed at Fate V",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000689,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000690,
+      "name": "Sealed Artifact: Bow Aimed at Fate VI",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000690,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000698,
+      "name": "Sealed Artifact: Barraging Cannon I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000698,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000699,
+      "name": "Sealed Artifact: Barraging Cannon II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000699,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000700,
+      "name": "Sealed Artifact: Barraging Cannon III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000700,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000701,
+      "name": "Sealed Artifact: Barraging Cannon IV",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000701,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000702,
+      "name": "Sealed Artifact: Barraging Cannon V",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000702,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000710,
+      "name": "Sealed Artifact: When Lightning Strikes I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000710,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000711,
+      "name": "Sealed Artifact: When Lightning Strikes II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000711,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000712,
+      "name": "Sealed Artifact: When Lightning Strikes III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000712,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000713,
+      "name": "Sealed Artifact: When Lightning Strikes IV",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000713,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000714,
+      "name": "Sealed Artifact: When Lightning Strikes V",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000714,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000209,
+      "name": "Sealed Artifact: Sword of Trials I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000209,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000214,
+      "name": "Sealed Artifact: Sword of Trials II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000214,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000217,
+      "name": "Sealed Artifact: Sword of Trials III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000217,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000642,
+      "name": "Sealed Artifact: Sword of Trials IV",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000642,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000653,
+      "name": "Sealed Artifact: Sword of Trials V",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000653,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000672,
+      "name": "Sealed Artifact: Sword of Trials VI",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000672,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000736,
+      "name": "Sealed Artifact: Waves of Lightning",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000736,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000737,
+      "name": "Sealed Artifact: Hidden Banner Pike",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000737,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000738,
+      "name": "Sealed Artifact: End of the Shadow",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000738,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000739,
+      "name": "Sealed Artifact: Judgment of the Storm",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000739,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000793,
+      "name": "Sealed Artifact: Meteor Run in the Dark",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000793,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000740,
+      "name": "Sealed Artifact: Seeds of Discord",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000740,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000790,
+      "name": "Sealed Artifact: Touch of Darkness",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000790,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000791,
+      "name": "Sealed Artifact: Disruption",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000791,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000792,
+      "name": "Sealed Artifact: Gunshot",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000792,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000794,
+      "name": "Sealed Artifact: Dirge Beyond the Border",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000794,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000704,
+      "name": "Sealed Artifact: Dancing Blade, Shining Shield I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000704,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000705,
+      "name": "Sealed Artifact: Dancing Blade, Shining Shield II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000705,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000706,
+      "name": "Sealed Artifact: Dancing Blade, Shining Shield III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000706,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000707,
+      "name": "Sealed Artifact: Dancing Blade, Shining Shield IV",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000707,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000708,
+      "name": "Sealed Artifact: Dancing Blade, Shining Shield V",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000708,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000599,
+      "name": "Sealed Artifact: Shield of Unchanging Will I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000599,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000600,
+      "name": "Sealed Artifact: Shield of Unchanging Will II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000600,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000601,
+      "name": "Sealed Artifact: Shield of Unchanging Will III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000601,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000234,
+      "name": "Sealed Artifact: Shield of Unchanging Will IV",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000234,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000238,
+      "name": "Sealed Artifact: Shield of Unchanging Will V",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000238,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000239,
+      "name": "Sealed Artifact: Shield of Unchanging Will VI",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000239,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000725,
+      "name": "Sealed Artifact: Slam Master",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000725,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000726,
+      "name": "Sealed Artifact: Flash",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000726,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000727,
+      "name": "Sealed Artifact: Seven Consecutive Strikes",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000727,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000728,
+      "name": "Sealed Artifact: Sinking Fort",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000728,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000733,
+      "name": "Sealed Artifact: Giant Windmill",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000733,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000729,
+      "name": "Sealed Artifact: Single Spark, Seven Strikes",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000729,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000730,
+      "name": "Sealed Artifact: Into the Barrage",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000730,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000731,
+      "name": "Sealed Artifact: Desperate Rescue",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000731,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000732,
+      "name": "Sealed Artifact: Judgment Cast Upon the Sleeping",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000732,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000734,
+      "name": "Sealed Artifact: Bare Courage",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000734,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000593,
+      "name": "Sealed Artifact: Sharpened Spear I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000593,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000594,
+      "name": "Sealed Artifact: Sharpened Spear II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000594,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000192,
+      "name": "Sealed Artifact: Sharpened Spear III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000192,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000691,
+      "name": "Sealed Artifact: Sharpened Spear IV",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000691,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000692,
+      "name": "Sealed Artifact: Sharpened Spear V",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000692,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000655,
+      "name": "Sealed Artifact: Special Weapon: Flamespitter",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000655,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000715,
+      "name": "Sealed Artifact: Special Weapon: Propeller Spear",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000715,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000716,
+      "name": "Sealed Artifact: Special Weapon: Knuckledrill",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000716,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000717,
+      "name": "Sealed Artifact: Special Weapon: Lightning Spear",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000717,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000722,
+      "name": "Sealed Artifact: Special Weapon: Shotgun Shield",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000722,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000718,
+      "name": "Sealed Artifact: Special Weapon: Bismuth Spear",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000718,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000719,
+      "name": "Sealed Artifact: Special Armor: Lightning Bolt Plate Armor",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000719,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000720,
+      "name": "Sealed Artifact: Special Weapon: Gale Shield",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000720,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000721,
+      "name": "Sealed Artifact: Special Weapon: Marni Laser Helm",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000721,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000723,
+      "name": "Sealed Artifact: Special Weapon: Vessel of Dark Pursuit",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000723,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000765,
+      "name": "Sealed Artifact: Overwhelming Slash I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000765,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000924,
+      "name": "Sealed Artifact: Overwhelming Slash II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000924,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000925,
+      "name": "Sealed Artifact: Overwhelming Slash III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000925,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000926,
+      "name": "Sealed Artifact: Ground-Shaking Impact I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000926,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000927,
+      "name": "Sealed Artifact: Ground-Shaking Impact II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000927,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000928,
+      "name": "Sealed Artifact: Ground-Shaking Impact III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000928,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001026,
+      "name": "Sealed Artifact: Traveler with Oak Barrels",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001026,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001027,
+      "name": "Sealed Artifact: Rainbow Mane",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001027,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001028,
+      "name": "Sealed Artifact: Mysterious Accessory Shop",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001028,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001029,
+      "name": "Sealed Artifact: Contract of the Golden Crown",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001029,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001001030,
+      "name": "Sealed Artifact: Magnate of the Golden Desert",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1001030,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000897,
+      "name": "Sealed Artifact: Harmonious Hooves I",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000897,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000898,
+      "name": "Sealed Artifact: Harmonious Hooves II",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000898,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000899,
+      "name": "Sealed Artifact: Harmonious Hooves III",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000899,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000900,
+      "name": "Sealed Artifact: Harmonious Hooves IV",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000900,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000905,
+      "name": "Sealed Artifact: Harmonious Hooves IX",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000905,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000901,
+      "name": "Sealed Artifact: Harmonious Hooves V",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000901,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000902,
+      "name": "Sealed Artifact: Harmonious Hooves VI",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000902,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000903,
+      "name": "Sealed Artifact: Harmonious Hooves VII",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000903,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000904,
+      "name": "Sealed Artifact: Harmonious Hooves VIII",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000904,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000906,
+      "name": "Sealed Artifact: Harmonious Hooves X",
+      "region": "Sealed Abyss Artifacts",
+      "category": "sealed_artifacts",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000906,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000923,
+      "name": "Spire: Spire of Clockwork",
+      "region": "Abyss spires",
+      "category": "spires",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000923,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000260,
+      "name": "Spire: Spire of Frost",
+      "region": "Abyss spires",
+      "category": "spires",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000260,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000325,
+      "name": "Spire: Jijeong Temple Pagoda",
+      "region": "Abyss spires",
+      "category": "spires",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000325,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000921,
+      "name": "Spire: Spire of Soaring",
+      "region": "Abyss spires",
+      "category": "spires",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000921,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000686,
+      "name": "Spire: Spire of Ringing Truth",
+      "region": "Abyss spires",
+      "category": "spires",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000686,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000431,
+      "name": "Spire: Spire of the Stars",
+      "region": "Abyss spires",
+      "category": "spires",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000431,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000747,
+      "name": "Spire: Spire of the Sun",
+      "region": "Abyss spires",
+      "category": "spires",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000747,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
+    },
+    {
+      "ap_id": 10001000922,
+      "name": "Spire: Spire of Insight",
+      "region": "Abyss spires",
+      "category": "spires",
+      "detection": {
+        "kind": "mission_state",
+        "mission_key": 1000922,
+        "states": [
+          5
+        ]
+      },
+      "requires": null,
+      "missable": false,
+      "repeatable_risk": false,
+      "verified": false,
+      "no_progression": true,
+      "evidence": "docs/research/drafts.md (optional category, draft from the game data; filler only, because where and when each challenge opens isn't in the data)",
+      "caveats": null
     }
   ]
 }

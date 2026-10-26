@@ -123,7 +123,7 @@ def test_shipped_slice_2_is_a_draft_that_first_slice_seeds_never_see(real_catalo
     assert extras and all(loc.no_progression for loc in extras)
     assert "Double Jump" not in {i.name for i in cat.items_in_scope("first_slice")}
     new_regions = {r for r in cat.regions_in_scope("chapter_2")} - set(cat.regions_in_scope("first_slice"))
-    assert {r for r in new_regions if not r.startswith(("Regional quests", "Abyss ruins"))} == {
+    assert {r for r in new_regions if not r.startswith(("Regional quests", "Abyss ruins", "Abyss challenges"))} == {
         "After the Jump", "Unexpected Gift", "Hernand in Chaos", "The End of Greed"}
     # a draft slice doesn't change what a first-slice seed is made of
     raw = copy.deepcopy(cat.raw)

@@ -45,7 +45,7 @@ SCENARIOS: dict[str, tuple[tuple[str, ...], list[str]]] = {
     "solo-whole-game-everything": ((), [cd_player(
         "CD1", goal="journeys_end", include_draft_slices="true",
         included_check_categories="['quest', 'boss', 'discovery', 'treasure', 'ability', 'exploration', 'regional', "
-                                  "'abyss_ruins']")]),
+                                  "'abyss_ruins', 'abyss_challenges', 'standstone', 'sealed_artifacts', 'spires']")]),
     "chapter-2-drafts-with-shorthike": (("shorthike",), [cd_player("CD1", goal="chapter_2", include_draft_slices="true"),
                                                          other("Hiker", "A Short Hike")]),
     "whole-game-drafts-with-timespinner": (("timespinner",), [

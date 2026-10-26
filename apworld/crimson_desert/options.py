@@ -78,9 +78,13 @@ class ItemPoolMode(Choice):
 class IncludedCheckCategories(OptionSet):
     """Which kinds of activities count as checks.
 
-    Valid values: quest, boss, discovery, treasure, ability, exploration, regional, abyss_ruins.
+    Valid values: quest, boss, discovery, treasure, ability, exploration, regional, abyss_ruins, abyss_challenges,
+    standstone, sealed_artifacts, spires.
     regional: the regional quests (the Witches, Legendary Wolf...). abyss_ruins: the Abyss ruins of each region the
-    seed reaches, about 100 per region. Both are drafts (need include_draft_slices) and only ever hold filler.
+    seed reaches, about 100 per region. abyss_challenges: the Abyss puzzles (38, from chapter 2).
+    standstone: the Standstone adventures and ruins puzzles (97), sealed_artifacts: the trials that open a Sealed
+    Abyss Artifact (141), spires: the spires into the Abyss (8); these three only in whole-game seeds.
+    All of these are drafts (need include_draft_slices), off by default, and only ever hold filler.
     Removing categories shortens the seed; generation fails if too few checks remain
     to hold the required progression.
     """

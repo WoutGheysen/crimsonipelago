@@ -28,7 +28,8 @@ CATALOGUE_FILES = ("items", "locations", "regions", "progression", "compatibilit
 CLASSIFICATIONS = {"progression", "useful", "filler", "trap"}
 CAPABILITIES = {"supported", "restricted", "detection_only", "unsupported"}
 DELIVERABLE_CAPABILITIES = {"supported", "restricted"}
-LOCATION_CATEGORIES = {"quest", "boss", "discovery", "treasure", "ability", "exploration", "regional", "abyss_ruins"}
+LOCATION_CATEGORIES = {"quest", "boss", "discovery", "treasure", "ability", "exploration", "regional", "abyss_ruins",
+                       "abyss_challenges", "standstone", "sealed_artifacts", "spires"}
 # on unless a player's options say otherwise (the later, optional categories are off by default)
 DEFAULT_CATEGORIES = frozenset({"quest", "boss", "discovery", "treasure", "ability", "exploration"})
 DETECTION_KINDS = {"placeholder", "quest_state", "mission_state", "knowledge"}
