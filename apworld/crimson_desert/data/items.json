@@ -610,17 +610,20 @@
       "classification": "filler",
       "category": "resource",
       "game_ref": {
-        "kind": "inventory_item",
-        "item_key": 50001,
-        "count": 20,
-        "max_stack": 100
+        "kind": "nothing",
+        "was": {
+          "kind": "inventory_item",
+          "item_key": 50001,
+          "count": 20,
+          "max_stack": 100
+        }
       },
       "quantity": 1,
       "repeatable": true,
       "starting_safe": true,
       "capability": "unsupported",
       "verified": false,
-      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "evidence": "docs/research/balance.md (the game refused arrows live, code 0x78c0a4e9, multiworld of 27 Oct: they stay in seeds made before as a harmless no-op, and are out of the filler pool)",
       "game_versions": [],
       "slice": 2
     },
@@ -630,17 +633,20 @@
       "classification": "filler",
       "category": "resource",
       "game_ref": {
-        "kind": "inventory_item",
-        "item_key": 1001316,
-        "count": 10,
-        "max_stack": 100
+        "kind": "nothing",
+        "was": {
+          "kind": "inventory_item",
+          "item_key": 1001316,
+          "count": 10,
+          "max_stack": 100
+        }
       },
       "quantity": 1,
       "repeatable": true,
       "starting_safe": true,
       "capability": "unsupported",
       "verified": false,
-      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "evidence": "docs/research/balance.md (the game refused arrows live, code 0x78c0a4e9, multiworld of 27 Oct: they stay in seeds made before as a harmless no-op, and are out of the filler pool)",
       "game_versions": [],
       "slice": 2
     },
@@ -650,17 +656,20 @@
       "classification": "filler",
       "category": "resource",
       "game_ref": {
-        "kind": "inventory_item",
-        "item_key": 50003,
-        "count": 10,
-        "max_stack": 100
+        "kind": "nothing",
+        "was": {
+          "kind": "inventory_item",
+          "item_key": 50003,
+          "count": 10,
+          "max_stack": 100
+        }
       },
       "quantity": 1,
       "repeatable": true,
       "starting_safe": true,
       "capability": "unsupported",
       "verified": false,
-      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "evidence": "docs/research/balance.md (the game refused arrows live, code 0x78c0a4e9, multiworld of 27 Oct: they stay in seeds made before as a harmless no-op, and are out of the filler pool)",
       "game_versions": [],
       "slice": 2
     },
@@ -670,17 +679,20 @@
       "classification": "filler",
       "category": "resource",
       "game_ref": {
-        "kind": "inventory_item",
-        "item_key": 1001321,
-        "count": 5,
-        "max_stack": 100
+        "kind": "nothing",
+        "was": {
+          "kind": "inventory_item",
+          "item_key": 1001321,
+          "count": 5,
+          "max_stack": 100
+        }
       },
       "quantity": 1,
       "repeatable": true,
       "starting_safe": true,
       "capability": "unsupported",
       "verified": false,
-      "evidence": "docs/research/balance.md (stackable item: key and stack size from the save editor's item list; draft until a seed delivers it)",
+      "evidence": "docs/research/balance.md (the game refused arrows live, code 0x78c0a4e9, multiworld of 27 Oct: they stay in seeds made before as a harmless no-op, and are out of the filler pool)",
       "game_versions": [],
       "slice": 2
     },
@@ -874,10 +886,6 @@
     "2 Hearty Grilled Meat": 2,
     "2 Meat Stew": 2,
     "2 Harvest Soup": 1,
-    "20 Arrows": 3,
-    "10 Fire Arrows": 1,
-    "10 Poison Arrows": 1,
-    "5 Explosive Arrows": 1,
     "5 Iron Ore": 2,
     "5 Copper Ore": 2,
     "3 Silver Ore": 1,

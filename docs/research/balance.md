@@ -78,3 +78,14 @@ Abilities spread over the whole game.
 - **More gates.** The whole game has two progression items. Story abilities from chapter 9 on (Back Hang, Aerial
   Maneuver, Focused Force Palm, Call Dragon) can become gates once their overrides exist, which gives the second
   half of a seed something to wait for.
+
+## 27 Oct: arrows out
+
+In the first multiworld, the game refused **20 Arrows** live (code `0x78c0a4e9`), where pouches, food and ores went
+in. Arrows may live outside the main bag, or need a bow. Until that's known:
+
+- the four arrow items are out of the filler pool for new seeds;
+- in seeds made before, they're a harmless no-op (`game_ref` kind `nothing`, the old reference kept under `was`), so
+  nothing is written into a save for them;
+- the client no longer asks the game again every few seconds for an item it refused outright: the item waits for the
+  save, once.

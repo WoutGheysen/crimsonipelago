@@ -174,10 +174,14 @@ class DeliveryEngine:
         return kind == "inventory_item" or (kind == "knowledge" and bool(getattr(self.live, "learns_knowledge", False)))
 
     def _given_up_live(self, rec: ReceivedItem) -> bool:
-        """Knowledge the game refused live a few times (each on a later tick) is left for the save."""
+        """Left for the save: knowledge the game refused live a few times (each on a later tick), and an item the game
+        refused outright (it would refuse it again: asking every tick only repeats the same message)."""
         item = self.catalogue.item_by_id(rec.item_id)
-        kind = (item.game_ref or {}).get("kind") if item is not None else None
-        return kind == "knowledge" and rec.attempts >= LIVE_KNOWLEDGE_TRIES
+        ref = (item.game_ref or {}) if item is not None else {}
+        if ref.get("kind") == "knowledge":
+            return rec.attempts >= LIVE_KNOWLEDGE_TRIES
+        refused = getattr(self.live, "refused", None) or {}
+        return ref.get("kind") == "inventory_item" and int(ref.get("item_key", -1)) in refused
 
     def _live_units(self, candidates: list[ReceivedItem]) -> list[tuple[list[ReceivedItem], dict, int]]:
         """What to give, in order: copies of the same item waiting together go in as one delivery (the game takes
