@@ -328,3 +328,20 @@ def test_a_combined_delivery_waits_or_is_refused_as_a_whole(setup, ledger, sim, 
     assert report.pending == 2 and states(ledger, sid) == [DeliveryState.PENDING] * 2
     engine.deliver_pending(sid)
     assert live.calls == [(1, 200), (1, 200)] and states(ledger, sid) == [DeliveryState.IN_GAME] * 2
+
+
+def test_an_item_the_game_refused_outright_is_not_asked_for_every_tick(setup, ledger, sim, catalogue):
+    sid, engine, live, events = setup
+    live.results = [LiveResult("refused", "the game refused it (code 0x78c0a4e9)", 0x78C0A4E9)]
+    sim.update(game_running=True, saved_at=0)
+    receive(ledger, sid, catalogue, "3 Ore")
+    engine.validate(sid)
+    engine.deliver_pending(sid)
+    live.refused = {721506: 0x78C0A4E9}            # what the real channel remembers after that refusal
+    calls = len(live.calls)
+    waiting = len(events)
+    for _ in range(5):
+        engine.deliver_pending(sid)
+    assert len(live.calls) == calls                 # not asked again
+    assert not any("refused" in str(e.message) for e in events[waiting:])
+    assert ledger.items(sid)[0].state is DeliveryState.PENDING   # still goes into the save at quit
