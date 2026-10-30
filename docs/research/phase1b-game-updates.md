@@ -77,3 +77,28 @@ Two changes:
 that code from a global, so it's produced in code not dumped yet. The way to find it: a write watch on the call's
 result field during a refused call. The first write of `0x40128a9b` there names the code that decided. Not needed
 for delivery (the client waits and retries), only to make big batches faster.
+
+## The first real update (30 Oct): 1.0.0.3424, then 1.0.0.3446
+
+Two patches in one evening (build stamps 1793296370, then 1793355216). The signature search ran by itself on the
+first one and found nothing for `probe`, `give` and `item_table`, so live delivery stayed off and the 70 items
+waiting stayed queued, as designed. Nothing was lost or given twice.
+
+What had changed, from `plugin find-moved` (each 8-byte piece of the old pattern votes for where the function went)
+and `plugin peek` (the bytes of one function):
+
+| Target | 1.0.0.2976 | 1.0.0.3446 | What changed |
+|---|---|---|---|
+| probe (transaction: add) | 0x277e080 | 0x29aeac0 | one register: `mov rsi, rcx` where it was `mov r14, rcx` |
+| give (add and commit) | 0x2781780 | 0x29b24c0 | saves rsi too, so everything after the prologue moved 4 bytes; same frame and locals |
+| runner | 0x2774b20 | 0x29a53e0 | nothing: the old signature matched |
+| knowledge_table | 0x6d69a98 | 0x71b29b0 | nothing: the old signature matched |
+| item_table | 0x6d69aa8 | 0x71b29c0 | the lookup (+0x3dcb40) now takes the key in `edx` (`mov edi, edx; mov rbx, [table]; cmp edx, [rbx+8]`) instead of reading it from `[rcx]` |
+
+The two tables are still 16 bytes apart, and the item table's layout is the same (count at +8, data at +0x58).
+The near-match search put `give` 4 bytes late, where the anchors after the inserted instruction pointed; the real
+start is the `mov r11, rsp` after the padding.
+
+The new patterns replace the old ones (Steam doesn't keep old builds), and build 1793355216 is listed in
+`builds`, so the client doesn't need to search. Save writes stay off for the new Steam build until a save written by
+it has been checked; live delivery covers the items in the meantime.
