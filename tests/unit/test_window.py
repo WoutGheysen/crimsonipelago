@@ -52,3 +52,14 @@ def test_without_a_bundled_plugin_the_install_button_stays_hidden(window, tmp_pa
     window.game_edit.setText(str(game))
     window.refresh_plugin()
     assert not window.plugin_btn.isVisible() and "Not installed" in window.plugin_label.text()
+
+
+def test_held_goal_and_checks_show_a_banner(window):
+    window._apply_status(StatusSnapshot(goal_doubt="your save says the goal is done, but only 52 of 412 story "
+                                                   "checks are"))
+    assert window.doubt.isVisible() and window.doubt_btn.text() == "Report goal anyway…"
+    assert "52 of 412" in window.doubt_label.text()
+    window._apply_status(StatusSnapshot(checks_doubt="300 checks turned up at once"))
+    assert window.doubt_btn.text() == "Send them…"
+    window._apply_status(StatusSnapshot())
+    assert not window.doubt.isVisible()
