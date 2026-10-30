@@ -70,19 +70,35 @@
         "0x2b744ed",
         "0x2b74065"
       ]
+    },
+    "1793355216": {
+      "game": "1.0.0.3446 (30 Oct 2026)",
+      "notes": "Found after the update with plugin find-moved and peek (docs/research/phase1b-game-updates.md): probe and give changed register allocation only; the item table lookup now takes the key in edx. The two tables are 16 bytes apart, as in 1.0.0.2976.",
+      "r3": {
+        "reason": "0x0b",
+        "notes": "as in 1790086912; item_table: the lookup (+0x3dcb40) now takes the key in edx",
+        "knowledge_live": true,
+        "probe": "0x29aeac0",
+        "give": "0x29b24c0",
+        "runner": "0x29a53e0",
+        "knowledge_table": "0x71b29b0",
+        "item_table": "0x71b29c0"
+      }
     }
   },
   "signatures": {
-    "_about": "Phase 1b: how to find each r3 target in a game build not listed under builds (runtime/signatures.py). Patterns from tools/make_signatures.py; ?? = a byte a rebuild moves. made_from: where the pattern starts in build 1790086912. via_call: follow the call at call_at, then find `then` in the called function (the item lookup is shared by 120 other tables, r7-signatures of 25 Oct).",
+    "_about": "Phase 1b: how to find each r3 target in a game build not listed under builds (runtime/signatures.py). Patterns from tools/make_signatures.py; ?? = a byte a rebuild moves. made_from: where the pattern starts in build 1790086912. via_call: follow the call at call_at, then find `then` in the called function (the item lookup is shared by 120 other tables, r7-signatures of 25 Oct). Game 1.0.0.3446 (build stamp 1793355216, 30 Oct) moved everything: probe, give and the item table's caller and lookup were made again from that build (plugin find-moved and peek); runner and knowledge_table still matched.",
     "probe": {
       "kind": "function",
-      "pattern": "48 89 5c 24 18 48 89 54 24 10 48 89 4c 24 08 55 56 57 41 54 41 55 41 56 41 57 48 8d ac 24 30 ff ff ff 48 81 ec d0 01 00 00 4d 8b e1 4d 8b e8 4c 8b c2 4c 8b f1 4c 89 29 48 8b bd 58 01 00 00 48 89 79 20 44 0f b6 bd 98 01 00 00",
-      "made_from": "0x277e080"
+      "pattern": "48 89 5c 24 18 48 89 54 24 10 48 89 4c 24 08 55 56 57 41 54 41 55 41 56 41 57 48 8d ac 24 30 ff ff ff 48 81 ec d0 01 00 00 4d 8b e1 4d 8b e8 4c 8b c2 48 8b f1 4c 89 29 48 8b bd 58 01 00 00 48 89 79 20 44 0f b6 bd 98",
+      "made_from": "0x29aeac0",
+      "made_in": "1793355216"
     },
     "give": {
       "kind": "function",
-      "pattern": "4c 8b dc 49 89 5b 08 49 89 7b 10 55 49 8d 6b f1 48 81 ec f0 00 00 00 48 8b da 4c 8b d1 33 ff 48 89 7d a7 48 89 7d af 48 89 7d b7 48 89 7d bf 48 89 7d c7 89 7d cf c7 45 e7 ff ff ff ff 48 89 7d ef 89 7d f7 40 88 7d ff",
-      "made_from": "0x2781780"
+      "pattern": "4c 8b dc 49 89 5b 08 49 89 73 10 49 89 7b 18 55 49 8d 6b f1 48 81 ec f0 00 00 00 48 8b fa 4c 8b d1 33 f6 48 89 75 a7 48 89 75 af 48 89 75 b7 48 89 75 bf 48 89 75 c7 89 75 cf c7 45 e7 ff ff ff ff 48 89 75 ef 89 75 f7",
+      "made_from": "0x29b24c0",
+      "made_in": "1793355216"
     },
     "runner": {
       "kind": "function",
@@ -98,12 +114,13 @@
     },
     "item_table": {
       "kind": "via_call",
-      "pattern": "0f 88 ?? ?? ?? ?? 48 63 fb 48 c1 e7 04 0f 1f 44 00 00 48 8b b6 d8 00 00 00 49 8d 4e 08 e8 ?? ?? ?? ?? 8b 14 3e 3b 10 74 ?? 48 83 ef 10 83 eb 01 48 8b 75 88 79 ?? e9 ?? ?? ?? ?? 48 8b 4c 3e 08",
-      "call_at": 29,
-      "then": "0f b7 39 48 8b 1d ?? ?? ?? ?? 3b 7b 08 0f 83 ?? ?? ?? ?? 48 8d 34 fd 00 00 00 00 48 8b 43 58",
-      "then_disp_at": 6,
-      "then_insn_end": 10,
-      "made_from": "0x27aeeee"
+      "pattern": "0f 88 ?? ?? ?? ?? 48 63 fb 48 c1 e7 04 0f 1f 44 00 00 48 8b b6 d8 00 00 00 41 0f b7 55 08 e8 ?? ?? ?? ?? 8b 14 3e 3b 50 08 74 ?? 48 83 ef 10 83 eb 01 48 8b 75 88 79 ?? e9 ?? ?? ?? ?? 48 8b 4c",
+      "call_at": 30,
+      "then": "8b fa 48 8b 1d ?? ?? ?? ?? 3b 53 08 0f 83",
+      "then_disp_at": 5,
+      "then_insn_end": 9,
+      "made_from": "0x29e34be",
+      "made_in": "1793355216"
     }
   },
   "signature_defaults": {

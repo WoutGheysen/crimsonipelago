@@ -16,6 +16,7 @@ import logging
 import os
 import signal
 import sys
+import time
 from pathlib import Path
 
 from crimson_desert.catalogue import Catalogue, default_catalogue
@@ -133,12 +134,12 @@ def build_parser() -> argparse.ArgumentParser:
     pl.add_argument("action", nargs="?", default="check",
                     choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls", "give-copper",
                              "give-item", "item-table", "give-knowledge", "knowledge-check", "error-sites",
-                             "edge-cases", "find-functions", "find-moved"],
+                             "edge-cases", "find-functions", "find-moved", "peek"],
                     help="check: test the link (default); find-copper: research step R1; "
                          "watch-money, dump-code, watch-calls: research step R2; give-copper: R3; "
                          "give-item, item-table: R4; give-knowledge: R5; edge-cases: phase 1 tests; "
                          "find-functions: check the game-update signatures; find-moved: after a game update, "
-                         "where the functions went")
+                         "where the functions went; peek: save some of the game's code (--rva, --size)")
     pl.add_argument("--key", type=int, default=None, help="give-item: the item's key, as in the save")
     pl.add_argument("--count", type=int, default=1, help="give-item: how many")
     pl.add_argument("--level", type=int, default=1, help="give-knowledge: the level to learn")
@@ -149,6 +150,9 @@ def build_parser() -> argparse.ArgumentParser:
                     help="give-knowledge: how it was learned (default 25, as saves record Flight; the skill menu uses 19)")
     pl.add_argument("--report", default=None,
                     help="dump-code: the watch-money or watch-calls report (default: the newest)")
+    pl.add_argument("--rva", default=None, help="peek: where, as an offset into the game (e.g. 0x3dcb40); several "
+                                                "separated by commas")
+    pl.add_argument("--size", type=int, default=512, help="peek: how many bytes at each")
     pl.add_argument("--port", type=int, default=None)
     pl.add_argument("--pings", type=int, default=5)
     r = sub.add_parser("resolve", help="settle an interrupted delivery")
@@ -243,7 +247,7 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
 NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4), "dump-code": (0, 5), "watch-calls": (0, 6),
                 "give-copper": (0, 8), "give-item": (0, 8), "item-table": (0, 8), "give-knowledge": (0, 8),
                 "knowledge-check": (0, 8), "error-sites": (0, 8), "edge-cases": (0, 8),
-                "find-functions": (0, 3), "find-moved": (0, 3)}
+                "find-functions": (0, 3), "find-moved": (0, 3), "peek": (0, 3)}
 
 
 def _plugin_version(text: str) -> tuple[int, int]:
@@ -294,6 +298,8 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                 from ..game_adapter.runtime.signatures import find_functions
 
                 return 0 if find_functions(research, report_dir) else 1
+            if args.action == "peek":
+                return cmd_peek(research, args, report_dir)
             if args.action == "find-moved":
                 from ..game_adapter.runtime.signatures import find_moved
 
@@ -492,6 +498,32 @@ def cmd_rebind(args, data_dir: Path, catalogue: Catalogue, ask=input) -> int:
         return 0
     finally:
         ledger.close()
+
+
+def cmd_peek(research, args, report_dir: Path) -> int:
+    """Save bytes of the game's code at given offsets (research, after a game update)."""
+    if not args.rva:
+        print("error: peek needs --rva, e.g. --rva 0x3dcb40", file=sys.stderr)
+        return 2
+    base = int(research.info.module_base, 16)
+    out = {"game": {"exe_version": research.info.exe_version, "pe_timestamp": research.info.pe_timestamp},
+           "peeks": []}
+    for text in args.rva.split(","):
+        rva = int(text.strip(), 16)
+        data = b""
+        while len(data) < args.size:
+            chunk = research.read(base + rva + len(data), min(4096, args.size - len(data)))
+            if not chunk:
+                break
+            data += chunk
+        out["peeks"].append({"rva": hex(rva), "bytes": data.hex()})
+        print(f"{rva:#x}: {len(data)} bytes")
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"peek-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    path.write_text(json.dumps(out, indent=1), encoding="utf-8")
+    print(f"Saved: {path}")
+    print("Send me that file.")
+    return 0
 
 
 def cmd_bundled() -> int:
