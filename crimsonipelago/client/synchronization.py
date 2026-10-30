@@ -33,6 +33,7 @@ log = logging.getLogger("crimsonipelago.sync")
 
 FATAL_REFUSALS = {"InvalidSlot", "InvalidGame", "InvalidPassword", "IncompatibleVersion"}
 RESEND_UNCONFIRMED_EVERY = 30.0
+MASS_CHECKS = 40      # more new checks than this at once are held until the player confirms them
 
 
 @dataclass
@@ -44,6 +45,8 @@ class ClientConfig:
     data_dir: Path = field(default_factory=lambda: Path("crimsonipelago_data"))
     poll_interval: float = 2.0
     client_uuid: str = ""
+    confirm_goal: bool = False      # report the goal even if the save doesn't look finished (goal_doubt)
+    confirm_checks: bool = False    # send a sudden mass of new checks without asking (checks_doubt)
 
 
 @dataclass
@@ -73,6 +76,8 @@ class StatusSnapshot:
     override_problem: str | None = None   # the installed game-data override doesn't fit this seed
     override_action: str | None = None    # what fixing it does ("Install story-abilities-removed")
     story_items: tuple[str, ...] = ()     # abilities this seed hands out instead of the story
+    goal_doubt: str | None = None         # the save says the goal is done, but the rest of it doesn't look like it
+    checks_doubt: str | None = None       # a sudden mass of new checks, held until the player says so
     slice: int = 1
 
 
@@ -109,6 +114,8 @@ class SyncController:
         self._last_resend = 0.0
         self._override_checked: int | None = None          # the session whose override was checked
         self.override_advice = None                         # overrides.OverrideAdvice for this seed
+        self._goal_confirmed = bool(getattr(config, "confirm_goal", False))
+        self._mass_confirmed = bool(getattr(config, "confirm_checks", False))
         if not config.client_uuid:
             config.client_uuid = self._load_uuid()
 
@@ -457,7 +464,28 @@ class SyncController:
             return
         pending = self.ledger.unconfirmed_checks(self.session.id) - self.server_checked
         if not pending:
+            if self.status.checks_doubt:
+                self.status.checks_doubt = None
+                self._emit_status()
             return
+        unsent = pending - self.ledger.sent_checks(self.session.id)
+        if len(unsent) > MASS_CHECKS and not self._mass_confirmed:
+            # a playthrough doesn't finish this many steps between two saves: more likely the save is read wrong
+            # (a game update). Checks can't be taken back, so wait for the player.
+            doubt = f"{len(unsent)} checks turned up at once"
+            if doubt != self.status.checks_doubt:
+                self.status.checks_doubt = doubt
+                self.bus.emit(ev.ERROR, f"Holding back {len(unsent)} checks that turned up at once: if you really did "
+                                        "all that, send them (the window's Send them button, or connect "
+                                        "--confirm-checks). Otherwise send the logs.")
+                self._emit_status()
+            pending -= unsent
+            if not pending:
+                return
+        elif self.status.checks_doubt:
+            self.status.checks_doubt = None
+            self._mass_confirmed = False
+            self._emit_status()
         if await self.send(protocol.location_checks(pending)):
             self._last_resend = loop.time()
             self.ledger.mark_checks_sent(self.session.id, pending)
@@ -465,11 +493,49 @@ class SyncController:
                 loc = self.catalogue.location_by_id(loc_id)
                 self.bus.emit(ev.CHECK_SENT, f"Sent check: {loc.name if loc else loc_id}", location_id=loc_id)
 
+    def goal_doubt(self) -> str | None:
+        """Why a goal the save reports doesn't look real, or None. Reporting a goal can't be undone, and with
+        release on goal it sends everything in this world to everyone (30 Oct: a goal read wrongly from a save after
+        a game update did exactly that). So the goal is only reported when the save also shows the story up to it:
+        the check the goal's logic names, and at least half of the seed's story checks, seen done in the save."""
+        goal = self.catalogue.goals.get(self.goal_key)
+        enabled = self.enabled_location_ids or set()
+        detected = self.ledger.detected_checks(self.session.id)
+        story = {i for i in enabled if (loc := self.catalogue.location_by_id(i)) is not None and loc.category == "quest"}
+        done = story & detected
+        last = (goal.requires or {}).get("location") if goal is not None and isinstance(goal.requires, dict) else None
+        last_loc = self.catalogue.locations.get(last) if last else None
+        if last_loc is not None and last_loc.ap_id in enabled and last_loc.ap_id not in detected:
+            return (f"your save says the goal is done, but its last step ({last}) isn't, and only {len(done)} of "
+                    f"{len(story)} story checks are")
+        if story and len(done) * 2 < len(story):
+            return f"your save says the goal is done, but only {len(done)} of {len(story)} story checks are"
+        return None
+
+    async def confirm_checks(self) -> None:
+        """The player says the mass of new checks is real: send them."""
+        self._mass_confirmed = True
+        await self._flush_checks(force=True)
+
+    async def confirm_goal(self) -> None:
+        """The player says the goal really is done: report it despite the doubt."""
+        self._goal_confirmed = True
+        await self._flush_goal()
+
     async def _flush_goal(self) -> None:
         if not (self.session and self.authenticated) or self.paused:
             return
         session = self.ledger.session(self.session.id)
         if session.goal_detected and not session.goal_reported:
+            doubt = None if self._goal_confirmed else await asyncio.to_thread(self.goal_doubt)
+            if doubt != self.status.goal_doubt:
+                self.status.goal_doubt = doubt
+                if doubt:
+                    self.bus.emit(ev.ERROR, f"Not reporting the goal: {doubt}. If you really finished, confirm it "
+                                            "(the window's Report goal button, or connect --confirm-goal).")
+                self._emit_status()
+            if doubt:
+                return
             if await self.send(protocol.status_update(protocol.ClientStatus.GOAL)):
                 self.ledger.set_goal(session.id, reported=True)
                 self.bus.emit(ev.GOAL, "Victory reported to the Archipelago server")

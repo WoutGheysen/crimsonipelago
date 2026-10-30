@@ -219,6 +219,7 @@ class MainWindow(QMainWindow):
         layout.addLayout(top)
         layout.addWidget(self._banner())
         layout.addWidget(self._override_bar())
+        layout.addWidget(self._doubt_bar())
         layout.addWidget(self._recovery_bar())
         layout.addWidget(self._status_box())
         self.tabs = QTabWidget()
@@ -401,6 +402,39 @@ class MainWindow(QMainWindow):
         h.addWidget(self.override_btn)
         self.override.hide()
         return self.override
+
+    def _doubt_bar(self) -> QFrame:
+        self.doubt = QFrame(objectName="banner")
+        self.doubt.setStyleSheet("QFrame#banner { background: #ffebee; color: #b71c1c; }")
+        h = QHBoxLayout(self.doubt)
+        h.setContentsMargins(10, 6, 10, 6)
+        self.doubt_label = QLabel()
+        self.doubt_label.setWordWrap(True)
+        self.doubt_btn = QPushButton()
+        self.doubt_btn.clicked.connect(self.doubt_clicked)
+        h.addWidget(self.doubt_label, 1)
+        h.addWidget(self.doubt_btn)
+        self.doubt.hide()
+        self._doubt_kind: str | None = None
+        return self.doubt
+
+    def doubt_clicked(self) -> None:
+        worker = self.worker
+        if worker is None or self._doubt_kind is None:
+            return
+        if self._doubt_kind == "goal":
+            text = ("Report the goal to the server?\n\nThis can't be undone. If the room releases on goal, everything "
+                    "left in your world goes out to everyone. Only do this if you really finished.")
+            call = worker.controller.confirm_goal
+        else:
+            text = ("Send all these checks?\n\nChecks can't be taken back. Only do this if you really did all of them "
+                    "(for example, you played a long stretch with the client closed).")
+            call = worker.controller.confirm_checks
+        if QMessageBox.question(self, "Are you sure?", text) == QMessageBox.StandardButton.Yes:
+            try:
+                worker.call(call())
+            except Exception as exc:
+                QMessageBox.warning(self, "Couldn't send", str(exc))
 
     def _checks_box(self) -> QWidget:
         w = QWidget()
@@ -774,6 +808,16 @@ class MainWindow(QMainWindow):
         self.plugin_pill.setStyleSheet(f"background: {pcolour}; color: white; border-radius: 10px; "
                                        "padding: 4px 12px; font-weight: 600;")
         self.plugin_pill.setVisible(self.worker is not None and s.plugin != "off")
+        if s.goal_doubt or s.checks_doubt:
+            self._doubt_kind = "goal" if s.goal_doubt else "checks"
+            what = (f"<b>Goal not reported.</b> {s.goal_doubt[0].upper() + s.goal_doubt[1:]}." if s.goal_doubt else
+                    f"<b>Checks held back.</b> {s.checks_doubt}, which usually means the save was read wrong (a game "
+                    "update?).")
+            self.doubt_label.setText(what + " Send logs if this looks wrong.")
+            self.doubt_btn.setText("Report goal anyway…" if s.goal_doubt else "Send them…")
+            self.doubt.show()
+        else:
+            self.doubt.hide()
         if s.override_problem:
             self.override_label.setText(f"<b>Game-data override.</b> {s.override_problem}")
             self.override_btn.setText(s.override_action or "Fix it")

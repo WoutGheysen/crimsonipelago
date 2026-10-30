@@ -97,6 +97,10 @@ def build_parser() -> argparse.ArgumentParser:
     c.add_argument("--port", type=int, default=None)
     c.add_argument("--slot", default=None, help="your slot (player) name")
     c.add_argument("--password", default=None, help="room password (or set CRIMSONIPELAGO_PASSWORD)")
+    c.add_argument("--confirm-goal", action="store_true",
+                   help="report the goal even though the save doesn't look like the story is finished")
+    c.add_argument("--confirm-checks", action="store_true",
+                   help="send a sudden mass of new checks (normally held back as a sign the save is read wrong)")
     c.add_argument("--no-live", action="store_true",
                    help="don't give items in the running game; only edit the save once you quit to desktop")
     _add_adapter_args(c)
@@ -220,7 +224,8 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
     bus.subscribe(lambda e: e.kind != ev.STATUS and print(f"{e.at:%H:%M:%S}  {e.message}", flush=True))
     if not args.verbose:
         logging.getLogger("crimsonipelago.events").setLevel(logging.ERROR)   # printed above already
-    config = ClientConfig(server=server, port=args.port, slot_name=slot, password=password, data_dir=data_dir)
+    config = ClientConfig(server=server, port=args.port, slot_name=slot, password=password, data_dir=data_dir,
+                          confirm_goal=args.confirm_goal, confirm_checks=args.confirm_checks)
     live = None
     if args.adapter == "save" and not args.no_live:
         from ..game_adapter.runtime.live import JsonlLog, LiveChannel

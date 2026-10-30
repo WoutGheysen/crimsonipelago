@@ -419,6 +419,15 @@ class Ledger:
                     (session_id, loc, ts),
                 )
 
+    def sent_checks(self, session_id: int) -> set[int]:
+        rows = self._all("SELECT location_id FROM checks WHERE session_id=? AND sent_at IS NOT NULL", (session_id,))
+        return {r["location_id"] for r in rows}
+
+    def detected_checks(self, session_id: int) -> set[int]:
+        """Checks seen done in the save (not ones the server marked checked by a release or collect)."""
+        rows = self._all("SELECT location_id FROM checks WHERE session_id=? AND detected_at IS NOT NULL", (session_id,))
+        return {r["location_id"] for r in rows}
+
     def check_states(self, session_id: int) -> dict[int, str]:
         """Per check: confirmed (the server has it), sent, or found (seen in the save, not sent yet)."""
         rows = self._all("SELECT location_id, detected_at, sent_at, confirmed_at FROM checks WHERE session_id=?",

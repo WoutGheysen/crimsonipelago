@@ -104,10 +104,51 @@ async def test_gap_triggers_sync(tmp_path, server, sim, ledger, catalogue, bus):
 
 async def test_goal_is_reported_once(tmp_path, server, sim, ledger, catalogue, bus):
     c = make_controller(tmp_path, server, sim, ledger, catalogue, bus)
+    for loc in catalogue.locations.values():                 # the story played to the end
+        sim.complete_location(loc.name)
     sim.update(goal_complete=True)
     await run_until(c, lambda: 30 in server.status)
     assert server.status.count(30) == 1
     assert ledger.session(c.session.id).goal_reported
+
+
+async def test_a_goal_the_save_does_not_back_up_waits_for_the_player(tmp_path, server, sim, ledger, catalogue, bus):
+    """30 Oct: after a game update the save read as goal done with 52 of 412 story checks, and the goal report
+    released the whole world. Now it waits, and only goes out when the player confirms it."""
+    c = make_controller(tmp_path, server, sim, ledger, catalogue, bus)
+    sim.update(goal_complete=True)
+    task = asyncio.create_task(c.run())
+    try:
+        await wait_for(lambda: c.status.goal_doubt is not None)
+        assert "Finale Quest" in c.status.goal_doubt and 30 not in server.status
+        await asyncio.sleep(0.3)
+        assert 30 not in server.status and not ledger.session(c.session.id).goal_reported
+        await c.confirm_goal()
+        await wait_for(lambda: 30 in server.status)
+    finally:
+        c.stop()
+        await asyncio.wait_for(task, 5)
+
+
+async def test_a_sudden_mass_of_checks_is_held_until_confirmed(tmp_path, server, sim, ledger, catalogue, bus,
+                                                               monkeypatch):
+    from crimsonipelago.client import synchronization
+
+    monkeypatch.setattr(synchronization, "MASS_CHECKS", 5)
+    c = make_controller(tmp_path, server, sim, ledger, catalogue, bus)
+    task = asyncio.create_task(c.run())
+    try:
+        await wait_for(lambda: c.session is not None and c.authenticated)
+        for loc in list(catalogue.locations.values())[:8]:
+            sim.complete_location(loc.name)
+        await wait_for(lambda: c.status.checks_doubt is not None)
+        await asyncio.sleep(0.3)
+        assert not server.checked
+        await c.confirm_checks()
+        await wait_for(lambda: len(server.checked) == 8)
+    finally:
+        c.stop()
+        await asyncio.wait_for(task, 5)
 
 
 async def test_catalogue_mismatch_stops_sync(tmp_path, sim, ledger, catalogue, bus):
