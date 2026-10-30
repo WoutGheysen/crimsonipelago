@@ -265,3 +265,132 @@ def find_functions(bridge: ResearchBridge, report_dir: Path, say: Callable[[str]
     say(f"Saved: {path}")
     say("Send me that file.")
     return path
+
+
+# --------------------------------------------------------------------------- after a game update: where did they go?
+ANCHOR = 8          # bytes per anchor: short enough to survive small edits, long enough to be rare
+ANCHOR_HITS = 64    # an anchor found more often than this says nothing
+
+
+@dataclass
+class Candidate:
+    rva: int                 # where the pattern would start
+    matched: int             # anchors of the pattern found in their place (give or take a small shift)
+    total: int
+    shift: int               # how far the later anchors moved from the first (bytes added or removed)
+
+    @property
+    def score(self) -> float:
+        return self.matched / max(self.total, 1)
+
+
+def anchors(pattern: tuple[int | None, ...], size: int = ANCHOR) -> list[tuple[int, bytes]]:
+    """Every run of `size` known bytes in a pattern, with its offset."""
+    out = []
+    for at in range(0, len(pattern) - size + 1):
+        window = pattern[at:at + size]
+        if None not in window:
+            out.append((at, bytes(window)))
+    return out
+
+
+def read_code(read: Callable[[int, int], bytes | None], base: int,
+              progress: Callable[[int, int], None] = lambda done, total: None) -> list[tuple[int, bytes]]:
+    """All executable sections, read once: (rva, bytes)."""
+    sections = code_sections(read, base)
+    total, done, out = sum(size for _, size in sections), 0, []
+    for rva, size in sections:
+        buf = bytearray()
+        while len(buf) < size:
+            n = min(READ, size - len(buf))
+            data = read(base + rva + len(buf), n)
+            buf += data if data is not None else b"\0" * n
+            done += n
+            if done % BATCH < READ:
+                progress(done, total)
+        out.append((rva, bytes(buf)))
+    progress(total, total)
+    return out
+
+
+def near_matches(code: list[tuple[int, bytes]], pattern: tuple[int | None, ...], top: int = 5,
+                 window: int = 48) -> list[Candidate]:
+    """Where a pattern that no longer matches exactly most likely went: each of its anchors votes for where the
+    pattern would start; votes within `window` bytes of each other count together (an edit shifts what follows)."""
+    marks = anchors(pattern)
+    votes: dict[int, set[int]] = {}
+    for offset, needle in marks:
+        hits = []
+        for rva, buf in code:
+            i = buf.find(needle)
+            while i != -1 and len(hits) <= ANCHOR_HITS:
+                hits.append(rva + i - offset)
+                i = buf.find(needle, i + 1)
+        if len(hits) > ANCHOR_HITS:
+            continue
+        for start in hits:
+            votes.setdefault(start, set()).add(offset)
+    clusters: list[Candidate] = []
+    for start in sorted(votes):
+        if clusters and start - clusters[-1].rva <= window:
+            c = clusters[-1]
+            c.matched = len(set().union(*(votes[s] for s in votes if c.rva <= s <= start)))
+            c.shift = start - c.rva
+        else:
+            clusters.append(Candidate(start, len(votes[start]), len(marks), 0))
+    return sorted(clusters, key=lambda c: -c.matched)[:top]
+
+
+def find_moved(bridge: ResearchBridge, report_dir: Path, say: Callable[[str], None] = print,
+               targets_file: Path = TARGETS_FILE) -> Path | None:
+    """Research, after a game update the signatures don't fit: the likeliest new place of each function, with the
+    bytes there, for making new signatures (tools/make_signatures.py)."""
+    info = bridge.info
+    if info is None:
+        raise BridgeError("not connected")
+    sigs, _ = load_signatures(targets_file)
+    base = int(info.module_base, 16)
+    read = reader(bridge)
+    say("Reading the game's code (about a minute; keep the game running)...")
+    last = [0.0]
+
+    def progress(done: int, total: int) -> None:
+        if done - last[0] >= total / 10 or done == total:
+            last[0] = done
+            say(f"   {100 * done // max(total, 1)}%")
+
+    code = read_code(read, base, progress)
+    rows = []
+    for name, sig in sigs.items():
+        patterns = [(name, sig.pattern)] + ([(f"{name}.then", sig.then)] if sig.kind == "via_call" else [])
+        for label, pattern in patterns:
+            rx = Signature(label, "function", pattern).regex
+            found = [rva + m.start() for rva, buf in code for m in rx.finditer(buf)]
+            cands = near_matches(code, pattern)
+            row = {"name": label, "kind": sig.kind, "exact": [hex(m) for m in found[:8]],
+                   "candidates": [{"rva": hex(c.rva), "score": round(c.score, 2), "matched": c.matched,
+                                   "of": c.total, "shift": c.shift,
+                                   "bytes_from": hex(max(c.rva - 32, 0)),
+                                   "bytes": (_slice(code, max(c.rva - 32, 0), 320) or b"").hex()}
+                                  for c in cands]}
+            rows.append(row)
+            best = cands[0] if cands else None
+            say(f"   {label:<20} " + (f"exact at {found[0]:#x}" if found else
+                                       f"best guess {best.rva:#x} ({best.matched}/{best.total} pieces)" if best
+                                       else "nothing close"))
+    report = {"plugin": info.plugin_version,
+              "game": {"exe_version": info.exe_version, "pe_timestamp": info.pe_timestamp},
+              "code_bytes": sum(len(b) for _, b in code), "targets": rows}
+    report_dir.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"r8-moved-{time.strftime('%Y%m%d-%H%M%S')}.json"
+    path.write_text(json.dumps(report, indent=1), encoding="utf-8")
+    say(f"Saved: {path}")
+    say("Send me that file.")
+    return path
+
+
+def _slice(code: list[tuple[int, bytes]], rva: int, size: int) -> bytes | None:
+    for start, buf in code:
+        if start <= rva < start + len(buf):
+            return buf[rva - start:rva - start + size]
+    return None

@@ -143,3 +143,21 @@ def test_via_call_follows_the_call_into_the_function_that_reads_the_table():
                     then=parse_pattern("0f b7 39 48 8b 1d ?? ?? ?? ?? 3b 7b 08"), then_disp_at=6, then_insn_end=10)
     found = scan(_reader(image), BASE, {"item_table": sig})
     assert found.targets == {"item_table": 0x6D69AA8} and len(found.matches["item_table"]) == 2
+
+
+def test_near_matches_finds_a_function_an_update_changed_a_little():
+    import random
+
+    from crimsonipelago.game_adapter.runtime.signatures import near_matches, parse_pattern
+
+    rng = random.Random(7)
+    pattern = parse_pattern("48 89 5c 24 18 48 89 54 24 10 48 89 4c 24 08 55 56 57 41 54 41 55 41 56 41 57 48 8d "
+                            "ac 24 30 ff ff ff 48 81 ec d0 01 00 00 4d 8b e1 4d 8b e8 4c 8b c2 4c 8b f1 4c 89 29")
+    old = bytes(pattern)
+    # the update: a bigger stack frame (d0 01 -> e0 01) and one more instruction in the middle
+    new = old[:37] + b"\xe0" + old[38:44] + b"\x90\x90\x90\x90" + old[44:]
+    code = bytearray(rng.randbytes(400_000))
+    code[123_456:123_456 + len(new)] = new
+    code[300_000:300_000 + 12] = old[:12]            # a stray copy of the first few bytes elsewhere
+    best = near_matches([(0x1000, bytes(code))], pattern)[0]
+    assert best.rva == 0x1000 + 123_456 and best.score > 0.6 and best.shift in (0, 4)

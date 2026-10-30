@@ -133,11 +133,12 @@ def build_parser() -> argparse.ArgumentParser:
     pl.add_argument("action", nargs="?", default="check",
                     choices=["check", "find-copper", "watch-money", "dump-code", "watch-calls", "give-copper",
                              "give-item", "item-table", "give-knowledge", "knowledge-check", "error-sites",
-                             "edge-cases", "find-functions"],
+                             "edge-cases", "find-functions", "find-moved"],
                     help="check: test the link (default); find-copper: research step R1; "
                          "watch-money, dump-code, watch-calls: research step R2; give-copper: R3; "
                          "give-item, item-table: R4; give-knowledge: R5; edge-cases: phase 1 tests; "
-                         "find-functions: check the game-update signatures")
+                         "find-functions: check the game-update signatures; find-moved: after a game update, "
+                         "where the functions went")
     pl.add_argument("--key", type=int, default=None, help="give-item: the item's key, as in the save")
     pl.add_argument("--count", type=int, default=1, help="give-item: how many")
     pl.add_argument("--level", type=int, default=1, help="give-knowledge: the level to learn")
@@ -242,7 +243,7 @@ def cmd_connect(args, data_dir: Path, catalogue: Catalogue) -> int:
 NEEDS_PLUGIN = {"find-copper": (0, 3), "watch-money": (0, 4), "dump-code": (0, 5), "watch-calls": (0, 6),
                 "give-copper": (0, 8), "give-item": (0, 8), "item-table": (0, 8), "give-knowledge": (0, 8),
                 "knowledge-check": (0, 8), "error-sites": (0, 8), "edge-cases": (0, 8),
-                "find-functions": (0, 3)}
+                "find-functions": (0, 3), "find-moved": (0, 3)}
 
 
 def _plugin_version(text: str) -> tuple[int, int]:
@@ -293,6 +294,10 @@ def cmd_plugin(args, data_dir: Path | None = None) -> int:
                 from ..game_adapter.runtime.signatures import find_functions
 
                 return 0 if find_functions(research, report_dir) else 1
+            if args.action == "find-moved":
+                from ..game_adapter.runtime.signatures import find_moved
+
+                return 0 if find_moved(research, report_dir) else 1
             if args.action == "edge-cases":
                 from ..game_adapter.runtime.edge_cases import edge_cases
 
